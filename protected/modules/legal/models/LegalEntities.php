@@ -74,7 +74,9 @@ class LegalEntities extends SOAPModel {
 	/**
 	 * Get one legal entity
 	 *
-	 * @param array $filter
+	 * @param $id
+	 * @return bool|\LegalEntities
+	 * @internal param array $filter
 	 */
 	public function findByPk($id) {
 		$ret = $this->SOAP->getLegalEntity(array('id' => '1'.$id));

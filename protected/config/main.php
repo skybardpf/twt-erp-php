@@ -7,7 +7,9 @@
 // CWebApplication properties can be configured here.
 return array(
 	'basePath'=>dirname(__FILE__).DIRECTORY_SEPARATOR.'..',
-	'name'=>'Yury test yii framework',
+	'name'=>'TWT',
+	'sourceLanguage' => 'root',
+	'language' => 'ru',
 
 	// preloading 'log' component
 	'preload'=>array('log', 'bootstrap'),
@@ -27,7 +29,7 @@ return array(
 			'class'=>'system.gii.GiiModule',
 			'password'=>'Enter Your Password Here',
 			// If removed, Gii defaults to localhost only. Edit carefully to taste.
-			'ipFilters'=>array('127.0.0.1','::1', '192.168.0.175'),
+			'ipFilters'=>array('127.0.0.1','::1', '192.168.0.*'),
 		),
 	),
 

@@ -32,6 +32,10 @@ abstract class SOAPModel extends CModel {
 		return array_keys($this->attributeLabels());
 	}
 
+	/**
+	 * @return array
+	 * @throws Exception
+	 */
 	public function attributeLabels()
 	{
 		throw new Exception('Перечислите все поля');
@@ -50,6 +54,7 @@ abstract class SOAPModel extends CModel {
 		{
 			return parent::__set($name,$value);
 		}
+		return null;
 	}
 
 	/**
@@ -105,6 +110,7 @@ abstract class SOAPModel extends CModel {
 			return $this->$name;
 		elseif(isset($this->_attributes[$name]))
 			return $this->_attributes[$name];
+		return null;
 	}
 
 	/**
