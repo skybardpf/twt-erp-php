@@ -41,9 +41,12 @@ return array(
 			'class'=>'system.caching.CFileCache',
 		),
 		'soap' => array(
-			'class' => 'SoapComponent',
-			'wsdl'  => 'http://192.168.0.101/InfoBase/ws/twt?wsdl',
-			//'connection_options' => array('test1' => 3)
+			'class'     => 'SoapComponent',
+			'wsdl'      => 'http://192.168.0.101/InfoBase/ws/twt?wsdl',
+			'connection_options' => array(
+				'login'     => 'test',
+                'password'  => '',
+			)
 		),
 		'bootstrap' => array(
 			'class' => 'ext.bootstrap.components.Bootstrap', // assuming you extracted bootstrap under extensions

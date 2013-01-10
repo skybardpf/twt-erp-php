@@ -19,7 +19,7 @@ Yii::app()->clientScript->registerCssFile(CHtml::asset(Yii::app()->basePath.'/..
 		<?php
 		$items = array(
 			'main'           => array('label' => 'Главная', 'url' => Yii::app()->homeUrl),
-			'legal.entities' => array('label' => 'Юридическое лицо', 'url' => $this->createUrl('/legal/entities/')),
+			'legal.entities' => array('label' => 'Юридические лица', 'url' => $this->createUrl('/legal/entities/')),
 		);
 		if (isset($items[$this->menu_elem])) {
 			$items[$this->menu_elem]['active'] = true;
@@ -30,6 +30,15 @@ Yii::app()->clientScript->registerCssFile(CHtml::asset(Yii::app()->basePath.'/..
 			'items'     => array_values($items)
 		));
 		unset($items); ?>
+	</div>
+	<div class="span12">
+		<div>
+			<?php
+			$this->widget('bootstrap.widgets.TbBreadcrumbs', array(
+				'links' => $this->breadcrumbs
+			));?>
+		</div>
+		<?=$content?>
 	</div>
 </div>
 

@@ -21,6 +21,21 @@ class SoapComponent extends CApplicationComponent
 
 	public $wsdl = NULL;
 
+	/**
+	 * @static
+	 *
+	 * @param array $properties
+	 *
+	 * @return array
+	 */
+	static public function getStructureElement(array $properties = array()) {
+		$ret = array();
+		foreach ($properties as $key => $val) {
+			$ret[] = array('Поле' => $key, 'Значение' => $val);
+		}
+		return $ret;
+	}
+
 	protected function delay_init() {
 		/** Setting wsdl cache */
 		if (ini_get('soap.wsdl_cache_enabled') != $this->cache_enabled) ini_set('soap.wsdl_cache_enabled', $this->cache_enabled);
@@ -60,7 +75,7 @@ class SoapComponent extends CApplicationComponent
 	 *
 	 * @return mixed
 	 */
-	protected function soap_call($name, $params = null) {
+	protected function soap_call($name, $params = NULL) {
 		if ($this->soap_client === NULL) {
 			$this->delay_init();
 		}
