@@ -19,14 +19,15 @@ return array(
 	),
 
 	'modules'=>array(
-		'gii'=>array(
+		'legal',
+		'gii' => array(
 			'generatorPaths'=>array(
 				'bootstrap.gii',
 			),
 			'class'=>'system.gii.GiiModule',
 			'password'=>'Enter Your Password Here',
 			// If removed, Gii defaults to localhost only. Edit carefully to taste.
-			'ipFilters'=>array('127.0.0.1','::1'),
+			'ipFilters'=>array('127.0.0.1','::1', '192.168.0.175'),
 		),
 	),
 
@@ -41,7 +42,7 @@ return array(
 		),
 		'soap' => array(
 			'class' => 'SoapComponent',
-			'wsdl'  => 'http://morpher.ru/WebServices/Morpher.asmx?WSDL',
+			'wsdl'  => 'http://192.168.0.101/InfoBase/ws/twt?wsdl',
 			//'connection_options' => array('test1' => 3)
 		),
 		'bootstrap' => array(

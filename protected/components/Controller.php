@@ -20,4 +20,8 @@ class Controller extends CController
 	 * for more details on how to specify this property.
 	 */
 	public $breadcrumbs=array();
+	/**
+	 * @var string array key for currently active menu element
+	 */
+	public $menu_elem = 'main';
 }
