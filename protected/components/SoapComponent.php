@@ -22,7 +22,7 @@ class SoapComponent extends CApplicationComponent
 	public $wsdl = NULL;
 
 	/**
-	 * @static
+	 * @static generate specialized "structure" array(array('Поле' => key, 'Значение' => value), ...)
 	 *
 	 * @param array $properties
 	 *
@@ -32,6 +32,36 @@ class SoapComponent extends CApplicationComponent
 		$ret = array();
 		foreach ($properties as $key => $val) {
 			$ret[] = array('Поле' => $key, 'Значение' => $val);
+		}
+		return $ret;
+	}
+
+	/**
+	 * @static
+	 *
+	 * @param $data
+	 * @param $class - which objects we will generate
+	 * @param $key - the first key of resulting array
+	 *
+	 * @return array
+	 */
+	static public function parseReturn($data, $class, $key = 'Yur') {
+		$ret = array();
+		if ($data->return) {
+			$data = (array)$data->return;
+			if (!empty($data[$key])) {
+				if (is_array($data[$key])) {
+					foreach ($data[$key] as $elem) {
+						$object = new $class();
+						$object->setAttributes((array)$elem, false);
+						$ret[] = $object;
+					}
+				} else {
+					$object = new $class();
+					$object->setAttributes((array)$data[$key], false);
+					$ret[] = $object;
+				}
+			}
 		}
 		return $ret;
 	}

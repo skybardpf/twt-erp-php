@@ -80,25 +80,7 @@ class LegalEntities extends SOAPModel {
 				))
 			)
 		);
-		$return = array();
-		if ($ret->return) {
-			$ret = (array)$ret->return;
-			if (!empty($ret['Yur'])) {
-				$return = array();
-				if (is_array($ret['Yur'])) {
-					foreach ($ret['Yur'] as $elem) {
-						$object = new self();
-						$object->setAttributes((array)$elem, false);
-						$return[] = $object;
-					}
-				} else {
-					$object = new self();
-					$object->setAttributes((array)$ret['Yur'], false);
-					$return[] = $object;
-				}
-			}
-		}
-		return $return;
+		return SoapComponent::parseReturn($ret, get_class($this));
 	}
 
 	/**

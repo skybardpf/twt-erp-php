@@ -6,7 +6,8 @@ $this->breadcrumbs=array(
 	'Юридические лица',
 );
 ?>
-<h2>Юридические лица</h2>
+<h2>Юридические лица <a class="btn btn-success" href="<?=$this->createUrl('add')?>">Добавить Юр.Лицо</a></h2>
+<div></div>
 <div>
 	<?php
 	if ($elements) {

@@ -3,7 +3,7 @@
 /* @var $model LegalEntities */
 
 $this->breadcrumbs=array(
-	'Юридические лица' => array($this->createUrl('/legal/entities/')),
+	'Юридические лица' => $this->createUrl('/legal/entities/'),
 	'Редактирование',
 );
 ?>

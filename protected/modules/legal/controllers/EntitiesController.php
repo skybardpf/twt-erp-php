@@ -10,7 +10,8 @@ class EntitiesController extends Controller
 
 	public function actionAdd()
 	{
-		$this->render('add');
+		$model = new LegalEntities();
+		$this->render('add', array('model' => $model));
 	}
 
 	public function actionDelete($id)
