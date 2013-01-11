@@ -5,6 +5,9 @@
  */
 abstract class SOAPModel extends CModel {
 
+	/**
+	 * @var SoapComponent
+	 */
 	protected $SOAP = NULL;
 	protected $_attributes = array();
 
@@ -54,7 +57,7 @@ abstract class SOAPModel extends CModel {
 		{
 			return parent::__set($name,$value);
 		}
-		return null;
+		return NULL;
 	}
 
 	/**
@@ -110,7 +113,7 @@ abstract class SOAPModel extends CModel {
 			return $this->$name;
 		elseif(isset($this->_attributes[$name]))
 			return $this->_attributes[$name];
-		return null;
+		return NULL;
 	}
 
 	/**

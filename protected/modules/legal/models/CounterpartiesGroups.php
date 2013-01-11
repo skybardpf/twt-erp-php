@@ -1,37 +1,20 @@
 <?php
 /**
  * User: Forgon
- * Date: 09.01.13
- * @property int $id
- * @property string $full_name
- * @property string $name
- * @property string $country
- * @property string $resident
- * @property string $type_no_res
- * @property string $contragent
- * @property string $group_name
- * @property string $comment
- * @property string $inn
- * @property string $kpp
- * @property string $ogrn
- * @property string $yur_address
- * @property string $fact_address
- * @property string $reg_nom
- * @property string $sert_nom
- * @property string $vat_nom
- * @property string $profile
- * @property string $deleted
+ * Date: 11.01.13
  *
-
+ * @property int $id
+ * @property string $name
+ * @property int $pid
  */
-class LegalEntities extends SOAPModel {
+class CounterpartiesGroups extends SOAPModel {
 
 	/**
 	 * @static
 	 *
 	 * @param string $className
 	 *
-	 * @return LegalEntities
+	 * @return CounterpartiesGroups
 	 */
 	public static function model($className = __CLASS__)
 	{
@@ -43,15 +26,15 @@ class LegalEntities extends SOAPModel {
 	 *
 	 * @return bool
 	 */
-	public function delete() {
+	/*public function delete() {
 		if ($pk = $this->getprimaryKey()) {
 			$ret = $this->SOAP->deleteLegalEntity(array('id' => '1'.$pk));
 			return $ret->return;
 		}
 		return false;
-	}
+	}*/
 
-	public function save() {
+	/*public function save() {
 		if ($pk = $this->getprimaryKey()) {
 			$this->id = '1'.$pk;
 		}
@@ -63,7 +46,7 @@ class LegalEntities extends SOAPModel {
 		$this->SOAP->saveLegalEntity(SoapComponent::getStructureElement($this->attributes));
 		exit;
 		return false;
-	}
+	}*/
 
 	/**
 	 * Get list of LegalEntities
@@ -71,33 +54,25 @@ class LegalEntities extends SOAPModel {
 	 * @return array
 	 */
 	public function findAll() {
-		$ret = $this->SOAP->listLegalEntities(array(
-				'filters' => SoapComponent::getStructureElement(array(
-					'yurlica' => '*', 'id' => '*'
-				)),
-				'sort' => SoapComponent::getStructureElement(array(
-					'id' => 'asc'
-				))
-			)
-		);
+		$ret = $this->SOAP->listCounterpartiesGroups();
 		$return = array();
-		if ($ret->return) {
+		/*if ($ret->return) {
 			$ret = (array)$ret->return;
-			if (!empty($ret['Yur'])) {
+			if (!empty($ret['ЮрЛицо'])) {
 				$return = array();
-				if (is_array($ret['Yur'])) {
-					foreach ($ret['Yur'] as $elem) {
+				if (is_array($ret['ЮрЛицо'])) {
+					foreach ($ret['ЮрЛицо'] as $elem) {
 						$object = new self();
 						$object->setAttributes((array)$elem, false);
 						$return[] = $object;
 					}
 				} else {
 					$object = new self();
-					$object->setAttributes((array)$ret['Yur'], false);
+					$object->setAttributes((array)$ret['ЮрЛицо'], false);
 					$return[] = $object;
 				}
 			}
-		}
+		}*/
 		return $return;
 	}
 
@@ -128,32 +103,11 @@ class LegalEntities extends SOAPModel {
 		return array(
 			'id'            => '#',
 			'name'          => 'Название',
-			'full_name'     => 'Полное имя',
-			'country'       => 'Страна юрисдикции',
-			'resident'      => 'Не является резидентом РФ',
-			'type_no_res'   => 'Тип нерезидента',
-			'contragent'    => 'Контрагент',
-			'group_name'    => 'Группа контрагентов',
-            'comment'       => 'Комментарий',
-			'inn'           => 'ИНН',
-			'kpp'           => 'КПП',
-			'ogrn'          => 'ОГРН',
-			'yur_address'   => 'Адрес юридический',
-			'fact_address'  => 'Адрес фактический',
-			'reg_nom'       => 'Регистрационный номер',
-			'sert_nom'      => 'Номер сертификата о регистрации',
-			'sert_date'     => 'Дата сертификата о регистрации',
-			'vat_nom'       => 'VAT-номер',
-			'profile'       => 'Основной вид деятельности',
-			'deleted'       => 'Помечен на удаление'
-			/*
-Сокращенное наименование (текст, обязательное);
-Английское наименование (текст);
-*/
+			'pid'           => 'Полное имя',
+
 		);
 	}
 
-	// TODO rules
 	/**
 	 * @return array validation rules for model attributes.
 	 */

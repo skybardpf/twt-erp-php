@@ -7,7 +7,7 @@ class SoapComponent extends CApplicationComponent
 	/** @var SoapClient */
 	protected $soap_client = NULL;
 	public $cache_enabled = 1;
-	public $socket_timeout = 5;
+	public $socket_timeout = 25;
 
 	public $connection_options = array(); // Configurable one
 	protected $_connection_options = array( // Default and really used one
@@ -80,8 +80,15 @@ class SoapComponent extends CApplicationComponent
 			$this->delay_init();
 		}
 		if ($this->soap_method_exists($name)) {
-			if (method_exists($this->soap_client, $name)) return call_user_func_array(array($this->soap_client, $name), $params);
-			else return $this->soap_client->__soapCall($name, $params);
+			try {
+				if (method_exists($this->soap_client, $name)) $ret = call_user_func_array(array($this->soap_client, $name), $params);
+				else $ret = $this->soap_client->__soapCall($name, $params);
+				if (YII_DEBUG) Yii::log($name.PHP_EOL.print_r($ret, 1), CLogger::LEVEL_INFO, 'soap');
+				return $ret;
+			} catch (Exception $e) {
+				Yii::log($e->getCode().'(at file '.$e->getFile().':'.$e->getLine().'): '.$e->getMessage(),CLogger::LEVEL_ERROR, 'soap');
+				throw new CHttpException(500);
+			}
 		} else {
 			return parent::__call($name, $params);
 		}

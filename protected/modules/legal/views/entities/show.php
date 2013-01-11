@@ -7,7 +7,7 @@ $this->breadcrumbs=array(
 	'Просмотр',
 );
 ?>
-<h1><?=$element->full_name?></h1>
+<h2><?=$element->full_name?></h2>
 <div>
 	<?php
 	$this->widget('bootstrap.widgets.TbDetailView', array(

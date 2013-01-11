@@ -1,9 +1,8 @@
 <?php
-/* @var $this EntitiesController */
-/* @var $elements array */
+/* @var $this Counterparties_groupsController */
 
 $this->breadcrumbs=array(
-	'Юридические лица',
+	'Банки',
 );
 ?>
 <h2>Юридические лица</h2>

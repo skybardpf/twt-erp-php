@@ -18,6 +18,10 @@ class EntitiesController extends Controller
 		/** @var $model LegalEntities */
 		$model = LegalEntities::model()->findByPk($id);
 		if (empty($model)) throw new CHttpException(404);
+		if (Yii::app()->request->isAjaxRequest) {
+			$model->delete();
+
+		}
 		if (isset($_POST['result'])) {
 			switch ($_POST['result']) {
 				case 'yes':

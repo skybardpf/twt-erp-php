@@ -1,7 +1,7 @@
 <?php
 /**
  * User: Forgon
- * Date: 09.01.13
+ * Date: 11.01.13
  * @property int $id
  * @property string $full_name
  * @property string $name
@@ -22,16 +22,15 @@
  * @property string $profile
  * @property string $deleted
  *
-
  */
-class LegalEntities extends SOAPModel {
+class Banks extends SOAPModel {
 
 	/**
 	 * @static
 	 *
 	 * @param string $className
 	 *
-	 * @return LegalEntities
+	 * @return Banks
 	 */
 	public static function model($className = __CLASS__)
 	{
@@ -39,85 +38,32 @@ class LegalEntities extends SOAPModel {
 	}
 
 	/**
-	 * Set or remove deletion mark
-	 *
-	 * @return bool
-	 */
-	public function delete() {
-		if ($pk = $this->getprimaryKey()) {
-			$ret = $this->SOAP->deleteLegalEntity(array('id' => '1'.$pk));
-			return $ret->return;
-		}
-		return false;
-	}
-
-	public function save() {
-		if ($pk = $this->getprimaryKey()) {
-			$this->id = '1'.$pk;
-		}
-		$attributes = $this->attributes;
-		unset($attributes['name']);
-		unset($attributes['deleted']);
-		$data = SoapComponent::getStructureElement($attributes);
-		CVarDumper::dump($data);
-		$this->SOAP->saveLegalEntity(SoapComponent::getStructureElement($this->attributes));
-		exit;
-		return false;
-	}
-
-	/**
-	 * Get list of LegalEntities
+	 * Get list of Banks
 	 *
 	 * @return array
 	 */
 	public function findAll() {
-		$ret = $this->SOAP->listLegalEntities(array(
-				'filters' => SoapComponent::getStructureElement(array(
-					'yurlica' => '*', 'id' => '*'
-				)),
-				'sort' => SoapComponent::getStructureElement(array(
-					'id' => 'asc'
-				))
-			)
-		);
+		$ret = $this->SOAP->listBanks(array());
 		$return = array();
-		if ($ret->return) {
+		/*if ($ret->return) {
 			$ret = (array)$ret->return;
-			if (!empty($ret['Yur'])) {
+			if (!empty($ret['ЮрЛицо'])) {
 				$return = array();
-				if (is_array($ret['Yur'])) {
-					foreach ($ret['Yur'] as $elem) {
+				if (is_array($ret['ЮрЛицо'])) {
+					foreach ($ret['ЮрЛицо'] as $elem) {
 						$object = new self();
 						$object->setAttributes((array)$elem, false);
 						$return[] = $object;
 					}
 				} else {
 					$object = new self();
-					$object->setAttributes((array)$ret['Yur'], false);
+					$object->setAttributes((array)$ret['ЮрЛицо'], false);
 					$return[] = $object;
 				}
 			}
-		}
+		}*/
 		return $return;
 	}
-
-	/**
-	 * Get one legal entity
-	 *
-	 * @param $id
-	 * @return bool|\LegalEntities
-	 * @internal param array $filter
-	 */
-	public function findByPk($id) {
-		$ret = $this->SOAP->getLegalEntity(array('id' => '1'.$id));
-		if ($ret->return) {
-			$object = new self();
-			$object->setAttributes((array)$ret->return, false);
-			return $object;
-		}
-		return false;
-	}
-
 
 	/**
 	 * Returns the list of attribute names of the model.
@@ -134,7 +80,7 @@ class LegalEntities extends SOAPModel {
 			'type_no_res'   => 'Тип нерезидента',
 			'contragent'    => 'Контрагент',
 			'group_name'    => 'Группа контрагентов',
-            'comment'       => 'Комментарий',
+			'comment'       => 'Комментарий',
 			'inn'           => 'ИНН',
 			'kpp'           => 'КПП',
 			'ogrn'          => 'ОГРН',

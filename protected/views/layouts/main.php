@@ -13,13 +13,15 @@ Yii::app()->clientScript->registerCssFile(CHtml::asset(Yii::app()->basePath.'/..
 </head>
 
 <body>
-
-<div>
+<div class="row"><div class="span12 offset2"><h1><?= Yii::app()->name?></h1></div></div>
+<div clas="container-fluid">
 	<div class="span3">
 		<?php
 		$items = array(
 			'main'           => array('label' => 'Главная', 'url' => Yii::app()->homeUrl),
 			'legal.entities' => array('label' => 'Юридические лица', 'url' => $this->createUrl('/legal/entities/')),
+			'legal.Counterparties_groups' => array('label' => 'Группы контрагентов', 'url' => $this->createUrl('/legal/counterparties_groups/')),
+			'legal.Banks' => array('label' => 'Банки', 'url' => $this->createUrl('/legal/banks/')),
 		);
 		if (isset($items[$this->menu_elem])) {
 			$items[$this->menu_elem]['active'] = true;

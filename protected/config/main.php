@@ -7,7 +7,7 @@
 // CWebApplication properties can be configured here.
 return array(
 	'basePath'=>dirname(__FILE__).DIRECTORY_SEPARATOR.'..',
-	'name'=>'TWT',
+	'name'=>'TWT Consult',
 	'sourceLanguage' => 'root',
 	'language' => 'ru',
 
@@ -27,7 +27,7 @@ return array(
 				'bootstrap.gii',
 			),
 			'class'=>'system.gii.GiiModule',
-			'password'=>'Enter Your Password Here',
+			'password'=>'1',
 			// If removed, Gii defaults to localhost only. Edit carefully to taste.
 			'ipFilters'=>array('127.0.0.1','::1', '192.168.0.*'),
 		),
@@ -44,7 +44,8 @@ return array(
 		),
 		'soap' => array(
 			'class'     => 'SoapComponent',
-			'wsdl'      => 'http://192.168.0.101/InfoBase/ws/twt?wsdl',
+			//'wsdl'      => 'http://192.168.0.101/InfoBase/ws/twt?wsdl',
+			'wsdl'      => 'http://80.250.210.238/TWTbackend/ws/twt?wsdl',
 			'connection_options' => array(
 				'login'     => 'test',
                 'password'  => '',
