@@ -105,15 +105,22 @@ class SoapComponent extends CApplicationComponent
 	 *
 	 * @return mixed
 	 */
-	protected function soap_call($name, $params = NULL) {
+	protected function soap_call($name, $params = array()) {
 		if ($this->soap_client === NULL) {
 			$this->delay_init();
 		}
 		if ($this->soap_method_exists($name)) {
 			try {
-				if (method_exists($this->soap_client, $name)) $ret = call_user_func_array(array($this->soap_client, $name), $params);
-				else $ret = $this->soap_client->__soapCall($name, $params);
-				if (YII_DEBUG) Yii::log($name.PHP_EOL.print_r($ret, 1), CLogger::LEVEL_INFO, 'soap');
+				if (method_exists($this->soap_client, $name)) {
+					$ret = call_user_func_array(array($this->soap_client, $name), $params);
+				} else {
+					if (YII_DEBUG) {
+						defined('JSON_UNESCAPED_UNICODE') or define('JSON_UNESCAPED_UNICODE', 0);
+						Yii::log('try SOAP function ' . htmlspecialchars($name) . ' with args: ' . json_encode($params, JSON_UNESCAPED_UNICODE) , CLogger::LEVEL_INFO, 'soap');
+					}
+					$ret = $this->soap_client->__soapCall($name, $params);
+				}
+				if (YII_DEBUG) Yii::log('function ' . $name . 'data: ' . PHP_EOL . print_r($ret, 1), CLogger::LEVEL_INFO, 'soap');
 				return $ret;
 			} catch (Exception $e) {
 				Yii::log($e->getCode().'(at file '.$e->getFile().':'.$e->getLine().'): '.$e->getMessage(),CLogger::LEVEL_ERROR, 'soap');

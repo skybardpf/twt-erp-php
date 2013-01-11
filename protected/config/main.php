@@ -44,7 +44,8 @@ return array(
 		),
 		'soap' => array(
 			'class'     => 'SoapComponent',
-			//'wsdl'      => 'http://192.168.0.101/InfoBase/ws/twt?wsdl',
+//			'wsdl'      => 'http://192.168.0.101/InfoBase/ws/twt?wsdl',
+//			'wsdl'      => 'http://192.168.0.101/testBase/ws/twt?wsdl',
 			'wsdl'      => 'http://80.250.210.238/TWTbackend/ws/twt?wsdl',
 			'connection_options' => array(
 				'login'     => 'test',
