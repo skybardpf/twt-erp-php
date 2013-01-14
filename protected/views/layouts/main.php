@@ -22,33 +22,33 @@ Yii::app()->clientScript->registerCssFile(CHtml::asset(Yii::app()->basePath.'/..
 </div>
 <div class="container">
 	<div class="row">
-		<div class="span3">
-			<?php
-			$items = array(
-				'main'           => array('label' => 'Главная', 'url' => Yii::app()->homeUrl),
-				'legal.entities' => array('label' => 'Юридические лица', 'url' => $this->createUrl('/legal/entities/')),
-				//'legal.Counterparties_groups' => array('label' => 'Группы контрагентов', 'url' => $this->createUrl('/legal/counterparties_groups/')),
-				//'legal.Banks' => array('label' => 'Банки', 'url' => $this->createUrl('/legal/banks/')),
-				'legal.Countries' => array('label' => 'Страны юрисдикции', 'url' => $this->createUrl('/legal/countries/')),
-			);
-			if (isset($items[$this->menu_elem])) {
-				$items[$this->menu_elem]['active'] = true;
-			}
-			$this->widget('bootstrap.widgets.TbMenu', array(
+	<div class="span3">
+		<?php
+		$items = array(
+			'main'           => array('label' => 'Главная', 'url' => Yii::app()->homeUrl),
+			'legal.entities' => array('label' => 'Юридические лица', 'url' => $this->createUrl('/legal/entities/')),
+			//'legal.Counterparties_groups' => array('label' => 'Группы контрагентов', 'url' => $this->createUrl('/legal/counterparties_groups/')),
+			//'legal.Banks' => array('label' => 'Банки', 'url' => $this->createUrl('/legal/banks/')),
+			'legal.Countries' => array('label' => 'Страны юрисдикции', 'url' => $this->createUrl('/legal/countries/')),
+		);
+		if (isset($items[$this->menu_elem])) {
+			$items[$this->menu_elem]['active'] = true;
+		}
+		$this->widget('bootstrap.widgets.TbMenu', array(
 				'type'      => 'tabs', // '', 'tabs', 'pills' (or 'list')
-				'stacked'   => true, // whether this is a stacked menu
-				'items'     => array_values($items)
-			));
-			unset($items); ?>
-		</div>
+			'stacked'   => true, // whether this is a stacked menu
+			'items'     => array_values($items)
+		));
+		unset($items); ?>
+	</div>
 		<div class="span9">
 			<?php
 			/*$this->widget('bootstrap.widgets.TbBreadcrumbs', array(
 				'links' => $this->breadcrumbs
 			));*/?>
-			<?=$content?>
-		</div>
+		<?=$content?>
 	</div>
+</div>
 </div>
 
 </body>

@@ -115,8 +115,8 @@ class SoapComponent extends CApplicationComponent
 					$ret = call_user_func_array(array($this->soap_client, $name), $params);
 				} else {
 					if (YII_DEBUG) {
-						defined('JSON_UNESCAPED_UNICODE') or define('JSON_UNESCAPED_UNICODE', 0);
-						Yii::log('try SOAP function ' . htmlspecialchars($name) . ' with args: ' . json_encode($params, JSON_UNESCAPED_UNICODE) , CLogger::LEVEL_INFO, 'soap');
+						//defined('JSON_UNESCAPED_UNICODE') or define('JSON_UNESCAPED_UNICODE', 0);
+						Yii::log('try SOAP function ' . htmlspecialchars($name) . ' with args: ' . (defined('JSON_UNESCAPED_UNICODE') ? json_encode($params, JSON_UNESCAPED_UNICODE) : json_encode($params)), CLogger::LEVEL_INFO, 'soap');
 					}
 					$ret = $this->soap_client->__soapCall($name, $params);
 				}
