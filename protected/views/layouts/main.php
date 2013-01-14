@@ -22,7 +22,7 @@ Yii::app()->clientScript->registerCssFile(CHtml::asset(Yii::app()->basePath.'/..
 </div>
 <div class="container">
 	<div class="row">
-		<div class="span3">
+		<div class="span3 left-menu">
 			<?php
 			$items = array(
 				'main'           => array('label' => 'Главная', 'url' => Yii::app()->homeUrl),

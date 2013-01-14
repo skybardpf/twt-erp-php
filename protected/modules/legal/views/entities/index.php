@@ -6,7 +6,7 @@ $this->breadcrumbs=array(
 	'Юридические лица',
 );
 ?>
-<h2>Юридические лица <a class="btn btn-success" href="<?=$this->createUrl('add')?>">Добавить Юр.Лицо</a></h2>
+<h2>Юридические лица</h2>
 <?php
 if ($elements) {
 	/*$gridDataProvider = new CArrayDataProvider(array(
@@ -33,3 +33,5 @@ if ($elements) {
 	echo 'Ни одного Юридического лица не зарегистрировано.';
 }
 ?>
+
+<a class="btn btn-success" href="<?=$this->createUrl('add')?>">Добавить Юр.Лицо</a>
