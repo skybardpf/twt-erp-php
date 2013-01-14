@@ -13,39 +13,35 @@
 
 	<?=$form->errorSummary($model)?>
 
-	<div class="form-actions">
-		<?php
-		$buttons = $this->widget('bootstrap.widgets.TbButton', array(
+	<fieldset>
+		<?= $form->textFieldRow($model, 'full_name', array('class' => 'span6')); ?>
+		<?= $form->dropDownListRow($model, 'country', array('1' => 'one'), array('class' => 'span6')); ?>
+		<?= $form->checkBoxRow($model, 'resident'); ?>
+		<?= $form->dropDownListRow($model, 'type_no_res', array('1' => 'one'), array('class' => 'span6')); ?>
+		<?= $form->checkBoxRow($model, 'contragent'); ?>
+		<?= $form->dropDownListRow($model, 'group_name', array('1' => 'one'), array('class' => 'span6')); ?>
+		Сокращенное наименование (текст, обязательное);
+		<?= $form->textAreaRow($model, 'comment', array('class'=>'span6', 'rows'=>5)); ?>
+		<?= $form->textFieldRow($model, 'inn', array('class' => 'span6')); ?>
+		<?= $form->textFieldRow($model, 'kpp', array('class' => 'span6')); ?>
+		<?= $form->textFieldRow($model, 'ogrn', array('class' => 'span6')); ?>
+		<?= $form->textFieldRow($model, 'yur_address', array('class' => 'span6')); ?>
+		<?= $form->textFieldRow($model, 'fact_address', array('class' => 'span6')); ?>
+		<?= $form->textFieldRow($model, 'reg_nom', array('class' => 'span6')); ?>
+		<?= $form->textFieldRow($model, 'sert_nom', array('class' => 'span6')); ?>
+		<?= $form->textFieldRow($model, 'sert_date', array('class' => 'span6')); ?>
+		<?= $form->textFieldRow($model, 'vat_nom', array('class' => 'span6')); ?>
+		<?= $form->textFieldRow($model, 'profile', array('class' => 'span6')); ?>
+	</fieldset>
+	<div class="control-group ">
+		<div class="controls">
+			<?=$this->widget('bootstrap.widgets.TbButton', array(
 				'buttonType' => 'submit',
 				'type' => 'primary',
-				'label'=> (!$model->getprimaryKey() ? 'Добавить' : 'Сохранить')), true
-		);
-		echo $buttons;
-		?>
+				'label'=> (!$model->getprimaryKey() ? 'Добавить' : 'Сохранить'))
+		);?>
+		</div>
 	</div>
-
-	<fieldset>
-		<?= $form->textFieldRow($model, 'full_name', array('class' => 'input-xxlarge')); ?>
-		<?= $form->dropDownListRow($model, 'country', array('1' => 'one')); ?>
-		<?= $form->checkBoxRow($model, 'resident'); ?>
-		<?= $form->dropDownListRow($model, 'type_no_res', array('1' => 'one')); ?>
-		<?= $form->checkBoxRow($model, 'contragent'); ?>
-		<?= $form->dropDownListRow($model, 'group_name', array('1' => 'one')); ?>
-		Сокращенное наименование (текст, обязательное);
-		<?= $form->textAreaRow($model, 'comment', array('class'=>'span8', 'rows'=>5)); ?>
-		<?= $form->textFieldRow($model, 'inn', array('class' => 'input-xxlarge')); ?>
-		<?= $form->textFieldRow($model, 'kpp', array('class' => 'input-xxlarge')); ?>
-		<?= $form->textFieldRow($model, 'ogrn', array('class' => 'input-xxlarge')); ?>
-		<?= $form->textFieldRow($model, 'yur_address', array('class' => 'input-xxlarge')); ?>
-		<?= $form->textFieldRow($model, 'fact_address', array('class' => 'input-xxlarge')); ?>
-		<?= $form->textFieldRow($model, 'reg_nom', array('class' => 'input-xxlarge')); ?>
-		<?= $form->textFieldRow($model, 'sert_nom', array('class' => 'input-xxlarge')); ?>
-		<?= $form->textFieldRow($model, 'sert_date', array('class' => 'input-xxlarge')); ?>
-		<?= $form->textFieldRow($model, 'vat_nom', array('class' => 'input-xxlarge')); ?>
-		<?= $form->textFieldRow($model, 'profile', array('class' => 'input-xxlarge')); ?>
-	</fieldset>
-
-	<div class="form-actions"><?=$buttons?></div>
 
 	<?php $this->endWidget(); ?>
 

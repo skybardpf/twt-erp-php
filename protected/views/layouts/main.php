@@ -13,35 +13,41 @@ Yii::app()->clientScript->registerCssFile(CHtml::asset(Yii::app()->basePath.'/..
 </head>
 
 <body>
-<div class="row"><div class="span12 offset2"><h1><?= Yii::app()->name?></h1></div></div>
-<div clas="container-fluid">
-	<div class="span3">
-		<?php
-		$items = array(
-			'main'           => array('label' => 'Главная', 'url' => Yii::app()->homeUrl),
-			'legal.entities' => array('label' => 'Юридические лица', 'url' => $this->createUrl('/legal/entities/')),
-			//'legal.Counterparties_groups' => array('label' => 'Группы контрагентов', 'url' => $this->createUrl('/legal/counterparties_groups/')),
-			//'legal.Banks' => array('label' => 'Банки', 'url' => $this->createUrl('/legal/banks/')),
-			'legal.Countries' => array('label' => 'Страны юрисдикции', 'url' => $this->createUrl('/legal/countries/')),
-		);
-		if (isset($items[$this->menu_elem])) {
-			$items[$this->menu_elem]['active'] = true;
-		}
-		$this->widget('bootstrap.widgets.TbMenu', array(
-			'type'      => 'pills', // '', 'tabs', 'pills' (or 'list')
-			'stacked'   => true, // whether this is a stacked menu
-			'items'     => array_values($items)
-		));
-		unset($items); ?>
-	</div>
-	<div class="span12">
-		<div>
-			<?php
-			$this->widget('bootstrap.widgets.TbBreadcrumbs', array(
-				'links' => $this->breadcrumbs
-			));?>
+<div class="container">
+	<div class="navbar">
+		<div class="navbar-inner">
+			<a class="brand" href="<?=Yii::app()->homeUrl?>"><?=Yii::app()->name?></a>
 		</div>
-		<?=$content?>
+	</div>
+</div>
+<div class="container">
+	<div class="row">
+		<div class="span3">
+			<?php
+			$items = array(
+				'main'           => array('label' => 'Главная', 'url' => Yii::app()->homeUrl),
+				'legal.entities' => array('label' => 'Юридические лица', 'url' => $this->createUrl('/legal/entities/')),
+				//'legal.Counterparties_groups' => array('label' => 'Группы контрагентов', 'url' => $this->createUrl('/legal/counterparties_groups/')),
+				//'legal.Banks' => array('label' => 'Банки', 'url' => $this->createUrl('/legal/banks/')),
+				'legal.Countries' => array('label' => 'Страны юрисдикции', 'url' => $this->createUrl('/legal/countries/')),
+			);
+			if (isset($items[$this->menu_elem])) {
+				$items[$this->menu_elem]['active'] = true;
+			}
+			$this->widget('bootstrap.widgets.TbMenu', array(
+				'type'      => 'tabs', // '', 'tabs', 'pills' (or 'list')
+				'stacked'   => true, // whether this is a stacked menu
+				'items'     => array_values($items)
+			));
+			unset($items); ?>
+		</div>
+		<div class="span9">
+			<?php
+			/*$this->widget('bootstrap.widgets.TbBreadcrumbs', array(
+				'links' => $this->breadcrumbs
+			));*/?>
+			<?=$content?>
+		</div>
 	</div>
 </div>
 
