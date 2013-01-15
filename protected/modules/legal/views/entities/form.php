@@ -15,11 +15,11 @@
 
 	<fieldset>
 		<?= $form->textFieldRow($model, 'full_name', array('class' => 'span6')); ?>
-		<?= $form->dropDownListRow($model, 'country', array('1' => 'one'), array('class' => 'span6')); ?>
+		<?= $form->dropDownListRow($model, 'country', array('' => 'не заданно'), array('class' => 'span6')); ?>
 		<?= $form->checkBoxRow($model, 'resident'); ?>
-		<?= $form->dropDownListRow($model, 'type_no_res', array('1' => 'one'), array('class' => 'span6')); ?>
+		<?= $form->dropDownListRow($model, 'type_no_res', array('' => 'не заданно'), array('class' => 'span6')); ?>
 		<?= $form->checkBoxRow($model, 'contragent'); ?>
-		<?= $form->dropDownListRow($model, 'group_name', array('1' => 'one'), array('class' => 'span6')); ?>
+		<?= $form->dropDownListRow($model, 'group_name', array('' => 'не заданно'), array('class' => 'span6')); ?>
 		Сокращенное наименование (текст, обязательное);
 		<?= $form->textAreaRow($model, 'comment', array('class'=>'span6', 'rows'=>5)); ?>
 		<?= $form->textFieldRow($model, 'inn', array('class' => 'span6')); ?>

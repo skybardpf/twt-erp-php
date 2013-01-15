@@ -120,7 +120,7 @@ class SoapComponent extends CApplicationComponent
 					}
 					$ret = $this->soap_client->__soapCall($name, $params);
 				}
-				if (YII_DEBUG) Yii::log('function ' . $name . 'data: ' . PHP_EOL . print_r($ret, 1), CLogger::LEVEL_INFO, 'soap');
+				if (YII_DEBUG) Yii::log('function ' . $name . ' data: ' .(defined('JSON_UNESCAPED_UNICODE') ? json_encode($ret, JSON_UNESCAPED_UNICODE) : json_encode($ret)), CLogger::LEVEL_INFO, 'soap');
 				return $ret;
 			} catch (Exception $e) {
 				Yii::log($e->getCode().'(at file '.$e->getFile().':'.$e->getLine().'): '.$e->getMessage(),CLogger::LEVEL_ERROR, 'soap');

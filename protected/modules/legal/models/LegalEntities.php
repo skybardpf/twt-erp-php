@@ -55,14 +55,8 @@ class LegalEntities extends SOAPModel {
 		if ($pk = $this->getprimaryKey()) {
 			$this->id = '1'.$pk;
 		}
-		$attributes = $this->attributes;
-		unset($attributes['name']);
-		unset($attributes['deleted']);
-		$data = SoapComponent::getStructureElement($attributes);
-		CVarDumper::dump($data);
-		$this->SOAP->saveLegalEntity(SoapComponent::getStructureElement($this->attributes));
-		exit;
-		return false;
+		$ret = $this->SOAP->saveLegalEntity(array('data' => SoapComponent::getStructureElement($this->attributes)));
+		return $ret->return == 'false' ? false : ($ret ? true : false);
 	}
 
 	/**
@@ -145,7 +139,7 @@ class LegalEntities extends SOAPModel {
 		// will receive user inputs.
 		return array(
 			array('full_name, country', 'required'),
-			array('contragent, type_no_res, group_name, comment, inn, kpp, ogrn, yur_address, fact_address, reg_nom, sert_nom, sert_date, vat_nom, profile', 'safe'),
+			array('resident, contragent, type_no_res, group_name, comment, inn, kpp, ogrn, yur_address, fact_address, reg_nom, sert_nom, sert_date, vat_nom, profile', 'safe'),
 			array('show', 'numerical', 'integerOnly'=>true),
 			// The following rule is used by search().
 			// Please remove those attributes that should not be searched.
