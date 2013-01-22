@@ -26,6 +26,8 @@
  */
 class LegalEntities extends SOAPModel {
 
+	public $attributes4Save = array('id', 'name', 'kpp', 'ogrn', 'yur_address', 'fact_address');
+
 	/**
 	 * @static
 	 *
@@ -55,23 +57,42 @@ class LegalEntities extends SOAPModel {
 		if ($pk = $this->getprimaryKey()) {
 			$this->id = '1'.$pk;
 		}
-		$ret = $this->SOAP->saveLegalEntity(array('data' => SoapComponent::getStructureElement($this->attributes)));
-		return $ret->return == 'false' ? false : ($ret ? true : false);
+
+		$attrs4save = array();
+		foreach ($this->attributes4Save as $field_name) {
+			if (array_key_exists($field_name, $this->attributes)) {
+				$attrs4save[$field_name] = $this->attributes[$field_name];
+			}
+		}
+
+		$ret = $this->SOAP->saveLegalEntity(array('data' => SoapComponent::getStructureElement($attrs4save)));
+
+		if ($ret->return == 'false'  or $ret->return == false) {
+			return false;
+		} else {
+			if (empty($this->id)) {
+				$this->id = $ret->return;
+			}
+			return true;
+		}
 	}
 
 	/**
 	 * Get list of LegalEntities
 	 *
+	 * @param array $filter
+	 * @param array $sort
 	 * @return array
 	 */
-	public function findAll() {
+	public function findAll($filter = array(), $sort = array()) {
 		$ret = $this->SOAP->listLegalEntities(array(
 				'filters' => SoapComponent::getStructureElement(array(
-					'yurlica' => '*', 'id' => '*'
-				)),
+					'yurlica' => '*',
+//					'id' => '*'
+				) + $filter),
 				'sort' => SoapComponent::getStructureElement(array(
 					'id' => 'asc'
-				))
+				) + $sort)
 			)
 		);
 		return SoapComponent::parseReturn($ret, get_class($this));
@@ -103,10 +124,10 @@ class LegalEntities extends SOAPModel {
 	{
 		return array(
 			'id'            => '#',
-			'name'          => 'Название',
+			'name'          => 'Сокращенное наименование',
 			'full_name'     => 'Полное имя',
 			'country'       => 'Страна юрисдикции',
-			'resident'      => 'Не является резидентом РФ',
+			'resident'      => 'Резидент РФ',
 			'type_no_res'   => 'Тип нерезидента',
 			'contragent'    => 'Контрагент',
 			'group_name'    => 'Группа контрагентов',
@@ -123,7 +144,6 @@ class LegalEntities extends SOAPModel {
 			'profile'       => 'Основной вид деятельности',
 			'deleted'       => 'Помечен на удаление'
 			/*
-Сокращенное наименование (текст, обязательное);
 Английское наименование (текст);
 */
 		);
@@ -138,7 +158,7 @@ class LegalEntities extends SOAPModel {
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('full_name, country', 'required'),
+			array('name, full_name, country', 'required'),
 			array('resident, contragent, type_no_res, group_name, comment, inn, kpp, ogrn, yur_address, fact_address, reg_nom, sert_nom, sert_date, vat_nom, profile', 'safe'),
 			array('show', 'numerical', 'integerOnly'=>true),
 			// The following rule is used by search().
@@ -146,13 +166,12 @@ class LegalEntities extends SOAPModel {
 			array('id, title, show', 'safe', 'on'=>'search'),
 
 			/*
-			Сокращенное наименование (текст, обязательное);
 			Английское наименование (текст);
 			*/
 
 			/*
 			Страна юрисдикции (выбор из справочника, обязательное);
-			Не является резидентом РФ (флаг: да или нет);
+			Резидент РФ (флаг: да или нет);
 			Контрагент (флаг: да – сторонее лицо или нет – собственное; обязательное);
 			Тип нерезидента (выбор из списка);
 			Группа контрагентов (выбор из справочника);

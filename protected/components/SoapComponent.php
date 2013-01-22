@@ -22,15 +22,22 @@ class SoapComponent extends CApplicationComponent
 	public $wsdl = NULL;
 
 	/**
-	 * @static generate specialized "structure" array(array('Поле' => key, 'Значение' => value), ...)
+	 * generate specialized "structure" array(array('Поле' => key, 'Значение' => value), ...)
+	 * Вторым значением принимает массив опций, для конвертации:
+	 * convert_boolean — если true, то преобразовывает булевые значения true и false в строки "true" и "false", по-умолчанию true
 	 *
+	 * @static
 	 * @param array $properties
-	 *
+	 * @param array $options
 	 * @return array
 	 */
-	static public function getStructureElement(array $properties = array()) {
+	static public function getStructureElement(array $properties = array(), $options = array()) {
 		$ret = array();
+		$options += array('convert_boolean' => true);
 		foreach ($properties as $key => $val) {
+			if ($options['convert_boolean'] && is_bool($val)) {
+				$val = $val ? 'true' : 'false';
+			}
 			$ret[] = array('Поле' => $key, 'Значение' => $val);
 		}
 		return $ret;
@@ -52,11 +59,13 @@ class SoapComponent extends CApplicationComponent
 			if (!empty($data[$key])) {
 				if (is_array($data[$key])) {
 					foreach ($data[$key] as $elem) {
+						/** @var $object SOAPModel */
 						$object = new $class();
 						$object->setAttributes((array)$elem, false);
 						$ret[] = $object;
 					}
 				} else {
+					/** @var $object SOAPModel */
 					$object = new $class();
 					$object->setAttributes((array)$data[$key], false);
 					$ret[] = $object;
@@ -73,6 +82,7 @@ class SoapComponent extends CApplicationComponent
 
 		$this->_connection_options = array_merge($this->_connection_options, $this->connection_options);
 		$this->soap_client = new SoapClient($this->wsdl, $this->_connection_options);
+		Yii::log('Connected to '.$this->wsdl, CLogger::LEVEL_INFO, 'soap');
 	}
 
 	public function cache($duration, $dependency = NULL) {
@@ -101,8 +111,9 @@ class SoapComponent extends CApplicationComponent
 
 	/**
 	 * @param $name
-	 * @param $params
+	 * @param array $params
 	 *
+	 * @throws CHttpException
 	 * @return mixed
 	 */
 	protected function soap_call($name, $params = array()) {

@@ -14,6 +14,7 @@
 	<?=$form->errorSummary($model)?>
 
 	<fieldset>
+		<?= $form->textFieldRow($model, 'name', array('class' => 'span6')); ?>
 		<?= $form->textFieldRow($model, 'full_name', array('class' => 'span6')); ?>
 		<?= $form->dropDownListRow($model, 'country', array('' => 'не заданно'), array('class' => 'span6')); ?>
 		<?= $form->checkBoxRow($model, 'resident'); ?>

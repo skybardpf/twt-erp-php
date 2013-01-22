@@ -42,7 +42,7 @@ class EntitiesController extends Controller
 
 	public function actionIndex()
 	{
-		$entities = LegalEntities::model()->findAll();
+		$entities = LegalEntities::model()->findAll(array('deleted' => false));
 		$this->render('index', array('elements' => $entities));
 	}
 
