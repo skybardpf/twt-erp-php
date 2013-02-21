@@ -43,7 +43,7 @@ class Banks extends SOAPModel {
 	 * @return array
 	 */
 	public function findAll() {
-		$ret = $this->SOAP->listBanks(array());
+		$ret = $this->SOAP->listBanks();
 		$return = array();
 		/*if ($ret->return) {
 			$ret = (array)$ret->return;

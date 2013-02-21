@@ -52,27 +52,19 @@ class SoapComponent extends CApplicationComponent
 	 *
 	 * @return array
 	 */
-	static public function parseReturn($data, $class, $key = 'Yur') {
-		$ret = array();
-		if ($data->return) {
-			$data = (array)$data->return;
-			if (!empty($data[$key])) {
-				if (is_array($data[$key])) {
-					foreach ($data[$key] as $elem) {
-						/** @var $object SOAPModel */
-						$object = new $class();
-						$object->setAttributes((array)$elem, false);
-						$ret[] = $object;
-					}
-				} else {
-					/** @var $object SOAPModel */
-					$object = new $class();
-					$object->setAttributes((array)$data[$key], false);
-					$ret[] = $object;
-				}
+	static public function parseReturn($data, $json = true) {
+		if (is_string($data->return) && strpos($data->return, 'error') !== false) {
+			throw new Exception($data->return);
+		} else {
+			if (is_string($data->return) && $json) {
+				$data = json_decode($data->return, true);
+			} elseif (!$json) {
+				$data = $data->return;
+			} else {
+				$data = null;
 			}
 		}
-		return $ret;
+		return $data;
 	}
 
 	protected function delay_init() {

@@ -5,13 +5,8 @@ $this->breadcrumbs=array(
 	$this->module->id,
 );
 ?>
-<h1><?php echo $this->uniqueId . '/' . $this->action->id; ?></h1>
-
-<p>
-This is the view content for action "<?php echo $this->action->id; ?>".
-The action belongs to the controller "<?php echo get_class($this); ?>"
-in the "<?php echo $this->module->id; ?>" module.
-</p>
-<p>
-You may customize this page by editing <tt><?php echo __FILE__; ?></tt>
-</p>
+<form method="post">
+<label>Название метода: <input type="text" name="method" value="<?=!empty($data['method'])?$data['method']:''?>"></label><br/>
+<label>Аргументы: <textarea rows="10" cols="60" name="args"><?=!empty($data['args'])?$data['args']:''?></textarea></label><br/>
+<input type="submit" value="Попробовать">
+</form>
