@@ -30,6 +30,7 @@ Yii::app()->clientScript->registerCssFile(CHtml::asset(Yii::app()->basePath.'/..
 				//'legal.Counterparties_groups' => array('label' => 'Группы контрагентов', 'url' => $this->createUrl('/legal/counterparties_groups/')),
 				'legal.Banks' => array('label' => 'Банки', 'url' => $this->createUrl('/legal/banks/')),
 				'legal.Currencies' => array('label' => 'Валюты', 'url' => $this->createUrl('/legal/currencies/')),
+				'legal.Users' => array('label' => 'Пользователи', 'url' => $this->createUrl('/legal/users/')),
 				'legal.Countries' => array('label' => 'Страны юрисдикции', 'url' => $this->createUrl('/legal/countries/')),
 			);
 			if (isset($items[$this->menu_elem])) {
