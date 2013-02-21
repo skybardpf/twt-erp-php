@@ -28,15 +28,7 @@ class Currencies extends SOAPModel {
 	public function findAll() {
 		$ret = $this->SOAP->listCurrencies();
 		$ret = SoapComponent::parseReturn($ret);
-		$return = array();
-		if (is_array($ret)) {
-			foreach ($ret as $elem) {
-				$obj = new Currencies();
-				$obj->setAttributes($elem, false);
-				$return[] = $obj;
-			}
-		}
-		return $return;
+		return $this->publish_list($ret, __CLASS__);
 	}
 
 	/**

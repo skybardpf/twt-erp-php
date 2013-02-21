@@ -136,4 +136,20 @@ abstract class SOAPModel extends CModel {
 	public function getprimaryKey() {
 		return $this->id;
 	}
+
+	public function publish_elem($data, $class) {
+		$obj = new $class;
+		$obj->setAttributes($data, false);
+		return $obj;
+	}
+
+	public function publish_list($data, $class) {
+		$return = array();
+		if (is_array($data)) {
+			foreach ($data as $elem) {
+				$return[] = $this->publish_elem($elem, $class);
+			}
+		}
+		return $return;
+	}
 }

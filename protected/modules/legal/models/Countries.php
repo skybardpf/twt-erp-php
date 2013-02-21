@@ -26,7 +26,8 @@ class Countries extends SOAPModel {
 	 */
 	public function findAll() {
 		$ret = $this->SOAP->listCountries();
-		return SoapComponent::parseReturn($ret, get_class($this));
+		$ret = SoapComponent::parseReturn($ret);
+		return $this->publish_list($ret, __CLASS__);
 	}
 
 	/**
