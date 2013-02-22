@@ -1,11 +1,11 @@
 <?php
-/* @var $this BanksController */
+/* @var $this Counterparties_groupsController */
 
 $this->breadcrumbs=array(
-	'Банки',
+	'Статьи движения денежных стредств',
 );
 ?>
-<h2>Банки</h2>
+<h2>Статьи движения денежных стредств</h2>
 <div>
 	<?php
 	if ($elements) {
@@ -21,12 +21,12 @@ $this->breadcrumbs=array(
 			'dataProvider' => $gridDataProvider,
 			'template'=>"{items}",
 			'columns'=>array(
-				array('name'=>'id', 'header'=>'#'),
-				array('name'=>'name', 'header'=>'Название', 'type' => 'raw', 'value' => 'CHtml::link($data->name, Yii::app()->controller->createUrl("show", array("id" => $data->id)))'),
+				array('name' => 'id', 'header'=>'#'),
+				array('name'=>'name', 'header'=>'Название'),
 			),
 		));
 	} else {
-		echo 'Ни одного банка не зарегистрировано.';
+		echo 'Ни одной статьи движения денежных стредств не зарегистрировано.';
 	}
 	?>
 </div>

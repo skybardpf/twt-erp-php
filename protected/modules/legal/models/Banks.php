@@ -3,26 +3,19 @@
  * User: Forgon
  * Date: 11.01.13
  * @property int $id
- * @property string $full_name
- * @property string $name
+ * @property string $phone
+ * @property string $swift
  * @property string $country
- * @property string $resident
- * @property string $type_no_res
- * @property string $contragent
- * @property string $group_name
- * @property string $comment
- * @property string $inn
- * @property string $kpp
- * @property string $ogrn
- * @property string $yur_address
- * @property string $fact_address
- * @property string $reg_nom
- * @property string $sert_nom
- * @property string $vat_nom
- * @property string $profile
- * @property string $deleted
+ * @property string $address
+ * @property string $bik
+ * @property string $city
+ * @property string $cor_sh
+ * @property string $name
  *
+ * @property string $deleted
  */
+
+
 class Banks extends SOAPModel {
 
 	/**
@@ -44,25 +37,8 @@ class Banks extends SOAPModel {
 	 */
 	public function findAll() {
 		$ret = $this->SOAP->listBanks();
-		$return = array();
-		/*if ($ret->return) {
-			$ret = (array)$ret->return;
-			if (!empty($ret['ЮрЛицо'])) {
-				$return = array();
-				if (is_array($ret['ЮрЛицо'])) {
-					foreach ($ret['ЮрЛицо'] as $elem) {
-						$object = new self();
-						$object->setAttributes((array)$elem, false);
-						$return[] = $object;
-					}
-				} else {
-					$object = new self();
-					$object->setAttributes((array)$ret['ЮрЛицо'], false);
-					$return[] = $object;
-				}
-			}
-		}*/
-		return $return;
+		$ret = SoapComponent::parseReturn($ret);
+		return $this->publish_list($ret, __CLASS__);
 	}
 
 	/**

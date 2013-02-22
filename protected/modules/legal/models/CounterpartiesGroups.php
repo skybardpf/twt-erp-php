@@ -5,7 +5,9 @@
  *
  * @property int $id
  * @property string $name
- * @property int $pid
+ * @property int $parent
+ * @property int $deleted
+ * @property int $level
  */
 class CounterpartiesGroups extends SOAPModel {
 
@@ -26,13 +28,13 @@ class CounterpartiesGroups extends SOAPModel {
 	 *
 	 * @return bool
 	 */
-	/*public function delete() {
+	public function delete() {
 		if ($pk = $this->getprimaryKey()) {
-			$ret = $this->SOAP->deleteLegalEntity(array('id' => '1'.$pk));
+			$ret = $this->SOAP->deleteCounterpartiesGroup(array('id' => $pk));
 			return $ret->return;
 		}
 		return false;
-	}*/
+	}
 
 	/*public function save() {
 		if ($pk = $this->getprimaryKey()) {
@@ -54,26 +56,12 @@ class CounterpartiesGroups extends SOAPModel {
 	 * @return array
 	 */
 	public function findAll() {
-		$ret = $this->SOAP->listCounterpartiesGroups();
-		$return = array();
-		/*if ($ret->return) {
-			$ret = (array)$ret->return;
-			if (!empty($ret['ЮрЛицо'])) {
-				$return = array();
-				if (is_array($ret['ЮрЛицо'])) {
-					foreach ($ret['ЮрЛицо'] as $elem) {
-						$object = new self();
-						$object->setAttributes((array)$elem, false);
-						$return[] = $object;
-					}
-				} else {
-					$object = new self();
-					$object->setAttributes((array)$ret['ЮрЛицо'], false);
-					$return[] = $object;
-				}
-			}
-		}*/
-		return $return;
+		$filters = SoapComponent::getStructureElement($this->where);
+		if (!$filters) $filters = array(array());
+		$request = array('filters' => $filters, 'sort' => array($this->order));
+		$ret = $this->SOAP->listCounterpartiesGroups($request);
+		$ret = SoapComponent::parseReturn($ret);
+		return $this->publish_list($ret, __CLASS__);
 	}
 
 	/**
@@ -84,15 +72,21 @@ class CounterpartiesGroups extends SOAPModel {
 	 * @internal param array $filter
 	 */
 	public function findByPk($id) {
-		$ret = $this->SOAP->getLegalEntity(array('id' => '1'.$id));
-		if ($ret->return) {
-			$object = new self();
-			$object->setAttributes((array)$ret->return, false);
-			return $object;
-		}
-		return false;
+
+		$ret = $this->SOAP->getCounterpartiesGroups(array('id' => $id));
+		$ret = SoapComponent::parseReturn($ret);
+		return $this->publish_elem(current($ret), __CLASS__);
 	}
 
+	public function save() {
+		$attr = $this->attributes;
+		if (!$this->getprimaryKey()) unset($attr['id']);
+		if ($attr['parent'] === null) $attr['parent'] = '';
+		$data = array('data' => SoapComponent::getStructureElement($attr));
+		$ret = $this->SOAP->saveCounterpartiesGroup($data);
+		$ret = SoapComponent::parseReturn($ret);
+		return $ret;
+	}
 
 	/**
 	 * Returns the list of attribute names of the model.
@@ -103,8 +97,8 @@ class CounterpartiesGroups extends SOAPModel {
 		return array(
 			'id'            => '#',
 			'name'          => 'Название',
-			'pid'           => 'Полное имя',
-
+			'parent'        => 'Родительский элемент',
+			'deleted'       => 'Удален'
 		);
 	}
 
@@ -113,29 +107,24 @@ class CounterpartiesGroups extends SOAPModel {
 	 */
 	public function rules()
 	{
-		// NOTE: you should only define rules for those attributes that
-		// will receive user inputs.
 		return array(
-			array('full_name, country', 'required'),
-			array('contragent, type_no_res, group_name, comment, inn, kpp, ogrn, yur_address, fact_address, reg_nom, sert_nom, sert_date, vat_nom, profile', 'safe'),
-			array('show', 'numerical', 'integerOnly'=>true),
-			// The following rule is used by search().
-			// Please remove those attributes that should not be searched.
-			array('id, title, show', 'safe', 'on'=>'search'),
-
-			/*
-			Сокращенное наименование (текст, обязательное);
-			Английское наименование (текст);
-			*/
-
-			/*
-			Страна юрисдикции (выбор из справочника, обязательное);
-			Не является резидентом РФ (флаг: да или нет);
-			Контрагент (флаг: да – сторонее лицо или нет – собственное; обязательное);
-			Тип нерезидента (выбор из списка);
-			Группа контрагентов (выбор из справочника);
-
-		 */
+			array('name', 'required'),
+			array('deleted, parent', 'safe'),
+			array('id, name, deleted', 'safe', 'on'=>'search'),
 		);
+	}
+
+	/**
+	 * Returns list of available values for parent field (excluding self only)
+	 * @return array
+	 */
+	public function getParentValues() {
+		$elements = $this->where('deleted', false)->findAll();
+		$return   = array();
+		$pk = $this->getprimaryKey();
+		if ($elements) { foreach ($elements as $elem) {
+			if (!$pk || $elem->getprimaryKey() != $pk) $return[$elem->getprimaryKey()] = $elem->name;
+		} }
+		return $return;
 	}
 }

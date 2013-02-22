@@ -1,20 +1,19 @@
 <?php
 /**
  * User: Forgon
- * Date: 11.01.13
+ * Date: 21.02.13
  */
-
-class CountriesController extends Controller
+class DdsarticlesController extends Controller
 {
 	public function init()
 	{
-		$this->menu_elem = 'legal.Countries';
+		$this->menu_elem = 'legal.DDSArticles';
 		parent::init();
 	}
 
 	public function actionIndex()
 	{
-		$entities = Countries::model()->findAll();
+		$entities = DDSArticle::model()->findAll();
 		$this->render('index', array('elements' => $entities));
 	}
 }

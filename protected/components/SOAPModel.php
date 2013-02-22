@@ -11,6 +11,9 @@ abstract class SOAPModel extends CModel {
 	protected $SOAP = NULL;
 	protected $_attributes = array();
 
+	protected $where = array();
+	protected $order = array();
+
 	public static function model($className=__CLASS__) {
 		return new $className();
 	}
@@ -137,12 +140,27 @@ abstract class SOAPModel extends CModel {
 		return $this->id;
 	}
 
+	/**
+	 * Create object with data
+	 * @param $data
+	 * @param $class
+	 *
+	 * @return mixed
+	 */
 	public function publish_elem($data, $class) {
+		/** @var $obj SOAPModel */
 		$obj = new $class;
 		$obj->setAttributes($data, false);
 		return $obj;
 	}
 
+	/**
+	 * Create array of objects with data
+	 * @param $data
+	 * @param $class
+	 *
+	 * @return array
+	 */
 	public function publish_list($data, $class) {
 		$return = array();
 		if (is_array($data)) {
@@ -151,5 +169,32 @@ abstract class SOAPModel extends CModel {
 			}
 		}
 		return $return;
+	}
+
+	/**
+	 * Set ordering for finds
+	 * @param $param
+	 * @param string $dir
+	 *
+	 * @return SOAPModel
+	 */
+	public function order($param, $dir = 'asc') {
+		foreach ($this->order as $key => $order) {
+			if ($order['Поле'] == $param) unset($this->order[$key]); break;
+		}
+		$this->order[] = array('Поле' => $param, 'Значение' => $dir);
+		return $this;
+	}
+
+	/**
+	 * Set filtering for finds
+	 * @param $param
+	 * @param $value
+	 *
+	 * @return SOAPModel
+	 */
+	public function where($param, $value) {
+		$this->where[$param] = $value;
+		return $this;
 	}
 }

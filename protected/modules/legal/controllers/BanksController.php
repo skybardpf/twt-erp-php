@@ -25,8 +25,6 @@ class BanksController extends Controller
 	public function actionIndex()
 	{
 		$entities = Banks::model()->findAll();
-		CVarDumper::dump($entities);
-
 		$this->render('index', array('elements' => $entities));
 	}
 

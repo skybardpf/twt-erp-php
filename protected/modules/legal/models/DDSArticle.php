@@ -1,18 +1,20 @@
 <?php
 /**
  * User: Forgon
- * Date: 11.01.13
+ * Date: 21.02.13
  * @property int $id
  * @property string $name
-*/
-class Countries extends SOAPModel {
+ * @property string $deleted
+ *
+ */
+class DDSArticle extends SOAPModel {
 
 	/**
 	 * @static
 	 *
 	 * @param string $className
 	 *
-	 * @return Countries
+	 * @return LUser
 	 */
 	public static function model($className = __CLASS__)
 	{
@@ -20,12 +22,12 @@ class Countries extends SOAPModel {
 	}
 
 	/**
-	 * Get list of Banks
+	 * Get list of Currencies
 	 *
 	 * @return array
 	 */
 	public function findAll() {
-		$ret = $this->SOAP->listCountries();
+		$ret = $this->SOAP->listDDS();
 		$ret = SoapComponent::parseReturn($ret);
 		return $this->publish_list($ret, __CLASS__);
 	}
@@ -39,6 +41,7 @@ class Countries extends SOAPModel {
 		return array(
 			'id'            => '#',
 			'name'          => 'Название',
+			'deleted'       => 'Удален'
 		);
 	}
 
@@ -52,4 +55,5 @@ class Countries extends SOAPModel {
 			array('id, name', 'safe', 'on'=>'search'),
 		);
 	}
+
 }
