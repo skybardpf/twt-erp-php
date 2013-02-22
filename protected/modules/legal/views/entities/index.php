@@ -19,10 +19,9 @@ if ($elements) {
 	$this->widget('bootstrap.widgets.TbGridView', array(
 		'type'=>'striped',
 		'dataProvider' => $gridDataProvider,
-		'template'=>"{items}",
 		'columns'=>array(
 			array('name'=>'id', 'header'=>'#'),
-			array('name'=>'name', 'header'=>'Название', 'type' => 'raw', 'value' => 'CHtml::link($data->name, Yii::app()->controller->createUrl("show", array("id" => $data->id)))'),
+			array('name'=>'name', 'header'=>'Название'/*, 'type' => 'raw', 'value' => 'CHtml::link($data->name, Yii::app()->controller->createUrl("show", array("id" => $data->id)))'*/),
 			array(
 				'class'=>'bootstrap.widgets.TbButtonColumn',
 				//'htmlOptions'=>array('style'=>'width: 50px'),

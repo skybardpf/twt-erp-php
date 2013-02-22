@@ -3,13 +3,14 @@
  * User: Forgon
  * Date: 09.01.13
  * @property int $id
- * @property string $full_name
  * @property string $name
+ * @property string $eng_name
+ * @property string $full_name
  * @property string $country
  * @property string $resident
  * @property string $type_no_res
  * @property string $contragent
- * @property string $group_name
+ * @property string $parent
  * @property string $comment
  * @property string $inn
  * @property string $kpp
@@ -22,11 +23,17 @@
  * @property string $profile
  * @property string $deleted
  *
-
+ * @property array NonResidentValues
+ * @property array GroupNameValues
+ * @property array CountryValues
  */
 class LegalEntities extends SOAPModel {
 
 	public $attributes4Save = array('id', 'name', 'kpp', 'ogrn', 'yur_address', 'fact_address');
+
+	static protected $_nonResidentValues = array();
+	static protected $_groupNameValues = array();
+	static protected $_countryValues = array();
 
 	/**
 	 * @static
@@ -35,8 +42,7 @@ class LegalEntities extends SOAPModel {
 	 *
 	 * @return LegalEntities
 	 */
-	public static function model($className = __CLASS__)
-	{
+	public static function model($className = __CLASS__) {
 		return parent::model($className);
 	}
 
@@ -55,7 +61,7 @@ class LegalEntities extends SOAPModel {
 
 	public function save() {
 		if ($pk = $this->getprimaryKey()) {
-			$this->id = '1'.$pk;
+			$this->id = $pk;
 		}
 
 		$attrs4save = array();
@@ -65,7 +71,16 @@ class LegalEntities extends SOAPModel {
 			}
 		}
 
-		$ret = $this->SOAP->saveLegalEntity(array('data' => SoapComponent::getStructureElement($attrs4save)));
+		$attrs = $this->getAttributes();
+
+		if (!$this->getprimaryKey()) unset($attrs['id']); // New record
+		$attrs['contragent'] = (boolean)$this->contragent;
+		$attrs['resident']   = (boolean)$this->resident;
+		unset($attrs['deleted']);
+
+		$ret = $this->SOAP->saveLegalEntity(array('data' => SoapComponent::getStructureElement($attrs)));
+		$ret = SoapComponent::parseReturn($ret, false);
+		return $ret;
 
 		if ($ret->return == 'false'  or $ret->return == false) {
 			return false;
@@ -80,22 +95,16 @@ class LegalEntities extends SOAPModel {
 	/**
 	 * Get list of LegalEntities
 	 *
-	 * @param array $filter
-	 * @param array $sort
 	 * @return array
 	 */
-	public function findAll($filter = array(), $sort = array()) {
-		$ret = $this->SOAP->listLegalEntities(array(
-				'filters' => SoapComponent::getStructureElement(array(
-					'yurlica' => '*',
-//					'id' => '*'
-				) + $filter),
-				'sort' => SoapComponent::getStructureElement(array(
-					'id' => 'asc'
-				) + $sort)
-			)
-		);
-		return SoapComponent::parseReturn($ret, get_class($this));
+	public function findAll() {
+		$filters = SoapComponent::getStructureElement($this->where);
+		if (!$filters) $filters = array(array());
+		$request = array('filters' => $filters, 'sort' => array($this->order));
+
+		$ret = $this->SOAP->listLegalEntities($request);
+		$ret = SoapComponent::parseReturn($ret);
+		return $this->publish_list($ret, __CLASS__);
 	}
 
 	/**
@@ -106,77 +115,87 @@ class LegalEntities extends SOAPModel {
 	 * @internal param array $filter
 	 */
 	public function findByPk($id) {
-		$ret = $this->SOAP->getLegalEntity(array('id' => '1'.$id));
-		if ($ret->return) {
-			$object = new self();
-			$object->setAttributes((array)$ret->return, false);
-			return $object;
-		}
-		return false;
+		$ret = $this->SOAP->getLegalEntity(array('id' => $id));
+		$ret = SoapComponent::parseReturn($ret);
+		return $this->publish_elem(current($ret), __CLASS__);
 	}
-
 
 	/**
 	 * Returns the list of attribute names of the model.
 	 * @return array list of attribute names.
 	 */
-	public function attributeLabels()
-	{
+	public function attributeLabels() {
 		return array(
-			'id'            => '#',
-			'name'          => 'Сокращенное наименование',
-			'full_name'     => 'Полное имя',
-			'country'       => 'Страна юрисдикции',
-			'resident'      => 'Резидент РФ',
-			'type_no_res'   => 'Тип нерезидента',
-			'contragent'    => 'Контрагент',
-			'group_name'    => 'Группа контрагентов',
-            'comment'       => 'Комментарий',
-			'inn'           => 'ИНН',
-			'kpp'           => 'КПП',
-			'ogrn'          => 'ОГРН',
-			'yur_address'   => 'Адрес юридический',
-			'fact_address'  => 'Адрес фактический',
-			'reg_nom'       => 'Регистрационный номер',
-			'sert_nom'      => 'Номер сертификата о регистрации',
-			'sert_date'     => 'Дата сертификата о регистрации',
-			'vat_nom'       => 'VAT-номер',
-			'profile'       => 'Основной вид деятельности',
-			'deleted'       => 'Помечен на удаление'
-			/*
-Английское наименование (текст);
-*/
+			'id'            => '#',                                 // +
+			'name'          => 'Сокращенное наименование',          // +
+			'full_name'     => 'Полное имя',                        // +
+			'country'       => 'Страна юрисдикции',                 // + id
+			'resident'      => 'Резидент РФ',                       // + boolean
+			'type_no_res'   => 'Тип нерезидента',                   // + int
+			'contragent'    => 'Контрагент',                        // + boolean
+			'parent'        => 'Группа контрагентов',               // +
+            'comment'       => 'Комментарий',                       // +
+			'inn'           => 'ИНН',                               // +
+			'kpp'           => 'КПП',                               // +
+			'ogrn'          => 'ОГРН',                              // +
+			'yur_address'   => 'Адрес юридический',                 // +
+			'fact_address'  => 'Адрес фактический',                 // +
+			'reg_nom'       => 'Регистрационный номер',             // +
+			'sert_nom'      => 'Номер сертификата о регистрации',   // +
+			'sert_date'     => 'Дата сертификата о регистрации',    // +
+			'vat_nom'       => 'VAT-номер',                         // +
+			'profile'       => 'Основной вид деятельности',         // +
+			'eng_name'      => 'Английское наименование',           // +
+			'deleted'       => 'Помечен на удаление'                // +
 		);
 	}
 
-	// TODO rules
 	/**
 	 * @return array validation rules for model attributes.
 	 */
-	public function rules()
-	{
-		// NOTE: you should only define rules for those attributes that
-		// will receive user inputs.
+	public function rules() {
 		return array(
-			array('name, full_name, country', 'required'),
-			array('resident, contragent, type_no_res, group_name, comment, inn, kpp, ogrn, yur_address, fact_address, reg_nom, sert_nom, sert_date, vat_nom, profile', 'safe'),
-			array('show', 'numerical', 'integerOnly'=>true),
-			// The following rule is used by search().
-			// Please remove those attributes that should not be searched.
+			array('country, name, full_name', 'required'),
+			array('id, resident, type_no_res, contragent, parent, comment, inn, kpp, ogrn, yur_address, fact_address, reg_nom, sert_nom, sert_date, vat_nom, profile, eng_name', 'safe'),
+
 			array('id, title, show', 'safe', 'on'=>'search'),
-
-			/*
-			Английское наименование (текст);
-			*/
-
-			/*
-			Страна юрисдикции (выбор из справочника, обязательное);
-			Резидент РФ (флаг: да или нет);
-			Контрагент (флаг: да – сторонее лицо или нет – собственное; обязательное);
-			Тип нерезидента (выбор из списка);
-			Группа контрагентов (выбор из справочника);
-
-		 */
 		);
+	}
+
+	/**
+	 * Available non_resident types
+	 * @return array
+	 */
+	public function getNonResidentValues() {
+		if (!LegalEntities::$_nonResidentValues) {
+			$ret = $this->SOAP->listNonResidentsTypes();
+			$ret = SoapComponent::parseReturn($ret);
+			LegalEntities::$_nonResidentValues = $ret;
+		}
+		return LegalEntities::$_nonResidentValues;
+	}
+
+	/**
+	 * Available counteragent groups
+	 * @return array
+	 */
+	public function getGroupNameValues() {
+		if (!LegalEntities::$_groupNameValues) {
+			$values = CounterpartiesGroups::model()->getValues();
+			LegalEntities::$_groupNameValues = $values;
+		}
+		return LegalEntities::$_groupNameValues;
+	}
+
+	/**
+	 * Available countries
+	 * @return array
+	 */
+	public function getCountryValues() {
+		if (!LegalEntities::$_countryValues) {
+			$values = Countries::model()->getValues();
+			LegalEntities::$_countryValues = $values;
+		}
+		return LegalEntities::$_countryValues;
 	}
 }

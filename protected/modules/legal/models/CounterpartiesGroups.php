@@ -72,7 +72,6 @@ class CounterpartiesGroups extends SOAPModel {
 	 * @internal param array $filter
 	 */
 	public function findByPk($id) {
-
 		$ret = $this->SOAP->getCounterpartiesGroups(array('id' => $id));
 		$ret = SoapComponent::parseReturn($ret);
 		return $this->publish_elem(current($ret), __CLASS__);
@@ -81,7 +80,9 @@ class CounterpartiesGroups extends SOAPModel {
 	public function save() {
 		$attr = $this->attributes;
 		if (!$this->getprimaryKey()) unset($attr['id']);
-		if ($attr['parent'] === null) $attr['parent'] = '';
+		if ($attr['parent'] === NULL) $attr['parent'] = '';
+		unset($attr['deleted']);
+
 		$data = array('data' => SoapComponent::getStructureElement($attr));
 		$ret = $this->SOAP->saveCounterpartiesGroup($data);
 		$ret = SoapComponent::parseReturn($ret);
@@ -124,6 +125,19 @@ class CounterpartiesGroups extends SOAPModel {
 		$pk = $this->getprimaryKey();
 		if ($elements) { foreach ($elements as $elem) {
 			if (!$pk || $elem->getprimaryKey() != $pk) $return[$elem->getprimaryKey()] = $elem->name;
+		} }
+		return $return;
+	}
+
+	/**
+	 * Returns all not deleted groups as array(id => name)
+	 * @return array
+	 */
+	static function getValues() {
+		$elements = self::model()->where('deleted', false)->findAll();
+		$return   = array();
+		if ($elements) { foreach ($elements as $elem) {
+			$return[$elem->getprimaryKey()] = $elem->name;
 		} }
 		return $return;
 	}

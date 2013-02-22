@@ -8,14 +8,33 @@ class EntitiesController extends Controller
 		parent::init();
 	}
 
-	public function actionAdd()
-	{
+	/**
+	 * Add new entity
+	 */
+	public function actionAdd() {
 		$model = new LegalEntities();
-		$this->render('add', array('model' => $model));
+		$error = '';
+		if (isset($_POST[get_class($model)])) {
+			$model->setAttributes($_POST[get_class($model)]);
+			if ($model->validate()) {
+				try {
+					$model->save();
+					$this->redirect($this->createUrl('index'));
+				} catch (Exception $e) {
+					$error = $e->getMessage();
+				}
+			}
+		}
+		$this->render('add', array('model' => $model, 'error' => $error));
 	}
 
-	public function actionDelete($id)
-	{
+	/**
+	 * Delete entity
+	 * @param $id
+	 *
+	 * @throws CHttpException
+	 */
+	public function actionDelete($id) {
 		/** @var $model LegalEntities */
 		$model = LegalEntities::model()->findByPk($id);
 		if (empty($model)) throw new CHttpException(404);
@@ -40,20 +59,31 @@ class EntitiesController extends Controller
 		$this->render('delete', array('model' => $model));
 	}
 
-	public function actionIndex()
-	{
-		$entities = LegalEntities::model()->findAll(array('deleted' => false));
+	/**
+	 * List action
+	 */
+	public function actionIndex() {
+		// Юр лица (не контрагенты и не удалены)
+		$entities = LegalEntities::model()->where('deleted', false)->where('contragent', false)->findAll();
 		$this->render('index', array('elements' => $entities));
 	}
 
-	public function actionShow($id)
-	{
+	/**
+	 * Show legal entity
+	 * @param $id
+	 */
+	public function actionView($id) {
 		$entity = LegalEntities::model()->findByPk($id);
 		$this->render('show', array('element' => $entity));
 	}
 
-	public function actionUpdate($id)
-	{
+	/**
+	 * Update entity
+	 * @param $id
+	 *
+	 * @throws CHttpException
+	 */
+	public function actionUpdate($id) {
 		$model = LegalEntities::model()->findByPk($id);
 		if (empty($model)) throw new CHttpException(404);
 
@@ -62,39 +92,18 @@ class EntitiesController extends Controller
 			Yii::app()->end();
 		}
 
+		$error = '';
 		if (isset($_POST[get_class($model)])) {
 			$model->setAttributes($_POST[get_class($model)]);
-			if ($model->save()) {
-				$this->redirect($this->createUrl('index'));
+			if ($model->validate()) {
+				try {
+					$model->save();
+					//$this->redirect($this->createUrl('index'));
+				} catch (Exception $e) {
+					$error = $e->getMessage();
+				}
 			}
 		}
-		$this->render('update', array('model' => $model));
+		$this->render('update', array('model' => $model, 'error' => $error));
 	}
-
-	// Uncomment the following methods and override them if needed
-	/*
-	public function filters()
-	{
-		// return the filter configuration for this controller, e.g.:
-		return array(
-			'inlineFilterName',
-			array(
-				'class'=>'path.to.FilterClass',
-				'propertyName'=>'propertyValue',
-			),
-		);
-	}
-
-	public function actions()
-	{
-		// return external action classes, e.g.:
-		return array(
-			'action1'=>'path.to.ActionClass',
-			'action2'=>array(
-				'class'=>'path.to.AnotherActionClass',
-				'propertyName'=>'propertyValue',
-			),
-		);
-	}
-	*/
 }

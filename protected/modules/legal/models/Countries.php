@@ -52,4 +52,17 @@ class Countries extends SOAPModel {
 			array('id, name', 'safe', 'on'=>'search'),
 		);
 	}
+
+	/**
+	 * Returns all not deleted groups as array(id => name)
+	 * @return array
+	 */
+	static function getValues() {
+		$elements = self::model()->findAll();
+		$return   = array();
+		if ($elements) { foreach ($elements as $elem) {
+			$return[$elem->getprimaryKey()] = $elem->name;
+		} }
+		return $return;
+	}
 }

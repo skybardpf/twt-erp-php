@@ -19,10 +19,16 @@ $this->breadcrumbs=array(
 		$this->widget('bootstrap.widgets.TbGridView', array(
 			'type'=>'striped',
 			'dataProvider' => $gridDataProvider,
-			'template'=>"{items}",
 			'columns'=>array(
-				array('name'=>'id', 'header'=>'#'),
-				array('name'=>'name', 'header'=>'Название', 'type' => 'raw', 'value' => 'CHtml::link($data->name, Yii::app()->controller->createUrl("show", array("id" => $data->id)))'),
+				array('name' => 'id', 'header'=>'#'),
+				array('name' => 'name', 'header'=>'Название', /*'type' => 'raw', 'value' => 'CHtml::link($data->name, Yii::app()->controller->createUrl("show", array("id" => $data->id)))'*/),
+				array('name' => 'country', 'header' => 'Страна юрисдикции'),
+				array('name' => 'city', 'header' => 'Город'),
+				array('name' => 'address', 'header' => 'Адрес'),
+				array('name' => 'phone', 'header' => 'Телефон'),
+				array('name' => 'bik', 'header' => 'БИК код'),
+				array('name' => 'cor_sh', 'header' => 'Корр. счет'),
+				array('name' => 'swift', 'header' => 'SWIFT код'),
 			),
 		));
 	} else {
