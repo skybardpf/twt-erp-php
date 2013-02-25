@@ -2,10 +2,10 @@
 /* @var $this BanksController */
 
 $this->breadcrumbs=array(
-	'Типы документов',
+	$this->controller_title,
 );
 ?>
-<h2>Типы документов</h2>
+<h2><?=$this->controller_title?></h2>
 <div>
 	<?php
 	if ($elements) {
@@ -27,3 +27,4 @@ $this->breadcrumbs=array(
 	}
 	?>
 </div>
+<a class="btn btn-success" href="<?=$this->createUrl('add')?>">Добавить тип документа</a>

@@ -1,6 +1,6 @@
 <?php
 /**
- * Учредительный документ
+ * Свободный документ
  *
  * User: Forgon
  * Date: 25.02.13
@@ -10,77 +10,51 @@
  * @property string $date
  * @property string $expire
  * @property string $typ_doc
+ * @property string $from_user
+ * @property string $nom
+ * @property string $user
  *
  * @property string $deleted
  */
-
-class FoundingDocument extends SOAPModel {
+class FreeDocument extends SOAPModel {
 
 	/**
 	 * @static
 	 *
 	 * @param string $className
 	 *
-	 * @return Banks
+	 * @return FreeDocument
 	 */
 	public static function model($className = __CLASS__) {
 		return parent::model($className);
 	}
 
 	/**
-	 * Список учредительных документов
+	 * Список свободных документов
 	 *
-	 * @return FoundingDocument[]
+	 * @return FreeDocument[]
 	 */
 	public function findAll() {
 		$filters = SoapComponent::getStructureElement($this->where);
 		if (!$filters) $filters = array(array());
 		$request = array('filters' => $filters, 'sort' => array($this->order));
 
-		$ret = $this->SOAP->listFoundingDocuments($request);
+		$ret = $this->SOAP->listFreeDocuments($request);
 
 		$ret = SoapComponent::parseReturn($ret);
 		return $this->publish_list($ret, __CLASS__);
 	}
 
 	/**
-	 * Учредительный документ
+	 * Свободный документ
 	 * @param $id
 	 *
 	 * @return FoundingDocument
 	 */
 	public function findByPk($id) {
-		$ret = $this->SOAP->getFoundingDocument(array('id' => $id));
+		$ret = $this->SOAP->getFreeDocument(array('id' => $id));
 		$ret = SoapComponent::parseReturn($ret);
 		return $this->publish_elem(current($ret), __CLASS__);
-	}
-
-	/**
-	 * Удаление учредительного документа
-	 *
-	 * @return bool
-	 */
-	public function delete() {
-		if ($pk = $this->getprimaryKey()) {
-			$ret = $this->SOAP->deleteFoundingDocument(array('id' => $pk));
-			return $ret->return;
-		}
-		return false;
-	}
-
-	/**
-	 * Сохранение учредительного документа
-	 * @return array
-	 */
-	public function save() {
-		$attr = $this->attributes;
-		if (!$this->getprimaryKey()) unset($attr['id']);
-		unset($attr['deleted']);
-
-		$data = array('data' => SoapComponent::getStructureElement($attr));
-		$ret = $this->SOAP->saveFoundingDocument($data);
-		$ret = SoapComponent::parseReturn($ret);
-		return $ret;
 	}
 
 	/**
@@ -94,7 +68,9 @@ class FoundingDocument extends SOAPModel {
 			'name'              => 'Название',
 			'date'              => 'Дата загрузки',
 			'expire'            => 'Срок действия',
-			'typ_doc'           => 'Тип документа',
+			'from_user'         => 'От пользователя',
+			'nom'               => 'Номер документа',
+			'user'              => 'Пользователь',
 			'deleted'           => 'Помечен на удаление'
 		);
 	}
@@ -104,9 +80,11 @@ class FoundingDocument extends SOAPModel {
 	 */
 	public function rules() {
 		return array(
-			array('name, id_yur', 'required'),
-			array('date, expire, typ_doc', 'safe'),
+			array('id, name', 'required'),
+			array('id, date, expire, from_user, nom, user, deleted', 'safe'),
+
 			array('id, name', 'safe', 'on'=>'search'),
 		);
 	}
+
 }

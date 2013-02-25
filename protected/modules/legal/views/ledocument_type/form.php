@@ -1,12 +1,14 @@
 <?php
-/* @var $this EntitiesController */
-/* @var $model LegalEntities */
-/* @var $form TbActiveForm */
-/* @var $error string */
-?>
-<?php if ($error) :?>
-	<?=CHtml::openTag('div', array('class' => 'alert alert-error')).$error.CHtml::closeTag('div')?>
-<?php endif; ?>
+/**
+ * @var $this EntitiesController
+ * @var $model LegalEntities
+ * @var $form TbActiveForm
+ * @var $error string
+ */
+// ТУДУ Редактирование типов документов
+// Внимание не доделан тип документа
+
+if ($error) echo CHtml::openTag('div', array('class' => 'alert alert-error')).$error.CHtml::closeTag('div'); ?>
 
 <div class="form">
 	<?php $form = $this->beginWidget('bootstrap.widgets.TbActiveForm', array(
@@ -21,7 +23,7 @@
 		<?= $form->textFieldRow(    $model, 'name',         array('class' => 'span6')); ?>
 		<?= $form->textFieldRow(    $model, 'full_name',    array('class' => 'span6')); ?>
 		<?= $form->textFieldRow(    $model, 'eng_name',     array('class' => 'span6')); ?>
-		<?= $form->dropDownListRow( $model, 'country', array('' => 'не заданно')+$model->CountryValues, array('class' => 'span6')); ?>
+		<?= $form->dropDownListRow( $model, 'country', array('' => 'не заданно')+Countries::getValues(), array('class' => 'span6')); ?>
 		<?= $form->checkBoxRow(     $model, 'resident'); ?>
 		<?= $form->dropDownListRow( $model, 'type_no_res', array('' => 'не заданно')+$model->NonResidentValues, array('class' => 'span6')); ?>
 		<?= $form->checkBoxRow(     $model, 'contragent'); ?>

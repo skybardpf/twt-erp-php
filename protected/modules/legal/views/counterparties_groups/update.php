@@ -2,7 +2,7 @@
 /* @var $this Counterparties_groupsController */
 
 $this->breadcrumbs=array(
-	'Группы контрагентов' => array('/legal/counterparties_groups'),
+	$this->controller_title => array('/legal/counterparties_groups'),
 	'Редактирование',
 );
 ?>

@@ -3,8 +3,8 @@
 /* @var $model LegalEntities */
 
 $this->breadcrumbs=array(
-	'Тип документа' => $this->createUrl('/legal/entities/'),
-	'Редактирование типа документа',
+	$this->controller_title => array('/legal/entities/'),
+	'Редактирование',
 );
 ?>
 <h2><?=$model->full_name?></h2>

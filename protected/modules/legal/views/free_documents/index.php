@@ -1,5 +1,5 @@
 <?php
-/* @var $this Counterparties_groupsController */
+/* @var $this BanksController */
 
 $this->breadcrumbs=array(
 	$this->controller_title,
@@ -14,14 +14,17 @@ $this->breadcrumbs=array(
 		$this->widget('bootstrap.widgets.TbGridView', array(
 			'type'=>'striped',
 			'dataProvider' => $gridDataProvider,
-			'template'=>"{items}",
 			'columns'=>array(
 				array('name' => 'id', 'header'=>'#'),
-				array('name'=>'name', 'header'=>'Название'),
+				array('name' => 'name', 'header'=>'Название',),
+				array(
+					'class'=>'bootstrap.widgets.TbButtonColumn',
+				),
 			),
 		));
 	} else {
-		echo 'Ни одной статьи движения денежных стредств не зарегистрировано.';
+		echo 'Ни одного свободного документа не зарегистрировано.';
 	}
 	?>
 </div>
+<a class="btn btn-success" href="<?=$this->createUrl('add')?>">Добавить свободный документ</a>

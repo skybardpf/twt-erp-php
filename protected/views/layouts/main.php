@@ -36,6 +36,7 @@ Yii::app()->clientScript->registerCssFile(CHtml::asset(Yii::app()->basePath.'/..
 				'legal.Counterparties_groups' => array('label' => 'Группы контрагентов', 'url' => $this->createUrl('/legal/counterparties_groups/')),
 				'legal.LEDocument_type' => array('label' => 'Типы документов', 'url' => $this->createUrl('/legal/ledocument_type/')),
 				'legal.FoundingDocument' => array('label' => 'Учредительные документы', 'url' => $this->createUrl('/legal/founding_document/')),
+				'legal.FreeDocument' => array('label' => 'Свободные документы', 'url' => $this->createUrl('/legal/free_documents/')),
 			);
 			if (isset($items[$this->menu_elem])) {
 				$items[$this->menu_elem]['active'] = true;

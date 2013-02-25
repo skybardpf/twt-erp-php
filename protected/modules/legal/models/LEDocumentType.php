@@ -1,5 +1,7 @@
 <?php
 /**
+ * Тип документа
+ *
  * User: Forgon
  * Date: 25.02.13
  *
@@ -26,7 +28,7 @@ class LEDocumentType extends SOAPModel {
 	}
 
 	/**
-	 * Get list of Banks
+	 * Типы документов
 	 *
 	 * @return LEDocumentType[]
 	 */
@@ -41,6 +43,7 @@ class LEDocumentType extends SOAPModel {
 	}
 
 	/**
+	 * Тип документа
 	 * @param $id
 	 *
 	 * @return LEDocumentType
@@ -52,7 +55,7 @@ class LEDocumentType extends SOAPModel {
 	}
 
 	/**
-	 * Set or remove deletion mark
+	 * Удаление типа документа
 	 *
 	 * @return bool
 	 */
@@ -71,8 +74,7 @@ class LEDocumentType extends SOAPModel {
 	 * Returns the list of attribute names of the model.
 	 * @return array list of attribute names.
 	 */
-	public function attributeLabels()
-	{
+	public function attributeLabels() {
 		return array(
 			'id'                => '#',
 			'name_of_doc'       => 'Название',
@@ -85,8 +87,7 @@ class LEDocumentType extends SOAPModel {
 	/**
 	 * @return array validation rules for model attributes.
 	 */
-	public function rules()
-	{
+	public function rules() {
 		return array(
 			array('name, list_of_countries', 'required'),
 			array('id, name', 'safe', 'on'=>'search'),

@@ -1,15 +1,15 @@
 <?php
+/**
+ * User: Forgon
+ * Date: 21.02.13
+ */
+class Counterparties_groupsController extends Controller {
 
-class Counterparties_groupsController extends Controller
-{
-	public function init()
-	{
-		$this->menu_elem = 'legal.Counterparties_groups';
-		parent::init();
-	}
+	public $menu_elem = 'legal.Counterparties_groups';
+	public $controller_title = 'Группы контрагентов';
 
 	/**
-	 * Adding action
+	 * Добавление группы контрагентов
 	 * @param bool $pid
 	 */
 	public function actionAdd($pid = false) {
@@ -20,6 +20,7 @@ class Counterparties_groupsController extends Controller
 		} else {
 			$parent = NULL;
 		}
+
 		$error = array();
 		if (isset($_POST['CounterpartiesGroups'])) {
 			$elem->setAttributes($_POST['CounterpartiesGroups']);
@@ -37,7 +38,7 @@ class Counterparties_groupsController extends Controller
 	}
 
 	/**
-	 * Deleting action
+	 * Удаление группы контрагентов
 	 * @param $id
 	 *
 	 * @throws CHttpException
@@ -67,7 +68,7 @@ class Counterparties_groupsController extends Controller
 	}
 
 	/**
-	 * List action
+	 * Список групп контрагентов
 	 * @param bool $pid
 	 */
 	public function actionIndex($pid = false) {
@@ -85,7 +86,7 @@ class Counterparties_groupsController extends Controller
 	}
 
 	/**
-	 * Modify action
+	 * Редактирование группы контрагентов
 	 * @param $id
 	 */
 	public function actionUpdate($id) {

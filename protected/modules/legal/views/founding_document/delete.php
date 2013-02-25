@@ -3,10 +3,10 @@
 /* @var $model LegalEntities*/
 
 $this->breadcrumbs=array(
-	$this->controller_title => array('/legal/entities/'),
+	$this->controller_title => array('/legal/founding_document/'),
 	'Удаление',
 );?>
-Вы действительно хотите <?=$model->deleted ? '<b>снять пометку удаления со структуры</b>': '<b>пометить на удаление структуру</b>'?> «<?=CHtml::encode($model->full_name)?>»?
+Вы действительно хотите удалить учредительный документ «<?=CHtml::encode($model->name)?>»?
 
 <?php $form = $this->beginWidget('bootstrap.widgets.TbActiveForm', array(
 	'id'=>'news-delete-form',

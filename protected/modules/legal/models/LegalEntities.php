@@ -1,5 +1,7 @@
 <?php
 /**
+ * Юр.Лица
+ *
  * User: Forgon
  * Date: 09.01.13
  * @property int $id
@@ -48,7 +50,7 @@ class LegalEntities extends SOAPModel {
 	}
 
 	/**
-	 * Set or remove deletion mark
+	 * Удаление Юр.Лица
 	 *
 	 * @return bool
 	 */
@@ -62,6 +64,10 @@ class LegalEntities extends SOAPModel {
 		return false;
 	}
 
+	/**
+	 * Сохранение Юр.Лица
+	 * @return array
+	 */
 	public function save() {
 		$cacher = new CFileCache();
 		$cacher->add('LEntity_values', false, 1);
@@ -86,21 +92,12 @@ class LegalEntities extends SOAPModel {
 		$ret = $this->SOAP->saveLegalEntity(array('data' => SoapComponent::getStructureElement($attrs)));
 		$ret = SoapComponent::parseReturn($ret, false);
 		return $ret;
-
-		if ($ret->return == 'false'  or $ret->return == false) {
-			return false;
-		} else {
-			if (empty($this->id)) {
-				$this->id = $ret->return;
-			}
-			return true;
-		}
 	}
 
 	/**
-	 * Get list of LegalEntities
+	 * Список Юр.Лиц
 	 *
-	 * @return array
+	 * @return LegalEntities[]
 	 */
 	public function findAll() {
 		$filters = SoapComponent::getStructureElement($this->where);
@@ -113,10 +110,10 @@ class LegalEntities extends SOAPModel {
 	}
 
 	/**
-	 * Get one legal entity
+	 * Юр.Лицо
 	 *
 	 * @param $id
-	 * @return bool|\LegalEntities
+	 * @return bool|LegalEntities
 	 * @internal param array $filter
 	 */
 	public function findByPk($id) {
@@ -168,7 +165,7 @@ class LegalEntities extends SOAPModel {
 	}
 
 	/**
-	 * Available non_resident types
+	 * Типы нерезидентов
 	 * @return array
 	 */
 	public function getNonResidentValues() {
@@ -181,22 +178,6 @@ class LegalEntities extends SOAPModel {
 	}
 
 	/**
-	 * Available counteragent groups
-	 * @return array
-	 */
-	public function getGroupNameValues() {
-		return CounterpartiesGroups::getValues();
-	}
-
-	/**
-	 * Available countries
-	 * @return array
-	 */
-	public function getCountryValues() {
-		return Countries::getValues();
-	}
-
-	/**
 	 * Список доступных значений Юр.Лиц
 	 * @return array
 	 */
@@ -204,19 +185,19 @@ class LegalEntities extends SOAPModel {
 		$cacher = new CFileCache();
 		$cache = $cacher->get('LEntity_values');
 		if ($cache === false) {
-			if (!LegalEntities::$values) {
+			if (!self::$values) {
 				$elements = self::model()->findAll();
 				$return   = array();
 				if ($elements) { foreach ($elements as $elem) {
 					$return[$elem->getprimaryKey()] = $elem->name;
 				} }
-				LegalEntities::$values = $return;
+				self::$values = $return;
 
 			}
-			$cacher->add('LEntity_values', LegalEntities::$values, 30);
-		} elseif (!LegalEntities::$values) {
-			LegalEntities::$values = $cache;
+			$cacher->add('LEntity_values', self::$values, 30);
+		} elseif (!self::$values) {
+			self::$values = $cache;
 		}
-		return LegalEntities::$values;
+		return self::$values;
 	}
 }

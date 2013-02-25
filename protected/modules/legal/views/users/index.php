@@ -2,10 +2,10 @@
 /* @var $this Counterparties_groupsController */
 
 $this->breadcrumbs=array(
-	'Пользователи',
+	$this->controller_title,
 );
 ?>
-<h2>Пользователи</h2>
+<h2><?=$this->controller_title?></h2>
 <div>
 	<?php
 	if ($elements) {

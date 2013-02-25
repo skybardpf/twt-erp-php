@@ -6,8 +6,8 @@
  */
 
 $this->breadcrumbs=array(
-	'Группы контрагентов' => array('/legal/counterparties_groups'),
-	'Добавление группы контрагентов',
+	$this->controller_title => array('/legal/counterparties_groups'),
+	'Добавление',
 );
 ?>
 <h2>Группа контрагентов<?=$parent ? (': '.$parent->name) : ''?>, Добавление группы</h2>

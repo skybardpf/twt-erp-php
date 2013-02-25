@@ -2,10 +2,10 @@
 /* @var $this BanksController */
 
 $this->breadcrumbs=array(
-	'Учредительные документы',
+	$this->controller_title,
 );
 ?>
-<h2>Учредительные документы</h2>
+<h2><?=$this->controller_title?></h2>
 <div>
 	<?php
 	if ($elements) {
@@ -27,3 +27,4 @@ $this->breadcrumbs=array(
 	}
 	?>
 </div>
+<a class="btn btn-success" href="<?=$this->createUrl('add')?>">Добавить учредительный документ</a>

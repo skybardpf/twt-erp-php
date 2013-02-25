@@ -4,12 +4,11 @@
  * Date: 11.01.13
  */
 
+//ТУДУ: Банки
 class BanksController extends Controller
 {
-	public function init() {
-		$this->menu_elem = 'legal.Banks';
-		parent::init();
-	}
+	public $menu_elem = 'legal.Banks';
+	public $controller_title = 'Банки';
 
 	/**
 	 * List action

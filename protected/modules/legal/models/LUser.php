@@ -1,5 +1,7 @@
 <?php
 /**
+ * Пользователи
+ *
  * User: Forgon
  * Date: 21.02.13
  *
@@ -17,15 +19,14 @@ class LUser extends SOAPModel {
 	 *
 	 * @return LUser
 	 */
-	public static function model($className = __CLASS__)
-	{
+	public static function model($className = __CLASS__) {
 		return parent::model($className);
 	}
 
 	/**
-	 * Get list of Currencies
+	 * Список пользователей
 	 *
-	 * @return array
+	 * @return LUser[]
 	 */
 	public function findAll() {
 		$ret = $this->SOAP->listUsers();
@@ -37,8 +38,7 @@ class LUser extends SOAPModel {
 	 * Returns the list of attribute names of the model.
 	 * @return array list of attribute names.
 	 */
-	public function attributeLabels()
-	{
+	public function attributeLabels() {
 		return array(
 			'id'            => '#',
 			'name'          => 'Название',
@@ -48,8 +48,7 @@ class LUser extends SOAPModel {
 	/**
 	 * @return array validation rules for model attributes.
 	 */
-	public function rules()
-	{
+	public function rules() {
 		return array(
 			array('name', 'required'),
 			array('id, name', 'safe', 'on'=>'search'),
@@ -64,18 +63,18 @@ class LUser extends SOAPModel {
 		$cacher = new CFileCache();
 		$cache = $cacher->get('LUsers_values');
 		if ($cache === false) {
-			if (!LUser::$values) {
+			if (!self::$values) {
 				$elements = self::model()->findAll();
 				$return   = array();
 				if ($elements) { foreach ($elements as $elem) {
 					$return[$elem->getprimaryKey()] = $elem->name;
 				} }
-				LUser::$values = $return;
+				self::$values = $return;
 			}
-			$cacher->add('LUsers_values', LUser::$values, 30);
-		} elseif (!LUser::$values) {
-			LUser::$values = $cache;
+			$cacher->add('LUsers_values', self::$values, 30);
+		} elseif (!self::$values) {
+			self::$values = $cache;
 		}
-		return LUser::$values;
+		return self::$values;
 	}
 }

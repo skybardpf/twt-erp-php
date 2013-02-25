@@ -7,7 +7,6 @@
  */
 $gridDataProvider = new CArrayDataProvider($model->list_of_countries, array('keyField' => 'country'));
 Countries::getValues();
-//CVarDumper::dump($model->attributes,3,1);exit;
 $this->widget('bootstrap.widgets.TbDetailView', array(
 	'data' => $model,
 	'attributes'=>array(

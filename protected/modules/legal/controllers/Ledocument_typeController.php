@@ -3,29 +3,29 @@
  * User: Forgon
  * Date: 25.02.13
  */
-class Ledocument_typeController extends Controller
-{
-	public function init() {
-		$this->menu_elem = 'legal.LEDocument_type';
-		parent::init();
-	}
+class Ledocument_typeController extends Controller {
+	public $menu_elem = 'legal.LEDocument_type';
+	public $controller_title = 'Типы документов';
 
 	/**
-	 * List action
+	 * Список типов документов
 	 */
 	public function actionIndex() {
 		$entities = LEDocumentType::model()->where('deleted', false)->findAll();
 		$this->render('index', array('elements' => $entities));
 	}
 
-	public function actionView($id)
-	{
+	/**
+	 * Просмотр типа документа
+	 * @param $id
+	 */
+	public function actionView($id) {
 		$model = LEDocumentType::model()->findByPk($id);
 		$this->render('show', array('model' => $model));
 	}
 
 	/**
-	 * Delete entity
+	 * Удаление типа документа
 	 * @param $id
 	 *
 	 * @throws CHttpException

@@ -1,5 +1,6 @@
 <?php
 /**
+ * Группы контрагентов
  * User: Forgon
  * Date: 11.01.13
  *
@@ -20,17 +21,18 @@ class CounterpartiesGroups extends SOAPModel {
 	 *
 	 * @return CounterpartiesGroups
 	 */
-	public static function model($className = __CLASS__)
-	{
+	public static function model($className = __CLASS__) {
 		return parent::model($className);
 	}
 
 	/**
-	 * Set or remove deletion mark
+	 * Удаление (снять или поставить на удаление)
 	 *
 	 * @return bool
 	 */
 	public function delete() {
+		$cacher = new CFileCache();
+		$cacher->add('CounterpartiesGroups_values', false, 1);
 		if ($pk = $this->getprimaryKey()) {
 			$ret = $this->SOAP->deleteCounterpartiesGroup(array('id' => $pk));
 			return $ret->return;
@@ -38,24 +40,10 @@ class CounterpartiesGroups extends SOAPModel {
 		return false;
 	}
 
-	/*public function save() {
-		if ($pk = $this->getprimaryKey()) {
-			$this->id = '1'.$pk;
-		}
-		$attributes = $this->attributes;
-		unset($attributes['name']);
-		unset($attributes['deleted']);
-		$data = SoapComponent::getStructureElement($attributes);
-		CVarDumper::dump($data);
-		$this->SOAP->saveLegalEntity(SoapComponent::getStructureElement($this->attributes));
-		exit;
-		return false;
-	}*/
-
 	/**
-	 * Get list of LegalEntities
+	 * Список групп контрагентов
 	 *
-	 * @return array
+	 * @return CounterpartiesGroups[]
 	 */
 	public function findAll() {
 		$filters = SoapComponent::getStructureElement($this->where);
@@ -67,10 +55,10 @@ class CounterpartiesGroups extends SOAPModel {
 	}
 
 	/**
-	 * Get one legal entity
+	 * Получение группы контрагентов
 	 *
 	 * @param $id
-	 * @return bool|\LegalEntities
+	 * @return bool|CounterpartiesGroups
 	 * @internal param array $filter
 	 */
 	public function findByPk($id) {
@@ -79,7 +67,13 @@ class CounterpartiesGroups extends SOAPModel {
 		return $this->publish_elem(current($ret), __CLASS__);
 	}
 
+	/**
+	 * Сохранение группы контрагентов
+	 * @return array
+	 */
 	public function save() {
+		$cacher = new CFileCache();
+		$cacher->add('CounterpartiesGroups_values', false, 1);
 		$attr = $this->attributes;
 		if (!$this->getprimaryKey()) unset($attr['id']);
 		if ($attr['parent'] === NULL) $attr['parent'] = '';
@@ -95,8 +89,7 @@ class CounterpartiesGroups extends SOAPModel {
 	 * Returns the list of attribute names of the model.
 	 * @return array list of attribute names.
 	 */
-	public function attributeLabels()
-	{
+	public function attributeLabels() {
 		return array(
 			'id'            => '#',
 			'name'          => 'Название',
@@ -108,8 +101,7 @@ class CounterpartiesGroups extends SOAPModel {
 	/**
 	 * @return array validation rules for model attributes.
 	 */
-	public function rules()
-	{
+	public function rules() {
 		return array(
 			array('name', 'required'),
 			array('deleted, parent', 'safe'),
@@ -117,8 +109,9 @@ class CounterpartiesGroups extends SOAPModel {
 		);
 	}
 
+	// ТУДУ: исключить своих потомков
 	/**
-	 * Returns list of available values for parent field (excluding self only)
+	 * Получить доступные данному элементу родительские элементы
 	 * @return array
 	 */
 	public function getParentValues() {
@@ -139,19 +132,19 @@ class CounterpartiesGroups extends SOAPModel {
 		$cacher = new CFileCache();
 		$cache = $cacher->get('CounterpartiesGroups_values');
 		if ($cache === false) {
-			if (!CounterpartiesGroups::$values) {
+			if (!self::$values) {
 				$elements = self::model()->where('deleted', false)->findAll();
 				$return   = array();
 				if ($elements) { foreach ($elements as $elem) {
 					$return[$elem->getprimaryKey()] = $elem->name;
 				} }
-				CounterpartiesGroups::$values = $return;
+				self::$values = $return;
 
 			}
-			$cacher->add('CounterpartiesGroups_values', CounterpartiesGroups::$values, 30);
-		} elseif (!CounterpartiesGroups::$values) {
-			CounterpartiesGroups::$values = $cache;
+			$cacher->add('CounterpartiesGroups_values', self::$values, 30);
+		} elseif (!self::$values) {
+			self::$values = $cache;
 		}
-		return CounterpartiesGroups::$values;
+		return self::$values;
 	}
 }

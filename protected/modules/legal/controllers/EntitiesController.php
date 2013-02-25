@@ -1,15 +1,14 @@
 <?php
-
-class EntitiesController extends Controller
-{
-	public function init()
-	{
-		$this->menu_elem = 'legal.entities';
-		parent::init();
-	}
+/**
+ * User: Forgon
+ * Date: 21.02.13
+ */
+class EntitiesController extends Controller {
+	public $menu_elem = 'legal.entities';
+	public $controller_title = 'Юридические лица';
 
 	/**
-	 * Add new entity
+	 * Добавление Юр.Лица
 	 */
 	public function actionAdd() {
 		$model = new LegalEntities();
@@ -29,7 +28,7 @@ class EntitiesController extends Controller
 	}
 
 	/**
-	 * Delete entity
+	 * Удаление Юр.Лица
 	 * @param $id
 	 *
 	 * @throws CHttpException
@@ -60,7 +59,7 @@ class EntitiesController extends Controller
 	}
 
 	/**
-	 * List action
+	 * Список Юр.Лиц
 	 */
 	public function actionIndex() {
 		// Юр лица (не контрагенты и не удалены)
@@ -69,7 +68,7 @@ class EntitiesController extends Controller
 	}
 
 	/**
-	 * Show legal entity
+	 * Просмотр Юр.Лица
 	 * @param $id
 	 */
 	public function actionView($id) {
@@ -78,7 +77,7 @@ class EntitiesController extends Controller
 	}
 
 	/**
-	 * Update entity
+	 * Редактирование Юр.Лица
 	 * @param $id
 	 *
 	 * @throws CHttpException

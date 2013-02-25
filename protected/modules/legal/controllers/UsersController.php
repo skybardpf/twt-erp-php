@@ -3,16 +3,14 @@
  * User: Forgon
  * Date: 21.02.13
  */
-class UsersController extends Controller
-{
-	public function init()
-	{
-		$this->menu_elem = 'legal.Users';
-		parent::init();
-	}
+class UsersController extends Controller {
+	public $menu_elem = 'legal.Users';
+	public $controller_title = 'Пользователи';
 
-	public function actionIndex()
-	{
+	/**
+	 * Список пользователей
+	 */
+	public function actionIndex() {
 		$entities = LUser::model()->findAll();
 		$this->render('index', array('elements' => $entities));
 	}

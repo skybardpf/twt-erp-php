@@ -3,9 +3,9 @@
 /* @var $model LegalEntities */
 
 $this->breadcrumbs=array(
-	$this->controller_title => array('/legal/entities/'),
+	$this->controller_title => array('/legal/founding_document/'),
 	'Редактирование',
 );
 ?>
-<h2><?=$model->full_name?></h2>
+<h2><?=$model->name?></h2>
 <?php $this->renderPartial('form', array('model' => $model, 'error' => $error)) ?>

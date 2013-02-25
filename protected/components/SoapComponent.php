@@ -119,11 +119,11 @@ class SoapComponent extends CApplicationComponent
 				} else {
 					if (YII_DEBUG) {
 						//defined('JSON_UNESCAPED_UNICODE') or define('JSON_UNESCAPED_UNICODE', 0);
-						Yii::log('try SOAP function ' . htmlspecialchars($name) . ' with args: ' . (defined('JSON_UNESCAPED_UNICODE') ? json_encode($params, JSON_UNESCAPED_UNICODE) : json_encode($params)), CLogger::LEVEL_INFO, 'soap');
+						Yii::log('try SOAP function ' . htmlspecialchars($name) . ' with args: ' . (defined('JSON_UNESCAPED_UNICODE') ? json_encode($params, JSON_UNESCAPED_UNICODE) : preg_replace('#\\\\u([0-9a-f]{4})#se','iconv("UTF-16BE","UTF-8",pack("H4","$1"))', json_encode($params))), CLogger::LEVEL_INFO, 'soap');
 					}
 					$ret = $this->soap_client->__soapCall($name, $params);
 				}
-				if (YII_DEBUG) Yii::log('function ' . $name . ' data: ' .(defined('JSON_UNESCAPED_UNICODE') ? json_encode($ret, JSON_UNESCAPED_UNICODE) : json_encode($ret)), CLogger::LEVEL_INFO, 'soap');
+				if (YII_DEBUG) Yii::log('function ' . $name . ' data: ' .(defined('JSON_UNESCAPED_UNICODE') ? json_encode($ret, JSON_UNESCAPED_UNICODE) : preg_replace('#\\\\u([0-9a-f]{4})#se','iconv("UTF-16BE","UTF-8",pack("H4","$1"))',json_encode($ret))), CLogger::LEVEL_INFO, 'soap');
 				return $ret;
 			} catch (Exception $e) {
 				Yii::log($e->getCode().'(at file '.$e->getFile().':'.$e->getLine().'): '.$e->getMessage(),CLogger::LEVEL_ERROR, 'soap');

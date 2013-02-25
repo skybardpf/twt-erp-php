@@ -3,7 +3,7 @@
 /* @var $model LegalEntities*/
 
 $this->breadcrumbs=array(
-	'Тип документа' => array($this->createUrl('/legal/ledocument_type/')),
+	$this->controller_title => array('/legal/ledocument_type/'),
 	'Удаление',
 );?>
 Вы действительно хотите удалить тип документа «<?=CHtml::encode($model->name_of_doc)?>»?

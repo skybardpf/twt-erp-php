@@ -52,6 +52,14 @@ return array(
                 'password'  => '',
 			)
 		),
+		'calc' => array(
+			'class'     => 'SoapComponent',
+			'wsdl'      => 'http://80.250.210.238/TWTsite/ws/CalcInsurance?wsdl',
+			'connection_options' => array(
+				'login'     => 'Site',
+				'password'  => 'Site',
+			)
+		),
 		'bootstrap' => array(
 			'class' => 'ext.bootstrap.components.Bootstrap', // assuming you extracted bootstrap under extensions
 		),

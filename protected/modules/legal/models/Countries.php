@@ -1,5 +1,6 @@
 <?php
 /**
+ * Страна
  * User: Forgon
  * Date: 11.01.13
  * @property int $id
@@ -23,9 +24,9 @@ class Countries extends SOAPModel {
 	}
 
 	/**
-	 * Get list of Countries
+	 * Список стран
 	 *
-	 * @return array
+	 * @return Countries[]
 	 */
 	public function findAll() {
 		$ret = $this->SOAP->listCountries();
@@ -62,19 +63,19 @@ class Countries extends SOAPModel {
 		$cacher = new CFileCache();
 		$cache = $cacher->get('countries_values');
 		if ($cache === false) {
-			if (!Countries::$values) {
+			if (!self::$values) {
 				$elements = self::model()->findAll();
 				$return   = array();
 				if ($elements) { foreach ($elements as $elem) {
 					$return[$elem->getprimaryKey()] = $elem->name;
 				} }
-				Countries::$values = $return;
+				self::$values = $return;
 
 			}
-			$cacher->add('countries_values', Countries::$values, 30);
-		} elseif (!Countries::$values) {
-			Countries::$values = $cache;
+			$cacher->add('countries_values', self::$values, 30);
+		} elseif (!self::$values) {
+			self::$values = $cache;
 		}
-		return Countries::$values;
+		return self::$values;
 	}
 }

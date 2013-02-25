@@ -2,7 +2,7 @@
 /* @var $this Counterparties_groupsController */
 
 $this->breadcrumbs=array(
-	'Группы контрагентов',
+	$this->controller_title,
 );
 ?>
 <h2>Группы контрагентов<?=$parent ? (': '.$parent->name) : ''?></h2>
@@ -10,11 +10,6 @@ $this->breadcrumbs=array(
 <div>
 	<?php
 	if ($elements) {
-		/*$gridDataProvider = new CArrayDataProvider(array(
-			array('id'=>1, 'firstName'=>'Mark', 'lastName'=>'Otto', 'language'=>'CSS'),
-			array('id'=>2, 'firstName'=>'Jacob', 'lastName'=>'Thornton', 'language'=>'JavaScript'),
-			array('id'=>3, 'firstName'=>'Stu', 'lastName'=>'Dent', 'language'=>'HTML'),
-		));*/
 		$gridDataProvider = new CArrayDataProvider($elements);
 
 		$this->widget('bootstrap.widgets.TbGridView', array(
@@ -22,15 +17,10 @@ $this->breadcrumbs=array(
 			'dataProvider' => $gridDataProvider,
 			'columns'=>array(
 				array('name'=>'id', 'header'=>'#'),
-				array('name'=>'name', 'header'=>'Название', /*'type' => 'raw', 'value' => 'CHtml::link($data->name, Yii::app()->controller->createUrl("index", array("pid" => $data->id)))'*/),
+				array('name'=>'name', 'header'=>'Название',),
 				array(
 					'class'=>'bootstrap.widgets.TbButtonColumn',
-					//'class' => 'zii.widgets.grid.CButtonColumn',
 					'template' => '{update} {delete}',
-					//'viewButtonLabel' => null,
-					//'viewButtonImageUrl' => null,
-					//'viewButtonIcon' => false
-					//'htmlOptions'=>array('style'=>'width: 50px'),
 				),
 			),
 		));

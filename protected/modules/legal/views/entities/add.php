@@ -2,8 +2,8 @@
 /* @var $this EntitiesController */
 
 $this->breadcrumbs=array(
-	'Юридические лица' => $this->createUrl('/legal/entities/'),
-	'Добавление Юр.Лица',
+	$this->controller_title => array('/legal/entities/'),
+	'Добавление',
 );
 ?>
 <h2>Добавление Юр.Лица</h2>

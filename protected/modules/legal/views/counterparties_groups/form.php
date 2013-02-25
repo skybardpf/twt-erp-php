@@ -7,10 +7,8 @@
  * @var $model LegalEntities
  * @var $form TbActiveForm
  */
-?>
-<?php if ($error) :?>
-	<?=CHtml::openTag('div', array('class' => 'alert alert-error')).$error.CHtml::closeTag('div')?>
-<?php endif; ?>
+
+if ($error) echo CHtml::openTag('div', array('class' => 'alert alert-error')).$error.CHtml::closeTag('div'); ?>
 
 <div class="form">
 	<?php $form = $this->beginWidget('bootstrap.widgets.TbActiveForm', array(

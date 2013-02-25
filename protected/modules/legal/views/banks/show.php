@@ -2,8 +2,8 @@
 /* @var $this Counterparties_groupsController */
 
 $this->breadcrumbs=array(
-	'Counterparties Groups'=>array('/legal/counterparties_groups'),
-	'Show',
+	$this->controller_title => array('/legal/banks'),
+	'Просмотр',
 );
 ?>
 <h1><?php echo $this->id . '/' . $this->action->id; ?></h1>

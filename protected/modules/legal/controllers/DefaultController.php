@@ -1,9 +1,13 @@
 <?php
+/**
+ * User: Forgon
+ * Date: 21.02.13
+ */
+class DefaultController extends Controller {
 
-class DefaultController extends Controller
-{
-	public function actionIndex()
-	{
+	// ТУДУ: убрать из боя
+	// Внимание: метод для тестирования
+	public function actionIndex() {
 		$data = array();
 		if ($_POST && !empty($_POST['method'])) {
 			$data = $_POST;

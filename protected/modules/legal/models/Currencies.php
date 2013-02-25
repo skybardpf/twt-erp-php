@@ -1,5 +1,6 @@
 <?php
 /**
+ * Валюты
  * User: Forgon
  * Date: 21.02.13
  *
@@ -15,15 +16,14 @@ class Currencies extends SOAPModel {
 	 *
 	 * @return Currencies
 	 */
-	public static function model($className = __CLASS__)
-	{
+	public static function model($className = __CLASS__) {
 		return parent::model($className);
 	}
 
 	/**
-	 * Get list of Currencies
+	 * Список валют
 	 *
-	 * @return array
+	 * @return Currencies[]
 	 */
 	public function findAll() {
 		$ret = $this->SOAP->listCurrencies();
@@ -35,8 +35,7 @@ class Currencies extends SOAPModel {
 	 * Returns the list of attribute names of the model.
 	 * @return array list of attribute names.
 	 */
-	public function attributeLabels()
-	{
+	public function attributeLabels() {
 		return array(
 			'id'            => '#',
 			'name'          => 'Название',
@@ -46,8 +45,7 @@ class Currencies extends SOAPModel {
 	/**
 	 * @return array validation rules for model attributes.
 	 */
-	public function rules()
-	{
+	public function rules() {
 		return array(
 			array('name', 'required'),
 			array('id, name', 'safe', 'on'=>'search'),

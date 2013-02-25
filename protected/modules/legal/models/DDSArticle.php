@@ -1,5 +1,6 @@
 <?php
 /**
+ * Статья движения денежных средств
  * User: Forgon
  * Date: 21.02.13
  * @property int $id
@@ -16,15 +17,14 @@ class DDSArticle extends SOAPModel {
 	 *
 	 * @return LUser
 	 */
-	public static function model($className = __CLASS__)
-	{
+	public static function model($className = __CLASS__) {
 		return parent::model($className);
 	}
 
 	/**
-	 * Get list of Currencies
+	 * Список движения денежных средств
 	 *
-	 * @return array
+	 * @return DDSArticle[]
 	 */
 	public function findAll() {
 		$ret = $this->SOAP->listDDS();
@@ -36,8 +36,7 @@ class DDSArticle extends SOAPModel {
 	 * Returns the list of attribute names of the model.
 	 * @return array list of attribute names.
 	 */
-	public function attributeLabels()
-	{
+	public function attributeLabels() {
 		return array(
 			'id'            => '#',
 			'name'          => 'Название',
@@ -48,8 +47,7 @@ class DDSArticle extends SOAPModel {
 	/**
 	 * @return array validation rules for model attributes.
 	 */
-	public function rules()
-	{
+	public function rules() {
 		return array(
 			array('name', 'required'),
 			array('id, name', 'safe', 'on'=>'search'),

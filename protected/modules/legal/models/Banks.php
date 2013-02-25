@@ -1,7 +1,10 @@
 <?php
 /**
+ * Банк
+ *
  * User: Forgon
  * Date: 11.01.13
+ *
  * @property int $id
  * @property string $phone
  * @property string $swift
@@ -19,21 +22,22 @@
 class Banks extends SOAPModel {
 
 	/**
+	 * Объект модели
 	 * @static
 	 *
 	 * @param string $className
 	 *
 	 * @return Banks
 	 */
-	public static function model($className = __CLASS__)
-	{
+	public static function model($className = __CLASS__) {
 		return parent::model($className);
 	}
 
+	// ТУДУ фильтрация по полям
 	/**
-	 * Get list of Banks
+	 * Список банков
 	 *
-	 * @return array
+	 * @return Banks[]
 	 */
 	public function findAll() {
 		$ret = $this->SOAP->listBanks();
@@ -41,6 +45,13 @@ class Banks extends SOAPModel {
 		return $this->publish_list($ret, __CLASS__);
 	}
 
+	// ТУДУ - список банков с фильтрацией по id
+	/**
+	 * Получить один банк
+	 * @param $id
+	 *
+	 * @throws CHttpException
+	 */
 	public function findByPk($id) {
 		/*$ret = $this->SOAP->getCounterpartiesGroups(array('id' => $id));
 		$ret = SoapComponent::parseReturn($ret);
@@ -55,8 +66,7 @@ class Banks extends SOAPModel {
 	 * Returns the list of attribute names of the model.
 	 * @return array list of attribute names.
 	 */
-	public function attributeLabels()
-	{
+	public function attributeLabels() {
 		return array(
 			'id'            => '#',
 			'name'          => 'Название',
@@ -75,8 +85,7 @@ class Banks extends SOAPModel {
 	/**
 	 * @return array validation rules for model attributes.
 	 */
-	public function rules()
-	{
+	public function rules() {
 		return array(
 			array('name, country, city, address, phone, cor_sh, swift', 'required'),
 			array('id, name, show', 'safe', 'on'=>'search'),

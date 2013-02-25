@@ -3,16 +3,14 @@
  * User: Forgon
  * Date: 21.02.13
  */
-class DdsarticlesController extends Controller
-{
-	public function init()
-	{
-		$this->menu_elem = 'legal.DDSArticles';
-		parent::init();
-	}
+class DdsarticlesController extends Controller {
+	public $menu_elem = 'legal.DDSArticles';
+	public $controller_title = 'Статьи движения денежных стредств';
 
-	public function actionIndex()
-	{
+	/**
+	 * Список статей движения денежных средств
+	 */
+	public function actionIndex() {
 		$entities = DDSArticle::model()->findAll();
 		$this->render('index', array('elements' => $entities));
 	}
