@@ -34,6 +34,8 @@ Yii::app()->clientScript->registerCssFile(CHtml::asset(Yii::app()->basePath.'/..
 				'legal.Countries' => array('label' => 'Страны юрисдикции', 'url' => $this->createUrl('/legal/countries/')),
 				'legal.DDSArticles' => array('label' => 'Статьи движения денежных стредств', 'url' => $this->createUrl('/legal/ddsarticles/')),
 				'legal.Counterparties_groups' => array('label' => 'Группы контрагентов', 'url' => $this->createUrl('/legal/counterparties_groups/')),
+				'legal.LEDocument_type' => array('label' => 'Типы документов', 'url' => $this->createUrl('/legal/ledocument_type/')),
+				'legal.FoundingDocument' => array('label' => 'Учредительные документы', 'url' => $this->createUrl('/legal/founding_document/')),
 			);
 			if (isset($items[$this->menu_elem])) {
 				$items[$this->menu_elem]['active'] = true;

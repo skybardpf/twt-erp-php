@@ -4,8 +4,12 @@
  * Date: 11.01.13
  * @property int $id
  * @property string $name
+ *
+ * @property array $values
 */
 class Countries extends SOAPModel {
+
+	static public $values = array();
 
 	/**
 	 * @static
@@ -14,13 +18,12 @@ class Countries extends SOAPModel {
 	 *
 	 * @return Countries
 	 */
-	public static function model($className = __CLASS__)
-	{
+	public static function model($className = __CLASS__) {
 		return parent::model($className);
 	}
 
 	/**
-	 * Get list of Banks
+	 * Get list of Countries
 	 *
 	 * @return array
 	 */
@@ -34,8 +37,7 @@ class Countries extends SOAPModel {
 	 * Returns the list of attribute names of the model.
 	 * @return array list of attribute names.
 	 */
-	public function attributeLabels()
-	{
+	public function attributeLabels() {
 		return array(
 			'id'            => '#',
 			'name'          => 'Название',
@@ -45,8 +47,7 @@ class Countries extends SOAPModel {
 	/**
 	 * @return array validation rules for model attributes.
 	 */
-	public function rules()
-	{
+	public function rules() {
 		return array(
 			array('name', 'required'),
 			array('id, name', 'safe', 'on'=>'search'),
@@ -54,15 +55,26 @@ class Countries extends SOAPModel {
 	}
 
 	/**
-	 * Returns all not deleted groups as array(id => name)
+	 * Список доступных значений Стран
 	 * @return array
 	 */
 	static function getValues() {
-		$elements = self::model()->findAll();
-		$return   = array();
-		if ($elements) { foreach ($elements as $elem) {
-			$return[$elem->getprimaryKey()] = $elem->name;
-		} }
-		return $return;
+		$cacher = new CFileCache();
+		$cache = $cacher->get('countries_values');
+		if ($cache === false) {
+			if (!Countries::$values) {
+				$elements = self::model()->findAll();
+				$return   = array();
+				if ($elements) { foreach ($elements as $elem) {
+					$return[$elem->getprimaryKey()] = $elem->name;
+				} }
+				Countries::$values = $return;
+
+			}
+			$cacher->add('countries_values', Countries::$values, 30);
+		} elseif (!Countries::$values) {
+			Countries::$values = $cache;
+		}
+		return Countries::$values;
 	}
 }

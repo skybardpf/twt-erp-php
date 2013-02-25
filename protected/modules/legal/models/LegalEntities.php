@@ -34,6 +34,7 @@ class LegalEntities extends SOAPModel {
 	static protected $_nonResidentValues = array();
 	static protected $_groupNameValues = array();
 	static protected $_countryValues = array();
+	static public $values = array();
 
 	/**
 	 * @static
@@ -52,6 +53,8 @@ class LegalEntities extends SOAPModel {
 	 * @return bool
 	 */
 	public function delete() {
+		$cacher = new CFileCache();
+		$cacher->add('LEntity_values', false, 1);
 		if ($pk = $this->getprimaryKey()) {
 			$ret = $this->SOAP->deleteLegalEntity(array('id' => '1'.$pk));
 			return $ret->return;
@@ -60,6 +63,8 @@ class LegalEntities extends SOAPModel {
 	}
 
 	public function save() {
+		$cacher = new CFileCache();
+		$cacher->add('LEntity_values', false, 1);
 		if ($pk = $this->getprimaryKey()) {
 			$this->id = $pk;
 		}
@@ -180,11 +185,7 @@ class LegalEntities extends SOAPModel {
 	 * @return array
 	 */
 	public function getGroupNameValues() {
-		if (!LegalEntities::$_groupNameValues) {
-			$values = CounterpartiesGroups::model()->getValues();
-			LegalEntities::$_groupNameValues = $values;
-		}
-		return LegalEntities::$_groupNameValues;
+		return CounterpartiesGroups::getValues();
 	}
 
 	/**
@@ -192,10 +193,30 @@ class LegalEntities extends SOAPModel {
 	 * @return array
 	 */
 	public function getCountryValues() {
-		if (!LegalEntities::$_countryValues) {
-			$values = Countries::model()->getValues();
-			LegalEntities::$_countryValues = $values;
+		return Countries::getValues();
+	}
+
+	/**
+	 * Список доступных значений Юр.Лиц
+	 * @return array
+	 */
+	static function getValues() {
+		$cacher = new CFileCache();
+		$cache = $cacher->get('LEntity_values');
+		if ($cache === false) {
+			if (!LegalEntities::$values) {
+				$elements = self::model()->findAll();
+				$return   = array();
+				if ($elements) { foreach ($elements as $elem) {
+					$return[$elem->getprimaryKey()] = $elem->name;
+				} }
+				LegalEntities::$values = $return;
+
+			}
+			$cacher->add('LEntity_values', LegalEntities::$values, 30);
+		} elseif (!LegalEntities::$values) {
+			LegalEntities::$values = $cache;
 		}
-		return LegalEntities::$_countryValues;
+		return LegalEntities::$values;
 	}
 }

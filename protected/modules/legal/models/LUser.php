@@ -8,6 +8,8 @@
  */
 class LUser extends SOAPModel {
 
+	static public $values = array();
+
 	/**
 	 * @static
 	 *
@@ -54,4 +56,26 @@ class LUser extends SOAPModel {
 		);
 	}
 
+	/**
+	 * Список доступных значений Пользователей
+	 * @return array
+	 */
+	static function getValues() {
+		$cacher = new CFileCache();
+		$cache = $cacher->get('LUsers_values');
+		if ($cache === false) {
+			if (!LUser::$values) {
+				$elements = self::model()->findAll();
+				$return   = array();
+				if ($elements) { foreach ($elements as $elem) {
+					$return[$elem->getprimaryKey()] = $elem->name;
+				} }
+				LUser::$values = $return;
+			}
+			$cacher->add('LUsers_values', LUser::$values, 30);
+		} elseif (!LUser::$values) {
+			LUser::$values = $cache;
+		}
+		return LUser::$values;
+	}
 }

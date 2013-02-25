@@ -11,6 +11,8 @@
  */
 class CounterpartiesGroups extends SOAPModel {
 
+	static public $values = array();
+
 	/**
 	 * @static
 	 *
@@ -130,15 +132,26 @@ class CounterpartiesGroups extends SOAPModel {
 	}
 
 	/**
-	 * Returns all not deleted groups as array(id => name)
+	 * Список доступных значений групп контрагентов
 	 * @return array
 	 */
 	static function getValues() {
-		$elements = self::model()->where('deleted', false)->findAll();
-		$return   = array();
-		if ($elements) { foreach ($elements as $elem) {
-			$return[$elem->getprimaryKey()] = $elem->name;
-		} }
-		return $return;
+		$cacher = new CFileCache();
+		$cache = $cacher->get('CounterpartiesGroups_values');
+		if ($cache === false) {
+			if (!CounterpartiesGroups::$values) {
+				$elements = self::model()->where('deleted', false)->findAll();
+				$return   = array();
+				if ($elements) { foreach ($elements as $elem) {
+					$return[$elem->getprimaryKey()] = $elem->name;
+				} }
+				CounterpartiesGroups::$values = $return;
+
+			}
+			$cacher->add('CounterpartiesGroups_values', CounterpartiesGroups::$values, 30);
+		} elseif (!CounterpartiesGroups::$values) {
+			CounterpartiesGroups::$values = $cache;
+		}
+		return CounterpartiesGroups::$values;
 	}
 }
