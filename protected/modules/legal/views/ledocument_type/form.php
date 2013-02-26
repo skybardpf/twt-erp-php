@@ -23,11 +23,11 @@ if ($error) echo CHtml::openTag('div', array('class' => 'alert alert-error')).$e
 		<?= $form->textFieldRow(    $model, 'name',         array('class' => 'span6')); ?>
 		<?= $form->textFieldRow(    $model, 'full_name',    array('class' => 'span6')); ?>
 		<?= $form->textFieldRow(    $model, 'eng_name',     array('class' => 'span6')); ?>
-		<?= $form->dropDownListRow( $model, 'country', array('' => 'не заданно')+Countries::getValues(), array('class' => 'span6')); ?>
+		<?= $form->dropDownListRow( $model, 'country', array('' => 'не задано')+Countries::getValues(), array('class' => 'span6')); ?>
 		<?= $form->checkBoxRow(     $model, 'resident'); ?>
-		<?= $form->dropDownListRow( $model, 'type_no_res', array('' => 'не заданно')+$model->NonResidentValues, array('class' => 'span6')); ?>
+		<?= $form->dropDownListRow( $model, 'type_no_res', array('' => 'не задано')+$model->NonResidentValues, array('class' => 'span6')); ?>
 		<?= $form->checkBoxRow(     $model, 'contragent'); ?>
-		<?= $form->dropDownListRow( $model, 'parent', array('' => 'не заданно')+$model->GroupNameValues, array('class' => 'span6')); ?>
+		<?= $form->dropDownListRow( $model, 'parent', array('' => 'не задано')+$model->GroupNameValues, array('class' => 'span6')); ?>
 		<?= $form->textAreaRow(     $model, 'comment',      array('class'=>'span6', 'rows'=>5)); ?>
 		<?= $form->textFieldRow(    $model, 'inn',          array('class' => 'span6')); ?>
 		<?= $form->textFieldRow(    $model, 'kpp',          array('class' => 'span6')); ?>

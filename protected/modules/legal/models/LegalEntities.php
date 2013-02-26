@@ -71,16 +71,6 @@ class LegalEntities extends SOAPModel {
 	public function save() {
 		$cacher = new CFileCache();
 		$cacher->add('LEntity_values', false, 1);
-		if ($pk = $this->getprimaryKey()) {
-			$this->id = $pk;
-		}
-
-		$attrs4save = array();
-		foreach ($this->attributes4Save as $field_name) {
-			if (array_key_exists($field_name, $this->attributes)) {
-				$attrs4save[$field_name] = $this->attributes[$field_name];
-			}
-		}
 
 		$attrs = $this->getAttributes();
 
@@ -130,7 +120,7 @@ class LegalEntities extends SOAPModel {
 		return array(
 			'id'            => '#',                                 // +
 			'name'          => 'Сокращенное наименование',          // +
-			'full_name'     => 'Полное имя',                        // +
+			'full_name'     => 'Полное наименование',                        // +
 			'country'       => 'Страна юрисдикции',                 // + id
 			'resident'      => 'Резидент РФ',                       // + boolean
 			'type_no_res'   => 'Тип нерезидента',                   // + int
@@ -194,7 +184,7 @@ class LegalEntities extends SOAPModel {
 				self::$values = $return;
 
 			}
-			$cacher->add('LEntity_values', self::$values, 30);
+			$cacher->add('LEntity_values', self::$values, 3000);
 		} elseif (!self::$values) {
 			self::$values = $cache;
 		}

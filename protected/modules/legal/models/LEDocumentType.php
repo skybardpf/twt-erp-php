@@ -111,7 +111,7 @@ class LEDocumentType extends SOAPModel {
 				self::$values = $return;
 
 			}
-			$cacher->add('LEDoc_type_values', self::$values, 30);
+			$cacher->add('LEDoc_type_values', self::$values, 3000);
 		} elseif (!self::$values) {
 			self::$values = $cache;
 		}

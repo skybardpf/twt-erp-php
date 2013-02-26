@@ -141,7 +141,7 @@ class CounterpartiesGroups extends SOAPModel {
 				self::$values = $return;
 
 			}
-			$cacher->add('CounterpartiesGroups_values', self::$values, 30);
+			$cacher->add('CounterpartiesGroups_values', self::$values, 3000);
 		} elseif (!self::$values) {
 			self::$values = $cache;
 		}

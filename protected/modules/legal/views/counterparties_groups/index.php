@@ -4,6 +4,7 @@
 $this->breadcrumbs=array(
 	$this->controller_title,
 );
+CounterpartiesGroups::getValues();
 ?>
 <h2>Группы контрагентов<?=$parent ? (': '.$parent->name) : ''?></h2>
 <?php if ($parent) :?><a href="<?=$this->createUrl('index', ($parent ? array('pid' => $parent->parent) : array()))?>"><?=$parent->name?></a><?php endif; ?>
@@ -18,6 +19,7 @@ $this->breadcrumbs=array(
 			'columns'=>array(
 				array('name'=>'id', 'header'=>'#'),
 				array('name'=>'name', 'header'=>'Название',),
+				array('name' => 'parent', 'header' => 'Родительская группа', 'type' => 'raw', 'value' => 'isset(CounterpartiesGroups::$values[$data["parent"]]) ? CounterpartiesGroups::$values[$data["parent"]] : "Не установлена или удалена"'),
 				array(
 					'class'=>'bootstrap.widgets.TbButtonColumn',
 					'template' => '{update} {delete}',

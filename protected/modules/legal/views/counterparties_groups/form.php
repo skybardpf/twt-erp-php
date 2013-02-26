@@ -27,7 +27,7 @@ if ($error) echo CHtml::openTag('div', array('class' => 'alert alert-error')).$e
 			<?php $this->widget('bootstrap.widgets.TbButton', array(
 			'buttonType' => 'submit',
 			'type' => 'primary',
-			'label'=> 'Добавить'
+			'label'=> (!$model->getprimaryKey() ? 'Добавить' : 'Сохранить')
 		));?>
         </div>
     </div>

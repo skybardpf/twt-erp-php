@@ -19,11 +19,11 @@ if ($error) echo CHtml::openTag('div', array('class' => 'alert alert-error')).$e
 
 	<fieldset>
 		<?= $form->textFieldRow(    $model, 'name',         array('class' => 'span6')); ?>
-		<?= $form->dropDownListRow( $model, 'id_yur', array('' => 'не заданно')+LegalEntities::getValues(), array('class' => 'span6')); ?>
+		<?= $form->dropDownListRow( $model, 'id_yur', array('' => 'не задано')+LegalEntities::getValues(), array('class' => 'span6')); ?>
 		<?= $form->textFieldRow(    $model, 'date'); ?>
 		<?= $form->textFieldRow(    $model, 'expire'); ?>
 		<?= $form->checkBoxRow( $model, 'from_user'); ?>
-		<?= $form->dropDownListRow( $model, 'user', array('' => 'не заданно')+LUser::getValues(), array('class' => 'span6')); ?>
+		<?= $form->dropDownListRow( $model, 'user', array('' => 'не задано')+LUser::getValues(), array('class' => 'span6')); ?>
 		<?= $form->textFieldRow( $model, 'nom', array('class' => 'span6')); ?>
 	</fieldset>
 	<div class="control-group ">

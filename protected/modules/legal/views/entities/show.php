@@ -17,7 +17,7 @@ CounterpartiesGroups::getValues();
 		'data' => $element,
 		'attributes'=>array(
 			array('name' => 'id',           'label' => '#'),
-			array('name' => 'full_name',    'label' => 'Полное имя'),
+			array('name' => 'full_name',    'label' => 'Полное наименование'),
 			array('name' => 'eng_name',     'label' => 'Английское наименование'),
 			array('name' => 'country',      'label' => 'Страна юрисдикции', 'type' => 'raw', 'value' => $element->country ? Countries::$values[$element->country] : 'Не указана'),
 			array('name' => 'resident',     'label' => 'Не является резидентом РФ', 'type' => 'raw', 'value' => $element->resident ? 'Да' : 'Нет'),

@@ -71,7 +71,7 @@ class LUser extends SOAPModel {
 				} }
 				self::$values = $return;
 			}
-			$cacher->add('LUsers_values', self::$values, 30);
+			$cacher->add('LUsers_values', self::$values, 3000);
 		} elseif (!self::$values) {
 			self::$values = $cache;
 		}

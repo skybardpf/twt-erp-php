@@ -5,7 +5,7 @@ $this->breadcrumbs=array(
 	$this->controller_title,
 );
 ?>
-<h2>$this->controller_title</h2>
+<h2><?=$this->controller_title?></h2>
 <div>
 	<?php
 	if ($elements) {
