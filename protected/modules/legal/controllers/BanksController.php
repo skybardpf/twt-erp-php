@@ -14,7 +14,8 @@ class BanksController extends Controller
 	 * List action
 	 */
 	public function actionIndex() {
-		$entities = Banks::model()->findAll();
+		// TODO пока что только банки кипра
+		$entities = Banks::model()->where('deleted', false)->where('country', '196')->findAll();
 		$this->render('index', array('elements' => $entities));
 	}
 

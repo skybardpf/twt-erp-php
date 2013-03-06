@@ -24,6 +24,17 @@ class Ledocument_typeController extends Controller {
 		$this->render('show', array('model' => $model));
 	}
 
+	public function actionAdd() {
+		$model = new LEDocumentType();
+		$error = '';
+		$this->render('add', array('model' => $model, 'error' => $error));
+	}
+
+	public function actionUpdate($id) {
+		$model = LEDocumentType::model()->findByPk($id);
+		$error = '';
+		$this->render('update', array('model' => $model, 'error' => $error));
+	}
 	/**
 	 * Удаление типа документа
 	 * @param $id

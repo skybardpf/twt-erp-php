@@ -115,13 +115,10 @@ class CounterpartiesGroups extends SOAPModel {
 	 * @return array
 	 */
 	public function getParentValues() {
-		$elements = $this->where('deleted', false)->findAll();
-		$return   = array();
+		$elements = $this->getValues();
 		$pk = $this->getprimaryKey();
-		if ($elements) { foreach ($elements as $elem) {
-			if (!$pk || $elem->getprimaryKey() != $pk) $return[$elem->getprimaryKey()] = $elem->name;
-		} }
-		return $return;
+		if ($pk && isset($elements[$pk])) unset($elements[$pk]);
+		return $elements;
 	}
 
 	/**

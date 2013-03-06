@@ -52,7 +52,8 @@ class FoundingDocument extends SOAPModel {
 	public function findByPk($id) {
 		$ret = $this->SOAP->getFoundingDocument(array('id' => $id));
 		$ret = SoapComponent::parseReturn($ret);
-		return $this->publish_elem(current($ret), __CLASS__);
+		if ($ret) return $this->publish_elem(current($ret), __CLASS__);
+		else return null;
 	}
 
 	/**

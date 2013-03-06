@@ -12,10 +12,10 @@ $this->widget('bootstrap.widgets.TbDetailView', array(
 	'attributes'=>array(
 		array('name' => 'id',           'label' => '#'),
 		array('name' => 'name',         'label' => 'Название'),
-		array('name' => 'id_yur',       'label' => 'Юр.Лицо', 'value' => $model->id_yur ? LegalEntities::$values[$model->id_yur] : 'Не указан'),
+		array('name' => 'id_yur',       'label' => 'Юр.Лицо', 'value' => isset(LegalEntities::$values[$model->id_yur])? LegalEntities::$values[$model->id_yur] : 'Не указан'),
 		array('name' => 'date',         'label' => 'Дата загрузки'),
 		array('name' => 'expire',       'label' => 'Срок действия'),
-		array('name' => 'typ_doc',      'label' => 'Тип документа', 'value' => $model->typ_doc ? LEDocumentType::$values[$model->typ_doc] : 'Не указан'),
+		array('name' => 'typ_doc',      'label' => 'Тип документа', 'value' => isset(LEDocumentType::$values[$model->typ_doc]) ? LEDocumentType::$values[$model->typ_doc] : 'Не указан'),
 	)
 ));
 ?>

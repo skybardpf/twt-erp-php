@@ -74,20 +74,15 @@ return array(
 				'<controller:\w+>/<action:\w+>'=>'<controller>/<action>',
 			),*/
 		),
-
-		/*'db'=>array(
-			'connectionString' => 'sqlite:'.dirname(__FILE__).'/../data/testdrive.db',
-		),*/
-		// uncomment the following to use a MySQL database
-		/*
 		'db'=>array(
-			'connectionString' => 'mysql:host=localhost;dbname=testdrive',
-			'emulatePrepare' => true,
-			'username' => 'root',
-			'password' => '',
-			'charset' => 'utf8',
+			'connectionString' => 'sqlite:'.dirname(__FILE__).'/../data/twt.db',
+			'schemaCachingDuration' => YII_DEBUG ? 10 : 3600,
+			'enableParamLogging' => YII_DEBUG,
+			'enableProfiling' => YII_DEBUG
 		),
-		*/
+		'yexcel' => array(
+			'class' => 'ext.yexcel.Yexcel'
+		),
 		'errorHandler'=>array(
 			// use 'site/error' action to display errors
 			'errorAction'=>'site/error',

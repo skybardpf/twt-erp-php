@@ -70,6 +70,11 @@ class LEDocumentType extends SOAPModel {
 		return false;
 	}
 
+	public function save() {
+		$attr = array();
+		//[{"data":{"id":"","name_of_doc": "тест", "deleted": false, "list_of_countries": [ {"country":"004","name_in_country":"doc004","user": "rt34000000002", "from_user": false} ]} }]
+	}
+
 	/**
 	 * Returns the list of attribute names of the model.
 	 * @return array list of attribute names.

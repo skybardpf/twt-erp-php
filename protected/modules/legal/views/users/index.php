@@ -19,7 +19,6 @@ $this->breadcrumbs=array(
 		$this->widget('bootstrap.widgets.TbGridView', array(
 			'type'=>'striped',
 			'dataProvider' => $gridDataProvider,
-			'template'=>"{items}",
 			'columns'=>array(
 				array('name'=>'name', 'header'=>'ФИО'),
 			),

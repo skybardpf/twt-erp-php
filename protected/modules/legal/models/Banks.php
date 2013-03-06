@@ -40,7 +40,11 @@ class Banks extends SOAPModel {
 	 * @return Banks[]
 	 */
 	public function findAll() {
-		$ret = $this->SOAP->listBanks();
+		$filters = SoapComponent::getStructureElement($this->where);
+		if (!$filters) $filters = array(array());
+		$request = array('filters' => $filters, 'sort' => array($this->order));
+
+		$ret = $this->SOAP->listBanks($request);
 		$ret = SoapComponent::parseReturn($ret);
 		return $this->publish_list($ret, __CLASS__);
 	}

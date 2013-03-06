@@ -8,6 +8,7 @@
  */
 
 class Calc extends SOAPModel {
+	public $excel_file;
 
 	static public $categories;
 	/**
@@ -31,7 +32,7 @@ class Calc extends SOAPModel {
 			$this->onAfterConstruct(new CEvent($this));
 	}
 
-	static public function getCategories() {
+	/*static public function getCategories() {
 		$cacher = new CFileCache();
 		$cache = $cacher->get('calc_categories');
 		if ($cache === false) {
@@ -56,7 +57,7 @@ class Calc extends SOAPModel {
 			self::$categories = $cache;
 		}
 		return self::$categories;
-	}
+	}*/
 
 	/**
 	 * Returns the list of attribute names of the model.
@@ -84,6 +85,7 @@ class Calc extends SOAPModel {
 	public function rules() {
 		return array(
 			array('name, country, city, address, phone, cor_sh, swift', 'required'),
+			array('excel_file', 'file', 'types'=>'xls, xlsx', 'maxSize' => 10485760),
 			array('id, name, show', 'safe', 'on'=>'search'),
 		);
 	}
