@@ -73,4 +73,34 @@ class PegroupController extends Controller {
 		}
 		$this->render('update', array('model' => $model, 'error' => $error));
 	}
+
+	/**
+	 * Удаление группы физ.лиц
+	 * @param $id
+	 *
+	 * @throws CHttpException
+	 */
+	public function actionDelete($id) {
+		/** @var $model LegalEntities */
+		$model = PEGroup::model()->findByPk($id);
+		if (empty($model)) throw new CHttpException(404);
+		if (Yii::app()->request->isAjaxRequest) {
+			$model->delete();
+		}
+		if (isset($_POST['result'])) {
+			switch ($_POST['result']) {
+				case 'yes':
+					if ($model->delete()) {
+						$this->redirect($this->createUrl('index'));
+					} else {
+						//throw new CException('Не удалось удалить страницу');
+					}
+					break;
+				default:
+					$this->redirect($this->createUrl('index'));
+					break;
+			}
+		}
+		$this->render('delete', array('model' => $model));
+	}
 }

@@ -96,6 +96,21 @@ class PEGroup extends SOAPModel {
 	}
 
 	/**
+	 * Удаление группы физ.лиц
+	 *
+	 * @return bool
+	 */
+	public function delete() {
+		$cacher = new CFileCache();
+		$cacher->add('PEGroups_values', false, 1);
+		if ($pk = $this->getprimaryKey()) {
+			$ret = $this->SOAP->deleteIndividualsGroup(array('id' => $pk));
+			return $ret->return;
+		}
+		return false;
+	}
+
+	/**
 	 * Список доступных значений групп физ.лиц
 	 * @return array
 	 */

@@ -58,6 +58,19 @@ class FreeDocument extends SOAPModel {
 	}
 
 	/**
+	 * Удаление Свободного документа
+	 *
+	 * @return bool
+	 */
+	public function delete() {
+		if ($pk = $this->getprimaryKey()) {
+			$ret = $this->SOAP->deleteFreeDocument(array('id' => $pk));
+			return $ret->return;
+		}
+		return false;
+	}
+
+	/**
 	 * Returns the list of attribute names of the model.
 	 * @return array list of attribute names.
 	 */

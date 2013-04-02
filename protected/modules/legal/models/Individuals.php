@@ -4,6 +4,9 @@
  * Date: 01.04.13
  */
 class Individuals extends SOAPModel {
+
+	static public $values = array();
+
 	/**
 	 * @static
 	 *
@@ -16,7 +19,7 @@ class Individuals extends SOAPModel {
 	}
 
 	/**
-	 * Список Юр.Лиц
+	 * Список Физ.лиц
 	 *
 	 * @return Individuals[]
 	 */
@@ -31,7 +34,7 @@ class Individuals extends SOAPModel {
 	}
 
 	/**
-	 * Юр.Лицо
+	 * Физ.Лицо
 	 *
 	 * @param $id
 	 * @return bool|Individuals
@@ -71,5 +74,29 @@ class Individuals extends SOAPModel {
 			'eng_name'      => 'Английское наименование',           // +
 			'deleted'       => 'Помечен на удаление'                // +
 		);
+	}
+
+	/**
+	 * Список доступных значений Физ.лиц
+	 * @return array
+	 */
+	static function getValues() {
+		$cacher = new CFileCache();
+		$cache = $cacher->get('Individuals_values');
+		if ($cache === false) {
+			if (!self::$values) {
+				$elements = self::model()->findAll();
+				$return   = array();
+				if ($elements) { foreach ($elements as $elem) {
+					$return[$elem->getprimaryKey()] = $elem->name;
+				} }
+				self::$values = $return;
+
+			}
+			$cacher->add('Individuals_values', self::$values, 3000);
+		} elseif (!self::$values) {
+			self::$values = $cache;
+		}
+		return self::$values;
 	}
 }

@@ -17,13 +17,16 @@ $this->widget('bootstrap.widgets.TbDetailView', array(
 			'name' => 'list_of_countries',
 			'label' => 'Названия в странах',
 			'type' => 'raw',
-			'value' => $this->widget('bootstrap.widgets.TbGridView', array(
-				'type' => 'striped',
-				'dataProvider' => $gridDataProvider,
-				'columns'=>array(
-					array('name' => 'country', 'header'=>'Страна', 'type' => 'raw', 'value' => 'Countries::$values[$data["country"]]'),
-					array('name' => 'name_in_country', 'header'=>'Название документа',),
-					)), true)
+			'value' => $this->widget(
+				'bootstrap.widgets.TbGridView',
+				array(
+					'type' => 'striped',
+					'dataProvider' => $gridDataProvider,
+					'columns'=>array(
+						array('name' => 'country', 'header'=>'Страна', 'type' => 'raw', 'value' => 'Countries::$values[$data["country"]]'),
+						array('name' => 'name_in_country', 'header'=>'Название документа',),
+					)
+				), true)
 			)
 		)
 	)
