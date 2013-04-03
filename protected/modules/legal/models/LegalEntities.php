@@ -75,7 +75,6 @@ class LegalEntities extends SOAPModel {
 		$attrs = $this->getAttributes();
 
 		if (!$this->getprimaryKey()) unset($attrs['id']); // New record
-		if ($attrs['parent']) $attrs['parent'] = substr($attrs['parent'],1);
 		unset($attrs['deleted']);
 
 		$ret = $this->SOAP->saveLegalEntity(array('data' => SoapComponent::getStructureElement($attrs)));

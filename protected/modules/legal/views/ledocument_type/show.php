@@ -22,8 +22,11 @@ $this->widget('bootstrap.widgets.TbDetailView', array(
 				array(
 					'type' => 'striped',
 					'dataProvider' => $gridDataProvider,
+					'enablePagination' => false,
+					'enableSorting' => false,
+					'template' => '{items}',
 					'columns'=>array(
-						array('name' => 'country', 'header'=>'Страна', 'type' => 'raw', 'value' => 'Countries::$values[$data["country"]]'),
+						array('name' => 'country', 'header'=>'Страна', 'type' => 'raw', 'value' => '($data["country"] && isset(Countries::$values[$data["country"]])) ? Countries::$values[$data["country"]] : "Не указана"'),
 						array('name' => 'name_in_country', 'header'=>'Название документа',),
 					)
 				), true)

@@ -7,7 +7,7 @@
  *
  * @property int $id
  * @property string $name_of_doc
- * @property string $list_of_countries
+ * @property array $list_of_countries
  *
  * @property string $deleted
  */
@@ -15,6 +15,9 @@
 
 class LEDocumentType extends SOAPModel {
 	static public $values = array();
+	public $new_countries = array();
+
+	public $deleted = false;
 
 	/**
 	 * @static
@@ -71,8 +74,15 @@ class LEDocumentType extends SOAPModel {
 	}
 
 	public function save() {
-		$attr = array();
-		//[{"data":{"id":"","name_of_doc": "тест", "deleted": false, "list_of_countries": [ {"country":"004","name_in_country":"doc004","user": "rt34000000002", "from_user": false} ]} }]
+		$attrs = $this->getAttributes();
+
+		if (!$this->getprimaryKey()) {
+			$attrs['id'] = '';
+		} // New record
+
+		$ret = $this->SOAP->saveLEDocumentType(array('data' => $attrs));//SoapComponent::getStructureElement($attrs))
+		$ret = SoapComponent::parseReturn($ret, false);
+		return $ret;
 	}
 
 	/**
@@ -85,7 +95,6 @@ class LEDocumentType extends SOAPModel {
 			'name_of_doc'       => 'Название',
 			'list_of_countries' => 'Страны юрисдикции',
 			'deleted'           => 'Помечен на удаление'
-			//Адрес отделения
 		);
 	}
 
@@ -94,9 +103,29 @@ class LEDocumentType extends SOAPModel {
 	 */
 	public function rules() {
 		return array(
-			array('name, list_of_countries', 'required'),
-			array('id, name', 'safe', 'on'=>'search'),
+			array('name_of_doc, new_countries', 'required'),
+			array('new_countries', 'validateCountriesList'),
+			array('list_of_countries', 'unsafe'),
+			array('id, name_of_doc', 'safe', 'on'=>'search'),
 		);
+	}
+
+	/**
+	 * Переопределенный метод setAttribute для отдельной установки списка документов
+	 * @param string $name
+	 * @param mixed $value
+	 *
+	 * @return bool
+	 */
+	public function setAttribute($name,$value)
+	{
+		if(property_exists($this,$name))
+			$this->$name = $value;
+		elseif(in_array($name, $this->attributeNames()))
+			$this->_attributes[$name]=$value;
+		else
+			return false;
+		return true;
 	}
 
 	/**
@@ -121,5 +150,42 @@ class LEDocumentType extends SOAPModel {
 			self::$values = $cache;
 		}
 		return self::$values;
+	}
+
+	public function validateCountriesList($attribute, $params) {
+		if ($attribute != 'new_countries') throw new Exception('Данный метод только для валидации новых стран');
+		$countries = array();
+		$user_countries = array();
+
+		// Страны, которые были до редактирования (установим те, что загружены администрацией)
+		$old_countries = array();
+		if ($this->getprimaryKey()) {
+			// Не новая запись - проверить администраторские страны
+			foreach ($this->list_of_countries as $country) {
+				$old_countries[$country['country']] = $country;
+				if ($country['from_user'] == false) {
+					$countries[$country['country']] = $country;
+				}
+			}
+			unset($country);
+		}
+
+		//Страны, полученные в форме, надо проверить
+		foreach ($this->new_countries as $country) {
+			if (isset($user_countries[$country['country']])) {
+				if (!$this->getError($attribute)) {
+					$this->addError($attribute, 'Страны не должны повторяться.');
+				}
+				continue;
+			}
+			$user_countries[$country['country']] = 1;
+			if (isset($old_countries[$country['country']])) {
+				continue;
+			}
+			$country['user'] = 'test';
+			$country['from_user'] = true;
+			$countries[$country['country']] = $country;
+		}
+		$this->list_of_countries = array_values($countries);
 	}
 }

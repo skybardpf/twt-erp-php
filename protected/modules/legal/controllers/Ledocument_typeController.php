@@ -26,13 +26,52 @@ class Ledocument_typeController extends Controller {
 
 	public function actionAdd() {
 		$model = new LEDocumentType();
+		if(isset($_POST['ajax']) && $_POST['ajax']==='model-form-form') {
+			echo CActiveForm::validate($model);
+			Yii::app()->end();
+		}
+
 		$error = '';
+
+		if (isset($_POST[get_class($model)])) {
+			// Нужно очистить ключи массива стран на случай ошибок валидации, чтобы скрипт добавления новых полей не создал поля с аналогичным номером.
+			$model->setAttributes($_POST[get_class($model)]);
+			if ($model->validate()) {
+				try {
+					$model->save();
+					$this->redirect($this->createUrl('index'));
+				} catch (Exception $e) {
+					$error = $e->getMessage();
+				}
+			}
+		}
+
 		$this->render('add', array('model' => $model, 'error' => $error));
 	}
 
 	public function actionUpdate($id) {
+		/** @var $model LEDocumentType */
 		$model = LEDocumentType::model()->findByPk($id);
+		if (empty($model)) throw new CHttpException(404);
+
+		if(isset($_POST['ajax']) && $_POST['ajax']==='model-form-form') {
+			echo CActiveForm::validate($model);
+			Yii::app()->end();
+		}
+
 		$error = '';
+		if (isset($_POST[get_class($model)])) {
+			// Нужно очистить ключи массива стран на случай ошибок валидации, чтобы скрипт добавления новых полей не создал поля с аналогичным номером.
+			$model->setAttributes($_POST[get_class($model)]);
+			if ($model->validate()) {
+				try {
+					$model->save();
+					$this->redirect($this->createUrl('index'));
+				} catch (Exception $e) {
+					$error = $e->getMessage();
+				}
+			}
+		}
 		$this->render('update', array('model' => $model, 'error' => $error));
 	}
 	/**

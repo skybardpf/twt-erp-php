@@ -47,8 +47,11 @@ class SoapComponent extends CApplicationComponent
 	 * @static
 	 *
 	 * @param $data
-	 * @param $class - which objects we will generate
-	 * @param $key - the first key of resulting array
+	 * @param bool $json
+	 *
+	 * @throws Exception
+	 * @internal param $class - which objects we will generate
+	 * @internal param $key - the first key of resulting array
 	 *
 	 * @return array
 	 */
@@ -61,7 +64,7 @@ class SoapComponent extends CApplicationComponent
 			} elseif (!$json) {
 				$data = $data->return;
 			} else {
-				$data = null;
+				$data = NULL;
 			}
 		}
 		return $data;

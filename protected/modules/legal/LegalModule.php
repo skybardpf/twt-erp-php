@@ -1,7 +1,12 @@
 <?php
-
+/**
+ * Class LegalModule
+ *
+ * @property string $assets
+ */
 class LegalModule extends CWebModule
 {
+	public $assets = '';
 	public function init()
 	{
 		// this method is called when the module is being created
@@ -16,6 +21,7 @@ class LegalModule extends CWebModule
 
 	public function beforeControllerAction($controller, $action)
 	{
+		$this->assets = CHtml::asset($this->basePath.'/static');
 		if(parent::beforeControllerAction($controller, $action))
 		{
 			// this method is called before any module controller action is performed

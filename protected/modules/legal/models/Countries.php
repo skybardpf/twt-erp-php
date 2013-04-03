@@ -6,7 +6,7 @@
  * @property int $id
  * @property string $name
  *
- * @property array $values
+ * @property @static array $values
 */
 class Countries extends SOAPModel {
 

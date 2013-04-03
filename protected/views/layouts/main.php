@@ -26,11 +26,11 @@ Yii::app()->clientScript->registerCssFile(CHtml::asset(Yii::app()->basePath.'/..
 			<?php
 			$items = array(
 				'main'           => array('label' => 'Главная', 'url' => Yii::app()->homeUrl),
-/* Внимание Метод с ошибкой	*/ 'legal.entities' => array('label' => 'Юридические лица', 'url' => $this->createUrl('/legal/entities/'), 'linkOptions' => array('style' => 'background: #F22', 'title' => 'Проблемы с сохранением. Не сохраняется группа контрагентов')),
+				'legal.entities' => array('label' => 'Юридические лица', 'url' => $this->createUrl('/legal/entities/'), 'linkOptions' => array('style' => 'background: #DFD')),
 				'legal.Counterparties_groups' => array('label' => 'Группы контрагентов', 'url' => $this->createUrl('/legal/counterparties_groups/'), 'linkOptions' => array('style' => 'background: #dFd')),
 				'legal.Banks' => array('label' => 'Банки', 'url' => $this->createUrl('/legal/banks/'), 'linkOptions' => array('style' => 'background: #dFd')),
 				'legal.Countries' => array('label' => 'Страны юрисдикции', 'url' => $this->createUrl('/legal/countries/'), 'linkOptions' => array('style' => 'background: #dFd')),
-/* Внимание Метод с ошибкой	*/ 'legal.LEDocument_type' => array('label' => 'Типы документов', 'url' => $this->createUrl('/legal/ledocument_type/'), 'linkOptions' => array('style' => 'background: #F22', 'title' => 'Неверный формат стран, должны быть коды стран')),
+				'legal.LEDocument_type' => array('label' => 'Типы документов', 'url' => $this->createUrl('/legal/ledocument_type/'), 'linkOptions' => array('style' => 'background: #dFd')),
 				'legal.Users' => array('label' => 'Пользователи', 'url' => $this->createUrl('/legal/users/'), 'linkOptions' => array('style' => 'background: #dFd')),
 /* Внимание Метод с ошибкой	*/ 'legal.FoundingDocument' => array('label' => 'Учредительные документы', 'url' => $this->createUrl('/legal/founding_document/'), 'linkOptions' => array('style' => 'background: #F22', 'title' => 'Ошибка при сохранении, Файлы')),
 /* Внимание Метод с ошибкой	*/ 'legal.PowerAttorneyLE' => array('label' => 'Доверенности', 'url' => $this->createUrl('/legal/power_attorney_le/'), 'linkOptions' => array('style' => 'background: #F99', 'title' => 'Файлы, виды договоров, сканы.')),

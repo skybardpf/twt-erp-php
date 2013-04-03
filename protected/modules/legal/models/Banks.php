@@ -57,13 +57,8 @@ class Banks extends SOAPModel {
 	 * @throws CHttpException
 	 */
 	public function findByPk($id) {
-		/*$ret = $this->SOAP->getCounterpartiesGroups(array('id' => $id));
-		$ret = SoapComponent::parseReturn($ret);
-		return $this->publish_elem(current($ret), __CLASS__);
-		$ret = $this->SOAP->listBanks();
-		$ret = SoapComponent::parseReturn($ret);
-		return $this->publish_list($ret, __CLASS__);*/
-		throw new CHttpException(500, 'Нет метода getBank()');
+		$this->where('id', $id);
+		return $this->findAll();
 	}
 
 	/**

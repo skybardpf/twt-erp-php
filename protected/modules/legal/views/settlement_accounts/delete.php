@@ -1,12 +1,13 @@
 <?php
-/* @var $this EntitiesController */
-/* @var $model LegalEntities*/
+/* @var $this PegroupController */
+/* @var $model PEGroup */
 
 $this->breadcrumbs=array(
-	$this->controller_title => array('/legal/ledocument_type/'),
+	$this->controller_title => array('/legal/counterparties_groups/'),
 	'Удаление',
 );?>
-Вы действительно хотите <?=$model->deleted ? '<b>восстановить тип документа</b>': '<b>удалить тип документа</b>'?> «<?=CHtml::encode($model->name_of_doc)?>»?
+Вы действительно хотите <?=$model->deleted ? '<b>восстановить управляющего расчетным счетом</b>': '<b>удалить управляющего расчетным счетом</b>'?> «<?=CHtml::encode($model->role)?>»?
+
 <?php $form = $this->beginWidget('bootstrap.widgets.TbActiveForm', array(
 	'id'=>'news-delete-form',
 	'type'=>'horizontal',

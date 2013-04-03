@@ -1,13 +1,13 @@
 <?php
 /**
- * @var $this EntitiesController
- * @var $model LegalEntities
+ * @var $this Ledocument_typeController
+ * @var $model LEDocumentType
  * @var $form TbActiveForm
  * @var $error string
  */
-// ТУДУ Редактирование типов документов
-// Внимание не доделан тип документа
+Yii::app()->clientScript->registerScriptFile($this->module->assets.'/js/ledocument_type/form.js');
 
+Countries::getValues();
 if ($error) echo CHtml::openTag('div', array('class' => 'alert alert-error')).$error.CHtml::closeTag('div'); ?>
 
 <div class="form">
@@ -21,9 +21,23 @@ if ($error) echo CHtml::openTag('div', array('class' => 'alert alert-error')).$e
 
 	<fieldset>
 		<?= $form->textFieldRow(    $model, 'name_of_doc',      array('class' => 'span6')); ?>
-		<?php if ($countries = $model->list_of_countries) { foreach($countries as $c) {
+		<div class="control-group">
+			<?=CHtml::label('Страны юрисдикции <span class="required">*</span>','', array('class' => 'control-label'))?>
+			<div class="controls" id="list_of_countries">
+				<?php if ($countries = $model->list_of_countries) { foreach($countries as $k => $c) :?>
+					<div>
+						<?=CHtml::dropDownList('LEDocumentType[new_countries]['.$k.'][country]', $c['country'], array('' => 'Не выбрана') + Countries::$values, array('data-country_select' => 1))?>
+						<?=CHtml::textField('LEDocumentType[new_countries]['.$k.'][name_in_country]', $c['name_in_country'])?>
+					</div>
+				<?php endforeach; }?>
+				<div>
+					<?=CHtml::dropDownList('', '', array('' => 'Не выбрана') + Countries::$values, array('data-name' => 'LEDocumentType[new_countries][iteration][country]', 'data-country_select' => 1, 'data-new' => '1'))?>
+					<?=CHtml::textField('', '', array('data-name' => 'LEDocumentType[new_countries][iteration][name_in_country]'))?>
+				</div>
+			</div>
+		</div>
 
-		} }?>
+
 	</fieldset>
 	<div class="control-group ">
 		<div class="controls">
