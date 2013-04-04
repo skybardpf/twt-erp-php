@@ -5,6 +5,9 @@
  *
  * @var $this Ledocument_typeController
  */
+
+Yii::app()->clientScript->registerCss('LEDocumentTypeDetailView', 'table.table-striped th {text-align: left;}');
+
 $gridDataProvider = new CArrayDataProvider($model->list_of_countries, array('keyField' => 'country'));
 Countries::getValues();
 $this->widget('bootstrap.widgets.TbDetailView', array(
@@ -28,7 +31,7 @@ $this->widget('bootstrap.widgets.TbDetailView', array(
 					'columns'=>array(
 						array('name' => 'country', 'header'=>'Страна', 'type' => 'raw', 'value' => '($data["country"] && isset(Countries::$values[$data["country"]])) ? Countries::$values[$data["country"]] : "Не указана"'),
 						array('name' => 'name_in_country', 'header'=>'Название документа',),
-					)
+					),
 				), true)
 			)
 		)

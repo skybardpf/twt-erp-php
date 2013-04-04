@@ -26,8 +26,8 @@ if ($error) echo CHtml::openTag('div', array('class' => 'alert alert-error')).$e
 			<div class="controls" id="list_of_countries">
 				<?php if ($countries = $model->list_of_countries) { foreach($countries as $k => $c) :?>
 					<div>
-						<?=CHtml::dropDownList('LEDocumentType[new_countries]['.$k.'][country]', $c['country'], array('' => 'Не выбрана') + Countries::$values, array('data-country_select' => 1))?>
-						<?=CHtml::textField('LEDocumentType[new_countries]['.$k.'][name_in_country]', $c['name_in_country'])?>
+						<?=CHtml::dropDownList('LEDocumentType[new_countries]['.$k.'][country]', $c['country'], array('' => 'Не выбрана') + Countries::$values, array('data-country_select' => 1) + ($c['from_user'] ? array() : array('disabled' => 'disabled')))?>
+						<?=CHtml::textField('LEDocumentType[new_countries]['.$k.'][name_in_country]', $c['name_in_country'], $c['from_user'] ? array() : array('disabled' => 'disabled'))?>
 					</div>
 				<?php endforeach; }?>
 				<div>
