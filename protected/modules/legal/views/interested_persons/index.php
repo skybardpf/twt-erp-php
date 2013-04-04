@@ -20,10 +20,12 @@ if ($elements) {
 			array('name' => 'role',     'header' => 'Роль'),
 			array('name' => 'id_yur',   'header' => 'Юр.Лицо',  'type' => 'raw', 'value' => 'isset(LegalEntities::$values[$data["id_yur"]]) ? LegalEntities::$values[$data["id_yur"]] : "-"'),
 			array(
-				'class'=>'bootstrap.widgets.TbButtonColumn',
+				'class' => 'bootstrap.widgets.TbButtonColumn',
+				'viewButtonUrl' => 'Yii::app()->getController()->createUrl("view", array("id" => $data->id, "id_yur" => $data->id_yur, "role" => $data->role))'
 			),
 		),
 	));
+
 } else {
 	echo 'Ни одного заинтересованного лица не зарегистрировано.';
 }

@@ -17,6 +17,7 @@ class Free_documentsController extends Controller {
 		/** @var $model FoundingDocument */
 		$model = FreeDocument::model()->findByPk($id);
 		if (empty($model)) throw new CHttpException(404);
+		if (!$model->from_user) throw new CHttpException(404, 'Данный документ добавлен администрацией. Его редактирование запрещено.');
 
 		if(isset($_POST['ajax']) && $_POST['ajax']==='model-form-form') {
 			echo CActiveForm::validate($model);
@@ -49,7 +50,7 @@ class Free_documentsController extends Controller {
 			if ($model->validate()) {
 				try {
 					$model->save();
-					$this->redirect($this->createUrl('index'));
+					//$this->redirect($this->createUrl('index'));
 				} catch (Exception $e) {
 					$error = $e->getMessage();
 				}

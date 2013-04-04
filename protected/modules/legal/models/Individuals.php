@@ -21,6 +21,7 @@ class Individuals extends SOAPModel {
 	/**
 	 * Список Физ.лиц
 	 *
+	 * @internal param array $filter
 	 * @return Individuals[]
 	 */
 	public function findAll() {
@@ -38,13 +39,12 @@ class Individuals extends SOAPModel {
 	 *
 	 * @param $id
 	 * @return bool|Individuals
-	 * @internal param array $filter
 	 */
-	/*public function findByPk($id) {
-		$ret = $this->SOAP->getLegalEntity(array('id' => $id));
+	public function findByPk($id) {
+		$ret = $this->SOAP->getIndividual(array('id' => $id));
 		$ret = SoapComponent::parseReturn($ret);
 		return $this->publish_elem(current($ret), __CLASS__);
-	}*/
+	}
 
 	/**
 	 * Returns the list of attribute names of the model.
@@ -52,28 +52,69 @@ class Individuals extends SOAPModel {
 	 */
 	public function attributeLabels() {
 		return array(
-			'id'            => '#',                                 // +
-			'name'          => 'Сокращенное наименование',          // +
-			'full_name'     => 'Полное наименование',                        // +
-			'country'       => 'Страна юрисдикции',                 // + id
-			'resident'      => 'Резидент РФ',                       // + boolean
-			'type_no_res'   => 'Тип нерезидента',                   // + int
-			'contragent'    => 'Контрагент',                        // + boolean
-			'parent'        => 'Группа контрагентов',               // +
-			'comment'       => 'Комментарий',                       // +
-			'inn'           => 'ИНН',                               // +
-			'kpp'           => 'КПП',                               // +
-			'ogrn'          => 'ОГРН',                              // +
-			'yur_address'   => 'Адрес юридический',                 // +
-			'fact_address'  => 'Адрес фактический',                 // +
-			'reg_nom'       => 'Регистрационный номер',             // +
-			'sert_nom'      => 'Номер сертификата о регистрации',   // +
-			'sert_date'     => 'Дата сертификата о регистрации',    // +
-			'vat_nom'       => 'VAT-номер',                         // +
-			'profile'       => 'Основной вид деятельности',         // +
-			'eng_name'      => 'Английское наименование',           // +
-			'deleted'       => 'Помечен на удаление'                // +
+			'id'              => '#',
+			'name'            => 'Имя',
+			'family'          => 'Фамилия',
+			'parent_name'     => 'Отчество',
+			'fullname'        => 'ФИО',
+
+			'ser_nom_pass'    => 'Серия-номер паспорта',
+			'date_pass'       => 'Дата выдачи пасопрта',
+			'organ_pass'      => 'Орган, выдавший паспорт',
+			'date_exp_pass'   => 'Срок действия паспорта',
+
+			'ser_nom_passrf'  => 'Серия-номер паспорта',
+			'date_passrf'     => 'Дата выдачи пасопрта',
+			'organ_passrf'    => 'Орган, выдавший паспорт',
+			'date_exp_passrf' => 'Срок действия паспорта',
+
+			'group_code'      => 'Группа физ.лиц',
+
+			'resident'        => 'Резидент РФ',
+
+			'phone'           => 'Номер телефона',
+
+			'adres'           => 'Адрес',
+			'email'           => 'E-mail',
+
+			'deleted'       => 'Помечен на удаление'
 		);
+		/*
+					id:0000000007,
+					parent_name:Давудович,
+					name:34345Иван,
+					family:ЗАО,
+					fullname:ЗАО 34345Иван Давудович,
+					ser_nom_pass:772601001,
+					resident:true,
+					organ_pass:,
+					date_pass:,
+					date_exp_pass:,
+
+					deleted:false,
+					group_code:10000000004,
+
+					organ_passrf:,
+					date_exp_passrf:,
+					ser_nom_passrf:,
+					date_passrf:
+
+					phone:643,
+					adres:368000,Дагестан Респ,Дербент,Г. Далгата,дом № 1А,
+					email:77@267006.22,
+
+				+	ID (уникальный идентификатор, целое число, обязательное);
+				+	Фамилия (текст, обязательное);
+				+	Имя (текст, обязательное);
+				+	Отчество (текст, обязательное);
+					Резидент РФ? (флаг: да или нет);
+					Контактные данные (текст);
+					Серия-номер паспорта (текст);
+					Дата выдачи пасопрта (текст);
+				+	Орган выдавший паспорт (текст);
+					Срок действия паспорта (текст).
+
+				*/
 	}
 
 	/**

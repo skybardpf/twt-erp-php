@@ -71,6 +71,23 @@ class FreeDocument extends SOAPModel {
 	}
 
 	/**
+	 * Сохранение свободного документа
+	 * @return array
+	 */
+	public function save() {
+		$attrs = $this->getAttributes();
+
+		if (!$this->getprimaryKey()) unset($attrs['id']); // New record
+		unset($attrs['deleted']);
+		unset($attrs['file']); // TODO когда появятся файлы
+		$attrs['user'] = 'test';
+		$attrs['from_user'] = true;
+
+		$ret = $this->SOAP->saveFreeDocument(array('data' => SoapComponent::getStructureElement($attrs)));
+		$ret = SoapComponent::parseReturn($ret, false);
+		return $ret;
+	}
+	/**
 	 * Returns the list of attribute names of the model.
 	 * @return array list of attribute names.
 	 */
@@ -84,8 +101,35 @@ class FreeDocument extends SOAPModel {
 			'from_user'         => 'От пользователя',
 			'nom'               => 'Номер документа',
 			'user'              => 'Пользователь',
-			'deleted'           => 'Помечен на удаление'
+			'deleted'           => 'Помечен на удаление',
+			'file'              => 'Электронная версия'
+
 		);
+		/*
+
+		ТЗ
+		+	ID (уникальный идентификатор, целое число, автоинкремент, обязательное);
+		+	Дата загрузки документа (дата, обязательное);
+		+	Пользовательское? (флаг: да или нет; обозначает источник документа, загружен оператором системы, или самим пользователем; обязательное);
+		+	Пользователь, загрузивший документ (пользователь системы);
+		+	Юридическое лицо (выбор из справочника, обязательное);
+		+	Номер документа (текст);
+		+	Наименование (текст, обязательно);
+		+	Срок действия (дата, обязательное);
+		+	Электронная версия (файл);
+			Скан (файл или набор файлов).
+
+			user:test,
+			date:2013-03-22,
+			id_yur:0000000032,
+			id:000000001,
+			expire:2013-03-27,
+			deleted:false,
+			nom:23847,
+			name:НаименованиеПолное,
+			from_user:false,
+			file:ЦЕДокументсСсылка
+		*/
 	}
 
 	/**
@@ -93,8 +137,8 @@ class FreeDocument extends SOAPModel {
 	 */
 	public function rules() {
 		return array(
-			array('id, name', 'required'),
-			array('id, date, expire, from_user, nom, user, deleted', 'safe'),
+			array('name, date, id_yur, expire', 'required'),
+			array('id, from_user, nom, user, deleted', 'safe'),
 
 			array('id, name', 'safe', 'on'=>'search'),
 		);

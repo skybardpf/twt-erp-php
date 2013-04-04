@@ -17,10 +17,12 @@ class Interested_personsController extends Controller {
 
 	/**
 	 * Просмотр Заинтересованного лица
-	 * @param $id
+	 * @param $id       Идентификатор физ.лица
+	 * @param $id_yur   Идентификатор Юр.лица
+	 * @param $role     Роль
 	 */
-	public function actionView($id) {
-		$entity = InterestedPerson::model()->findByPk($id);
+	public function actionView($id, $id_yur, $role) {
+		$entity = InterestedPerson::model()->findByPk($id, $id_yur, $role);
 		$this->render('show', array('element' => $entity));
 	}
 

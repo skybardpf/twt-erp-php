@@ -16,8 +16,6 @@ $this->widget('bootstrap.widgets.TbDetailView', array(
 		array('name' => 'date',         'label' => 'Дата загрузки'),
 		array('name' => 'expire',       'label' => 'Срок действия'),
 		array('name' => 'nom',          'label' => 'Номер документа'),
-		array('name' => 'from_user',    'label' => 'Тип документа', 'value' => $model->from_user ? 'От пользователя' : 'От администратора'),
-		array('name' => 'user',         'label' => 'Юр.Лицо', 'value' => $model->user ? LUser::$values[$model->user] : 'Не указан'),
 		//"return":"[{\"user\":\"\",
 	)
 ));

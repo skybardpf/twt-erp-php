@@ -56,7 +56,7 @@ class LegalEntities extends SOAPModel {
 	 */
 	public function delete() {
 		$cacher = new CFileCache();
-		$cacher->add('LEntity_values', false, 1);
+		$cacher->set('LEntity_values', false, 1);
 		if ($pk = $this->getprimaryKey()) {
 			$ret = $this->SOAP->deleteLegalEntity(array('id' => '1'.$pk));
 			return $ret->return;
@@ -70,7 +70,7 @@ class LegalEntities extends SOAPModel {
 	 */
 	public function save() {
 		$cacher = new CFileCache();
-		$cacher->add('LEntity_values', false, 1);
+		$cacher->set('LEntity_values', false, 1);
 
 		$attrs = $this->getAttributes();
 

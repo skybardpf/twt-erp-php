@@ -9,6 +9,8 @@
  */
 class Currencies extends SOAPModel {
 
+	static public $values = array();
+
 	/**
 	 * @static
 	 *
@@ -52,4 +54,27 @@ class Currencies extends SOAPModel {
 		);
 	}
 
+	/**
+	 * Список доступных значений Валют
+	 * @return array
+	 */
+	static function getValues() {
+		$cacher = new CFileCache();
+		$cache = $cacher->get('Currencies_values');
+		if ($cache === false) {
+			if (!self::$values) {
+				$elements = self::model()->findAll();
+				$return   = array();
+				if ($elements) { foreach ($elements as $elem) {
+					$return[$elem->getprimaryKey()] = $elem->name;
+				} }
+				self::$values = $return;
+
+			}
+			$cacher->add('Currencies_values', self::$values, 3000);
+		} elseif (!self::$values) {
+			self::$values = $cache;
+		}
+		return self::$values;
+	}
 }

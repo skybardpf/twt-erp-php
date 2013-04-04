@@ -1,7 +1,7 @@
 <?php
 /**
- * @var $this EntitiesController
- * @var $model FoundingDocument
+ * @var $this Free_documentsController
+ * @var $model FreeDocument
  * @var $form TbActiveForm
  * @var $error string
  */
@@ -22,8 +22,6 @@ if ($error) echo CHtml::openTag('div', array('class' => 'alert alert-error')).$e
 		<?= $form->dropDownListRow( $model, 'id_yur', array('' => 'не задано')+LegalEntities::getValues(), array('class' => 'span6')); ?>
 		<?= $form->textFieldRow(    $model, 'date'); ?>
 		<?= $form->textFieldRow(    $model, 'expire'); ?>
-		<?= $form->checkBoxRow( $model, 'from_user'); ?>
-		<?= $form->dropDownListRow( $model, 'user', array('' => 'не задано')+LUser::getValues(), array('class' => 'span6')); ?>
 		<?= $form->textFieldRow( $model, 'nom', array('class' => 'span6')); ?>
 	</fieldset>
 	<div class="control-group ">
