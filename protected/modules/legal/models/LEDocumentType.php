@@ -64,7 +64,7 @@ class LEDocumentType extends SOAPModel {
 	 */
 	public function delete() {
 		$cacher = new CFileCache();
-		$cacher->add('LEDoc_type_values', false, 1);
+		$cacher->set('LEDoc_type_values', false, 1);
 
 		if ($pk = $this->getprimaryKey()) {
 			$ret = $this->SOAP->deleteLEDocumentType(array('id' => $pk));
@@ -74,8 +74,10 @@ class LEDocumentType extends SOAPModel {
 	}
 
 	public function save() {
-		$attrs = $this->getAttributes();
+		$cacher = new CFileCache();
+		$cacher->set('LEDoc_type_values', false, 1);
 
+		$attrs = $this->getAttributes();
 		if (!$this->getprimaryKey()) {
 			$attrs['id'] = '';
 		} // New record
@@ -185,6 +187,10 @@ class LEDocumentType extends SOAPModel {
 			$country['user'] = 'test';
 			$country['from_user'] = true;
 			$countries[$country['country']] = $country;
+		}
+
+		if (!$countries) {
+			$this->addError($attribute, 'Укажите хоть 1 страну юрисдикции.');
 		}
 		$this->list_of_countries = array_values($countries);
 	}

@@ -16,6 +16,8 @@
 
 class FoundingDocument extends SOAPModel {
 
+	public $from_user = true;
+
 	/**
 	 * @static
 	 *
@@ -76,6 +78,7 @@ class FoundingDocument extends SOAPModel {
 	public function save() {
 		$attr = $this->attributes;
 		if (!$this->getprimaryKey()) unset($attr['id']);
+		$attr['user'] = 'test';
 		unset($attr['deleted']);
 
 		$data = array('data' => SoapComponent::getStructureElement($attr));
@@ -96,8 +99,25 @@ class FoundingDocument extends SOAPModel {
 			'date'              => 'Дата загрузки',
 			'expire'            => 'Срок действия',
 			'typ_doc'           => 'Тип документа',
-			'deleted'           => 'Помечен на удаление'
+			'deleted'           => 'Помечен на удаление',
+			'from_user'         => 'Добавлено пользователем',
+			'user'              => 'Пользователь'
 		);
+
+		/*
+		ТЗ:
+
+		+	ID (уникальный идентификатор, целое число, автоинкремент, обязательное);
+		+	Дата загрузки документа (дата, обязательное);
+		+	Пользовательское? (флаг: да или нет; обозначает источник документа, загружен оператором системы, или самим пользователем; обязательное);
+		+	Пользователь, загрузивший документ (пользователь системы);
+		+	Юридическое лицо (выбор из справочника, обязательное);
+		+	Тип документа (выбор из справочника, обязательное);
+		+	Наименование (текст, обязательно);
+		+	Срок действия (дата, обязательное);
+		-	Электронная версия (файл);
+		-	Скан (файл или набор файлов).
+		*/
 	}
 
 	/**
@@ -105,7 +125,7 @@ class FoundingDocument extends SOAPModel {
 	 */
 	public function rules() {
 		return array(
-			array('name, id_yur', 'required'),
+			array('name, id_yur, date, expire, typ_doc', 'required'),
 			array('date, expire, typ_doc', 'safe'),
 			array('id, name', 'safe', 'on'=>'search'),
 		);

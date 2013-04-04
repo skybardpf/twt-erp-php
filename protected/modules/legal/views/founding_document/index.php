@@ -14,6 +14,7 @@ $this->breadcrumbs=array(
 		$this->widget('bootstrap.widgets.TbGridView', array(
 			'type'=>'striped',
 			'dataProvider' => $gridDataProvider,
+			'rowCssClassExpression' => '$data["from_user"] ? "" : "administrative"',
 			'columns'=>array(
 				array('name' => 'id', 'header'=>'#'),
 				array('name' => 'name', 'header'=>'Название',),
