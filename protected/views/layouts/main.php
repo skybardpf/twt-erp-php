@@ -32,7 +32,7 @@ Yii::app()->clientScript->registerCssFile(CHtml::asset(Yii::app()->basePath.'/..
 				'legal.Countries' => array('label' => 'Страны юрисдикции', 'url' => $this->createUrl('/legal/countries/'), 'linkOptions' => array('style' => 'background: #dFd')),
 				'legal.LEDocument_type' => array('label' => 'Типы документов', 'url' => $this->createUrl('/legal/ledocument_type/'), 'linkOptions' => array('style' => 'background: #dFd')),
 				'legal.Users' => array('label' => 'Пользователи', 'url' => $this->createUrl('/legal/users/'), 'linkOptions' => array('style' => 'background: #dFd')),
-				'legal.FoundingDocument' => array('label' => 'Учредительные документы', 'url' => $this->createUrl('/legal/founding_document/'), 'linkOptions' => array('style' => 'background: #F99', 'title' => 'Файлы')),
+				'legal.FoundingDocument' => array('label' => 'Учредительные документы', 'url' => $this->createUrl('/legal/founding_document/'), 'linkOptions' => array('style' => 'background: #DFD', 'title' => 'Файлы')),
 /* Внимание Метод с ошибкой	*/ 'legal.PowerAttorneyLE' => array('label' => 'Доверенности', 'url' => $this->createUrl('/legal/power_attorney_le/'), 'linkOptions' => array('style' => 'background: #F99', 'title' => 'Файлы, виды договоров.')),
 				'legal.FreeDocument' => array('label' => 'Свободные документы', 'url' => $this->createUrl('/legal/free_documents/'), 'linkOptions' => array('style' => 'background: #F99', 'title' => 'Файлы, проблема с редактированием.')),
 /* Внимание Метод с ошибкой	*/ 'legal.Pegroup' => array('label' => 'Группы физ.лиц', 'url' => $this->createUrl('/legal/pegroup/'), 'linkOptions' => array('style' => 'background: #F22', 'title' => 'Ошибки 1C при сохранении.')),
