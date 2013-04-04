@@ -157,15 +157,13 @@ class LEDocumentType extends SOAPModel {
 	public function validateCountriesList($attribute, $params) {
 		if ($attribute != 'new_countries') throw new Exception('Данный метод только для валидации новых стран');
 		$countries = array();
-		$user_countries = array();
 
 		// Страны, которые были до редактирования (установим те, что загружены администрацией)
-		$old_countries = array();
 		if ($this->getprimaryKey()) {
 			// Не новая запись - проверить администраторские страны
 			foreach ($this->list_of_countries as $country) {
-				$old_countries[$country['country']] = $country;
 				if ($country['from_user'] == false) {
+					// Страна не редактируется
 					$countries[$country['country']] = $country;
 				}
 			}
@@ -174,14 +172,10 @@ class LEDocumentType extends SOAPModel {
 
 		//Страны, полученные в форме, надо проверить
 		foreach ($this->new_countries as $country) {
-			if (isset($user_countries[$country['country']])) {
+			if (isset($countries[$country['country']])) {
 				if (!$this->getError($attribute)) {
 					$this->addError($attribute, 'Страны не должны повторяться.');
 				}
-				continue;
-			}
-			$user_countries[$country['country']] = 1;
-			if (isset($old_countries[$country['country']])) {
 				continue;
 			}
 			$country['user'] = 'test';
