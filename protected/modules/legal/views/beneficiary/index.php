@@ -16,15 +16,18 @@ if ($elements) {
 		'type'=>'striped',
 		'dataProvider' => $gridDataProvider,
 		'columns'=>array(
-			array('name'=>'id', 'header'=>'#'),
+			array('name'=>'id', 'header' => 'Лицо'),
 			array('name' => 'id_yur',   'header' => 'Юр.Лицо',  'type' => 'raw', 'value' => 'isset(LegalEntities::$values[$data["id_yur"]]) ? LegalEntities::$values[$data["id_yur"]] : "-"'),
 			array(
 				'class'=>'bootstrap.widgets.TbButtonColumn',
+				'viewButtonUrl' => 'Yii::app()->getController()->createUrl("view", array("id" => $data->id, "id_yur" => $data->id_yur))',
+				'updateButtonUrl' => 'Yii::app()->getController()->createUrl("update", array("id" => $data->id, "id_yur" => $data->id_yur))',
+				'deleteButtonUrl' => 'Yii::app()->getController()->createUrl("delete", array("id" => $data->id, "id_yur" => $data->id_yur))',
 			),
 		),
 	));
 } else {
-	echo 'Ни одного Бенефициара лица не зарегистрировано.';
+	echo 'Ни одного Бенефициара не зарегистрировано.';
 }
 ?>
 

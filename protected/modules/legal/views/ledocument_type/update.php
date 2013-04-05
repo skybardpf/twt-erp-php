@@ -7,5 +7,5 @@ $this->breadcrumbs=array(
 	'Редактирование',
 );
 ?>
-<h2><?=$model->name_of_doc?></h2>
+<h2>Тип документа "<?=$model->name_of_doc?>": редактирование</h2>
 <?php $this->renderPartial('form', array('model' => $model, 'error' => $error)) ?>

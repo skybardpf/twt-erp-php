@@ -6,7 +6,7 @@ $this->breadcrumbs=array(
 	$this->controller_title => array('/legal/counterparties_groups/'),
 	'Удаление',
 );?>
-Вы действительно хотите <?=$model->deleted ? '<b>восстановить бенефициара</b>': '<b>удалить бенефициар</b>'?> «<?=CHtml::encode($model->role)?>»?
+Вы действительно хотите <?=$model->deleted ? '<b>восстановить бенефициара</b>': '<b>удалить бенефициар</b>'?> «<?=CHtml::encode($model->id)?>»?
 
 <?php $form = $this->beginWidget('bootstrap.widgets.TbActiveForm', array(
 	'id'=>'news-delete-form',

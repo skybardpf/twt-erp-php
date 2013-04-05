@@ -18,21 +18,23 @@ class BeneficiaryController extends Controller {
 	/**
 	 * Просмотр Бенефициара
 	 * @param $id
+	 * @param $id_yur
 	 */
-	public function actionView($id) {
-		$entity = Beneficiary::model()->findByPk($id);
+	public function actionView($id, $id_yur) {
+		$entity = Beneficiary::model()->findByPk($id, $id_yur);
 		$this->render('show', array('element' => $entity));
 	}
 
 	/**
 	 * Удаление Бенефициара
 	 * @param $id
+	 * @param $id_yur
 	 *
 	 * @throws CHttpException
 	 */
-	public function actionDelete($id) {
+	public function actionDelete($id, $id_yur) {
 		/** @var $model LegalEntities */
-		$model = Beneficiary::model()->findByPk($id);
+		$model = Beneficiary::model()->findByPk($id, $id_yur);
 		if (empty($model)) throw new CHttpException(404);
 		if (Yii::app()->request->isAjaxRequest) {
 			$model->delete();

@@ -7,7 +7,6 @@
  */
 
 if ($error) echo CHtml::openTag('div', array('class' => 'alert alert-error')).$error.CHtml::closeTag('div'); ?>
-
 <div class="form">
 	<?php $form = $this->beginWidget('bootstrap.widgets.TbActiveForm', array(
 		'id'    => 'model-form-form',
@@ -26,11 +25,19 @@ if ($error) echo CHtml::openTag('div', array('class' => 'alert alert-error')).$e
 	</fieldset>
 	<div class="control-group ">
 		<div class="controls">
-			<?php $this->widget('bootstrap.widgets.TbButton', array(
+			<?php
+			$this->widget('bootstrap.widgets.TbButton', array(
 				'buttonType' => 'submit',
 				'type' => 'primary',
 				'label'=> (!$model->getprimaryKey() ? 'Добавить' : 'Сохранить'))
-		);?>
+			);
+			echo '&nbsp;';
+			$this->widget('bootstrap.widgets.TbButton', array(
+				'url' => $this->createUrl('index'),
+				'buttonType' => '',
+				'type' => '',
+				'label'=> 'Отмена')
+			);?>
 		</div>
 	</div>
 

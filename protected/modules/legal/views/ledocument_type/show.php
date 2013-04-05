@@ -10,31 +10,37 @@ Yii::app()->clientScript->registerCss('LEDocumentTypeDetailView', 'table.table-s
 
 $gridDataProvider = new CArrayDataProvider($model->list_of_countries, array('keyField' => 'country'));
 Countries::getValues();
-$this->widget('bootstrap.widgets.TbDetailView', array(
-	'data' => $model,
-	'attributes'=>array(
-		array('name' => 'id',           'label' => '#'),
-		array('name' => 'name_of_doc',  'label' => 'Название'),
+?>
+<h2>Тип документа "<?=$model->name_of_doc?>"</h2>
+<a href="<?=$this->createUrl('index')?>">Назад к списку</a>
+<div>
+	<?php
+	$this->widget('bootstrap.widgets.TbDetailView', array(
+		'data' => $model,
+		'attributes'=>array(
+			array('name' => 'id',           'label' => '#'),
+			array('name' => 'name_of_doc',  'label' => 'Название'),
 
-		array(
-			'name' => 'list_of_countries',
-			'label' => 'Названия в странах',
-			'type' => 'raw',
-			'value' => $this->widget(
-				'bootstrap.widgets.TbGridView',
-				array(
-					'type' => 'striped',
-					'dataProvider' => $gridDataProvider,
-					'enablePagination' => false,
-					'enableSorting' => false,
-					'template' => '{items}',
-					'columns'=>array(
-						array('name' => 'country', 'header'=>'Страна', 'type' => 'raw', 'value' => '($data["country"] && isset(Countries::$values[$data["country"]])) ? Countries::$values[$data["country"]] : "Не указана"'),
-						array('name' => 'name_in_country', 'header'=>'Название документа',),
-					),
-				), true)
+			array(
+				'name' => 'list_of_countries',
+				'label' => 'Названия в странах',
+				'type' => 'raw',
+				'value' => $this->widget(
+					'bootstrap.widgets.TbGridView',
+					array(
+						'type' => 'striped',
+						'dataProvider' => $gridDataProvider,
+						'enablePagination' => false,
+						'enableSorting' => false,
+						'template' => '{items}',
+						'columns'=>array(
+							array('name' => 'country', 'header'=>'Страна', 'type' => 'raw', 'value' => '($data["country"] && isset(Countries::$values[$data["country"]])) ? Countries::$values[$data["country"]] : "Не указана"'),
+							array('name' => 'name_in_country', 'header'=>'Название документа',),
+						),
+					), true)
+				)
 			)
 		)
-	)
-);
-?>
+	);
+	?>
+</div>

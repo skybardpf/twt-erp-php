@@ -23,15 +23,15 @@ if ($error) echo CHtml::openTag('div', array('class' => 'alert alert-error')).$e
 		<?php if ($model->new) :?>
 
 	    <?php endif;?>
-	    <?= 1//$form->dropDownListRow($model, 'id', )?>
-	    <?= $form->dropDownListRow($model, 'id_yur', LegalEntities::$values, $model->new ? array() : array('disabled' => 'disabled'))?>
+	    <?= $form->dropDownListRow($model, 'id', array('' => 'Проблемные лица'), array('class' => 'span6') + ($model->new ? array() : array('disabled' => 'disabled')))?>
+	    <?= $form->dropDownListRow($model, 'id_yur', LegalEntities::$values, array('class' => 'span6') + ($model->new ? array() : array('disabled' => 'disabled')))?>
+	    <?= $form->dropDownListRow($model, 'role', array('' => 'Непонятные роли'), array('class' => 'span6') + ($model->new ? array() : array('disabled' => 'disabled')))?>
+	    <?= $form->dropDownListRow($model, 'vid', array('' => 'Непонятные виды'), array('class' => 'span6') + ($model->new ? array() : array('disabled' => 'disabled'))); ?>
 
 	    <?= $form->textFieldRow($model, 'cost', array('class' => 'span6')); ?>
 	    <?= $form->textFieldRow($model, 'percent', array('class' => 'span6')); ?>
-	    <?= $form->textFieldRow($model, 'vid', array('class' => 'span6')); ?>
-	    <?= $form->dropDownListRow($model, 'cur', array('' => 'Не выбрана')+Currencies::$values); ?>
+	    <?= $form->dropDownListRow($model, 'cur', array('' => 'Не выбрана') + Currencies::$values, array('class' => 'span6')); ?>
 	    <?= $form->textFieldRow($model, 'add_info', array('class' => 'span6')); ?>
-		<?= $form->dropDownListRow($model, 'parent', array('' => 'Не выбран')+$model->getParentValues()); ?>
 
 	    <!--'id'            => 'Лицо',
 	    'role'          => 'Роль',
@@ -45,11 +45,19 @@ if ($error) echo CHtml::openTag('div', array('class' => 'alert alert-error')).$e
     </fieldset>
     <div class="control-group ">
         <div class="controls">
-			<?php $this->widget('bootstrap.widgets.TbButton', array(
-			'buttonType' => 'submit',
-			'type' => 'primary',
-			'label'=> (!$model->getprimaryKey() ? 'Добавить' : 'Сохранить')
-		));?>
+			<?php
+	        $this->widget('bootstrap.widgets.TbButton', array(
+				'buttonType' => 'submit',
+				'type' => 'primary',
+				'label'=> (!$model->getprimaryKey() ? 'Добавить' : 'Сохранить')
+			));
+	        echo '&nbsp;';
+	        $this->widget('bootstrap.widgets.TbButton', array(
+			        'url' => $this->createUrl('index'),
+			        'buttonType' => '',
+			        'type' => '',
+			        'label'=> 'Отмена')
+	        );?>
         </div>
     </div>
 

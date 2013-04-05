@@ -10,7 +10,8 @@ $this->breadcrumbs=array(
 Countries::getValues();
 CounterpartiesGroups::getValues();
 ?>
-<h2><?=$element->full_name?></h2>
+<h2>Юридическое лицо "<?=$element->full_name?>"</h2>
+<a href="<?=$this->createUrl('index')?>">Назад к списку</a>
 <div>
 	<?php
 	$this->widget('bootstrap.widgets.TbDetailView', array(

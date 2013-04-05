@@ -68,7 +68,7 @@ class InterestedPerson extends SOAPModel {
 	 */
 	public function delete() {
 		if ($pk = $this->getprimaryKey()) {
-			$ret = $this->SOAP->deleteInterestedPerson(array('id' => $pk));
+			$ret = $this->SOAP->deleteInterestedPerson(array('id' => $pk, 'id_yur' => $this->id_yur, 'role' => $this->role));
 			return $ret->return;
 		}
 		return false;

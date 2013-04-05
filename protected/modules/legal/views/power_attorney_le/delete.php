@@ -6,7 +6,7 @@ $this->breadcrumbs=array(
 	$this->controller_title => array('/legal/counterparties_groups/'),
 	'Удаление',
 );?>
-Вы действительно хотите <?=$model->deleted ? '<b>снять пометку удаления со структуры</b>': '<b>пометить на удаление группу</b>'?> «<?=CHtml::encode($model->name)?>»?
+Вы действительно хотите <?=$model->deleted ? '<b>восстановить доверенность</b>': '<b>удалить доверенность</b>'?> «<?=CHtml::encode($model->name)?>»?
 
 <?php $form = $this->beginWidget('bootstrap.widgets.TbActiveForm', array(
 	'id'=>'news-delete-form',
