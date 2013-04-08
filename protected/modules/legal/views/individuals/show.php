@@ -8,7 +8,8 @@ $this->breadcrumbs=array(
 );
 
 ?>
-<h2><?=$element->name?></h2>
+<h2>Физическое лицо "<?=$element->name?>"</h2>
+<a href="<?=$this->createUrl('index')?>">Назад к списку</a>
 <div>
 	<?php
 	$this->widget('bootstrap.widgets.TbDetailView', array(

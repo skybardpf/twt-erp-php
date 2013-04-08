@@ -5,3 +5,24 @@
 .left-menu {
 	padding-top: 60px;
 }
+
+h1 {
+    font-size: 33px;
+}
+
+.form-horizontal .control-group {
+    padding: 15px 10px;
+    margin: 0;
+}
+.form-horizontal .control-group:nth-child(even) {
+    background-color: #f9f9f9;
+}
+
+.form-horizontal fieldset {
+    border: 1px solid #DDDDDD;
+    border-radius: 4px;
+    margin: 20px 0;
+}
+.form-horizontal input[type='text'], .form-horizontal input[type='password'], .form-horizontal textarea {
+    width: 90%;
+}

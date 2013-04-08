@@ -9,7 +9,9 @@ $(document).ready(function(){
 
     var iteration = 1;
     $('#calc-form-form').on('change', '[data-one_row=1]', function(event){
+        // Инпуты данной строки
         var elements = $(this).find('input[name*=data]');
+        // Инпут
         var $this = $(this);
         if ($this.data('new_row')) {
             // добавление строки при заполнении ее значений
@@ -34,6 +36,11 @@ $(document).ready(function(){
         }
     });
 
+    /**
+     * Инициализация select2-инпутов
+     * @param elem
+     * @param clone
+     */
     function select2_init(elem, clone) {
         var selector = clone ? '[data-tnved=1]' : '[data-tnved=1][data-init_on_clone!=1]';
         if (elem.find(selector)) {

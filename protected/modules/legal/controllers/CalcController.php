@@ -15,9 +15,13 @@ class CalcController extends Controller
 	public function actionIndex() {
 		$values = array();
 		$model = new Calc();
-		// ТУДУ Авторизованный пользователь. пока передается пустой.
-		$data = array('ItIsCategory' => "false", 'UserID' => '', 'Strings' => array());
+		$error = '';
+
+		// todo Авторизованный пользователь. пока передается пустой.
+		$data = array('UserID' => '', 'Strings' => array());
+
 		if (!empty($_POST['parse_file'])) {
+			// Парсинг XML файла с кодами ТНВЭД
 			$file = CUploadedFile::getInstance($model, 'excel_file');
 			$excel = Yii::app()->yexcel->readActiveSheet($file->getTempName());
 			if ($excel) { foreach($excel as $e_row) {
@@ -27,19 +31,31 @@ class CalcController extends Controller
 				}
 			} }
 		} elseif (isset($_POST['data'])) {
-			foreach($_POST['data'] as $val){
-				if (!empty($val['code']) || !empty($val['summ'])) {
-					$values[] = $val;
-					$data['Strings'][] = array('Kod' => $val['code'], 'Summ' => $val['summ']);
+			// Нажали кнопку расчитать
+			if (!$error) {
+				if (isset($_POST['tnved'])) $data['ItIsCategory'] = $_POST['tnved'] == 'yes' ? 'false' : 'true';
+				foreach($_POST['data'] as $val){
+					if (!empty($val['code']) || !empty($val['summ'])) {
+						$values[] = $val;
+						$data['Strings'][] = array('Kod' => $val['code'], 'Summ' => $val['summ']);
+					}
+				}
+				try {
+					Currencies::getValues();
+					if (isset($_POST['currency']) && $_POST['currency'] && isset(Currencies::$values[$_POST['currency']])) $data['Currency'] = $_POST['currency'];
+					else throw new Exception('Укажите валюту');
+					$ret = Yii::app()->calc->GetSumm(array('Data' => $data));
+					$ret = SoapComponent::parseReturn($ret);
+					$this->render('step2', array('insurance' => $ret));
+					return;
+				} catch (Exception $e) {
+					$error = $e->getMessage();
 				}
 			}
-			try {
-				$ret = Yii::app()->calc->GetSumm(array('Data' => $data));
-				//$ret = Calc::model()->
-			} catch (Exception $e) {
-			}
 		}
-
+		if ($error) {
+			Yii::app()->user->setFlash('error', $error);
+		}
 		$this->render('index', array('model' => $model, 'values' => $values));
 	}
 
