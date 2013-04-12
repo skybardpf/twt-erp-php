@@ -118,7 +118,7 @@ class LegalEntities extends SOAPModel {
 		return array(
 			'id'            => '#',                                 // +
 			'name'          => 'Сокращенное наименование',          // +
-			'full_name'     => 'Полное наименование',                        // +
+			'full_name'     => 'Полное наименование',               // +
 			'country'       => 'Страна юрисдикции',                 // + id
 			'resident'      => 'Резидент РФ',                       // + boolean
 			'type_no_res'   => 'Тип нерезидента',                   // + int

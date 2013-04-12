@@ -3,7 +3,7 @@
 ?>
 <?php
 $this->widget('bootstrap.widgets.TbNavbar', array(
-    'brand'=>'TWT — ERP',
+    'brand'=>'TWT — Страховой калькулятор',
     'brandUrl'=>'/legal/template_example/',
     'collapse'=>true
 ));

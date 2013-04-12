@@ -67,7 +67,7 @@ class PowerAttorneysLE extends SOAPModel {
 			'id'             => '#',
 			'name'           => 'Название',
 			'id_yur'         => 'Юр.лицо',
-			'id_lico'        => 'Лицо',
+			'id_lico'        => 'На кого оформлена',
 			'date'           => 'Дата доверенности',
 			'loaded'         => 'Дата загрузки документа',
 			'expire'         => 'Срок действия',

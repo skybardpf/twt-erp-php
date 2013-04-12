@@ -19,10 +19,10 @@ $form = $this->beginWidget('bootstrap.widgets.TbActiveForm', array(
 
 <fieldset>
 
-    <?php echo $form->textFieldRow($model, 'country'); ?>
+    <?php echo $form->dropDownListRow($model, 'country'); ?>
     <?php echo $form->textFieldRow($model, 'name'); ?>
     <?php echo $form->textFieldRow($model, 'full_name'); ?>
-    <?php echo $form->textFieldRow($model, 'comment'); ?>
+    <?php echo $form->textAreaRow($model, 'comment'); ?>
     <?php echo $form->textFieldRow($model, 'inn'); ?>
     <?php echo $form->textFieldRow($model, 'kpp'); ?>
     <?php echo $form->textFieldRow($model, 'ogrn'); ?>

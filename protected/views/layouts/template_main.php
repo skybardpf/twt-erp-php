@@ -30,5 +30,10 @@ Yii::app()->clientScript->registerCssFile(CHtml::asset(Yii::app()->basePath.'/..
     <div class="container">
         <?=$content?>
     </div>
+    <footer class="container">
+        <hr>
+        © TWT - Юридический блок, 2013
+        <br><br>
+    </footer>
 </body>
 </html>

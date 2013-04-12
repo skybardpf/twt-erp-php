@@ -1,13 +1,7 @@
 <?php
 /**
- * Created by JetBrains PhpStorm.
- * User: Мишенько
- * Date: 08.04.13
- * Time: 11:03
- * To change this template use File | Settings | File Templates.
+ * @var $this Controller
  */
-
-/* @var $this Controller */
 ?>
 <div class="pull-right" style="margin-top: 15px;">
     <?php $this->widget('bootstrap.widgets.TbButton', array(

@@ -81,7 +81,7 @@ class SettlementAccount extends SOAPModel {
 			'name'          => 'Название',                          // +
 			'id_yur'        => 'Юр.лицо',                           // +
 			'deleted'       => 'Помечен на удаление',               // +
-			'bank'          => 'Банк',               // +
+			'bank'          => 'Банк',                              // +
 			'corrbank'      => 'Банк-корреспондент',
 			'service'       => '',
 			'recomend'      => 'Рекомендатель',
