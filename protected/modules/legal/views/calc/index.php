@@ -40,7 +40,7 @@ Yii::app()->clientScript->registerScriptFile(CHtml::asset(Yii::app()->basePath.'
 
 	<div class="row-fluid"><div class="span12">1. Укажите способ выбора типов товаров:</div></div>
 	<div class="row-fluid">
-		<div class="span12" style="padding-left: 20px;">
+		<div class="span12">
 			<label class="radio" for="tnved_no">
 				<?=CHtml::radioButton('tnved', /*!isset($data['tnved']) || $data['tnved'] == 'no'*/ false, array('value' => 'no', 'id' => 'tnved_no', 'data-select_type' => 'tnved_no', 'disabled' => 'disabled'))?>
 				По кодам категорий
@@ -52,20 +52,20 @@ Yii::app()->clientScript->registerScriptFile(CHtml::asset(Yii::app()->basePath.'
 		</div>
 	</div>
 
-	<br/>
+	<hr>
 
 	<div class="row-fluid"><div class="span12">2. Выберите валюту:</div></div>
 	<div class="row-fluid">
-		<div class="span12" style="padding-left: 20px;">
+		<div class="span12">
 			<?= CHtml::dropDownList('currency', '', array('' => 'Не выбрана') + Currencies::getValues())?>
 		</div>
 	</div>
 
-	<br/>
+	<hr>
     
 	    <div class="row-fluid"><div class="span12">3. Введите стоимость ваших товаров:</div></div>
 	    <div class="row-fluid">
-		    <div class="span12" style="padding-left: 20px;">
+		    <div class="span12">
 		    <table class="table table-striped table-bordered">
 			    <thead>
 			        <tr>
