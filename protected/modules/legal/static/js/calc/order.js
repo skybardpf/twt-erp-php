@@ -9,7 +9,7 @@ $(document).ready(function(){
     $(document.getElementById('route_point_add_button')).click(function(){
         var $cloned = $original.clone();
         $cloned.removeAttr('id');
-        $cloned.find('[data-route_input]').val('').each(function(i, e) {
+        $cloned.find('[data-route_input]').val('').removeAttr('disabled').each(function(i, e) {
             var $this = $(this);
             $this.attr('name', $this.attr('name').replace('[__iteration__]', '['+iteration+']'));
         });
@@ -18,5 +18,28 @@ $(document).ready(function(){
         $cloned.show();
     });
 
+    $(document.getElementById('route_points_table')).on('change', '[data-country_input]', function(event){
+        var $this = $(this)
+        var $city_select = $(this.parentNode.parentNode.parentNode).find('[data-city_input]');
 
+        $city_select.val('');
+        $city_select.find('option:not(:selected)').remove();
+        if ($this.val()) {
+            $.get(window.order_cities_link, {country: $this.val()}, function(data){
+                if (data.error) {
+                    return;
+                }
+                var ind;
+                for(ind in data.values) {
+                    if (data.values.hasOwnProperty(ind)) {
+                        var $opt = $(document.createElement('option'));
+                        $opt.attr('value', ind);
+                        $opt.html(data.values[ind]);
+                        $opt.appendTo($city_select);
+                    }
+                }
+            }, 'json');
+        }
+        console.log($(this).val());
+    });
 });

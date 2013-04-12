@@ -5,7 +5,9 @@
  */
 
 /* @var $this CalcController */
+/* @var $order array */
 
+Yii::app()->clientScript->registerScript('order_links', 'window.order_cities_link = "'.$this->createUrl('cities').'"');
 Yii::app()->clientScript->registerScriptFile($this->module->assets.'/js/calc/order.js');
 
 Countries::getValues();
@@ -68,6 +70,7 @@ Countries::getValues();
 		<div class="span9">
 			<?php $this->widget('zii.widgets.jui.CJuiDatePicker',array(
 					'name' => 'order[StartDate]',
+					'value' => isset($order['StartDate']) ? $order['StartDate'] : '',
 					'options' => array(
 						'showAnim' => '',
 						//'minDate'  => '+0D',
@@ -79,8 +82,12 @@ Countries::getValues();
 	<div class="row-fluid">
 		<div class="span3" style="padding-left: 20px;"><label class="pull-right" for="order_EndDate">Конец страхования</label></div>
 		<div class="span9">
-			<?php $this->widget('zii.widgets.jui.CJuiDatePicker',array(
+
+			<?php
+			/* @var CJuiDatePicker */
+			$this->widget('zii.widgets.jui.CJuiDatePicker',array(
 					'name' => 'order[EndDate]',
+					'value' => isset($order['EndDate']) ? $order['EndDate'] : '',
 					'options' => array(
 						'showAnim' => '',
 						//'minDate'  => '+0D',
@@ -106,66 +113,21 @@ Countries::getValues();
 		</thead>
 		<tr style="display: none;" id="route_point" data-route_middle="1">
 			<td class="span3"><span class="pull-right">Промежуточная точка маршрута</span></td>
-			<td>
-				<div class="row-fluid">
-					<div class="span3"><label class="pull-right">Страна</label></div>
-					<div class="span6"><?=CHtml::dropDownList('order[route][middle][__iteration__][Country]', '', array('' => 'Не выбрана') + Countries::$values, array('data-route_input' => 1))?></div>
-				</div>
-				<div class="row-fluid">
-					<div class="span3"><label class="pull-right">Город</label></div>
-					<div class="span6"><?=CHtml::textField('order[route][middle][__iteration__][City]', '', array('data-route_input' => 1))?></div>
-				</div>
-				<div class="row-fluid">
-					<div class="span3"><label class="pull-right">Транспорт</label></div>
-					<div class="span6"><?=CHtml::textField('order[route][middle][__iteration__][Transport]', '', array('data-route_input' => 1))?></div>
-				</div>
-				<div class="row-fluid">
-					<div class="span3"><label>Номер транспортного средства</label></div>
-					<div class="span6"><?=CHtml::textField('order[route][middle][__iteration__][RegistrationNumber]', '', array('data-route_input' => 1))?></div>
-				</div>
-			</td>
+			<td><?php $this->renderPartial('route_point', array('name' => 'middle', 'iteration' => '__iteration__', 'point' => array()))?></td>
 		</tr>
 		<tr id="route_first_point">
 			<td class="span3"><span class="pull-right">Начальная точка маршрута</span></td>
-			<td>
-				<div class="row-fluid">
-					<div class="span3"><label class="pull-right">Страна</label></div>
-					<div class="span6"><?=CHtml::dropDownList('order[route][middle][begin][Country]', '', array('' => 'Не выбрана') + Countries::$values, array('data-route_input' => 1, 'data-'))?></div>
-				</div>
-				<div class="row-fluid">
-					<div class="span3"><label class="pull-right">Город</label></div>
-					<div class="span6"><?=CHtml::textField('order[route][begin][City]', '')?></div>
-				</div>
-				<div class="row-fluid">
-					<div class="span3"><label class="pull-right">Транспорт</label></div>
-					<div class="span6"><?=CHtml::textField('order[route][begin][Transport]', '')?></div>
-				</div>
-				<div class="row-fluid">
-					<div class="span3"><label>Номер транспортного средства</label></div>
-					<div class="span6"><?=CHtml::textField('order[route][begin][RegistrationNumber]', '')?></div>
-				</div>
-			</td>
+			<td><?php $this->renderPartial('route_point', array('name' => 'begin', 'iteration' => false, 'point' => isset($order['route']['begin']) ? $order['route']['begin'] : array()))?></td>
 		</tr>
+		<?php if (isset($order['route']['middle'])) { foreach($order['route']['middle'] as $iter => $point) : ?>
+			<tr data-route_middle="1">
+				<td class="span3"><span class="pull-right">Промежуточная точка маршрута</span></td>
+				<td><?php $this->renderPartial('route_point', array('name' => 'middle', 'iteration' => $iter, 'point' => $point))?></td>
+			</tr>
+		<?php endforeach; }?>
 		<tr id="route_last_point">
 			<td class="span3"><span class="pull-right">Конечная точка маршрута</span></td>
-			<td>
-				<div class="row-fluid">
-					<div class="span3"><label class="pull-right">Страна</label></div>
-					<div class="span6"><?=CHtml::dropDownList('order[route][middle][end][Country]', '', array('' => 'Не выбрана') + Countries::$values, array('data-route_input' => 1))?></div>
-				</div>
-				<div class="row-fluid">
-					<div class="span3"><label class="pull-right">Город</label></div>
-					<div class="span6"><?=CHtml::textField('order[route][end][City]', '')?></div>
-				</div>
-				<div class="row-fluid">
-					<div class="span3"><label class="pull-right">Транспорт</label></div>
-					<div class="span6"><?=CHtml::textField('order[route][end][Transport]', '')?></div>
-				</div>
-				<div class="row-fluid">
-					<div class="span3"><label>Номер транспортного средства</label></div>
-					<div class="span6"><?=CHtml::textField('order[route][end][RegistrationNumber]', '')?></div>
-				</div>
-			</td>
+			<td><?php $this->renderPartial('route_point', array('name' => 'end', 'iteration' => false, 'point' => isset($order['route']['end']) ? $order['route']['end'] : array()))?></td>
 		</tr>
 	</table>
 
@@ -185,6 +147,23 @@ Countries::getValues();
 <?php
 
 /*
+ <div class="row-fluid">
+					<div class="span3"><label class="pull-right">Страна</label></div>
+					<div class="span6"><?=CHtml::dropDownList('order[route][middle][__iteration__][Country]', '', array('' => 'Не выбрана') + Countries::$values, array('data-route_input' => 1, 'data-country_input' => '1'))?></div>
+				</div>
+				<div class="row-fluid">
+					<div class="span3"><label class="pull-right">Город</label></div>
+					<div class="span6"><?=CHtml::dropDownList('order[route][middle][__iteration__][City]', '', array('' => 'Не выбран'), array('data-route_input' => 1, 'data-city_input' => '1'))?></div>
+				</div>
+				<div class="row-fluid">
+					<div class="span3"><label class="pull-right">Транспорт</label></div>
+					<div class="span6"><?=CHtml::textField('order[route][middle][__iteration__][Transport]', '', array('data-route_input' => 1))?></div>
+				</div>
+				<div class="row-fluid">
+					<div class="span3"><label>Номер транспортного средства</label></div>
+					<div class="span6"><?=CHtml::textField('order[route][middle][__iteration__][RegistrationNumber]', '', array('data-route_input' => 1))?></div>
+				</div>
+
 Наименование компании (текст)
 	-	ИНН (текст)
 	-	КПП (текст)

@@ -110,8 +110,11 @@ class CalcController extends Controller
 	}
 
 	public function actionOrder($order_id) {
-		Yii::app()->user->setState('ins_type', false, false);
-		$this->render('order');
+		$order = array();
+		if ($_POST && isset($_POST['order'])) {
+			$order = $_POST['order'];
+		}
+		$this->render('order', array('order' => $order));
 	}
 
 	/**
@@ -151,6 +154,10 @@ class CalcController extends Controller
 		Yii::app()->end();
 	}
 
+	/**
+	 * AJAX получение списка городов страны
+	 * @param $country
+	 */
 	public function actionCities($country) {
 		$ret = array();
 		try {
@@ -158,7 +165,7 @@ class CalcController extends Controller
 		} catch (Exception $e) {
 			$ret = array('error' => $e->getMessage());
 		}
-		echo CJSON::encode($ret);
+		echo CJSON::encode(array('values' => $ret));
 		Yii::app()->end();
 	}
 
