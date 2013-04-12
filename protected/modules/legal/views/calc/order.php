@@ -22,50 +22,50 @@ Countries::getValues();
 	));
 ?>
 	<div class="row-fluid">
-		<div class="span4" style="padding-left: 20px;"><label class="pull-right" for="order_CompanyName">Наименование компании</label></div>
-		<div class="span8"><?=CHtml::textField('order[CompanyName]', isset($order['CompanyName']) ? $order['CompanyName'] : '', array('class' => 'span12'))?></div>
+		<div class="span3" style="padding-left: 20px;"><label class="pull-right" for="order_CompanyName">Наименование компании</label></div>
+		<div class="span9"><?=CHtml::textField('order[CompanyName]', isset($order['CompanyName']) ? $order['CompanyName'] : '', array('class' => 'span12'))?></div>
 	</div><br/>
 	<div class="row-fluid">
-		<div class="span4" style="padding-left: 20px;"><label class="pull-right" for="order_inn">ИНН (не принимается)</label></div>
-		<div class="span8"><?=CHtml::textField('order[inn]', isset($order['inn']) ? $order['inn'] : '', array('class' => 'span12'))?></div>
+		<div class="span3" style="padding-left: 20px;"><label class="pull-right" for="order_inn">ИНН (не принимается)</label></div>
+		<div class="span9"><?=CHtml::textField('order[inn]', isset($order['inn']) ? $order['inn'] : '', array('class' => 'span12'))?></div>
 	</div><br/>
 	<div class="row-fluid">
-		<div class="span4" style="padding-left: 20px;"><label class="pull-right" for="order_kpp">КПП (не принимается)</label></div>
-		<div class="span8"><?=CHtml::textField('order[kpp]', isset($order['kpp']) ? $order['kpp'] : '', array('class' => 'span12'))?></div>
+		<div class="span3" style="padding-left: 20px;"><label class="pull-right" for="order_kpp">КПП (не принимается)</label></div>
+		<div class="span9"><?=CHtml::textField('order[kpp]', isset($order['kpp']) ? $order['kpp'] : '', array('class' => 'span12'))?></div>
 	</div><br/>
 	<?php if (Yii::app()->user->getState('ins_type', false) == 'Агентский') :?>
 		<div class="row-fluid">
-			<div class="span4" style="padding-left: 20px;"><label class="pull-right" for="order_CompanyName">Выгодоприобретатель</label></div>
-			<div class="span8"><?=CHtml::textField('order[Beneficiary]', isset($order['Beneficiary']) ? $order['Beneficiary'] : '', array('class' => 'span12'))?></div>
+			<div class="span3" style="padding-left: 20px;"><label class="pull-right" for="order_CompanyName">Выгодоприобретатель</label></div>
+			<div class="span9"><?=CHtml::textField('order[Beneficiary]', isset($order['Beneficiary']) ? $order['Beneficiary'] : '', array('class' => 'span12'))?></div>
 		</div><br/>
 	<?php endif; ?>
 	<div class="row-fluid">
-		<div class="span4" style="padding-left: 20px;"><label class="pull-right" for="order_Consignment">Груз (товары через запятую)</label></div>
-		<div class="span8"><?=CHtml::textArea('order[Consignment]', isset($order['Consignment']) ? $order['Consignment'] : '', array('class' => 'span12'))?></div>
+		<div class="span3" style="padding-left: 20px;"><label class="pull-right" for="order_Consignment">Груз (товары через запятую)</label></div>
+		<div class="span9"><?=CHtml::textArea('order[Consignment]', isset($order['Consignment']) ? $order['Consignment'] : '', array('class' => 'span12'))?></div>
 	</div><br/>
 	<div class="row-fluid">
-		<div class="span4" style="padding-left: 20px;"><label class="pull-right" for="order_NumberOfSeat">Количество мест</label></div>
-		<div class="span8"><?=CHtml::textField('order[NumberOfSeat]', isset($order['NumberOfSeat']) ? $order['NumberOfSeat'] : '', array('class' => 'span12'))?></div>
+		<div class="span3" style="padding-left: 20px;"><label class="pull-right" for="order_NumberOfSeat">Количество мест</label></div>
+		<div class="span9"><?=CHtml::textField('order[NumberOfSeat]', isset($order['NumberOfSeat']) ? $order['NumberOfSeat'] : '', array('class' => 'span12'))?></div>
 	</div><br/>
 	<div class="row-fluid">
-		<div class="span4" style="padding-left: 20px;"><label class="pull-right" for="order_NumberOfSeatMeasure">Единица измерения мест</label></div>
-		<div class="span8"><?=CHtml::dropDownList('order[NumberOfSeatMeasure]', isset($order['NumberOfSeatMeasure']) ? $order['NumberOfSeatMeasure'] : '', array('' => 'Не выбрано') + $this->getSeatMeasures(), array('class' => 'span12'))?></div>
+		<div class="span3" style="padding-left: 20px;"><label class="pull-right" for="order_NumberOfSeatMeasure">Единица измерения мест</label></div>
+		<div class="span9"><?=CHtml::dropDownList('order[NumberOfSeatMeasure]', isset($order['NumberOfSeatMeasure']) ? $order['NumberOfSeatMeasure'] : '', array('' => 'Не выбрано') + $this->getSeatMeasures(), array('class' => 'span12'))?></div>
 	</div><br/>
 	<div class="row-fluid">
-		<div class="span4" style="padding-left: 20px;"><label class="pull-right" for="order_Weight">Общий вес</label></div>
-		<div class="span8"><?=CHtml::textArea('order[Weight]', isset($order['Weight']) ? $order['Weight'] : '', array('class' => 'span12'))?></div>
+		<div class="span3" style="padding-left: 20px;"><label class="pull-right" for="order_Weight">Общий вес</label></div>
+		<div class="span9"><?=CHtml::textArea('order[Weight]', isset($order['Weight']) ? $order['Weight'] : '', array('class' => 'span12'))?></div>
 	</div><br/>
 	<div class="row-fluid">
-		<div class="span4" style="padding-left: 20px;"><label class="pull-right" for="order_WeightMeasure">Единица измерения веса</label></div>
-		<div class="span8"><?=CHtml::dropDownList('order[WeightMeasure]', isset($order['WeightMeasure']) ? $order['WeightMeasure'] : '', array('' => 'Не выбрано') + $this->getWeightMeasures(), array('class' => 'span12'))?></div>
+		<div class="span3" style="padding-left: 20px;"><label class="pull-right" for="order_WeightMeasure">Единица измерения веса</label></div>
+		<div class="span9"><?=CHtml::dropDownList('order[WeightMeasure]', isset($order['WeightMeasure']) ? $order['WeightMeasure'] : '', array('' => 'Не выбрано') + $this->getWeightMeasures(), array('class' => 'span12'))?></div>
 	</div><br/>
 	<div class="row-fluid">
-		<div class="span4" style="padding-left: 20px;"><label class="pull-right" for="order_Documents">Список документов</label></div>
-		<div class="span8"><?=CHtml::textArea('order[Documents]', isset($order['Documents']) ? $order['Documents'] : '', array('class' => 'span12'))?></div>
+		<div class="span3" style="padding-left: 20px;"><label class="pull-right" for="order_Documents">Список документов</label></div>
+		<div class="span9"><?=CHtml::textArea('order[Documents]', isset($order['Documents']) ? $order['Documents'] : '', array('class' => 'span12'))?></div>
 	</div><br/>
 	<div class="row-fluid">
-		<div class="span4" style="padding-left: 20px;"><label class="pull-right" for="order_StartDate">Начало страхования</label></div>
-		<div class="span8">
+		<div class="span3" style="padding-left: 20px;"><label class="pull-right" for="order_StartDate">Начало страхования</label></div>
+		<div class="span9">
 			<?php $this->widget('zii.widgets.jui.CJuiDatePicker',array(
 					'name' => 'order[StartDate]',
 					'options' => array(
@@ -77,8 +77,8 @@ Countries::getValues();
 		</div>
 	</div><br/>
 	<div class="row-fluid">
-		<div class="span4" style="padding-left: 20px;"><label class="pull-right" for="order_EndDate">Конец страхования</label></div>
-		<div class="span8">
+		<div class="span3" style="padding-left: 20px;"><label class="pull-right" for="order_EndDate">Конец страхования</label></div>
+		<div class="span9">
 			<?php $this->widget('zii.widgets.jui.CJuiDatePicker',array(
 					'name' => 'order[EndDate]',
 					'options' => array(
@@ -170,7 +170,7 @@ Countries::getValues();
 	</table>
 
 	<div class="row-fluid">
-		<div class="span4">
+		<div class="span3">
 			<div class="pull-right">
 			<?php
 				$this->widget('bootstrap.widgets.TbButton', array(
