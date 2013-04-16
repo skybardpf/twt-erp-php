@@ -17,7 +17,7 @@
                 'itemOptions' => array('class'=>'narrow')
             ),
             array('label'=>'Мероприятия', 'url'=>$this->createUrl('my_events', array('id' => 1)), 'active'=> $this->cur_tab == 'my_events'),
-            array('label'=>'Договоры', 'url'=>$this->createUrl('contract', array('id' => 1)), 'active'=> $this->cur_tab == 'contract'),
+            array('label'=>'Договоры', 'url'=>$this->createUrl('contracts', array('id' => 1)), 'active'=> $this->cur_tab == 'contract'),
         ),
     )); ?>
 </div>
