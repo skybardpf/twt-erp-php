@@ -1,5 +1,5 @@
 <?php
-/* @var $this Counterparties_groupsController */
+/* @var $this CurrenciesController */
 
 $this->breadcrumbs=array(
 	$this->controller_title,

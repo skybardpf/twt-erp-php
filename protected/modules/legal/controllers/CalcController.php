@@ -109,10 +109,58 @@ class CalcController extends Controller
 		}
 	}
 
+
 	public function actionOrder($order_id) {
 		$order = array();
 		if ($_POST && isset($_POST['order'])) {
 			$order = $_POST['order'];
+			try {
+				$send_order = array('NumberOfPreOrder' => $order_id);
+				if (isset($_POST['order']['CompanyName']))          $send_order['CompanyName']          = $_POST['order']['CompanyName'];
+				if (isset($_POST['order']['Beneficiary']))          $send_order['Beneficiary']          = $_POST['order']['Beneficiary'];
+				if (isset($_POST['order']['Consignment']))          $send_order['Consignment']          = $_POST['order']['Consignment'];
+				if (isset($_POST['order']['NumberOfSeat']))         $send_order['NumberOfSeat']         = $_POST['order']['NumberOfSeat'];
+				if (isset($_POST['order']['NumberOfSeatMeasure']))  $send_order['NumberOfSeatMeasure']  = $_POST['order']['NumberOfSeatMeasure'];
+				if (isset($_POST['order']['Weight']))               $send_order['Weight']                    = $_POST['order']['Weight'];
+				if (isset($_POST['order']['WeightMeasure']))        $send_order['WeightMeasure']        = $_POST['order']['WeightMeasure'];
+				if (isset($_POST['order']['Documents']))            $send_order['Documents']            = $_POST['order']['Documents'];
+				if (isset($_POST['order']['StartDate']))            $send_order['StartDate']            = $_POST['order']['StartDate'];
+				if (isset($_POST['order']['EndDate']))              $send_order['EndDate']              = $_POST['order']['EndDate'];
+
+				$send_order['Transports'] = array();
+				if (isset($_POST['order']['route']) && isset($_POST['order']['route']['begin'])
+					&& !empty($_POST['order']['route']['begin']['Country'])
+					&& !empty($_POST['order']['route']['begin']['City'])
+					&& !empty($_POST['order']['route']['begin']['Transport'])
+					&& !empty($_POST['order']['route']['begin']['RegistrationNumber'])
+				) {
+					$send_order['Transports'][] = $_POST['order']['route']['begin'];
+				} else {
+					throw new Exception("Нужно указать начальную точку маршрута.");
+				}
+
+				if (isset($_POST['order']['route']) && isset($_POST['order']['route']['middle'])) {
+					foreach($_POST['order']['route']['middle'] as $route_point) {
+						$send_order['Transports'][] = $route_point;
+					}
+				}
+
+				if (isset($_POST['order']['route']) && isset($_POST['order']['route']['end'])
+					&& !empty($_POST['order']['route']['end']['Country'])
+					&& !empty($_POST['order']['route']['end']['City'])
+					&& !empty($_POST['order']['route']['end']['Transport'])
+					&& !empty($_POST['order']['route']['end']['RegistrationNumber'])
+				) {
+					$send_order['Transports'][] = $_POST['order']['route']['begin'];
+				} else {
+					throw new Exception("Нужно указать конечную точку маршрута.");
+				}
+				$ret = Yii::app()->calc->CreateOrder(array('Data' => $send_order));
+				$ret = SoapComponent::parseReturn($ret);
+				CVarDumper::dump($ret,5,1);
+			} catch (Exception $e) {
+				Yii::app()->user->setFlash('error', $e->getMessage());
+			}
 		}
 		$this->render('order', array('order' => $order));
 	}

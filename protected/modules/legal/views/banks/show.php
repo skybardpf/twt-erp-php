@@ -1,5 +1,5 @@
 <?php
-/* @var $this Counterparties_groupsController */
+/* @var $this BanksController */
 
 $this->breadcrumbs=array(
 	$this->controller_title => array('/legal/banks'),

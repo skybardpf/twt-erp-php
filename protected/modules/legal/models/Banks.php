@@ -54,6 +54,7 @@ class Banks extends SOAPModel {
 	 * Получить один банк
 	 * @param $id
 	 *
+	 * @return \Banks[]
 	 * @throws CHttpException
 	 */
 	public function findByPk($id) {

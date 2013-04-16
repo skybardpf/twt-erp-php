@@ -13,6 +13,16 @@ Yii::app()->clientScript->registerScriptFile($this->module->assets.'/js/calc/ord
 Countries::getValues();
 ?>
 <h2 xmlns="http://www.w3.org/1999/html"><?=$this->controller_title?>. Шаг 3</h2>
+<?php
+$this->widget('bootstrap.widgets.TbAlert', array(
+	'block'     => true, // display a larger alert block?
+	'fade'      => true, // use transitions?
+	'closeText' => '&times;', // close link text - if set to false, no close link is displayed
+	'alerts'    => array(
+		'error' => array('block'=>true, 'fade'=>true, 'closeText'=>'&times;'), // success, info, warning, error or danger
+	),
+));
+?>
 
 <?php
 	/* @var $form TbActiveForm */
@@ -147,23 +157,6 @@ Countries::getValues();
 <?php
 
 /*
- <div class="row-fluid">
-					<div class="span3"><label class="pull-right">Страна</label></div>
-					<div class="span6"><?=CHtml::dropDownList('order[route][middle][__iteration__][Country]', '', array('' => 'Не выбрана') + Countries::$values, array('data-route_input' => 1, 'data-country_input' => '1'))?></div>
-				</div>
-				<div class="row-fluid">
-					<div class="span3"><label class="pull-right">Город</label></div>
-					<div class="span6"><?=CHtml::dropDownList('order[route][middle][__iteration__][City]', '', array('' => 'Не выбран'), array('data-route_input' => 1, 'data-city_input' => '1'))?></div>
-				</div>
-				<div class="row-fluid">
-					<div class="span3"><label class="pull-right">Транспорт</label></div>
-					<div class="span6"><?=CHtml::textField('order[route][middle][__iteration__][Transport]', '', array('data-route_input' => 1))?></div>
-				</div>
-				<div class="row-fluid">
-					<div class="span3"><label>Номер транспортного средства</label></div>
-					<div class="span6"><?=CHtml::textField('order[route][middle][__iteration__][RegistrationNumber]', '', array('data-route_input' => 1))?></div>
-				</div>
-
 Наименование компании (текст)
 	-	ИНН (текст)
 	-	КПП (текст)

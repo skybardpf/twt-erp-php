@@ -130,7 +130,7 @@ class SoapComponent extends CApplicationComponent
 				return $ret;
 			} catch (Exception $e) {
 				Yii::log($e->getCode().'(at file '.$e->getFile().':'.$e->getLine().'): '.$e->getMessage(),CLogger::LEVEL_ERROR, 'soap');
-				throw new CHttpException(500);
+				throw new CHttpException(500, $e->getMessage());
 			}
 		} else {
 			return parent::__call($name, $params);
