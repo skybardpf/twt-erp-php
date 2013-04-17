@@ -6,7 +6,7 @@ class SoapComponent extends CApplicationComponent
 {
 	/** @var SoapClient */
 	protected $soap_client = NULL;
-	public $cache_enabled = 1;
+	public $cache_enabled = 0;
 	public $socket_timeout = 25;
 
 	public $connection_options = array(); // Configurable one

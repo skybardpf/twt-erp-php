@@ -45,12 +45,12 @@ $this->widget('bootstrap.widgets.TbAlert', array(
 		<div class="span3" style="padding-left: 20px;"><label class="pull-right" for="order_kpp">КПП (не принимается)</label></div>
 		<div class="span9"><?=CHtml::textField('order[kpp]', isset($order['kpp']) ? $order['kpp'] : '', array('class' => 'span12'))?></div>
 	</div><br/>
-	<?php if (Yii::app()->user->getState('ins_type', false) == 'Агентский') :?>
+	<?php /*if (Yii::app()->user->getState('ins_type', false) == 'Агентский') :*/?>
 		<div class="row-fluid">
 			<div class="span3" style="padding-left: 20px;"><label class="pull-right" for="order_CompanyName">Выгодоприобретатель</label></div>
 			<div class="span9"><?=CHtml::textField('order[Beneficiary]', isset($order['Beneficiary']) ? $order['Beneficiary'] : '', array('class' => 'span12'))?></div>
 		</div><br/>
-	<?php endif; ?>
+	<?php /*endif; */?>
 	<div class="row-fluid">
 		<div class="span3" style="padding-left: 20px;"><label class="pull-right" for="order_Consignment">Груз (товары через запятую)</label></div>
 		<div class="span9"><?=CHtml::textArea('order[Consignment]', isset($order['Consignment']) ? $order['Consignment'] : '', array('class' => 'span12'))?></div>
