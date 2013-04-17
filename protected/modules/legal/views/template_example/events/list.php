@@ -13,7 +13,9 @@
 
 <?php
 $gridDataProvider = new CArrayDataProvider(array(
-    array('id'=>1, 'title'=>'Сдача квартальной отчётности', 'first_date'=>'02.02.02', 'period'=>'ежеквартально', 'plannedfor'=>'ООО "Mark"'),
+    array('id'=>1, 'title'=>'Сдача квартальной отчётности', 'first_date'=>'15.01.2009', 'period'=>'Ежеквартально', 'plannedfor'=>'ООО "Ромашка"<br/>ООО "Рога и копыта"'),
+    array('id'=>2, 'title'=>'Сдача годовой отчётности', 'first_date'=>'15.01.2009', 'period'=>'Ежегодно', 'plannedfor'=>'ООО "Ромашка"<br/>ООО "Рога и копыта"'),
+    array('id'=>3, 'title'=>'Собрание акционеров', 'first_date'=>'21.10.2010', 'period'=>'Ежегодно', 'plannedfor'=>'Horns and Hooves, Ltd.'),
 ));
 
 $this->widget('bootstrap.widgets.TbGridView', array(

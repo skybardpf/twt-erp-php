@@ -155,7 +155,7 @@ class CalcController extends Controller
 				} else {
 					throw new Exception("Нужно указать конечную точку маршрута.");
 				}
-				$ret = Yii::app()->calc->CreateOrder1(array('Data' => $send_order));
+				$ret = Yii::app()->calc->CreateOrder(array('Data' => $send_order));
 				$ret = SoapComponent::parseReturn($ret);
 				CVarDumper::dump($ret,5,1);
 			} catch (Exception $e) {

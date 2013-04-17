@@ -44,7 +44,10 @@ h1 {
     margin-bottom: 0;
 }
 .yur-tabs .narrow {
-    width: 177px;
+    width: 160px;
+}
+.yur-tabs .narrower {
+    width: 120px;
 }
 .yur-tabs {
     font-size: 12px;

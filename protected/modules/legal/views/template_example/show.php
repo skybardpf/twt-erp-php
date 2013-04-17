@@ -16,7 +16,12 @@
                 'active'=> $this->cur_tab == 'benefits',
                 'itemOptions' => array('class'=>'narrow')
             ),
-            array('label'=>'Мероприятия', 'url'=>$this->createUrl('my_events', array('id' => 1)), 'active'=> $this->cur_tab == 'my_events'),
+            array(
+                'label'=>'Календарь событий',
+                'url'=>$this->createUrl('my_events', array('id' => 1)),
+                'active'=> $this->cur_tab == 'my_events',
+                'itemOptions' => array('class'=>'narrow narrower')
+            ),
             array('label'=>'Договоры', 'url'=>$this->createUrl('contracts', array('id' => 1)), 'active'=> $this->cur_tab == 'contract'),
         ),
     )); ?>

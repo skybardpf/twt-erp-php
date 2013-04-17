@@ -56,7 +56,7 @@ return array(
 			'class'     => 'SoapComponent',
 			//'wsdl'      => 'http://80.250.210.238/TWTsite/ws/CalcInsurance?wsdl', // Старая
 			//'wsdl'      => 'http://144.76.5.53/TWTsite/ws/CalcIns?wsdl',   // новая
-			'wsdl'      => 'http://144.76.5.53/testmakarov/ws/CalcIns?wsdl',   // Тест
+			'wsdl'        => 'http://144.76.5.53/testmakarov/ws/CalcIns?wsdl',   // Тест
 			'connection_options' => array(
 				'login'     => 'Site',
 				'password'  => 'Site',
@@ -98,7 +98,7 @@ return array(
 				),
 				array(
 					'class'     => 'ext.yii-debug-toolbar.YiiDebugToolbarRoute',
-					'ipFilters' => array('127.0.0.1','192.168.0.*'),
+					'ipFilters' => array('127.0.0.1','192.168.0.*', '83.229.142.164'),
 				),
 				// uncomment the following to show log messages on web pages
 				/*

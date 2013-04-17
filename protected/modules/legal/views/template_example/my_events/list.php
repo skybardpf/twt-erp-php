@@ -14,7 +14,21 @@
     </tr>
     <tr>
         <td><a href="/legal/template_example/event_show/id/1">Сдача квартальной отчётности</a></td>
-        <td>15.07.13</td>
+        <td>15.07.2013</td>
+        <td>
+            <?php $this->widget('bootstrap.widgets.TbButton', array('buttonType' => 'submit', 'type' => 'success', 'label' => 'Пометить как выполненное')); ?>
+        </td>
+    </tr>
+    <tr>
+        <td><a href="/legal/template_example/event_show/id/1">Собрание акционеров</a></td>
+        <td>21.10.2013</td>
+        <td>
+            <?php $this->widget('bootstrap.widgets.TbButton', array('buttonType' => 'submit', 'type' => 'success', 'label' => 'Пометить как выполненное')); ?>
+        </td>
+    </tr>
+    <tr>
+        <td><a href="/legal/template_example/event_show/id/1">Сдача годовой отчётности</a></td>
+        <td>15.01.2013</td>
         <td>
             <?php $this->widget('bootstrap.widgets.TbButton', array('buttonType' => 'submit', 'type' => 'success', 'label' => 'Пометить как выполненное')); ?>
         </td>

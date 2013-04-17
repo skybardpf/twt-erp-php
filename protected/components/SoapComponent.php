@@ -93,6 +93,8 @@ class SoapComponent extends CApplicationComponent
 			if ($data === false) {
 				$data = $this->soap_call($name, $parameters);
 				Yii::app()->cache->set('soap_'.md5($this->wsdl.'_'.$name.'_'.var_export($parameters, true)), $data, $this->requestCachingDuration, $this->requestCachingDependency);
+			} else {
+				Yii::log('soap from cache: function ' . htmlspecialchars($name) . ' with args: ' . (defined('JSON_UNESCAPED_UNICODE') ? json_encode($parameters, JSON_UNESCAPED_UNICODE) : preg_replace('#\\\\u([0-9a-f]{4})#se','iconv("UTF-16BE","UTF-8",pack("H4","$1"))', json_encode($parameters))), CLogger::LEVEL_INFO, 'soap');
 			}
 			$this->requestCachingDuration   = 0;
 			$this->requestCachingDependency = NULL;
@@ -112,6 +114,7 @@ class SoapComponent extends CApplicationComponent
 	 * @return mixed
 	 */
 	protected function soap_call($name, $params = array()) {
+		CVarDumper::dump($params,5,1);
 		if ($this->soap_client === NULL) {
 			$this->delay_init();
 		}
