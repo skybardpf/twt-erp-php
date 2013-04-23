@@ -4,9 +4,6 @@
  * Date: 21.02.13
  */
 class DefaultController extends Controller {
-
-	// ТУДУ: убрать из боя
-	// Внимание: метод для тестирования
 	public function actionIndex() {
 		$data = array();
 		if ($_POST && !empty($_POST['method'])) {

@@ -57,6 +57,7 @@ return array(
 			//'wsdl'      => 'http://80.250.210.238/TWTsite/ws/CalcInsurance?wsdl', // Старая
 			//'wsdl'      => 'http://144.76.5.53/TWTsite/ws/CalcIns?wsdl',   // новая
 			'wsdl'        => 'http://144.76.5.53/testmakarov/ws/CalcIns?wsdl',   // Тест
+			//'wsdl'        => 'http://144.76.5.53/WebTest/ws/CalcIns?wsdl',   // Тест
 			'connection_options' => array(
 				'login'     => 'Site',
 				'password'  => 'Site',

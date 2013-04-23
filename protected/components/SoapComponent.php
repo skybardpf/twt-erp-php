@@ -114,7 +114,6 @@ class SoapComponent extends CApplicationComponent
 	 * @return mixed
 	 */
 	protected function soap_call($name, $params = array()) {
-		CVarDumper::dump($params,5,1);
 		if ($this->soap_client === NULL) {
 			$this->delay_init();
 		}

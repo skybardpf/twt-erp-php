@@ -151,7 +151,7 @@ class CalcController extends Controller
 					&& !empty($_POST['order']['route']['end']['Transport'])
 					&& !empty($_POST['order']['route']['end']['RegistrationNumber'])
 				) {
-					$send_order['Transports'][] = $_POST['order']['route']['begin'];
+					$send_order['Transports'][] = $_POST['order']['route']['end'];
 				} else {
 					throw new Exception("Нужно указать конечную точку маршрута.");
 				}
