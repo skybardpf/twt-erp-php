@@ -1,16 +1,17 @@
 <?php
 /**
- * Created by JetBrains PhpStorm.
  * User: Мишенько
  * Date: 08.04.13
  * Time: 10:57
- * To change this template use File | Settings | File Templates.
+ *
+ * @var $this Controller
  */
 
-/*@var $this Controller */
-
-Yii::app()->clientScript->registerCssFile(CHtml::asset(Yii::app()->basePath.'/../static/css/main.css'));
-
+Yii::app()->clientScript->registerCssFile($this->asset_static.'/css/main.css');
+Yii::app()->clientScript->registerCoreScript('jquery.ui');
+Yii::app()->clientScript->registerCssFile(Yii::app()->clientScript->getCoreScriptUrl().'/jui/css/base/jquery-ui.css' );
+Yii::app()->clientScript->registerScriptFile('easter_egg', $this->asset_static.'/js/common.js');
+$this->widget('ext.widgets.loading.LoadingWidget');
 ?>
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="<?=Yii::app()->language?>" lang="<?=Yii::app()->language?>">

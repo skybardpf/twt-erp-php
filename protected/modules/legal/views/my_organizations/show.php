@@ -9,7 +9,7 @@
  * @var $model Organizations
  */
 ?>
-<h1><?=$model->name?></h1>
+<h1><?=$model->full_name?></h1>
 <div class="yur-tabs">
     <?php $this->widget('bootstrap.widgets.TbMenu', array(
         'type'=>'tabs', // '', 'tabs', 'pills' (or 'list')
@@ -35,8 +35,5 @@
     )); ?>
 </div>
 <div class="yur-content">
-
 	<?=$tab_content?>
-
 </div>
-<script type="text/javascript" src="/static/js/common.js"></script>

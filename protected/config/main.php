@@ -97,6 +97,11 @@ return array(
 					'class'  =>'CFileLogRoute',
 					'levels' =>'error, warning',
 				),
+                array(
+                    'class' => 'CFileLogRoute',
+                    'categories' => 'soap',
+                    'logFile' => 'soap_log.log'
+                ),
 				array(
 					'class'     => 'ext.yii-debug-toolbar.YiiDebugToolbarRoute',
 					'ipFilters' => array('127.0.0.1','192.168.0.*', '83.229.142.164'),

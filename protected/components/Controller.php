@@ -24,4 +24,12 @@ class Controller extends CController
 	 * @var string array key for currently active menu element
 	 */
 	public $menu_elem = 'main';
+
+	public $asset_static = '';
+
+	protected function beforeAction($action)
+	{
+		if (!$this->asset_static) $this->asset_static = CHtml::asset(Yii::app()->basePath.'/../static/');
+		return parent::beforeAction($action);
+	}
 }

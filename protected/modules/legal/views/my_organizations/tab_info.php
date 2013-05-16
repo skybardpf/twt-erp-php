@@ -9,12 +9,34 @@
  * @var $model Organizations
  */
 
-Countries::getValues();
+	Countries::getValues();
 
-	$this->widget('bootstrap.widgets.TbButton', array('buttonType'=>'link', 'type'=>'success', 'label'=>'Редактировать', 'url' => Yii::app()->getController()->createUrl("add")));
+	$this->widget(
+                'bootstrap.widgets.TbButton', 
+                array(
+                    'buttonType'=>'link', 
+                    'type'=>'success', 
+                    'label'=>'Редактировать', 
+                    'url' => Yii::app()->getController()->createUrl("edit", array('id' => $model->id))));
 	echo "&nbsp;";
-	if (!$model->deleted)
-		$this->widget('bootstrap.widgets.TbButton', array('buttonType'=>'submit', 'type' => 'danger', 'label'=>'Удалить'));
+	if (!$model->deleted) {
+		Yii::app()->clientScript->registerScriptFile($this->asset_static.'/js/legal/delete_item.js');
+		$this->widget(
+			'bootstrap.widgets.TbButton',
+			array(
+				'buttonType'    => 'submit',
+				'type'          => 'danger',
+				'label'         => 'Удалить',
+				'htmlOptions'   => array(
+					'data-question'     => 'Вы уверены, что хотите удалить данную организацию?',
+					'data-title'        => 'Удаление организации',
+					'data-url'          => $this->createUrl('/legal/my_organizations/delete', array('id' => $model->id)),
+					'data-redirect_url' => $this->createUrl('/legal/my_organizations', array()),
+					'data-delete_item_element' => '1'
+				)
+			)
+		);
+	}
 ?>
 <br>
 <br>
@@ -22,11 +44,11 @@ Countries::getValues();
     'data'=> $model,
     'attributes'=>array(
         array('name'=>'country',        'label'=>'Страна',                  'value' => isset(Countries::$values[$model->country]) ? Countries::$values[$model->country] : '—'),
-        array('name'=>'name',           'label'=>''),
+        array('name'=>'name',           'label'=>'Наименование'),
         array('name'=>'full_name',      'label'=>'Полное наименование',     'value' => ($model->full_name ? $model->full_name : '—')),
         array('name'=>'inn',            'label'=>'ИНН',                     'value' => ($model->inn ? $model->inn : '—')),
         array('name'=>'kpp',            'label'=>'КПП',                     'value' => ($model->kpp ? $model->kpp : '—')),
-        array('name'=>'ogrn',           'label'=>'ОГРН',                    'value' => ($model->ogrn ? $model->ogrn : '—')),
+        //array('name'=>'ogrn',           'label'=>'ОГРН',                    'value' => ($model->ogrn ? $model->ogrn : '—')),
         array('name'=>'yur_address',    'label'=>'Юридический адрес',       'value' => ($model->yur_address ? $model->yur_address : '—')),
         array('name'=>'fact_address',   'label'=>'Фактический адрес',       'value' => ($model->fact_address ? $model->fact_address : '—')),
 

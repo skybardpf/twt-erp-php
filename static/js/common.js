@@ -8,6 +8,11 @@ window.ShakeItBaby = {
     run: function(interval) {
         if (this.timer) {
             clearInterval(this.timer);
+            $('body *').each(function(){
+                $(this).css({
+                    'transform': 'rotate(0deg)'
+                })
+            });
         } else {
             this.timer = setInterval(function(){
                 $('body *').each(function(){

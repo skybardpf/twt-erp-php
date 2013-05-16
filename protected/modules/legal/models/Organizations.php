@@ -50,35 +50,48 @@ class Organizations extends SOAPModel {
 	/**
 	 * Удаление Собственного Юр.Лица
 	 *
+	 * @param $id
+	 *
+	 * @return bool
+	 */
+	public function delete_by_id($id) {
+		$cacher = new CFileCache();
+		$cacher->set('Organizations_values', false, 1);
+
+		$ret = $this->SOAP->deleteOrganization(array('id' => $id));
+		return $ret->return;
+	}
+
+	/**
+	 * Метод объекта - удаляет себя
 	 * @return bool
 	 */
 	public function delete() {
-		$cacher = new CFileCache();
-		$cacher->set('Organizations_values', false, 1);
 		if ($pk = $this->getprimaryKey()) {
-			$ret = $this->SOAP->deleteOrganization(array('id' => $pk));
-			return $ret->return;
-		}
-		return false;
+			$this->delete_by_id($pk);
+		} else return false;
 	}
 
 	/**
 	 * Сохранение Юр.Лица
 	 * @return array
 	 */
-	/*public function save() {
+	public function save() {
 		$cacher = new CFileCache();
 		$cacher->set('LEntity_values', false, 1);
 
 		$attrs = $this->getAttributes();
 
+        $attrs['resident'] = (boolean)intval($attrs['resident']);
+        
 		if (!$this->getprimaryKey()) unset($attrs['id']); // New record
 		unset($attrs['deleted']);
 
-		$ret = $this->SOAP->saveLegalEntity(array('data' => SoapComponent::getStructureElement($attrs)));
+		//$ret = $this->SOAP->saveLegalEntity(array('data' => SoapComponent::getStructureElement($attrs))); // DEPRECATED
+        $ret = $this->SOAP->saveOrganization(array('data' => SoapComponent::getStructureElement($attrs, array('convert_boolean' => true))));
 		$ret = SoapComponent::parseReturn($ret, false);
 		return $ret;
-	}*/
+	}
 
 	/**
 	 * Список Собственных Юр.Лиц
@@ -113,29 +126,68 @@ class Organizations extends SOAPModel {
 	 * @return array list of attribute names.
 	 */
 	public function attributeLabels() {
-		return array(
-			'id'            => '#',                                 // +
-			'name'          => 'Сокращенное наименование',          // +
-			'full_name'     => 'Полное наименование',               // +
-			'country'       => 'Страна юрисдикции',                 // + id
-			'resident'      => 'Резидент РФ',                       // + boolean
-			'type_no_res'   => 'Тип нерезидента',                   // + int
-			'contragent'    => 'Контрагент',                        // + boolean
-			'parent'        => 'Группа контрагентов',               // +
-            'comment'       => 'Комментарий',                       // +
+        // так должно быть по макету
+		/*return array(
+            'id'            => '#',                                 // +
+            'country'       => 'Страна',                            // + id
+            'opf'           => 'Организационно-правовая форма',     // 
+            'name'          => 'Наименование',                      // +
+            'sert_date'      => 'Дата государственной регистрации',  // +
 			'inn'           => 'ИНН',                               // +
 			'kpp'           => 'КПП',                               // +
 			'ogrn'          => 'ОГРН',                              // +
-			'yur_address'   => 'Адрес юридический',                 // +
-			'fact_address'  => 'Адрес фактический',                 // +
-			'reg_nom'       => 'Регистрационный номер',             // +
-			'sert_nom'      => 'Номер сертификата о регистрации',   // +
-			'sert_date'     => 'Дата сертификата о регистрации',    // +
-			'vat_nom'       => 'VAT-номер',                         // +
-			'profile'       => 'Основной вид деятельности',         // +
+            'vat_nom'       => 'VAT',                               // +
+            'reg_nom'       => 'Регистрационный номер',             // +
+            'sert_nom'      => 'Номер сертификата',                 // +
+            'profile'       => 'Основной вид деятельности',         // +            
+			'yur_address'   => 'Юридический адрес',                 // +
+			'fact_address'  => 'Фактический адрес',                 // +
+            'email'         => 'Email',                             // +
+            'phone'         => 'Телефон',                           // +
+            'fax'           => 'Факс',                              // +
+            'comment'       => 'Комментарий',                       // +
+            
+            // старые поля, не используются
+            'full_name'     => 'Полное наименование',               // +
+            'resident'      => 'Резидент РФ',                       // + boolean
+            'type_no_res'   => 'Тип нерезидента',                   // + int
+            'contragent'    => 'Контрагент',                        // + boolean
+            'parent'        => 'Группа контрагентов',               // +
 			'eng_name'      => 'Английское наименование',           // +
 			'deleted'       => 'Помечен на удаление'                // +
-		);
+            //'ogrn'          => 'ОГРН',                              // +
+		);*/
+        // а так есть по тому, что приходит с 1С
+        return array(
+            "id"            => '#',                                 // +
+            "country"       => 'Страна',                            // + id
+            //'opf'           => 'Организационно-правовая форма',   // нету
+            "name"          => 'Краткое наименование',              // +
+            'sert_date'      => 'Дата государственной регистрации',// нету
+            'inn'           => 'ИНН',                               // +
+            'kpp'           => 'КПП',                               // +
+            'vat_nom'       => 'VAT',                               // +
+            'reg_nom'       => 'Регистрационный номер',             // +
+            'sert_nom'      => 'Номер сертификата',                 // +
+            'profile'       => 'Основной вид деятельности',         // +          
+            'yur_address'   => 'Юридический адрес',                 // +
+            'fact_address'  => 'Фактический адрес',                 // +
+            //'email'         => 'Email',                             // нету
+            //'phone'         => 'Телефон',                           // нету
+            //'fax'           => 'Факс',                              // нету
+            //'comment'       => 'Комментарий',                       // нету            
+            
+            // старые поля, но все еще есть
+            "full_name"     => 'Полное наименование',               // +
+            'eng_name'      => 'Английское наименование',           // +
+            'resident'      => 'Резидент РФ',                       // + boolean
+            'type_no_res'   => 'Тип нерезидента',                   // + int
+            'deleted'       => 'Помечен на удаление',                // +
+            //'ogrn'          => 'ОГРН',                              // +
+            
+            // новые поля не понятно что в них совать
+            'group_name'    => 'group_name'                           
+        );
 /*
 		id
 		sert_nom:,

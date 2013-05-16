@@ -28,7 +28,12 @@
         'template'=>"{items}",
         'columns'=>array(
             array('name'=>'id', 'header'=>'#'),
-            array('name'=>'name', 'header'=>'Название', 'type' => 'raw', 'value' => 'CHtml::link($data["name"], Yii::app()->getController()->createUrl("show", array("id" => $data["id"])))'),
+            array(
+                    'name'=>'name', 
+                    'header'=>'Название', 
+                    'type' => 'raw', 
+                    'value' => 'CHtml::link($data["name"], Yii::app()->getController()->createUrl("show", array("id" => $data["id"])))'
+            ),
             /*array('name'=>'country', 'header'=>'Страна'),
             array('name'=>'inn_kpp', 'header'=>'ИНН/КПП')*/
         ),
