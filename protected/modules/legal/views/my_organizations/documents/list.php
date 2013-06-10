@@ -45,17 +45,18 @@
                 'label'=>'Новая доверенность',
                 'type'=>'success', // null, 'primary', 'info', 'success', 'warning', 'danger' or 'inverse'
                 'size'=>'normal', // null, 'large', 'small' or 'mini'
-                'url' => Yii::app()->getController()->createUrl("document_add")
+                'url' => Yii::app()->getController()->createUrl("document_add", array('yur_id' => $yur_id, 'doc_type' => 'pa'))
             )); ?>
         </div>
         <h3>Доверенности</h3>
 
         <?php
         $gridDataProvider = new CArrayDataProvider(array(
-            array('id'=>$id, 'title'=>'документ 1', 'owner'=>'Окуджава Булат Шалвович', 'term'=>'20.33.23'),
-            array('id'=>$id, 'title'=>'документ 2', 'owner'=>'Окуджава Булат Шалвович', 'term'=>'01.12.23'),
-            array('id'=>$id, 'title'=>'документ 3', 'owner'=>'Навальный Алексей Анатольевич', 'term'=>'21.23.09'),
+            array('id'=>1, 'title'=>'документ 1', 'owner'=>'Окуджава Булат Шалвович', 'term'=>'20.33.23'),
+            array('id'=>2, 'title'=>'документ 2', 'owner'=>'Окуджава Булат Шалвович', 'term'=>'01.12.23'),
+            array('id'=>3, 'title'=>'документ 3', 'owner'=>'Навальный Алексей Анатольевич', 'term'=>'21.23.09'),
         ));
+        $gridDataProvider = new CArrayDataProvider($PA_models);
 
         $this->widget('bootstrap.widgets.TbGridView', array(
             'type'=>'striped bordered condensed',
@@ -95,9 +96,9 @@
 
         <?php
         $gridDataProvider = new CArrayDataProvider(array(
-            array('id'=>$id, 'title'=>'документ 1', 'term'=>'20.33.23'),
-            array('id'=>$id, 'title'=>'документ 2', 'term'=>'01.12.23'),
-            array('id'=>$id, 'title'=>'документ 3', 'term'=>'21.23.09'),
+            array('id'=>1, 'title'=>'документ 1', 'term'=>'20.33.23'),
+            array('id'=>2, 'title'=>'документ 2', 'term'=>'01.12.23'),
+            array('id'=>3, 'title'=>'документ 3', 'term'=>'21.23.09'),
         ));
 
         $this->widget('bootstrap.widgets.TbGridView', array(

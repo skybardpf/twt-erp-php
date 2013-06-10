@@ -2,6 +2,7 @@
 /**
  * User: Forgon
  * Date: 09.01.13
+ *
  */
 abstract class SOAPModel extends CModel {
 
@@ -33,8 +34,7 @@ abstract class SOAPModel extends CModel {
 	 * Returns the list of attribute names of the model.
 	 * @return array list of attribute names.
 	 */
-	public function attributeNames()
-	{
+	public function attributeNames() {
 		return array_keys($this->attributeLabels());
 	}
 
@@ -42,8 +42,7 @@ abstract class SOAPModel extends CModel {
 	 * @return array
 	 * @throws Exception
 	 */
-	public function attributeLabels()
-	{
+	public function attributeLabels() {
 		throw new Exception('Перечислите все поля');
 	}
 

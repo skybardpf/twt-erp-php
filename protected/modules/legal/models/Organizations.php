@@ -56,7 +56,7 @@ class Organizations extends SOAPModel {
 	 */
 	public function delete_by_id($id) {
 		$cacher = new CFileCache();
-		$cacher->set('Organizations_values', false, 1);
+		$cacher->set(__CLASS__.'_values', false, 1);
 
 		$ret = $this->SOAP->deleteOrganization(array('id' => $id));
 		return $ret->return;
@@ -78,19 +78,37 @@ class Organizations extends SOAPModel {
 	 */
 	public function save() {
 		$cacher = new CFileCache();
-		$cacher->set('LEntity_values', false, 1);
+		$cacher->set(__CLASS__.'_values', false, 1);
 
 		$attrs = $this->getAttributes();
 
-        $attrs['resident'] = (boolean)intval($attrs['resident']);
-        
+        //$attrs['resident'] = (boolean)intval($attrs['resident']);
+        $attrs['creation_date'] = date('Y-m-d');
+        if($attrs['sert_date'] == ''){
+            $attrs['sert_date'] = date('Y-m-d', 0);
+        }
+
 		if (!$this->getprimaryKey()) unset($attrs['id']); // New record
 		unset($attrs['deleted']);
 
-		//$ret = $this->SOAP->saveLegalEntity(array('data' => SoapComponent::getStructureElement($attrs))); // DEPRECATED
-        $ret = $this->SOAP->saveOrganization(array('data' => SoapComponent::getStructureElement($attrs, array('convert_boolean' => true))));
-		$ret = SoapComponent::parseReturn($ret, false);
-		return $ret;
+        $responce = array();
+        try{
+            $ret = $this->SOAP->saveOrganization(array('data' => SoapComponent::getStructureElement($attrs, array('convert_boolean' => true))));
+            $ret = SoapComponent::parseReturn($ret, false);
+            $responce = array(
+                'error' => false,
+                'errorMessage' => '',
+                'id' => $ret
+            );
+        }
+        catch (Exception $e){
+            $responce = array(
+                'error' => true,
+                'errorMessage' => $e->getMessage(),
+                'id' => null
+            );
+        }
+		return $responce;
 	}
 
 	/**
@@ -130,7 +148,7 @@ class Organizations extends SOAPModel {
 		/*return array(
             'id'            => '#',                                 // +
             'country'       => 'Страна',                            // + id
-            'opf'           => 'Организационно-правовая форма',     // 
+            'opf'           => 'Организационно-правовая форма',     //
             'name'          => 'Наименование',                      // +
             'sert_date'      => 'Дата государственной регистрации',  // +
 			'inn'           => 'ИНН',                               // +
@@ -139,14 +157,14 @@ class Organizations extends SOAPModel {
             'vat_nom'       => 'VAT',                               // +
             'reg_nom'       => 'Регистрационный номер',             // +
             'sert_nom'      => 'Номер сертификата',                 // +
-            'profile'       => 'Основной вид деятельности',         // +            
+            'profile'       => 'Основной вид деятельности',         // +
 			'yur_address'   => 'Юридический адрес',                 // +
 			'fact_address'  => 'Фактический адрес',                 // +
             'email'         => 'Email',                             // +
             'phone'         => 'Телефон',                           // +
             'fax'           => 'Факс',                              // +
             'comment'       => 'Комментарий',                       // +
-            
+
             // старые поля, не используются
             'full_name'     => 'Полное наименование',               // +
             'resident'      => 'Резидент РФ',                       // + boolean
@@ -159,56 +177,57 @@ class Organizations extends SOAPModel {
 		);*/
         // а так есть по тому, что приходит с 1С
         return array(
-            "id"            => '#',                                 // +
-            "country"       => 'Страна',                            // + id
+            "id"            => '#',
+            "country"       => 'Страна',
+            "name"          => 'Наименование',
+            "full_name"     => 'Полное наименование',
+            'sert_date'     => 'Дата государственной регистрации',
+            'inn'           => 'ИНН',
+            'kpp'           => 'КПП',
+            'ogrn'          => 'ОГРН',
+            'vat_nom'       => 'VAT',
+            'reg_nom'       => 'Регистрационный номер',
+            'sert_nom'      => 'Номер сертификата',
+            'info'          => 'Дополнительная информация',
+            'profile'       => 'Основной вид деятельности',
+            'yur_address'   => 'Юридический адрес',
+            'fact_address'  => 'Фактический адрес',
+            'email'         => 'Email',
+            'phone'         => 'Телефон',
+            'fax'           => 'Факс',
+            'comment'       => 'Комментарий',
+            'okopf'         => 'ОКОПФ',
+            'creation_date' => 'creation_date',
+
+            // старые поля
             //'opf'           => 'Организационно-правовая форма',   // нету
-            "name"          => 'Краткое наименование',              // +
-            'sert_date'      => 'Дата государственной регистрации',// нету
-            'inn'           => 'ИНН',                               // +
-            'kpp'           => 'КПП',                               // +
-            'vat_nom'       => 'VAT',                               // +
-            'reg_nom'       => 'Регистрационный номер',             // +
-            'sert_nom'      => 'Номер сертификата',                 // +
-            'profile'       => 'Основной вид деятельности',         // +          
-            'yur_address'   => 'Юридический адрес',                 // +
-            'fact_address'  => 'Фактический адрес',                 // +
-            //'email'         => 'Email',                             // нету
-            //'phone'         => 'Телефон',                           // нету
-            //'fax'           => 'Факс',                              // нету
-            //'comment'       => 'Комментарий',                       // нету            
-            
-            // старые поля, но все еще есть
-            "full_name"     => 'Полное наименование',               // +
-            'eng_name'      => 'Английское наименование',           // +
-            'resident'      => 'Резидент РФ',                       // + boolean
-            'type_no_res'   => 'Тип нерезидента',                   // + int
+            //'eng_name'      => 'Английское наименование',           // +
+            //'resident'      => 'Резидент РФ',                       // + boolean
+            //'type_no_res'   => 'Тип нерезидента',                   // + int
             'deleted'       => 'Помечен на удаление',                // +
-            //'ogrn'          => 'ОГРН',                              // +
-            
-            // новые поля не понятно что в них совать
-            'group_name'    => 'group_name'                           
+
         );
-/*
-		id
-		sert_nom:,
-		country:643,
-		eng_name:,
-		reg_nom:,
-		id:000000001,
-		deleted:false,
-		resident:true,
-		profile:,
-		full_name:ЗАО ТВТ консалт,
-		inn:7726700622,
-		type_no_res:,
-		sert_date:,
-		ogrn:1127746529426,
-		yur_address:115230, Москва г, Электролитный проезд, дом № 1, строение 3,
-		name:ТВТконсалт,
-		fact_address:109240, Москва г, Николоямская ул, дом № 26, строение 3,
-		kpp:772601001,
-		vat_nom:
-*/
+		/*
+		"id":"000000001",
+		"country":"643",
+		"name":"ТВТконсалт",
+
+		'sert_nom' => ''
+        'eng_name' => ''
+        'reg_nom' => ''
+        'deleted' => false
+        'resident' => true
+        'profile' => ''
+        'full_name' => 'ЗАО \"ТВТ консалт\"'
+        'inn' => '7726700622'
+        'type_no_res' => ''
+        'sert_date' => ''
+        'ogrn' => '1127746529426'
+        'yur_address' => '115230, Москва г, Электролитный проезд, дом № 1, строение 3'
+        'fact_address' => '109240, Москва г, Николоямская ул, дом № 26, строение 3'
+        'kpp' => '772601001'
+        'vat_nom' => ''
+		*/
 	}
 
 	/**
@@ -242,7 +261,7 @@ class Organizations extends SOAPModel {
 	 */
 	static function getValues() {
 		$cacher = new CFileCache();
-		$cache = $cacher->get('Organizations_values');
+		$cache = $cacher->get(__CLASS__.'_values');
 		if ($cache === false) {
 			if (!self::$values) {
 				$elements = self::model()->findAll();
@@ -253,7 +272,7 @@ class Organizations extends SOAPModel {
 				self::$values = $return;
 
 			}
-			$cacher->add('Organizations_values', self::$values, 3000);
+			$cacher->add(__CLASS__.'_values', self::$values, 3000);
 		} elseif (!self::$values) {
 			self::$values = $cache;
 		}

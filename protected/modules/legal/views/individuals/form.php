@@ -14,26 +14,57 @@ if ($error) echo CHtml::openTag('div', array('class' => 'alert alert-error')).$e
 		'enableAjaxValidation' => false,
 	))?>
 
+    <?php $this->widget('bootstrap.widgets.TbButton', array('buttonType'=>'submit', 'type'=>'primary', 'label'=>'Сохранить')); ?>
+    <?php $this->widget('bootstrap.widgets.TbButton', array('buttonType'=>'reset', 'label'=>'Отмена')); ?>
+    
 	<?=$form->errorSummary($model)?>
 
 	<fieldset>
-		<?= $form->textFieldRow(    $model, 'name',         array('class' => 'span6')); ?>
-		<?= $form->textFieldRow(    $model, 'full_name',    array('class' => 'span6')); ?>
-		<?= $form->textFieldRow(    $model, 'eng_name',     array('class' => 'span6')); ?>
-		<?= $form->dropDownListRow( $model, 'country', array('' => 'не задано')+Countries::getValues(), array('class' => 'span6')); ?>
-		<?= $form->dropDownListRow( $model, 'type_no_res', array('' => 'Резидент РФ')+$model->NonResidentValues, array('class' => 'span6')); ?>
-		<?= $form->dropDownListRow( $model, 'parent', array('' => 'не задано')+CounterpartiesGroups::getValues(), array('class' => 'span6')); ?>
-		<?= $form->textAreaRow(     $model, 'comment',      array('class'=>'span6', 'rows'=>5)); ?>
-		<?= $form->textFieldRow(    $model, 'inn',          array('class' => 'span6')); ?>
-		<?= $form->textFieldRow(    $model, 'kpp',          array('class' => 'span6')); ?>
-		<?= $form->textFieldRow(    $model, 'ogrn',         array('class' => 'span6')); ?>
-		<?= $form->textFieldRow(    $model, 'yur_address',  array('class' => 'span6')); ?>
-		<?= $form->textFieldRow(    $model, 'fact_address', array('class' => 'span6')); ?>
-		<?= $form->textFieldRow(    $model, 'reg_nom',      array('class' => 'span6')); ?>
-		<?= $form->textFieldRow(    $model, 'sert_nom',     array('class' => 'span6')); ?>
-		<?= $form->textFieldRow(    $model, 'sert_date',    array('class' => 'span6')); ?>
-		<?= $form->textFieldRow(    $model, 'vat_nom',      array('class' => 'span6')); ?>
-		<?= $form->textFieldRow(    $model, 'profile',      array('class' => 'span6')); ?>
+		<?= $form->textFieldRow(    $model, 'family',         array('class' => 'span6')); ?>
+        <?= $form->textFieldRow(    $model, 'name',         array('class' => 'span6')); ?>
+        <?= $form->textFieldRow(    $model, 'parent_name',         array('class' => 'span6')); ?>
+        <?= $form->dropDownListRow($model, 'citizenship', $countries); ?>
+        <div class="control-group">
+            <label class="control-label" for="Individuals_date_of_birth"><?php echo $model->getAttributeLabel("date_of_birth"); ?></label>
+            <div class="controls">
+                <?php $this->widget('zii.widgets.jui.CJuiDatePicker',array(
+                        'model' => $model,
+                        'attribute' => 'date_of_birth',
+                        // additional javascript options for the date picker plugin
+                        'options'=>array(
+                            'showAnim'=>'fold', 
+                            'dateFormat' => 'yy-mm-dd'
+                        ),
+                        'htmlOptions' => array(
+                            'class' => 'some_class',
+                            'style'=>'height:20px;'
+                        ),
+                    )); ?>
+            </div>
+        </div>
+        <?= $form->textFieldRow(    $model, 'place_of_birth',         array('class' => 'span6')); ?>
+        <?= $form->textAreaRow($model, 'adres'); ?>
+        <?= $form->textFieldRow(    $model, 'ser_nom_pass',         array('class' => 'span6')); ?>
+        <?= $form->textFieldRow(    $model, 'date_pass',         array('class' => 'span6')); ?>
+        <?= $form->textFieldRow(    $model, 'organ_pass',         array('class' => 'span6')); ?>
+        <div class="control-group">
+            <label class="control-label" for="Individuals_date_passrf"><?php echo $model->getAttributeLabel("date_pass"); ?></label>
+            <div class="controls">
+                <?php $this->widget('zii.widgets.jui.CJuiDatePicker',array(
+                        'model' => $model,
+                        'attribute' => 'date_pass',
+                        // additional javascript options for the date picker plugin
+                        'options'=>array(
+                            'showAnim'=>'fold', 
+                            'dateFormat' => 'yy-mm-dd'
+                        ),
+                        'htmlOptions' => array(
+                            'class' => 'some_class',
+                            'style'=>'height:20px;'
+                        ),
+                    )); ?>
+            </div>
+        </div>
 <!--
 		array('name' => 'family',           'label' => 'Фамилия'),
 		array('name' => 'name',             'label' => 'Имя'),

@@ -7,7 +7,7 @@
         'buttonType'=>'link',
         'type'=>'success',
         'label'=>'Редактировать',
-        'url' => Yii::app()->getController()->createUrl("document_add", array('id'=>1)))
+        'url' => Yii::app()->getController()->createUrl("document_add", array('id'=>$id)))
     ); ?>
     <?php $this->widget('bootstrap.widgets.TbButton', array('buttonType'=>'submit', 'type' => 'danger', 'label'=>'Удалить')); ?>
 </div>
@@ -19,7 +19,7 @@
         'title' => 'доверенность 1',
         'type' => 'raw',
         'vid' => 'некий вид',
-        'types' => CHtml::link("Договор купли-продажи", Yii::app()->getController()->createUrl("document_show", array("id" => 1))),
+        'types' => CHtml::link("Договор купли-продажи", Yii::app()->getController()->createUrl("document_show", array("id" => $id))),
         'term' => '31.23.32',
     ),
     'attributes'=>array(
@@ -31,7 +31,7 @@
             'name'=>'types',
             'label'=>'Виды договоров',
             'type'=>'raw',
-            'value'=>CHtml::link("Договор купли-продажи", Yii::app()->getController()->createUrl("document_show", array("id" => 1))),
+            'value'=>CHtml::link("Договор купли-продажи", Yii::app()->getController()->createUrl("document_show", array("id" => $id))),
         ),
         array('name'=>'term', 'label'=>'Срок действия'),
     ),

@@ -1,6 +1,23 @@
 <?php
 /**
+ * Компонент SOAP для работы с ТВТ 1С
+ *
  * @method array __getFunctions() standard soap WSDL __getFunctions method
+ *
+ * Организации (собственные Юр.Лица)
+ * @method mixed listOrganizations      Список
+ * @method mixed getOrganization        Просмотр
+ * @method mixed saveOrganization       Сохранение
+ * @method mixed deleteOrganization     Удаление
+ *
+ * Доверенности
+ * @method mixed listPowerAttorneyLE    Список
+ * @method mixed getPowerAttorneyLE     Просмотр
+ * @method mixed savePowerAttorneyLE    Сохранение
+ * @method mixed deletePowerAttorneyLE  Удаление
+ *
+ * Страны
+ * @method mixed listCountries          Список
  */
 class SoapComponent extends CApplicationComponent
 {

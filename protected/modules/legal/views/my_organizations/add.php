@@ -19,10 +19,13 @@ $form = $this->beginWidget('bootstrap.widgets.TbActiveForm', array(
     <?php $this->widget('bootstrap.widgets.TbButton', array('buttonType'=>'reset', 'label'=>'Отмена')); ?>
 
 <fieldset>
-
+    <?php if(isset($error_message)):?>
+        <p><?php echo $error_message; ?></p>
+    <?php endif?>
     <?php echo $form->dropDownListRow($model, 'country', $countries); ?>
     <?php //echo $form->dropDownListRow($model, 'opf'); // организационно правовая форма ?>
     <?php echo $form->textFieldRow($model, 'name'); ?>
+    <?php echo $form->textFieldRow($model, 'full_name'); // на удаление ?>
     <div class="control-group">
         <label class="control-label" for="Organizations_sert_date"><?php echo $model->getAttributeLabel("sert_date"); ?></label>
         <div class="controls">
@@ -31,7 +34,7 @@ $form = $this->beginWidget('bootstrap.widgets.TbActiveForm', array(
                     'attribute' => 'sert_date',
                     // additional javascript options for the date picker plugin
                     'options'=>array(
-                        'showAnim'=>'fold', 
+                        'showAnim'=>'fold',
                         'dateFormat' => 'yy-mm-dd'
                     ),
                     'htmlOptions' => array(
@@ -57,20 +60,21 @@ $form = $this->beginWidget('bootstrap.widgets.TbActiveForm', array(
     <?php echo $form->textFieldRow($model, 'sert_nom'); ?>
     </div>
     <!-- КОНЕЦ поля для иностранных фирм -->
-    <?php echo $form->textFieldRow($model, 'profile'); // основной вид деятельности ?> 
+    <?php echo $form->textAreaRow($model, 'info'); ?>
+    <?php echo $form->textFieldRow($model, 'profile'); // основной вид деятельности ?>
     <?php echo $form->textFieldRow($model, 'yur_address'); ?>
     <?php echo $form->textFieldRow($model, 'fact_address'); ?>
-    <?php //echo $form->textFieldRow($model, 'email'); ?>
-    <?php //echo $form->textFieldRow($model, 'phone'); ?>
-    <?php //echo $form->textFieldRow($model, 'fax'); ?>
-    <?php //echo $form->textAreaRow($model, 'comment'); ?>
-    
+    <?php echo $form->textFieldRow($model, 'email'); ?>
+    <?php echo $form->textFieldRow($model, 'phone'); ?>
+    <?php echo $form->textFieldRow($model, 'fax'); ?>
+    <?php echo $form->textAreaRow($model, 'comment'); ?>
+    <?php echo $form->textFieldRow($model, 'okopf'); ?>
+
     <!-- старые поля, но все еще используются, в теории потом их надо будет удалить -->
-    <?php echo $form->textFieldRow($model, 'full_name'); // на удаление ?>
-    <?php echo $form->textFieldRow($model, 'eng_name'); // на удаление ?>
-    <?php echo $form->checkboxRow($model, 'resident'); // на удаление ?>
-    <?php echo $form->textFieldRow($model, 'type_no_res'); // на удаление ?>
-    <?php echo $form->checkboxRow($model, 'deleted'); // на удаление ?>
+    <?php //echo $form->textFieldRow($model, 'eng_name'); // на удаление ?>
+    <?php //echo $form->checkboxRow($model, 'resident'); // на удаление ?>
+    <?php //echo $form->textFieldRow($model, 'type_no_res'); // на удаление ?>
+    <?php //echo $form->checkboxRow($model, 'deleted'); // на удаление ?>
 
 </fieldset>
 

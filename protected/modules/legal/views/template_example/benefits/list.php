@@ -15,9 +15,9 @@
 
         <?php
         $gridDataProvider = new CArrayDataProvider(array(
-            array('id'=>1, 'name'=>'Малхасян Геворк Рубенович', 'shareholding'=>'33%'),
-            array('id'=>2, 'name'=>'Померанцев Павел Вячеславович', 'shareholding'=>'33%'),
-            array('id'=>3, 'name'=>'Крузенштерн Иван Фёдорович', 'shareholding'=>'80%'),
+            array('id'=>$id, 'name'=>'Малхасян Геворк Рубенович', 'shareholding'=>'33%'),
+            array('id'=>$id, 'name'=>'Померанцев Павел Вячеславович', 'shareholding'=>'33%'),
+            array('id'=>$id, 'name'=>'Крузенштерн Иван Фёдорович', 'shareholding'=>'80%'),
         ));
 
         $this->widget('bootstrap.widgets.TbGridView', array(
@@ -51,8 +51,8 @@
 
         <?php
         $gridDataProvider = new CArrayDataProvider(array(
-            array('id'=>2, 'name'=>'Померанцев Павел Вячеславович', 'shareholding'=>'100%'),
-            array('id'=>3, 'name'=>'Крузенштерн Иван Фёдорович', 'shareholding'=>'46%'),
+            array('id'=>$id, 'name'=>'Померанцев Павел Вячеславович', 'shareholding'=>'100%'),
+            array('id'=>$id, 'name'=>'Крузенштерн Иван Фёдорович', 'shareholding'=>'46%'),
         ));
 
         $this->widget('bootstrap.widgets.TbGridView', array(

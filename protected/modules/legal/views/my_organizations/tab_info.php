@@ -12,11 +12,11 @@
 	Countries::getValues();
 
 	$this->widget(
-                'bootstrap.widgets.TbButton', 
+                'bootstrap.widgets.TbButton',
                 array(
-                    'buttonType'=>'link', 
-                    'type'=>'success', 
-                    'label'=>'Редактировать', 
+                    'buttonType'=>'link',
+                    'type'=>'success',
+                    'label'=>'Редактировать',
                     'url' => Yii::app()->getController()->createUrl("edit", array('id' => $model->id))));
 	echo "&nbsp;";
 	if (!$model->deleted) {
@@ -40,9 +40,23 @@
 ?>
 <br>
 <br>
-<?php $this->widget('bootstrap.widgets.TbDetailView', array(
+<?php
+    $attributes = array();
+    $labels = $model->attributeLabels();
+    foreach($model as $field => $value){
+        if($value != ''){
+            $attributes[] = array(
+                'name' => $field,
+                'label' => $labels[$field],
+                'value' => $value
+            );
+        }
+    }
+
+    $this->widget('bootstrap.widgets.TbDetailView', array(
     'data'=> $model,
-    'attributes'=>array(
+    'attributes' => $attributes
+    /*'attributes'=>array(
         array('name'=>'country',        'label'=>'Страна',                  'value' => isset(Countries::$values[$model->country]) ? Countries::$values[$model->country] : '—'),
         array('name'=>'name',           'label'=>'Наименование'),
         array('name'=>'full_name',      'label'=>'Полное наименование',     'value' => ($model->full_name ? $model->full_name : '—')),
@@ -63,5 +77,5 @@
         //vat_nom
 
         //array('name'=>'comment',        'label'=>'Комментарий'),
-    ),
+    ),*/
 )); ?>

@@ -18,13 +18,13 @@ $form = $this->beginWidget('bootstrap.widgets.TbActiveForm', array(
     'buttonType'=>'link',
     'type'=>'primary',
     'label'=>'Сохранить',
-    'url' => Yii::app()->getController()->createUrl("benefit_show", array('id'=>1))
+    'url' => Yii::app()->getController()->createUrl("benefit_show", array('id'=>$id))
     )); ?>
 &nbsp;
 <?php $this->widget('bootstrap.widgets.TbButton', array(
     'buttonType'=>'link',
     'label'=>'Отмена',
-    'url' => Yii::app()->getController()->createUrl("benefit_show", array('id'=>1))
+    'url' => Yii::app()->getController()->createUrl("benefit_show", array('id'=>$id))
 )); ?>
 
     <fieldset>

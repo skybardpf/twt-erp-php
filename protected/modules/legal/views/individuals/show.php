@@ -2,14 +2,42 @@
 /* @var $this IndividualsController */
 /* @var $element Individuals */
 
-$this->breadcrumbs=array(
+/*$this->breadcrumbs=array(
 	$this->controller_title => array('/legal/entities/'),
 	'Просмотр',
-);
+);*/
 
 ?>
 <h2>Физическое лицо "<?=$element->name?>"</h2>
-<a href="<?=$this->createUrl('index')?>">Назад к списку</a>
+<!--<a href="<?=$this->createUrl('index')?>">Назад к списку</a>-->
+<?php 
+    $this->widget(
+                'bootstrap.widgets.TbButton', 
+                array(
+                    'buttonType'=>'link', 
+                    'type'=>'success', 
+                    'label'=>'Редактировать', 
+                    'url' => Yii::app()->getController()->createUrl("edit", array('id' => $element->id))));
+    echo "&nbsp;";
+    if (!$element->deleted) {
+        Yii::app()->clientScript->registerScriptFile($this->asset_static.'/js/legal/delete_item.js');
+        $this->widget(
+            'bootstrap.widgets.TbButton',
+            array(
+                'buttonType'    => 'submit',
+                'type'          => 'danger',
+                'label'         => 'Удалить',
+                'htmlOptions'   => array(
+                    'data-question'     => 'Вы уверены, что хотите удалить данную организацию?',
+                    'data-title'        => 'Удаление организации',
+                    'data-url'          => $this->createUrl('/legal/individuals/delete', array('id' => $element->id)),
+                    'data-redirect_url' => $this->createUrl('/legal/individuals', array()),
+                    'data-delete_item_element' => '1'
+                )
+            )
+        );
+    }
+?>
 <div>
 	<?php
 	$this->widget('bootstrap.widgets.TbDetailView', array(

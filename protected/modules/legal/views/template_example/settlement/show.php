@@ -7,7 +7,7 @@
         'buttonType'=>'link',
         'type'=>'success',
         'label'=>'Редактировать',
-        'url' => Yii::app()->getController()->createUrl("settlement_add", array('id'=>1)))
+        'url' => Yii::app()->getController()->createUrl("settlement_add", array('id'=>$id)))
     ); ?>
     <?php $this->widget('bootstrap.widgets.TbButton', array('buttonType'=>'submit', 'type' => 'danger', 'label'=>'Удалить')); ?>
 </div>

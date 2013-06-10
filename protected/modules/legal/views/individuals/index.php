@@ -1,17 +1,20 @@
 <?php
 /**
- * User: Forgon
- * Date: 01.04.13
+ * Список Физ.Лиц
+ *
+ * @var $this IndividualsController
+/* @var $elements array 
  */
-
-/* @var $this IndividualsController */
-/* @var $elements array */
-
-$this->breadcrumbs=array(
-	$this->controller_title,
-);
-?>
-<h2><?=$this->controller_title?></h2>
+ ?>
+<div class="pull-right" style="margin-top: 15px;">
+    <?php $this->widget('bootstrap.widgets.TbButton', array(
+        'label'=>'Новое физическое лицо',
+        'type'=>'success', // null, 'primary', 'info', 'success', 'warning', 'danger' or 'inverse'
+        'size'=>'normal', // null, 'large', 'small' or 'mini'
+        'url' => Yii::app()->getController()->createUrl("add")
+    )); ?>
+</div>
+<h2>Мои физические лица</h2>
 <?php
 if ($elements) {
 	$gridDataProvider = new CArrayDataProvider($elements);
@@ -21,7 +24,12 @@ if ($elements) {
 		'dataProvider' => $gridDataProvider,
 		'columns'=>array(
 			array('name'=>'id', 'header'=>'#'),
-			array('name'=>'name', 'header'=>'Название'),
+            array(
+                    'name'=>'name', 
+                    'header'=>'Название', 
+                    'type' => 'raw', 
+                    'value' => 'CHtml::link($data["name"], Yii::app()->getController()->createUrl("view", array("id" => $data["id"])))'
+            ),
 			array(
 				'class'=>'bootstrap.widgets.TbButtonColumn',
 			),
@@ -31,5 +39,3 @@ if ($elements) {
 	echo 'Ни одного Физического лица не зарегистрировано.';
 }
 ?>
-
-<a class="btn btn-success" href="<?=$this->createUrl('add')?>">Добавить Физ.Лицо</a>

@@ -15,10 +15,10 @@
 
 <?php
 $gridDataProvider = new CArrayDataProvider(array(
-    array('id'=>1, 'num'=>'101', 'title'=>'Договор', 'character'=>'Агентский договор', 'contragent'=>'ООО "Рога и копыта"', 'date'=>'20.03.2012'),
-    array('id'=>2, 'num'=>'195', 'title'=>'Договор', 'character'=>'Договор аренды', 'contragent'=>'ООО "Василёк"', 'date'=>'18.05.2012'),
-    array('id'=>3, 'num'=>'215', 'title'=>'Договор', 'character'=>'Договор купли-продажи', 'contragent'=>'ООО "Незабудка"', 'date'=>'03.10.2012'),
-    array('id'=>4, 'num'=>'256', 'title'=>'Договор', 'character'=>'Агентский договор', 'contragent'=>'Horns and Hooves, Ltd.', 'date'=>'25.03.2013')
+    array('id'=>$id, 'num'=>'101', 'title'=>'Договор', 'character'=>'Агентский договор', 'contragent'=>'ООО "Рога и копыта"', 'date'=>'20.03.2012'),
+    array('id'=>$id, 'num'=>'195', 'title'=>'Договор', 'character'=>'Договор аренды', 'contragent'=>'ООО "Василёк"', 'date'=>'18.05.2012'),
+    array('id'=>$id, 'num'=>'215', 'title'=>'Договор', 'character'=>'Договор купли-продажи', 'contragent'=>'ООО "Незабудка"', 'date'=>'03.10.2012'),
+    array('id'=>$id, 'num'=>'256', 'title'=>'Договор', 'character'=>'Агентский договор', 'contragent'=>'Horns and Hooves, Ltd.', 'date'=>'25.03.2013')
 ));
 
 $this->widget('bootstrap.widgets.TbGridView', array(

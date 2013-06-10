@@ -4,8 +4,10 @@
  * Date: 01.04.13
  */
 class IndividualsController extends Controller {
-    public $menu_elem = 'legal.Individual';
-	public $controller_title = 'Физические лица';
+    
+    public $layout = 'inner';
+    public $menu_current = 'individuals';
+    //public $menu_elem = 'legal.Individual';
 
 	/**
 	 * Список Физических лиц
@@ -80,8 +82,8 @@ class IndividualsController extends Controller {
 	 *
 	 * @throws CHttpException
 	 */
-	public function actionUpdate($id) {
-		$model = LegalEntities::model()->findByPk($id);
+	public function actionEdit($id) {
+		$model = Individuals::model()->findByPk($id);
 		if (empty($model)) throw new CHttpException(404);
 
 		if(isset($_POST['ajax']) && $_POST['ajax']==='model-form-form') {
@@ -101,7 +103,14 @@ class IndividualsController extends Controller {
 				}
 			}
 		}
-		$this->render('update', array('model' => $model, 'error' => $error));
+        
+        $countries = Organizations::model('Countries')->findAll();
+        $countries_arr = array();
+        foreach($countries as $key => $country){
+            $countries_arr[$country->id] = $country->name;
+        }
+        
+		$this->render('update', array('model' => $model, 'countries' => $countries_arr, 'error' => $error));
 	}
 
 }

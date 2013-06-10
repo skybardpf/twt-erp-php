@@ -46,12 +46,34 @@ class Individuals extends SOAPModel {
 		return $this->publish_elem(current($ret), __CLASS__);
 	}
 
+    /**
+     * Сохранение Физ.Лица
+     * @return array
+     */
+    public function save() {
+        $cacher = new CFileCache();
+        $cacher->set('LEntity_values', false, 1);
+
+        $attrs = $this->getAttributes();
+
+        $attrs['resident'] = (boolean)intval($attrs['resident']);
+        
+        if (!$this->getprimaryKey()) unset($attrs['id']); // New record
+        unset($attrs['deleted']);
+
+        //$ret = $this->SOAP->saveLegalEntity(array('data' => SoapComponent::getStructureElement($attrs))); // DEPRECATED
+        $ret = $this->SOAP->saveOrganization(array('data' => SoapComponent::getStructureElement($attrs, array('convert_boolean' => true))));
+        $ret = SoapComponent::parseReturn($ret, false);
+        return $ret;
+    }
+    
 	/**
 	 * Returns the list of attribute names of the model.
 	 * @return array list of attribute names.
 	 */
 	public function attributeLabels() {
-		return array(
+        // старые поля
+		/*return array(
 			'id'              => '#',
 			'name'            => 'Имя',
 			'family'          => 'Фамилия',
@@ -79,42 +101,73 @@ class Individuals extends SOAPModel {
 
 			'deleted'       => 'Помечен на удаление'
 		);
-		/*
-					id:0000000007,
-					parent_name:Давудович,
-					name:34345Иван,
-					family:ЗАО,
-					fullname:ЗАО 34345Иван Давудович,
-					ser_nom_pass:772601001,
-					resident:true,
-					organ_pass:,
-					date_pass:,
-					date_exp_pass:,
+                    id:0000000007,
+                    parent_name:Давудович,
+                    name:34345Иван,
+                    family:ЗАО,
+                    fullname:ЗАО 34345Иван Давудович,
+                    ser_nom_pass:772601001,
+                    resident:true,
+                    organ_pass:,
+                    date_pass:,
+                    date_exp_pass:,
 
-					deleted:false,
-					group_code:10000000004,
+                    deleted:false,
+                    group_code:10000000004,
 
-					organ_passrf:,
-					date_exp_passrf:,
-					ser_nom_passrf:,
-					date_passrf:
+                    organ_passrf:,
+                    date_exp_passrf:,
+                    ser_nom_passrf:,
+                    date_passrf:
 
-					phone:643,
-					adres:368000,Дагестан Респ,Дербент,Г. Далгата,дом № 1А,
-					email:77@267006.22,
+                    phone:643,
+                    adres:368000,Дагестан Респ,Дербент,Г. Далгата,дом № 1А,
+                    email:77@267006.22,
 
-				+	ID (уникальный идентификатор, целое число, обязательное);
-				+	Фамилия (текст, обязательное);
-				+	Имя (текст, обязательное);
-				+	Отчество (текст, обязательное);
-					Резидент РФ? (флаг: да или нет);
-					Контактные данные (текст);
-					Серия-номер паспорта (текст);
-					Дата выдачи пасопрта (текст);
-				+	Орган выдавший паспорт (текст);
-					Срок действия паспорта (текст).
+                +    ID (уникальный идентификатор, целое число, обязательное);
+                +    Фамилия (текст, обязательное);
+                +    Имя (текст, обязательное);
+                +    Отчество (текст, обязательное);
+                    Резидент РФ? (флаг: да или нет);
+                    Контактные данные (текст);
+                    Серия-номер паспорта (текст);
+                    Дата выдачи пасопрта (текст);
+                +    Орган выдавший паспорт (текст);
+                    Срок действия паспорта (текст).
 
-				*/
+                */
+        // новые поля
+        return array(
+            'id'              => '#',
+            'name'            => 'Имя',
+            'family'          => 'Фамилия',
+            'parent_name'     => 'Отчество',
+            'fullname'        => 'ФИО',
+            
+            'citizenship'     => 'Гражданство',
+            
+            'date_of_birth'   => 'Дата рождения',
+            'place_of_birth'   => 'Место рождения',
+            // контактных данных нет, вместо него пока раздельно телефон и емэйл
+            'phone'           => 'Номер телефона',
+            'email'           => 'E-mail',
+            'adres'           => 'Адрес',            
+
+            'ser_nom_pass'    => 'Серия и номер удостоверения',
+            'date_pass'       => 'Дата выдачи удостоверения',
+            'organ_pass'      => 'Орган, выдавший удостоверение',
+            'date_exp_pass'   => 'Срок действия удостоверения',
+
+            // устаревшие поля
+            'deleted'       => 'Помечен на удаление',
+
+            'ser_nom_passrf'  => 'Серия-номер паспорта',
+            'date_passrf'     => 'Дата выдачи паспорта',
+            'organ_passrf'    => 'Орган, выдавший паспорт',
+            'date_exp_passrf' => 'Срок действия паспорта',
+            'resident'        => 'Резидент РФ',
+            'group_code'      => 'Группа физ.лиц',
+        );
 	}
 
 	/**

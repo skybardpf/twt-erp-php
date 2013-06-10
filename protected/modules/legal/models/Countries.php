@@ -3,6 +3,7 @@
  * Страна
  * User: Forgon
  * Date: 11.01.13
+ *
  * @property int $id
  * @property string $name
  *
