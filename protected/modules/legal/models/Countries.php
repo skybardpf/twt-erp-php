@@ -58,6 +58,8 @@ class Countries extends SOAPModel {
 
 	/**
 	 * Список доступных значений Стран
+	 * id => name
+	 *
 	 * @return array
 	 */
 	static function getValues() {

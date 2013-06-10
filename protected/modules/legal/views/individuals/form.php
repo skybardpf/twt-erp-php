@@ -1,8 +1,8 @@
 <?php
 /**
- * @var $this EntitiesController
- * @var $model LegalEntities
- * @var $form TbActiveForm
+ * @var $this  IndividualsController
+ * @var $model Individuals
+ * @var $form  TbActiveForm
  */
 
 if ($error) echo CHtml::openTag('div', array('class' => 'alert alert-error')).$error.CHtml::closeTag('div'); ?>
@@ -14,57 +14,108 @@ if ($error) echo CHtml::openTag('div', array('class' => 'alert alert-error')).$e
 		'enableAjaxValidation' => false,
 	))?>
 
-    <?php $this->widget('bootstrap.widgets.TbButton', array('buttonType'=>'submit', 'type'=>'primary', 'label'=>'Сохранить')); ?>
-    <?php $this->widget('bootstrap.widgets.TbButton', array('buttonType'=>'reset', 'label'=>'Отмена')); ?>
+    <?php $this->widget('bootstrap.widgets.TbButton', array('buttonType' => 'submit', 'type' => 'primary', 'label' => 'Сохранить')); ?>
+    <?php $this->widget('bootstrap.widgets.TbButton', array(
+		'buttonType'    => 'link',
+		'label'         => 'Отмена',
+		'url'           => ($model->getprimaryKey()
+								? $this->createUrl('view', array('id' => $model->getprimaryKey()))
+								: $this->createUrl('index')
+							)
+	)); ?>
     
 	<?=$form->errorSummary($model)?>
 
 	<fieldset>
-		<?= $form->textFieldRow(    $model, 'family',         array('class' => 'span6')); ?>
-        <?= $form->textFieldRow(    $model, 'name',         array('class' => 'span6')); ?>
-        <?= $form->textFieldRow(    $model, 'parent_name',         array('class' => 'span6')); ?>
-        <?= $form->dropDownListRow($model, 'citizenship', $countries); ?>
+		<?= $form->textFieldRow(    $model, 'family',      array('class' => 'span6')); ?>
+        <?= $form->textFieldRow(    $model, 'name',        array('class' => 'span6')); ?>
+        <?= $form->textFieldRow(    $model, 'parent_name', array('class' => 'span6')); ?>
+        <?= $form->dropDownListRow( $model, 'citizenship', Countries::getValues()); ?>
         <div class="control-group">
-            <label class="control-label" for="Individuals_date_of_birth"><?php echo $model->getAttributeLabel("date_of_birth"); ?></label>
+            <label class="control-label" for="Individuals_birth_date"><?php echo $model->getAttributeLabel("birth_date"); ?></label>
             <div class="controls">
                 <?php $this->widget('zii.widgets.jui.CJuiDatePicker',array(
-                        'model' => $model,
-                        'attribute' => 'date_of_birth',
+                        'model'     => $model,
+                        'attribute' => 'birth_date',
                         // additional javascript options for the date picker plugin
-                        'options'=>array(
-                            'showAnim'=>'fold', 
+                        'options'   =>array(
+                            'showAnim'   =>'fold',
                             'dateFormat' => 'yy-mm-dd'
                         ),
                         'htmlOptions' => array(
                             'class' => 'some_class',
-                            'style'=>'height:20px;'
+                            'style' => 'height:20px;'
                         ),
                     )); ?>
             </div>
         </div>
-        <?= $form->textFieldRow(    $model, 'place_of_birth',         array('class' => 'span6')); ?>
-        <?= $form->textAreaRow($model, 'adres'); ?>
-        <?= $form->textFieldRow(    $model, 'ser_nom_pass',         array('class' => 'span6')); ?>
-        <?= $form->textFieldRow(    $model, 'date_pass',         array('class' => 'span6')); ?>
-        <?= $form->textFieldRow(    $model, 'organ_pass',         array('class' => 'span6')); ?>
-        <div class="control-group">
-            <label class="control-label" for="Individuals_date_passrf"><?php echo $model->getAttributeLabel("date_pass"); ?></label>
-            <div class="controls">
-                <?php $this->widget('zii.widgets.jui.CJuiDatePicker',array(
-                        'model' => $model,
-                        'attribute' => 'date_pass',
-                        // additional javascript options for the date picker plugin
-                        'options'=>array(
-                            'showAnim'=>'fold', 
-                            'dateFormat' => 'yy-mm-dd'
-                        ),
-                        'htmlOptions' => array(
-                            'class' => 'some_class',
-                            'style'=>'height:20px;'
-                        ),
-                    )); ?>
-            </div>
-        </div>
+        <?= $form->textFieldRow(    $model, 'birth_place',  array('class' => 'span6')); ?>
+		<?= $form->textFieldRow(    $model, 'phone',        array('class' => 'span6')); ?>
+		<?= $form->textFieldRow(    $model, 'email',        array('class' => 'span6')); ?>
+		<?= $form->textAreaRow(     $model, 'adres'); ?>
+		<?= $form->textFieldRow(    $model, 'ser_nom_pass', array('class' => 'span6')); ?>
+		<?php /* date_pass */ ?>
+		<div class="control-group">
+			<label class="control-label" for="Individuals_date_passrf"><?php echo $model->getAttributeLabel("date_pass"); ?></label>
+			<div class="controls">
+				<?php $this->widget('zii.widgets.jui.CJuiDatePicker',array(
+					'model' => $model,
+					'attribute' => 'date_pass',
+					// additional javascript options for the date picker plugin
+					'options'=>array(
+						'showAnim'=>'fold',
+						'dateFormat' => 'yy-mm-dd'
+					),
+					'htmlOptions' => array(
+						'class' => 'some_class',
+						'style'=>'height:20px;'
+					),
+				)); ?>
+			</div>
+		</div>
+		<?= $form->textFieldRow(    $model, 'organ_pass',   array('class' => 'span6')); ?>
+		<?php /* date_exp_pass */?>
+		<div class="control-group">
+			<label class="control-label" for="Individuals_date_exp_pass"><?php echo $model->getAttributeLabel("date_exp_pass"); ?></label>
+			<div class="controls">
+				<?php $this->widget('zii.widgets.jui.CJuiDatePicker',array(
+					'model' => $model,
+					'attribute' => 'date_exp_pass',
+					// additional javascript options for the date picker plugin
+					'options'=>array(
+						'showAnim'=>'fold',
+						'dateFormat' => 'yy-mm-dd'
+					),
+					'htmlOptions' => array(
+						'class' => 'some_class',
+						'style'=>'height:20px;'
+					),
+				)); ?>
+			</div>
+		</div>
+		<?php /*= $form->textFieldRow(    $model, 'date_pass',    array('class' => 'span6')); */?>
+        <?php /*
+			    • id - идентификатор (строка) (параметром в урле)
+				• date_pass - ПаспортРФ.ДатаВыдачи (дата)
+				• citizenship - Гражданство.Страна.Наименование (Строка)
+				• fullname – Наименование (строка)
+				• ser_nom_pass - Паспорт.СерияНомер (строка)
+				• phone – Телефон (строка)
+				• family – Фамилия (строка)
+				• birth_date – ДатаРождения (дата)
+				• organ_passrf - ПаспортРФ.КемВыдан (строка)
+				• date_exp_pass - Паспорт.СрокОкончания (дата)
+				• date_exp_passrf - ПаспортРФ.СрокОкончания (дата)
+				• birth_place – МестоРождения (строка)
+				• group_code - Родитель.Код (строка)
+				• parent_name – ФИО.Отчество (строка)
+				• email – АдресЭлектроннойПочты (строка)
+				• ser_nom_passrf - ПаспортРФ.СерияНомер (строка)
+				• name – Имя (строка)
+				• organ_pass - Паспорт.КемВыдан (строка)
+				• date_passrf - ПаспортРФ.ДатаВыдачи (дата)
+				• deleted – признак пометки на удаление (булево)
+
 <!--
 		array('name' => 'family',           'label' => 'Фамилия'),
 		array('name' => 'name',             'label' => 'Имя'),
@@ -80,7 +131,7 @@ if ($error) echo CHtml::openTag('div', array('class' => 'alert alert-error')).$e
 		array('name' => 'group_code',       'label' => 'Группа физ.лиц'),
 		array('name' => 'phone',            'label' => 'Номер телефона'),
 		array('name' => 'adres',            'label' => 'Адрес'),
-		array('name' => 'email',            'label' => 'E-mail'),-->
+		array('name' => 'email',            'label' => 'E-mail'),--> */?>
 	</fieldset>
 	<div class="control-group ">
 		<div class="controls">

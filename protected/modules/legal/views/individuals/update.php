@@ -8,4 +8,4 @@
 );*/
 ?>
 <h2>Редактирование физического лица</h2>
-<?php $this->renderPartial('form', array('model' => $model, 'countries' => $countries, 'error' => $error)) ?>
+<?php $this->renderPartial('form', array('model' => $model, 'error' => $error)) ?>

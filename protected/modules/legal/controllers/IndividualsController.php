@@ -5,8 +5,9 @@
  */
 class IndividualsController extends Controller {
     
-    public $layout = 'inner';
+    public $layout       = 'inner';
     public $menu_current = 'individuals';
+	public $cur_tab      = '';
     //public $menu_elem = 'legal.Individual';
 
 	/**
@@ -22,15 +23,22 @@ class IndividualsController extends Controller {
 	 * @param $id
 	 */
 	public function actionView($id) {
+		$this->cur_tab = 'view';
 		$entity = Individuals::model()->findByPk($id);
-		$this->render('show', array('element' => $entity));
+		$this->render(
+			'show',
+			array(
+				'model' => $entity,
+				'tab_content' => $this->renderPartial('tab_view', array('element' => $entity), 1)
+			)
+		);
 	}
 
 	/**
 	 * Добавление Физ.лица
 	 */
 	public function actionAdd() {
-		$model = new LegalEntities();
+		$model = new Individuals();
 		$error = '';
 		if (isset($_POST[get_class($model)])) {
 			$model->setAttributes($_POST[get_class($model)]);
@@ -103,14 +111,20 @@ class IndividualsController extends Controller {
 				}
 			}
 		}
-        
-        $countries = Organizations::model('Countries')->findAll();
-        $countries_arr = array();
-        foreach($countries as $key => $country){
-            $countries_arr[$country->id] = $country->name;
-        }
-        
-		$this->render('update', array('model' => $model, 'countries' => $countries_arr, 'error' => $error));
+
+		$this->render('update', array('model' => $model, 'error' => $error));
+	}
+
+	public function actionCart($id) {
+		$this->cur_tab = 'cart';
+		$entity = Individuals::model()->findByPk($id);
+		$this->render(
+			'show',
+			array(
+				'model' => $entity,
+				'tab_content' => "Заглушка" // Todo Корзина акционирования
+			)
+		);
 	}
 
 }

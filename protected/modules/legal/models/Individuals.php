@@ -2,6 +2,17 @@
 /**
  * User: Forgon
  * Date: 01.04.13
+ *
+ * @property string $id             Идентификатор
+ * @property string $deleted        Удален? ("true" - да, "false" - нет)
+ *
+ * @property string $family         Фамилия
+ * @property string $name           Имя
+ * @property string $parent_name    Отчество
+ * @property string $fullname       ФИО
+ * @property string $citizenship    Гражданство !!! Не идентификатор страны, а строка
+ * @property string $birth_place    Место рождения
+ * @property string $birth_date     Дата рождения
  */
 class Individuals extends SOAPModel {
 
@@ -52,17 +63,14 @@ class Individuals extends SOAPModel {
      */
     public function save() {
         $cacher = new CFileCache();
-        $cacher->set('LEntity_values', false, 1);
+        $cacher->set(__CLASS__.'_values', false, 1);
 
         $attrs = $this->getAttributes();
 
-        $attrs['resident'] = (boolean)intval($attrs['resident']);
-        
         if (!$this->getprimaryKey()) unset($attrs['id']); // New record
         unset($attrs['deleted']);
 
-        //$ret = $this->SOAP->saveLegalEntity(array('data' => SoapComponent::getStructureElement($attrs))); // DEPRECATED
-        $ret = $this->SOAP->saveOrganization(array('data' => SoapComponent::getStructureElement($attrs, array('convert_boolean' => true))));
+        $ret = $this->SOAP->saveIndividual(array('data' => SoapComponent::getStructureElement($attrs, array('convert_boolean' => true))));
         $ret = SoapComponent::parseReturn($ret, false);
         return $ret;
     }
@@ -72,71 +80,6 @@ class Individuals extends SOAPModel {
 	 * @return array list of attribute names.
 	 */
 	public function attributeLabels() {
-        // старые поля
-		/*return array(
-			'id'              => '#',
-			'name'            => 'Имя',
-			'family'          => 'Фамилия',
-			'parent_name'     => 'Отчество',
-			'fullname'        => 'ФИО',
-
-			'ser_nom_pass'    => 'Серия-номер паспорта',
-			'date_pass'       => 'Дата выдачи пасопрта',
-			'organ_pass'      => 'Орган, выдавший паспорт',
-			'date_exp_pass'   => 'Срок действия паспорта',
-
-			'ser_nom_passrf'  => 'Серия-номер паспорта',
-			'date_passrf'     => 'Дата выдачи пасопрта',
-			'organ_passrf'    => 'Орган, выдавший паспорт',
-			'date_exp_passrf' => 'Срок действия паспорта',
-
-			'group_code'      => 'Группа физ.лиц',
-
-			'resident'        => 'Резидент РФ',
-
-			'phone'           => 'Номер телефона',
-
-			'adres'           => 'Адрес',
-			'email'           => 'E-mail',
-
-			'deleted'       => 'Помечен на удаление'
-		);
-                    id:0000000007,
-                    parent_name:Давудович,
-                    name:34345Иван,
-                    family:ЗАО,
-                    fullname:ЗАО 34345Иван Давудович,
-                    ser_nom_pass:772601001,
-                    resident:true,
-                    organ_pass:,
-                    date_pass:,
-                    date_exp_pass:,
-
-                    deleted:false,
-                    group_code:10000000004,
-
-                    organ_passrf:,
-                    date_exp_passrf:,
-                    ser_nom_passrf:,
-                    date_passrf:
-
-                    phone:643,
-                    adres:368000,Дагестан Респ,Дербент,Г. Далгата,дом № 1А,
-                    email:77@267006.22,
-
-                +    ID (уникальный идентификатор, целое число, обязательное);
-                +    Фамилия (текст, обязательное);
-                +    Имя (текст, обязательное);
-                +    Отчество (текст, обязательное);
-                    Резидент РФ? (флаг: да или нет);
-                    Контактные данные (текст);
-                    Серия-номер паспорта (текст);
-                    Дата выдачи пасопрта (текст);
-                +    Орган выдавший паспорт (текст);
-                    Срок действия паспорта (текст).
-
-                */
-        // новые поля
         return array(
             'id'              => '#',
             'name'            => 'Имя',
@@ -146,8 +89,9 @@ class Individuals extends SOAPModel {
             
             'citizenship'     => 'Гражданство',
             
-            'date_of_birth'   => 'Дата рождения',
-            'place_of_birth'   => 'Место рождения',
+            'birth_date'      => 'Дата рождения',
+            'birth_place'     => 'Место рождения',
+
             // контактных данных нет, вместо него пока раздельно телефон и емэйл
             'phone'           => 'Номер телефона',
             'email'           => 'E-mail',
@@ -158,15 +102,15 @@ class Individuals extends SOAPModel {
             'organ_pass'      => 'Орган, выдавший удостоверение',
             'date_exp_pass'   => 'Срок действия удостоверения',
 
-            // устаревшие поля
-            'deleted'       => 'Помечен на удаление',
+            'deleted'         => 'Помечен на удаление',
 
-            'ser_nom_passrf'  => 'Серия-номер паспорта',
-            'date_passrf'     => 'Дата выдачи паспорта',
-            'organ_passrf'    => 'Орган, выдавший паспорт',
-            'date_exp_passrf' => 'Срок действия паспорта',
-            'resident'        => 'Резидент РФ',
-            'group_code'      => 'Группа физ.лиц',
+	        // устаревшие поля
+            //'ser_nom_passrf'  => 'Серия-номер паспорта',
+            //'date_passrf'     => 'Дата выдачи паспорта',
+            //'organ_passrf'    => 'Орган, выдавший паспорт',
+            //'date_exp_passrf' => 'Срок действия паспорта',
+            //'resident'        => 'Резидент РФ',
+            //'group_code'      => 'Группа физ.лиц',
         );
 	}
 
@@ -176,21 +120,29 @@ class Individuals extends SOAPModel {
 	 */
 	static function getValues() {
 		$cacher = new CFileCache();
-		$cache = $cacher->get('Individuals_values');
+		$cache = $cacher->get(__CLASS__.'_values');
 		if ($cache === false) {
 			if (!self::$values) {
 				$elements = self::model()->findAll();
 				$return   = array();
 				if ($elements) { foreach ($elements as $elem) {
-					$return[$elem->getprimaryKey()] = $elem->name;
+					$return[$elem->getprimaryKey()] = $elem->family.' '.$elem->name.' '.$elem->parent_name;
 				} }
 				self::$values = $return;
 
 			}
-			$cacher->add('Individuals_values', self::$values, 3000);
+			$cacher->add(__CLASS__.'_values', self::$values, 3000);
 		} elseif (!self::$values) {
 			self::$values = $cache;
 		}
 		return self::$values;
+	}
+
+	public function rules() {
+		return array(
+			array('name, parent_name, family, birth_date, birth_place, date_exp_pass',     'safe'),
+			array('phone, email, adres, ser_nom_pass, date_pass, organ_pass, citizenship', 'safe'),
+			//array('id, name, show', 'safe', 'on'=>'search'),
+		);
 	}
 }

@@ -16,6 +16,12 @@
  * @method mixed savePowerAttorneyLE    Сохранение
  * @method mixed deletePowerAttorneyLE  Удаление
  *
+ * Физ.Лица
+ * @method mixed listIndividuals        Список
+ * @method mixed getIndividual          Просмотр
+ * @method mixed saveIndividual         Сохранение
+ * @method mixed depr_adeletePowerAttorneyLE  Удаление
+ *
  * Страны
  * @method mixed listCountries          Список
  */
@@ -93,8 +99,17 @@ class SoapComponent extends CApplicationComponent
 		if (ini_get('default_socket_timeout') != $this->socket_timeout) ini_set('default_socket_timeout', $this->socket_timeout);
 
 		$this->_connection_options = array_merge($this->_connection_options, $this->connection_options);
-		$this->soap_client = new SoapClient($this->wsdl, $this->_connection_options);
-		Yii::log('Connected to '.$this->wsdl, CLogger::LEVEL_INFO, 'soap');
+
+		$time = microtime(true);
+		Yii::log('Connecting to '.$this->wsdl, CLogger::LEVEL_INFO, 'soap');
+		try {
+			$this->soap_client = new SoapClient($this->wsdl, $this->_connection_options);
+		} catch(Exception $e) {
+			Yii::log($e->getCode().'(at file '.$e->getFile().':'.$e->getLine().'): '.$e->getMessage(),CLogger::LEVEL_ERROR, 'soap');
+			throw new CHttpException(500, $e->getMessage());
+		}
+		$time = microtime(true) - $time;
+		Yii::log('Connected to '.$this->wsdl.' in '.$time.' seconds.', CLogger::LEVEL_INFO, 'soap');
 	}
 
 	public function cache($duration, $dependency = NULL) {
@@ -131,21 +146,34 @@ class SoapComponent extends CApplicationComponent
 	 * @return mixed
 	 */
 	protected function soap_call($name, $params = array()) {
-		if ($this->soap_client === NULL) {
-			$this->delay_init();
+		if (YII_DEBUG) {
+			$time = microtime(true);
+			Yii::log('calling SOAP function ' . htmlspecialchars($name) . ' with args: ' . (defined('JSON_UNESCAPED_UNICODE') ? json_encode($params, JSON_UNESCAPED_UNICODE) : preg_replace('#\\\\u([0-9a-f]{4})#se','iconv("UTF-16BE","UTF-8",pack("H4","$1"))', json_encode($params))), CLogger::LEVEL_INFO, 'soap');
 		}
+
+		// initing soap if needed
+		if ($this->soap_client === NULL) { $this->delay_init(); }
+
 		if ($this->soap_method_exists($name)) {
 			try {
 				if (method_exists($this->soap_client, $name)) {
 					$ret = call_user_func_array(array($this->soap_client, $name), $params);
 				} else {
-					if (YII_DEBUG) {
-						//defined('JSON_UNESCAPED_UNICODE') or define('JSON_UNESCAPED_UNICODE', 0);
-						Yii::log('try SOAP function ' . htmlspecialchars($name) . ' with args: ' . (defined('JSON_UNESCAPED_UNICODE') ? json_encode($params, JSON_UNESCAPED_UNICODE) : preg_replace('#\\\\u([0-9a-f]{4})#se','iconv("UTF-16BE","UTF-8",pack("H4","$1"))', json_encode($params))), CLogger::LEVEL_INFO, 'soap');
-					}
 					$ret = $this->soap_client->__soapCall($name, $params);
 				}
-				if (YII_DEBUG) Yii::log('function ' . $name . ' data: ' .(defined('JSON_UNESCAPED_UNICODE') ? json_encode($ret, JSON_UNESCAPED_UNICODE) : preg_replace('#\\\\u([0-9a-f]{4})#se','iconv("UTF-16BE","UTF-8",pack("H4","$1"))',json_encode($ret))), CLogger::LEVEL_INFO, 'soap');
+				if (YII_DEBUG) {
+					$time = microtime(true) - $time;
+					Yii::log(
+						'function ' . $name . ' in '.$time.' seconds with data: ' .
+							(defined('JSON_UNESCAPED_UNICODE')
+								? json_encode($ret, JSON_UNESCAPED_UNICODE)
+								: preg_replace('#\\\\u([0-9a-f]{4})#se','iconv("UTF-16BE","UTF-8",pack("H4","$1"))',json_encode($ret))
+							),
+						CLogger::LEVEL_INFO,
+						'soap'
+					);
+				}
+
 				return $ret;
 			} catch (Exception $e) {
 				Yii::log($e->getCode().'(at file '.$e->getFile().':'.$e->getLine().'): '.$e->getMessage(),CLogger::LEVEL_ERROR, 'soap');
