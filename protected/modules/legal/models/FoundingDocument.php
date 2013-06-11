@@ -4,16 +4,21 @@
  *
  * User: Forgon
  * Date: 25.02.13
- * @property int $id
- * @property string $id_yur
- * @property string $name
- * @property string $date
- * @property string $expire
- * @property string $typ_doc
+ * @property string $id         Идентификатор
+ * @property string $id_yur     Юр.Лицо
+ * @property string $type_yur   Тип юрлица ("Контрагенты", "Организации")
+ * @property string $name       Название
+ * @property string $num        Номер
+ * @property string $comment    Комментарий
+ * @property string $date       Дата
+ * @property string $expire     Дата окончания
+ * @property string $typ_doc    Тип документа (LEDocumentType)
+ *
+ * @property string $from_user  Создан пользователем
+ * @property string $user       Пользователь
  *
  * @property string $deleted
  */
-
 class FoundingDocument extends SOAPModel {
 
 	public $from_user = true;
@@ -52,10 +57,18 @@ class FoundingDocument extends SOAPModel {
 	 * @return FoundingDocument
 	 */
 	public function findByPk($id) {
-		$ret = $this->SOAP->getFoundingDocument(array('id' => $id));
-		$ret = SoapComponent::parseReturn($ret);
-		if ($ret) return $this->publish_elem(current($ret), __CLASS__);
-		else return null;
+		$cacher = new CFileCache();
+		$data = $cacher->get(__CLASS__.'_objects_'.$id);
+		if (!$data) {
+			$data = $this->SOAP->getFoundingDocument(array('id' => $id));
+			$data = SoapComponent::parseReturn($data);
+			$data = current($data);
+			$cacher->set(__CLASS__.'_objects_'.$id, $data, self::CACHE_TTL);
+		} else {
+			if (YII_DEBUG) Yii::log('model '.__CLASS__.' id:'.$id.' from cache', CLogger::LEVEL_INFO, 'soap');
+		}
+
+		return $this->publish_elem($data, __CLASS__);
 	}
 
 	/**
@@ -64,7 +77,9 @@ class FoundingDocument extends SOAPModel {
 	 * @return bool
 	 */
 	public function delete() {
-		if ($pk = $this->getprimaryKey()) {
+		if ($pk = $this->primaryKey) {
+			$cacher = new CFileCache();
+			$cacher->set(__CLASS__.'_objects_'.$pk, false, 1);
 			$ret = $this->SOAP->deleteFoundingDocument(array('id' => $pk));
 			return $ret->return;
 		}
@@ -77,8 +92,11 @@ class FoundingDocument extends SOAPModel {
 	 */
 	public function save() {
 		$attr = $this->attributes;
-		if (!$this->getprimaryKey()) unset($attr['id']);
-		$attr['user'] = 'test';
+		if (!$this->primaryKey) unset($attr['id']);
+		else {
+			$cacher = new CFileCache();
+			$cacher->set(__CLASS__.'_objects_'.$this->primaryKey, false, 1);
+		}
 		unset($attr['deleted']);
 
 		$data = array('data' => SoapComponent::getStructureElement($attr));
@@ -95,8 +113,11 @@ class FoundingDocument extends SOAPModel {
 		return array(
 			'id'                => '#',
 			'id_yur'            => 'Юр.Лицо',
+			'type_yur'          => 'Тип Юр.лица',
 			'name'              => 'Название',
-			'date'              => 'Дата загрузки',
+			'num'               => 'Номер',
+			'comment'           => 'Комментарий',
+			'date'              => 'Дата',
 			'expire'            => 'Срок действия',
 			'typ_doc'           => 'Тип документа',
 			'deleted'           => 'Помечен на удаление',
@@ -126,8 +147,8 @@ class FoundingDocument extends SOAPModel {
 	public function rules() {
 		return array(
 			array('name, id_yur, date, expire, typ_doc', 'required'),
-			array('date, expire, typ_doc', 'safe'),
-			array('id, name', 'safe', 'on'=>'search'),
+			array('num, comment', 'safe'),
+			//array('id, name', 'safe', 'on'=>'search'),
 		);
 	}
 }

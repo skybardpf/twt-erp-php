@@ -3,8 +3,10 @@
  * User: Мишенько
  * Date: 08.04.13
  * Time: 10:57
+ *
+ * @var $this Controller
  */
-/*@var $this Controller */
+
 $this->beginContent('/layouts/main');
 ?>
 <div class="row">

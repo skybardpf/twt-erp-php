@@ -23,7 +23,7 @@ $form = $this->beginWidget('bootstrap.widgets.TbActiveForm', array(
         <p><?php echo $error_message; ?></p>
     <?php endif?>
     <?php echo $form->dropDownListRow($model, 'country', $countries); ?>
-    <?php //echo $form->dropDownListRow($model, 'opf'); // организационно правовая форма ?>
+	<?php echo $form->textFieldRow($model, 'okopf'); ?>
     <?php echo $form->textFieldRow($model, 'name'); ?>
     <?php echo $form->textFieldRow($model, 'full_name'); // на удаление ?>
     <div class="control-group">
@@ -68,7 +68,7 @@ $form = $this->beginWidget('bootstrap.widgets.TbActiveForm', array(
     <?php echo $form->textFieldRow($model, 'phone'); ?>
     <?php echo $form->textFieldRow($model, 'fax'); ?>
     <?php echo $form->textAreaRow($model, 'comment'); ?>
-    <?php echo $form->textFieldRow($model, 'okopf'); ?>
+
 
     <!-- старые поля, но все еще используются, в теории потом их надо будет удалить -->
     <?php //echo $form->textFieldRow($model, 'eng_name'); // на удаление ?>

@@ -18,7 +18,7 @@ if ($_SERVER['HTTP_HOST'] == 'twt.local') {
 }
 
 // specify how many levels of call stack should be shown in each log message
-defined('YII_TRACE_LEVEL') or define('YII_TRACE_LEVEL',3);
+defined('YII_TRACE_LEVEL') or define('YII_TRACE_LEVEL',0);
 
 
 require_once($yii);

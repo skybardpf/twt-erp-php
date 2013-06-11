@@ -22,6 +22,12 @@
  * @method mixed saveIndividual         Сохранение
  * @method mixed depr_adeletePowerAttorneyLE  Удаление
  *
+ * Учредительные документы
+ * @method mixed listFoundingDocuments  Список
+ * @method mixed getFoundingDocument    Просмотр
+ * @method mixed saveFoundingDocument   Сохранение
+ * @method mixed deleteFoundingDocument Удаление
+ *
  * Страны
  * @method mixed listCountries          Список
  */

@@ -74,6 +74,23 @@ class Individuals extends SOAPModel {
         $ret = SoapComponent::parseReturn($ret, false);
         return $ret;
     }
+
+	/**
+	 * Удаление Физ.лица
+	 *
+	 * @return array|bool
+	 */
+	public function delete() {
+		$cacher = new CFileCache();
+		$cacher->set(__CLASS__.'_values', false, 1);
+
+		if ($id = $this->getprimaryKey()) {
+			$ret = $this->SOAP->deleteIndividual(array('id' => $id));
+			return SoapComponent::parseReturn($ret, false);
+		} else {
+			return false;
+		}
+	}
     
 	/**
 	 * Returns the list of attribute names of the model.

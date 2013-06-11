@@ -3,8 +3,13 @@
  * User: Forgon
  * Date: 09.01.13
  *
+ * @property $primaryKey string
  */
 abstract class SOAPModel extends CModel {
+	/** Кешируем Гет-ы на это время, кеширование возложено на подклассы */
+	const CACHE_TTL = 30;
+	/** Пока не реализована авторизация - для сохранения объектов надо передавать какого-то пользователя */
+	const USER_NAME = "test_user@user.test"; // TODO При реализации авторизации передавать правильное значение
 
 	/**
 	 * @var SoapComponent
@@ -147,6 +152,7 @@ abstract class SOAPModel extends CModel {
 	 * @return mixed
 	 */
 	public function publish_elem($data, $class) {
+		if (!$data) return null;
 		/** @var $obj SOAPModel */
 		$obj = new $class;
 		$obj->setAttributes($data, false);
@@ -196,4 +202,6 @@ abstract class SOAPModel extends CModel {
 		$this->where[$param] = $value;
 		return $this;
 	}
+
+	public abstract function findAll();
 }

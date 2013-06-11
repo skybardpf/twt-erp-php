@@ -57,6 +57,7 @@ class Organizations extends SOAPModel {
 	public function delete_by_id($id) {
 		$cacher = new CFileCache();
 		$cacher->set(__CLASS__.'_values', false, 1);
+		$cacher->set(__CLASS__.'_objects_'.$id, false, 1);
 
 		$ret = $this->SOAP->deleteOrganization(array('id' => $id));
 		return $ret->return;
@@ -67,8 +68,8 @@ class Organizations extends SOAPModel {
 	 * @return bool
 	 */
 	public function delete() {
-		if ($pk = $this->getprimaryKey()) {
-			$this->delete_by_id($pk);
+		if ($pk = $this->primaryKey) {
+			return $this->delete_by_id($pk);
 		} else return false;
 	}
 
@@ -88,7 +89,10 @@ class Organizations extends SOAPModel {
             $attrs['sert_date'] = date('Y-m-d', 0);
         }
 
-		if (!$this->getprimaryKey()) unset($attrs['id']); // New record
+		// New record
+		if (!$this->primaryKey) unset($attrs['id']);
+		else $cacher->set(__CLASS__.'_objects_'.$this->primaryKey, false, 1);
+
 		unset($attrs['deleted']);
 
         $responce = array();
@@ -134,9 +138,17 @@ class Organizations extends SOAPModel {
 	 * @internal param array $filter
 	 */
 	public function findByPk($id) {
-		$ret = $this->SOAP->getOrganization(array('id' => $id));
-		$ret = SoapComponent::parseReturn($ret);
-		return $this->publish_elem(current($ret), __CLASS__);
+		$cacher = new CFileCache();
+		$data = $cacher->get(__CLASS__.'_objects_'.$id);
+		if (!$data) {
+			$data = $this->SOAP->getOrganization(array('id' => $id));
+			$data = SoapComponent::parseReturn($data);
+			$data = current($data);
+			$cacher->set(__CLASS__.'_objects_'.$id, $data, self::CACHE_TTL);
+		} else {
+			if (YII_DEBUG) Yii::log('model '.__CLASS__.' id:'.$id.' from cache', CLogger::LEVEL_INFO, 'soap');
+		}
+		return $this->publish_elem($data, __CLASS__);
 	}
 
 	/**
@@ -196,7 +208,7 @@ class Organizations extends SOAPModel {
             'phone'         => 'Телефон',
             'fax'           => 'Факс',
             'comment'       => 'Комментарий',
-            'okopf'         => 'ОКОПФ',
+            'okopf'         => 'Организационно-правовая форма',
             'creation_date' => 'creation_date',
 
             // старые поля

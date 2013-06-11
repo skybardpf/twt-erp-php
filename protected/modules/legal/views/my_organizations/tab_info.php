@@ -6,44 +6,44 @@
  * Date: 23.04.2013 от рождества Христова
  *
  * @var $this My_OrganizationsController
- * @var $model Organizations
  */
 
-	Countries::getValues();
+$this->beginContent('/my_organizations/show');
 
+Countries::getValues();
+
+$this->widget('bootstrap.widgets.TbButton', array(
+    'buttonType'=>'link',
+    'type'=>'success',
+    'label'=>'Редактировать',
+    'url' => Yii::app()->getController()->createUrl("edit", array('id' => $this->organization->primaryKey))
+));
+echo "&nbsp;";
+if (!$this->organization->deleted) {
+	Yii::app()->clientScript->registerScriptFile($this->asset_static.'/js/legal/delete_item.js');
 	$this->widget(
-                'bootstrap.widgets.TbButton',
-                array(
-                    'buttonType'=>'link',
-                    'type'=>'success',
-                    'label'=>'Редактировать',
-                    'url' => Yii::app()->getController()->createUrl("edit", array('id' => $model->id))));
-	echo "&nbsp;";
-	if (!$model->deleted) {
-		Yii::app()->clientScript->registerScriptFile($this->asset_static.'/js/legal/delete_item.js');
-		$this->widget(
-			'bootstrap.widgets.TbButton',
-			array(
-				'buttonType'    => 'submit',
-				'type'          => 'danger',
-				'label'         => 'Удалить',
-				'htmlOptions'   => array(
-					'data-question'     => 'Вы уверены, что хотите удалить данную организацию?',
-					'data-title'        => 'Удаление организации',
-					'data-url'          => $this->createUrl('/legal/my_organizations/delete', array('id' => $model->id)),
-					'data-redirect_url' => $this->createUrl('/legal/my_organizations', array()),
-					'data-delete_item_element' => '1'
-				)
+		'bootstrap.widgets.TbButton',
+		array(
+			'buttonType'    => 'submit',
+			'type'          => 'danger',
+			'label'         => 'Удалить',
+			'htmlOptions'   => array(
+				'data-question'     => 'Вы уверены, что хотите удалить данную организацию?',
+				'data-title'        => 'Удаление организации',
+				'data-url'          => $this->createUrl('/legal/my_organizations/delete', array('id' => $this->organization->primaryKey)),
+				'data-redirect_url' => $this->createUrl('/legal/my_organizations', array()),
+				'data-delete_item_element' => '1'
 			)
-		);
-	}
+		)
+	);
+}
 ?>
 <br>
 <br>
 <?php
     $attributes = array();
-    $labels = $model->attributeLabels();
-    foreach($model as $field => $value){
+    $labels = $this->organization->attributeLabels();
+    foreach($this->organization as $field => $value){
         if($value != ''){
             $attributes[] = array(
                 'name' => $field,
@@ -54,7 +54,7 @@
     }
 
     $this->widget('bootstrap.widgets.TbDetailView', array(
-    'data'=> $model,
+    'data'=> $this->organization,
     'attributes' => $attributes
     /*'attributes'=>array(
         array('name'=>'country',        'label'=>'Страна',                  'value' => isset(Countries::$values[$model->country]) ? Countries::$values[$model->country] : '—'),
@@ -78,4 +78,7 @@
 
         //array('name'=>'comment',        'label'=>'Комментарий'),
     ),*/
-)); ?>
+));
+
+$this->endContent();
+?>

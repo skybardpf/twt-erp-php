@@ -20,18 +20,19 @@ if ($elements) {
 	$gridDataProvider = new CArrayDataProvider($elements);
 
 	$this->widget('bootstrap.widgets.TbGridView', array(
-		'type'=>'striped',
-		'dataProvider' => $gridDataProvider,
-		'columns'=>array(
-			array('name'=>'id', 'header'=>'#'),
+		'type'          => 'striped',
+		'dataProvider'  => $gridDataProvider,
+		'columns'       => array(
+			array('name' => 'id', 'header' => '#'),
             array(
-                    'name'=>'name', 
-                    'header'=>'Название', 
-                    'type' => 'raw', 
-                    'value' => 'CHtml::link($data["name"], Yii::app()->getController()->createUrl("view", array("id" => $data["id"])))'
-            ),
+                'name'   => 'name',
+                'header' => 'Название',
+                'type'   => 'raw',
+                'value'  => 'CHtml::link($data["name"], Yii::app()->getController()->createUrl("view", array("id" => $data["id"])))'
+	        ),
 			array(
-				'class'=>'bootstrap.widgets.TbButtonColumn',
+				'class' => 'bootstrap.widgets.TbButtonColumn',
+				'updateButtonUrl' => 'Yii::app()->controller->createUrl("edit",array("id"=>$data->primaryKey))'
 			),
 		),
 	));

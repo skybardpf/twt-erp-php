@@ -2,10 +2,10 @@
 /* @var $this EntitiesController */
 /* @var $model LegalEntities*/
 
-$this->breadcrumbs=array(
+/*$this->breadcrumbs=array(
 	$this->controller_title => array('/legal/entities/'),
 	'Удаление',
-);?>
+);*/?>
 Вы действительно хотите <?=$model->deleted ? '<b>восстановить Физ.лицо</b>': '<b>удалить Физ.лицо</b>'?> «<?=CHtml::encode($model->fullname)?>»?
 
 <?php $form = $this->beginWidget('bootstrap.widgets.TbActiveForm', array(
