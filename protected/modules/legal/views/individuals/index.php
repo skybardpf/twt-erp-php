@@ -3,7 +3,7 @@
  * Список Физ.Лиц
  *
  * @var $this IndividualsController
-/* @var $elements array 
+/* @var $elements array
  */
  ?>
 <div class="pull-right" style="margin-top: 15px;">
@@ -16,6 +16,9 @@
 </div>
 <h2>Мои физические лица</h2>
 <?php
+// Инициализируем список стран
+Countries::getValues();
+;
 if ($elements) {
 	$gridDataProvider = new CArrayDataProvider($elements);
 
@@ -26,10 +29,21 @@ if ($elements) {
 			array('name' => 'id', 'header' => '#'),
             array(
                 'name'   => 'name',
-                'header' => 'Название',
+                'header' => 'ФИО',
                 'type'   => 'raw',
-                'value'  => 'CHtml::link($data["name"], Yii::app()->getController()->createUrl("view", array("id" => $data["id"])))'
+                'value'  => 'CHtml::link($data["family"]." ".$data["name"]." ".$data["parent_name"], Yii::app()->getController()->createUrl("view", array("id" => $data["id"])))'
 	        ),
+			array(
+				'header' => 'Гражданин',
+				'type'   => 'raw',
+				'value'  => 'isset(Countries::$values[$data["citizenship"]]) ? Countries::$values[$data["citizenship"]] : ($data["citizenship"] ?: "&mdash;")'
+			),
+			array('name' => 'ser_nom_pass', 'header' => 'Серия и номер удостоверения'),
+			array(
+				'header' => 'Контакты',
+				'type'   => 'raw',
+				'value'  => '$data["email"].($data["email"] && $data["phone"] ? ",<br/>" : "").$data["phone"]'
+			),
 			array(
 				'class' => 'bootstrap.widgets.TbButtonColumn',
 				'updateButtonUrl' => 'Yii::app()->controller->createUrl("edit",array("id"=>$data->primaryKey))'
