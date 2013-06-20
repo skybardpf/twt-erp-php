@@ -27,6 +27,7 @@ $this->widget('bootstrap.widgets.TbAlert', array(
 <?php
 	/* @var $form TbActiveForm */
 	$form = $this->beginWidget('bootstrap.widgets.TbActiveForm', array(
+		'action' => $this->createUrl('order'),
 		'id'    => 'calc-order-form',
 		'type'  => 'inline',
 		'enableAjaxValidation' => false,
@@ -39,14 +40,14 @@ $this->widget('bootstrap.widgets.TbAlert', array(
 		<div class="span3" style="padding-left: 20px;"><label class="pull-right" for="order_CompanyName">Наименование компании</label></div>
 		<div class="span9"><?=CHtml::textField('order[CompanyName]', isset($order['CompanyName']) ? $order['CompanyName'] : '', array('class' => 'span12'))?></div>
 	</div><br/>
-	<div class="row-fluid">
+	<?php /*<div class="row-fluid">
 		<div class="span3" style="padding-left: 20px;"><label class="pull-right" for="order_inn">ИНН (не принимается)</label></div>
 		<div class="span9"><?=CHtml::textField('order[inn]', isset($order['inn']) ? $order['inn'] : '', array('class' => 'span12'))?></div>
 	</div><br/>
 	<div class="row-fluid">
 		<div class="span3" style="padding-left: 20px;"><label class="pull-right" for="order_kpp">КПП (не принимается)</label></div>
 		<div class="span9"><?=CHtml::textField('order[kpp]', isset($order['kpp']) ? $order['kpp'] : '', array('class' => 'span12'))?></div>
-	</div><br/>
+	</div><br/>*/?>
 	<?php /*if (Yii::app()->user->getState('ins_type', false) == 'Агентский') :*/?>
 		<div class="row-fluid">
 			<div class="span3" style="padding-left: 20px;"><label class="pull-right" for="order_CompanyName">Выгодоприобретатель</label></div>
@@ -67,7 +68,7 @@ $this->widget('bootstrap.widgets.TbAlert', array(
 	</div><br/>
 	<div class="row-fluid">
 		<div class="span3" style="padding-left: 20px;"><label class="pull-right" for="order_Weight">Общий вес</label></div>
-		<div class="span9"><?=CHtml::textArea('order[Weight]', isset($order['Weight']) ? $order['Weight'] : '', array('class' => 'span12'))?></div>
+		<div class="span9"><?=CHtml::textField('order[Weight]', isset($order['Weight']) ? $order['Weight'] : '', array('class' => 'span12'))?></div>
 	</div><br/>
 	<div class="row-fluid">
 		<div class="span3" style="padding-left: 20px;"><label class="pull-right" for="order_WeightMeasure">Единица измерения веса</label></div>

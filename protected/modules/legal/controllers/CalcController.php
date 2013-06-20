@@ -114,7 +114,8 @@ class CalcController extends Controller
 						'DateOfPreOrder'    => $_POST['order_date'],
 					);
 					$this->render('order', array('order' => $order));
-					$this->redirect($this->createUrl('order', array('order_id' => $_POST['order_number'])));
+					return;
+					//$this->redirect($this->createUrl('order', array('order_id' => $_POST['order_number'])));
 				}
 			} catch(Exception $e) {
 				Yii::app()->user->setFlash('error', $e->getMessage());
