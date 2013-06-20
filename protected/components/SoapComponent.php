@@ -28,6 +28,12 @@
  * @method mixed saveFoundingDocument   Сохранение
  * @method mixed deleteFoundingDocument Удаление
  *
+ * Банковские счета
+ * @method mixed listSettlementAccount      Список
+ * @method mixed aaageatFoundingDocument    Просмотр
+ * @method mixed aaasaveFoundingDocument   Сохранение
+ * @method mixed aaadeleteFoundingDocument Удаление
+ *
  * Страны
  * @method mixed listCountries          Список
  */
@@ -85,7 +91,7 @@ class SoapComponent extends CApplicationComponent
 	 * @return array
 	 */
 	static public function parseReturn($data, $json = true) {
-		if (is_string($data->return) && strpos($data->return, 'error') !== false) {
+		if (is_string($data->return) && stripos($data->return, 'error') !== false) {
 			throw new Exception($data->return);
 		} else {
 			if (is_string($data->return) && $json) {

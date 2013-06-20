@@ -32,6 +32,10 @@ class Calc extends SOAPModel {
 			$this->onAfterConstruct(new CEvent($this));
 	}
 
+	public function findAll(){
+		throw new Exception('Данный метод не реализован в калькуляторе.');
+	}
+
 	/*static public function getCategories() {
 		$cacher = new CFileCache();
 		$cache = $cacher->get('calc_categories');

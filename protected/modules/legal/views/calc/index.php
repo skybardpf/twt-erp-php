@@ -57,7 +57,10 @@ Yii::app()->clientScript->registerScriptFile(CHtml::asset(Yii::app()->basePath.'
 	<div class="row-fluid"><div class="span12">2. Выберите валюту:</div></div>
 	<div class="row-fluid">
 		<div class="span12">
-			<?= CHtml::dropDownList('currency', '', array('' => 'Не выбрана') + Currencies::getValues())?>
+			<?= CHtml::dropDownList(
+				'currency',
+				(!empty($_POST['currency']) ? $_POST['currency'] : ''),
+				array('' => 'Не выбрана') + Currencies::getValues())?>
 		</div>
 	</div>
 

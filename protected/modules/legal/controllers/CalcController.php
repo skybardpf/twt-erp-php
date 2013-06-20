@@ -43,7 +43,9 @@ class CalcController extends Controller
 				foreach($_POST['data'] as $val){
 					if (!empty($val['code']) || !empty($val['summ'])) {
 						$values[] = $val;
-						$data['Strings'][] = array('Kod' => $val['code'], 'Summ' => $val['summ']);
+						$code_length = strlen($val['code']);
+						$code = ($code_length == 10) ? $val['code'] : str_repeat('0', 10-$code_length).$val['code'];
+						$data['Strings'][] = array('Kod' => $code, 'Summ' => $val['summ']);
 					}
 				}
 				try {
@@ -76,10 +78,18 @@ class CalcController extends Controller
 	 */
 	public function actionStep2() {
 		$data = array();
-		if (!isset($_POST['variants']) || !$_POST['variants'] || !isset($_POST['order_number']) || !$_POST['order_number']) {
+		if (
+			   !isset($_POST['variants']) || !$_POST['variants']
+			|| !isset($_POST['order_number']) || !$_POST['order_number']
+			|| !isset($_POST['order_date']) || !$_POST['order_date'])
+		{
 			$this->redirect($this->createUrl('index'));
 		} else {
-			$data = array('NumberOfPreOrder' => $_POST['order_number'], 'variants' =>  $_POST['variants']);
+			$data = array(
+				'NumberOfPreOrder' => $_POST['order_number'],
+				'DateOfPreOrder' => $_POST['order_date'],
+				'variants' =>  $_POST['variants']
+			);
 		}
 
 		if (!isset($_POST['variant']) || !$_POST['variant']) {
@@ -91,6 +101,7 @@ class CalcController extends Controller
 				$selected_var = $data['variants'][$_POST['variant']];
 				$ret = Yii::app()->calc->ApplyMethod(array('Data' => array(
 					'NumberOfPreOrder'  => $_POST['order_number'],
+					'DateOfPreOrder'    => $_POST['order_date'],
 					'Company'           => $selected_var['company'],
 					'UserID'            => 'test_user@nomail.asd',
 					'InsuranceType'     => $selected_var['ins_type']
@@ -98,6 +109,11 @@ class CalcController extends Controller
 				$ret = SoapComponent::parseReturn($ret);
 				if ($ret) {
 					Yii::app()->user->setState('ins_type', $selected_var['ins_type']);
+					$order = array(
+						'NumberOfPreOrder'  => $_POST['order_number'],
+						'DateOfPreOrder'    => $_POST['order_date'],
+					);
+					$this->render('order', array('order' => $order));
 					$this->redirect($this->createUrl('order', array('order_id' => $_POST['order_number'])));
 				}
 			} catch(Exception $e) {
@@ -110,22 +126,27 @@ class CalcController extends Controller
 	}
 
 
-	public function actionOrder($order_id) {
-		$order = array();
+	public function actionOrder($order_id = '', $order_date = '') {
+		$send_order = ($order_id && $order_date)
+			? array('NumberOfPreOrder'  => $order_id,'DateOfPreOrder'    => $order_date)
+			: array();
+
 		if ($_POST && isset($_POST['order'])) {
 			$order = $_POST['order'];
 			try {
-				$send_order = array('NumberOfPreOrder' => $order_id);
-				if (isset($_POST['order']['CompanyName']))          $send_order['CompanyName']          = $_POST['order']['CompanyName'];
-				if (isset($_POST['order']['Beneficiary']))          $send_order['Beneficiary']          = $_POST['order']['Beneficiary'];
-				if (isset($_POST['order']['Consignment']))          $send_order['Consignment']          = $_POST['order']['Consignment'];
-				if (isset($_POST['order']['NumberOfSeat']))         $send_order['NumberOfSeat']         = $_POST['order']['NumberOfSeat'];
-				if (isset($_POST['order']['NumberOfSeatMeasure']))  $send_order['NumberOfSeatMeasure']  = $_POST['order']['NumberOfSeatMeasure'];
-				if (isset($_POST['order']['Weight']))               $send_order['Weight']                    = $_POST['order']['Weight'];
-				if (isset($_POST['order']['WeightMeasure']))        $send_order['WeightMeasure']        = $_POST['order']['WeightMeasure'];
-				if (isset($_POST['order']['Documents']))            $send_order['Documents']            = $_POST['order']['Documents'];
-				if (isset($_POST['order']['StartDate']))            $send_order['StartDate']            = $_POST['order']['StartDate'];
-				if (isset($_POST['order']['EndDate']))              $send_order['EndDate']              = $_POST['order']['EndDate'];
+				$send_order['UserID'] = 'test_user@nomail.asd';
+				if (!empty($_POST['order']['NumberOfPreOrder']))     $send_order['NumberOfPreOrder']     = $_POST['order']['NumberOfPreOrder'];
+				if (!empty($_POST['order']['DateOfPreOrder']))       $send_order['DateOfPreOrder']       = $_POST['order']['DateOfPreOrder'];
+				if (!empty($_POST['order']['CompanyName']))          $send_order['CompanyName']          = $_POST['order']['CompanyName'];
+				if (!empty($_POST['order']['Beneficiary']))          $send_order['Beneficiary']          = $_POST['order']['Beneficiary'];
+				if (!empty($_POST['order']['Consignment']))          $send_order['Consignment']          = $_POST['order']['Consignment'];
+				if (!empty($_POST['order']['NumberOfSeat']))         $send_order['NumberOfSeat']         = $_POST['order']['NumberOfSeat'];
+				if (!empty($_POST['order']['NumberOfSeatMeasure']))  $send_order['NumberOfSeatMeasure']  = $_POST['order']['NumberOfSeatMeasure'];
+				if (!empty($_POST['order']['Weight']))               $send_order['Weight']               = $_POST['order']['Weight'];
+				if (!empty($_POST['order']['WeightMeasure']))        $send_order['WeightMeasure']        = $_POST['order']['WeightMeasure'];
+				if (!empty($_POST['order']['Documents']))            $send_order['Documents']            = $_POST['order']['Documents'];
+				if (!empty($_POST['order']['StartDate']))            $send_order['StartDate']            = $_POST['order']['StartDate'];
+				if (!empty($_POST['order']['EndDate']))              $send_order['EndDate']              = $_POST['order']['EndDate'];
 
 				$send_order['Transports'] = array();
 				if (isset($_POST['order']['route']) && isset($_POST['order']['route']['begin'])
@@ -156,7 +177,7 @@ class CalcController extends Controller
 					throw new Exception("Нужно указать конечную точку маршрута.");
 				}
 				$ret = Yii::app()->calc->CreateOrder(array('Data' => $send_order));
-				$ret = SoapComponent::parseReturn($ret);
+				$ret = SoapComponent::parseReturn($ret, false);
 				CVarDumper::dump($ret,5,1);
 			} catch (Exception $e) {
 				Yii::app()->user->setFlash('error', $e->getMessage());

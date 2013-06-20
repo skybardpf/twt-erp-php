@@ -32,6 +32,8 @@ $this->widget('bootstrap.widgets.TbAlert', array(
 		'enableAjaxValidation' => false,
 		'htmlOptions'=>array('enctype'=>'multipart/form-data'),
 	));
+	echo CHtml::hiddenField('order[NumberOfPreOrder]', isset($order["NumberOfPreOrder"]) ? $order["NumberOfPreOrder"] : 0);
+	echo CHtml::hiddenField('order[DateOfPreOrder]', isset($order["DateOfPreOrder"]) ? $order["DateOfPreOrder"] : '');
 ?>
 	<div class="row-fluid">
 		<div class="span3" style="padding-left: 20px;"><label class="pull-right" for="order_CompanyName">Наименование компании</label></div>

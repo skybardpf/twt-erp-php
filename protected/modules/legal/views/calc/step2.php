@@ -30,6 +30,7 @@ Currencies::getValues();
 	));
 
 	echo CHtml::hiddenField('order_number', isset($insurance["NumberOfPreOrder"]) ? $insurance["NumberOfPreOrder"] : 0);
+	echo CHtml::hiddenField('order_date', isset($insurance["DateOfPreOrder"]) ? $insurance["DateOfPreOrder"] : '');
 	foreach ($insurance['variants'] as $var) {
 		echo CHtml::hiddenField('variants['.$var["number"].'][company]', $var["company"]);
 		echo CHtml::hiddenField('variants['.$var["number"].'][company_title]', $var["company_title"]);

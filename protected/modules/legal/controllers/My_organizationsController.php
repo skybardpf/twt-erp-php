@@ -3,7 +3,7 @@
  * User: Forgon
  * Date: 23.04.13
  */
-class My_OrganizationsController extends Controller {
+class My_organizationsController extends Controller {
 
 	public $layout = 'inner';
 	/** @var string Пункт левого меню */
@@ -65,7 +65,7 @@ class My_OrganizationsController extends Controller {
             else{
                 $model = Organizations::model();
             }
-            $countries = $this->getCountriesList();
+            $countries = Countries::getValues();
             $this->render('add', array('model' => $model, 'countries' => $countries, 'url_params' => $form_url_params));
         }
         else{ // если POST не пустой, значит сохраняем форму и редиректим на страницу организации
@@ -83,7 +83,7 @@ class My_OrganizationsController extends Controller {
             if(!$result['error'])
                 $this->actionShow($result['id']);
             else{
-                $countries = $this->getCountriesList();
+                $countries = Countries::getValues();
                 $this->render('add', array('model' => $organization, 'countries' => $countries, 'url_params' => $form_url_params, 'error_message' => $result['errorMessage']));
             }
         }
@@ -109,17 +109,44 @@ class My_OrganizationsController extends Controller {
 	    // Учредительные документы
 	    $Fdocs = FoundingDocument::model()
 		    ->where('deleted', false)
-		    ->where('id_yur',  $model->getprimaryKey())
+		    ->where('id_yur',  $model->primaryKey)
 		    ->where('type_yur', 'Организации')
 		    ->findAll();
 
 	    // получаем набор документов типа "Доверенность"
-	    //$PA_models = PowerAttorneysLE::model()->where('deleted', false)->where('id_yur', $id)->findAll();
-	    $PA_models = array();
+		$PAdocs = PowerAttorneysLE::model()
+		    ->where('deleted', false)
+		    ->where('id_yur', $model->primaryKey)
+		    ->where('type_yur', 'Организации')
+		    ->findAll();
 
-	    $this->render('documents/list', array('fdocs' => $Fdocs, 'PA_models' => $PA_models));
+	    $this->render('documents/list', array('Fdocs' => $Fdocs, 'PAdocs' => $PAdocs));
     }
 
+	/**
+	 * Список счетов
+	 *
+	 * @param $id
+	 *
+	 * @throws CHttpException
+	 */
+	public function actionSettlements($id) {
+		$this->cur_tab = 'settlements';
+
+		/** @var $model Organizations */
+		$model = Organizations::model()->findByPk($id);
+		if (!$model) throw new CHttpException(404);
+		$this->organization = $model;
+
+		$accs = SettlementAccount::model()
+			->where('deleted', false)
+			->where('id_yur', $model->primaryKey)
+			->where('type_yur', 'Организации')
+			->findAll();
+
+		$this->render('settlements/list', array('accs' => $accs));
+//		$this->render('show', array('tab_content' => $this->renderPartial('../template_example/settlement/list', array('id' => $id), true), 'model' => $model));
+	}
 
 // ╔═════════════════════════╗
 // ║ Учредительные документы ║
@@ -260,6 +287,145 @@ class My_OrganizationsController extends Controller {
 		}
 	}
 
+// ╔══════════════╗
+// ║ Доверенности ║
+// ╚══════════════╝
+
+	/**
+	 * Создание учредительного документа
+	 *
+	 * @param $id
+	 *
+	 * @throws CHttpException
+	 */
+	public function actionAdd_attorney($id) {
+		$this->cur_tab = 'documents';
+
+		/** @var $model Organizations */
+		$model = Organizations::model()->findByPk($id);
+		if (!$model) throw new CHttpException(404);
+		$this->organization = $model;
+
+		$doc = new PowerAttorneysLE();
+		$doc->id_yur    = $id;
+		$doc->type_yur  = "Организации";
+		$doc->from_user = true;
+		$doc->user      = SOAPModel::USER_NAME;
+		$error = '';
+		if ($_POST && !empty($_POST['PowerAttorneysLE'])) {
+			$doc->setAttributes($_POST['PowerAttorneysLE']);
+			if ($doc->validate()) {
+				try {
+					$doc->save();
+					$this->redirect($this->createUrl('documents', array('id' => $id)));
+				} catch (Exception $e) {
+					$error = $e->getMessage();
+				}
+			}
+		}
+		$this->render('documents/attorney_form', array('doc' => $doc, 'error' => $error));
+	}
+
+	/**
+	 * Редактирование учредительного документа
+	 *
+	 * @param $id
+	 *
+	 * @throws CHttpException
+	 */
+	public function aaaaaaaaaaaaaaaaaaaaaaactionEdit_founding($id) {
+		$this->cur_tab = 'documents';
+
+		/** @var $doc FoundingDocument */
+		$doc = FoundingDocument::model()->findByPk($id);
+		if (!$doc) throw new CHttpException(404);
+		if ($doc->type_yur != 'Организации') throw new CHttpException(404, 'У документа неверный тип для данной страницы');
+
+		/** @var $org Organizations */
+		$org = Organizations::model()->findByPk($doc->id_yur);
+		if (!$org) throw new CHttpException(404, 'Юр.лицо данного документа не получено.');
+		$this->organization = $org;
+
+		$doc->user      = SOAPModel::USER_NAME;
+		$error = '';
+		if ($_POST && !empty($_POST['FoundingDocument'])) {
+			$doc->setAttributes($_POST['FoundingDocument']);
+			if ($doc->validate()) {
+				try {
+					$doc->save();
+					$this->redirect($this->createUrl('show_founding', array('id' => $id)));
+				} catch (Exception $e) {
+					$error = $e->getMessage();
+				}
+			}
+		}
+		$this->render('documents/founding_form', array('doc' => $doc, 'error' => $error));
+	}
+
+	/**
+	 * Просмотр учредительного документа
+	 *
+	 * @param $id
+	 *
+	 * @throws CHttpException
+	 */
+	public function aaaaaaaaaaaaaaaaaaaaaaactionShow_founding($id) {
+		$this->cur_tab = 'documents';
+
+		/** @var $doc FoundingDocument */
+		$doc = FoundingDocument::model()->findByPk($id);
+		if (!$doc) throw new CHttpException(404);
+		if ($doc->type_yur != 'Организации') throw new CHttpException(404, 'У документа неверный тип для данной страницы');
+
+		/** @var $org Organizations */
+		$org = Organizations::model()->findByPk($doc->id_yur);
+		if (!$org) throw new CHttpException(404, 'Юр.лицо данного документа не получено.');
+		$this->organization = $org;
+
+		$this->render('documents/founding_show', array('model' => $doc));
+	}
+
+	public function aaaaaaaaaaaaaaaaaaaaaaactionDelete_founding($id) {
+		$this->cur_tab = 'documents';
+
+		/** @var $doc FoundingDocument */
+		$doc = FoundingDocument::model()->findByPk($id);
+		if (!$doc) throw new CHttpException(404);
+		if ($doc->type_yur != 'Организации') throw new CHttpException(404, 'У документа неверный тип для данной страницы');
+
+		/** @var $org Organizations */
+		$org = Organizations::model()->findByPk($doc->id_yur);
+		if (!$org) throw new CHttpException(404, 'Юр.лицо данного документа не получено.');
+		$this->organization = $org;
+
+		if (Yii::app()->request->isAjaxRequest) {
+			$ret = array();
+			try {
+				$doc->delete();
+			} catch (Exception $e) {
+				$ret['error'] = $e->getMessage();
+			}
+			echo CJSON::encode($ret);
+			Yii::app()->end();
+		} else {
+			if (isset($_POST['result'])) {
+				switch ($_POST['result']) {
+					case 'yes':
+						if ($doc->delete()) {
+							$this->redirect($this->createUrl('documents', array('id' => $this->organization->primaryKey)));
+						} else {
+							throw new CHttpException(500, 'Не удалось удалить учредительный документ');
+						}
+						break;
+					default:
+						$this->redirect($this->createUrl('show_founding', array('id' => $doc->primaryKey)));
+						break;
+				}
+			}
+			$this->render('delete_founding', array('model' => $doc));
+		}
+	}
+
 
 
 
@@ -316,17 +482,6 @@ class My_OrganizationsController extends Controller {
         }
     }
 
-    private function getCountriesList(){
-        $countries = Organizations::model('Countries')->findAll();
-        $countries_arr = array();
-        foreach($countries as $key => $country){
-            $countries_arr[$country->id] = $country->name;
-        }
-        return $countries_arr;
-    }
-
-
-
     public function actionDocument_show($id) {
         $this->menu_current = 'index';
         $this->cur_tab = 'documents';
@@ -334,12 +489,7 @@ class My_OrganizationsController extends Controller {
         $this->render('show', array('tab_content' => $this->renderPartial('../template_example/documents/show', array('id' => $id), true), 'model' => $model));
     }
 
-    public function actionSettlements($id) {
-        $this->menu_current = 'index';
-        $this->cur_tab = 'settlements';
-        $model = Organizations::model()->findByPk($id);
-        $this->render('show', array('tab_content' => $this->renderPartial('../template_example/settlement/list', array('id' => $id), true), 'model' => $model));
-    }
+
 
     public function actionSettlement_add($id) {
         $this->menu_current = 'index';
