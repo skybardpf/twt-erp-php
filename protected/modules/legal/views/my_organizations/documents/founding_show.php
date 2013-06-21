@@ -40,14 +40,13 @@ if (!$model->deleted) {
 	$this->widget('bootstrap.widgets.TbDetailView', array(
 		'data'       => $model,
 		'attributes' => array(
-			'name',
 			array(
 				'name'  => 'typ_doc',
 				//'label' => 'Гражданство',
 				'type'  => 'raw',
 				'value' => ($model->typ_doc && isset($doc_types[$model->typ_doc])) ? $doc_types[$model->typ_doc] : '&mdash;',
 			),
-			'num', 'comment', 'date', 'expire',
+			'num', 'name', 'comment', 'date', 'expire',
 		)
 	));
 	?>
