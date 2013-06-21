@@ -7,6 +7,10 @@ $(document).ready(function(){
 
     select2_init($(document), false);
 
+    $('input[type=radio][name=tnved]').on('change', function(e){
+        $('[data-new_row="0"]').remove();
+    });
+
     var iteration = 1;
     $('#calc-form-form').on('change', '[data-one_row=1]', function(event){
         // Инпуты данной строки
@@ -17,6 +21,7 @@ $(document).ready(function(){
             // добавление строки при заполнении ее значений
             if (elements.get(0).value || elements.get(1).value) {
                 $this.data('new_row', 0);
+                $this.attr('data-new_row', 0);
                 var clone = $('#calc_clone_row').clone();
                 clone.removeAttr('id');
 
@@ -60,7 +65,13 @@ $(document).ready(function(){
                     options.ajax = {
                         url: e.dataset.ajax_url,
                         dataType: 'json',
-                        data: function(term, page) {return {q: term, page_limit: 10}},
+                        data: function(term, page) {
+                            return {
+                                q: term,
+                                page_limit: 10,
+                                tnved: $('[data-tnved_selection]:checked').val()
+                            }
+                        },
                         results: function(data, page) { return {results: data.values }}
                     };
                     options.initSelection = function(element, callback) {

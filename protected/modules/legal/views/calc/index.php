@@ -41,13 +41,13 @@ Yii::app()->clientScript->registerScriptFile(CHtml::asset(Yii::app()->basePath.'
 	<div class="row-fluid"><div class="span12">1. Укажите способ выбора типов товаров:</div></div>
 	<div class="row-fluid">
 		<div class="span12">
-			<label class="radio" for="tnved_no">
-				<?=CHtml::radioButton('tnved', /*!isset($data['tnved']) || $data['tnved'] == 'no'*/ false, array('value' => 'no', 'id' => 'tnved_no', 'data-select_type' => 'tnved_no', 'disabled' => 'disabled'))?>
-				По кодам категорий
-			</label><br/>
 			<label class="radio" for="tnved_yes">
-				<?=CHtml::radioButton('tnved', /*isset($data['tnved']) && $data['tnved'] == 'yes'*/ true, array('value' => 'yes', 'id' => 'tnved_yes', 'data-select_type' => 'tnved_yes'))?>
+				<?=CHtml::radioButton('tnved', !isset($data['tnved']) || empty($data['tnved']) || $data['tnved'] == 'yes', array('value' => 'yes', 'id' => 'tnved_yes', 'data-tnved_selection' => '1'))?>
 				По кодам ТНВЭД
+			</label><br/>
+			<label class="radio" for="tnved_no">
+				<?=CHtml::radioButton('tnved', !empty($data['tnved']) && $data['tnved'] != 'yes', array('value' => 'no', 'id' => 'tnved_no', 'data-tnved_selection' => '1'))?>
+				По кодам категорий
 			</label>
 		</div>
 	</div>

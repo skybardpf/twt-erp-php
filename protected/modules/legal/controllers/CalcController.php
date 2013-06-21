@@ -12,6 +12,7 @@ class CalcController extends Controller
 	protected $_seat_measures = false;
 	protected $_weight_measures = false;
 	protected $_cities = array();
+	protected $_categories = array();
 
 	public $layout = '//layouts/calc';
 
@@ -192,33 +193,50 @@ class CalcController extends Controller
 	 * @param string $q
 	 * @param bool $page_limit
 	 */
-	public function actionTnved($q = '', $page_limit = false) {
+	public function actionTnved($q = '', $page_limit = false, $tnved = 'yes') {
 		$values = array();
 		// Инициализация селекта
 		if (isset($_GET['id']) && $_GET['id']) {
-			$command = Yii::app()->db->createCommand()
-				->select('code, title')
-				->from('tnved')
-				->where('code = :id', array(':id' => $_GET['id']));
-			$tmp = $command->queryRow(true);
-			$values = array(
-				'id' => $tmp['code'],
-				'text' => $tmp['code'].' - '.$tmp['title']
-			);
+			if ($tnved == 'yes') {
+				$command = Yii::app()->db->createCommand()
+					->select('code, title')
+					->from('tnved')
+					->where('code = :id', array(':id' => $_GET['id']));
+				$tmp = $command->queryRow(true);
+				$values = array(
+					'id' => $tmp['code'],
+					'text' => $tmp['code'].' - '.$tmp['title']
+				);
+			} else {
+				$arr = $this->getCategories();
+			}
 		// Автодополнение селекта
 		} elseif ($q && mb_strlen($q) >= 4) {
-			$command = Yii::app()->db->createCommand()
-				->select('code, title')
-				->from('tnved')
-				->where('code LIKE :q OR title LIKE :q', array(':q' => '%'.$q.'%'));
-			if ($page_limit) $command->limit($page_limit);
-			$tmp = $command->queryAll(true);
-			if ($tmp) { foreach($tmp as $t) {
-				$values[] = array(
-					'id' => $t['code'],
-					'text' => $t['code'].' - '.$t['title']
-				);
-			} }
+			if ($tnved == 'yes') {
+				$command = Yii::app()->db->createCommand()
+					->select('code, title')
+					->from('tnved')
+					->where('code LIKE :q OR title LIKE :q', array(':q' => '%'.$q.'%'));
+				if ($page_limit) $command->limit($page_limit);
+				$tmp = $command->queryAll(true);
+				if ($tmp) { foreach($tmp as $t) {
+					$values[] = array(
+						'id' => $t['code'],
+						'text' => $t['code'].' - '.$t['title']
+					);
+				} }
+			} else {
+				$arr = $this->getCategories();
+				array_walk($arr, function($val, $key) use ($q, &$values) {
+					if (stripos($val, $q) !== false || stripos($key, $q) !== false) {
+						$values[] = array(
+							'id' => $key,
+							'text' => $key.' - '.$val
+						);
+					}
+				});
+			}
+
 		}
 		echo CJSON::encode(array('values' => $values));
 		Yii::app()->end();
@@ -321,5 +339,30 @@ class CalcController extends Controller
 			}
 		}
 		return $this->_cities[$country_id];
+	}
+
+	/**
+	 * Список категорий грузов, используемых калькулятором
+	 * @return array|mixed Массив идентификатор => название
+	 */
+	public function getCategories() {
+		$cacher = new CFileCache();
+		$cache = $cacher->get(__CLASS__.'_categories_values');
+		if ($cache === false) {
+			if (!$this->_categories) {
+				$tmp = Yii::app()->calc->GetCategory();
+				$tmp = SoapComponent::parseReturn($tmp);
+				$return   = array();
+				if ($tmp) foreach ($tmp as $sub_tmp) {
+					// Т.к. sub_tmp = array('key' => 'title');
+					$return[key($sub_tmp)] = current($sub_tmp);
+				}
+				$this->_categories = $return;
+			}
+			$cacher->add(__CLASS__.'_categories_values', $this->_categories, 3000);
+		} elseif (!$this->_categories) {
+			$this->_categories = $cache;
+		}
+		return $this->_categories;
 	}
 }
