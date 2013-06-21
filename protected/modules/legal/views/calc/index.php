@@ -42,11 +42,11 @@ Yii::app()->clientScript->registerScriptFile(CHtml::asset(Yii::app()->basePath.'
 	<div class="row-fluid">
 		<div class="span12">
 			<label class="radio" for="tnved_yes">
-				<?=CHtml::radioButton('tnved', !isset($data['tnved']) || empty($data['tnved']) || $data['tnved'] == 'yes', array('value' => 'yes', 'id' => 'tnved_yes', 'data-tnved_selection' => '1'))?>
+				<?=CHtml::radioButton('tnved', !isset($_POST['tnved']) || empty($_POST['tnved']) || $_POST['tnved'] == 'yes', array('value' => 'yes', 'id' => 'tnved_yes', 'data-tnved_selection' => '1'))?>
 				По кодам ТНВЭД
 			</label><br/>
 			<label class="radio" for="tnved_no">
-				<?=CHtml::radioButton('tnved', !empty($data['tnved']) && $data['tnved'] != 'yes', array('value' => 'no', 'id' => 'tnved_no', 'data-tnved_selection' => '1'))?>
+				<?=CHtml::radioButton('tnved', !empty($_POST['tnved']) && $_POST['tnved'] != 'yes', array('value' => 'no', 'id' => 'tnved_no', 'data-tnved_selection' => '1'))?>
 				По кодам категорий
 			</label>
 		</div>

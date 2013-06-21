@@ -209,6 +209,12 @@ class CalcController extends Controller
 				);
 			} else {
 				$arr = $this->getCategories();
+				if (isset($arr[$_GET['id']])) {
+					$values = array(
+						'id' => $_GET['id'],
+						'text' => $_GET['id'].' - '.$arr[$_GET['id']]
+					);
+				}
 			}
 		// Автодополнение селекта
 		} elseif ($q && mb_strlen($q) >= 4) {

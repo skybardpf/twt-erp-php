@@ -77,7 +77,7 @@ $(document).ready(function(){
                     options.initSelection = function(element, callback) {
                         var id = $(element).val();
                         var ajaxoptions = {dataType: "json"};
-                        if (id) ajaxoptions.data = { id: id };
+                        if (id) ajaxoptions.data = { id: id, tnved: $('[data-tnved_selection]:checked').val()};
                         $.ajax(e.dataset.ajax_url, ajaxoptions).done(function(data) { callback(data.values); });
                     }
                 }
