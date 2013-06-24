@@ -44,8 +44,9 @@ class CalcController extends Controller
 				foreach($_POST['data'] as $val){
 					if (!empty($val['code']) || !empty($val['summ'])) {
 						$values[] = $val;
-						$code_length = strlen($val['code']);
-						$code = ($code_length == 10) ? $val['code'] : str_repeat('0', 10-$code_length).$val['code'];
+						$needed_length = (isset($_POST['tnved']) && $_POST['tnved'] == 'yes') ? 10 : 9;
+                        $code_length = strlen($val['code']);
+						$code = ($code_length == $needed_length) ? $val['code'] : str_repeat('0', $needed_length-$code_length).$val['code'];
 						$data['Strings'][] = array('Kod' => $code, 'Summ' => $val['summ']);
 					}
 				}
