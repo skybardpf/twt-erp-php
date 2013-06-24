@@ -46,7 +46,7 @@ if (!$model->deleted) {
 				'type'  => 'raw',
 				'value' => ($model->typ_doc && isset($doc_types[$model->typ_doc])) ? $doc_types[$model->typ_doc] : '&mdash;',
 			),
-			'num', 'name', 'comment', 'date', 'expire',
+			'num', 'name', 'date', 'expire', 'comment', 
 		)
 	));
 	?>
