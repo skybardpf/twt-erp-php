@@ -1,8 +1,9 @@
 <?php
 /**
- * @var $this  My_OrganizationsController   Контролер
- * @var $Fdocs FoundingDocument[]           Учредительные документы
- * @var $PAdocs PowerAttorneysLE[]          Доверенности
+ * @var $this       My_OrganizationsController  Контролер
+ * @var $Fdocs      FoundingDocument[]          Учредительные документы
+ * @var $PAdocs     PowerAttorneysLE[]          Доверенности
+ * @var $freeDocs   FreeDocument[]              Свободные документы
  */
 
 $this->beginContent('/my_organizations/show'); ?>
@@ -90,17 +91,13 @@ $this->beginContent('/my_organizations/show'); ?>
                 'label'=>'Новый свободный документ',
                 'type'=>'success', // null, 'primary', 'info', 'success', 'warning', 'danger' or 'inverse'
                 'size'=>'normal', // null, 'large', 'small' or 'mini'
-                'url' => Yii::app()->getController()->createUrl("document_add")
+                'url' => Yii::app()->getController()->createUrl("free_document", array("action"=> "create", "id" => $this->organization->primaryKey))
             )); ?>
         </div>
         <h3>Свободные документы</h3>
 
         <?php
-        $gridDataProvider = new CArrayDataProvider(array(
-            array('id'=>1, 'title'=>'документ 1', 'term'=>'20.33.23'),
-            array('id'=>2, 'title'=>'документ 2', 'term'=>'01.12.23'),
-            array('id'=>3, 'title'=>'документ 3', 'term'=>'21.23.09'),
-        ));
+        $gridDataProvider = new CArrayDataProvider($freeDocs);
 
         $this->widget('bootstrap.widgets.TbGridView', array(
             'type'=>'striped bordered condensed',
@@ -109,12 +106,12 @@ $this->beginContent('/my_organizations/show'); ?>
             'columns'=>array(
                 array('name'=>'id', 'header'=>'#'),
                 array(
-                    'name'=>'title',
-                    'header'=>'Название',
-                    'type' => 'raw',
-                    'value' => 'CHtml::link($data["title"], Yii::app()->getController()->createUrl("document_show", array("id" => $data["id"])))'
+                    'name'  => 'name',
+                    'header'=> 'Название',
+                    'type'  => 'raw',
+                    'value' => 'CHtml::link($data["name"], Yii::app()->getController()->createUrl("free_document", array("action"=> "show", "id" => $data["id"])))'
                 ),
-                array('name'=>'term', 'header'=>'Срок действия'),
+                array('name'=>'expire', 'header'=>'Срок действия'),
             ),
         ));
         ?>

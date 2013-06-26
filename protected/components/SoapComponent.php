@@ -28,6 +28,12 @@
  * @method mixed saveFoundingDocument   Сохранение
  * @method mixed deleteFoundingDocument Удаление
  *
+ * Свободные документы
+ * @method mixed listFreeDocuments      Список
+ * @method mixed getFreeDocument        Просмотр
+ * @method mixed saveFreeDocument       Сохранение
+ * @method mixed deleteFreeDocument     Удаление
+ *
  * Банковские счета
  * @method mixed listSettlementAccount      Список
  * @method mixed aaageatFoundingDocument    Просмотр
@@ -151,20 +157,23 @@ class SoapComponent extends CApplicationComponent
 	}
 
 	/**
-	 * @param $name
-	 * @param array $params
+	 * @param   string  $name
+	 * @param   array   $params
 	 *
-	 * @throws CHttpException
-	 * @return mixed
+	 * @throws  CHttpException
+	 * @return  mixed
 	 */
-	protected function soap_call($name, $params = array()) {
-		if (YII_DEBUG) {
+	protected function soap_call($name, $params = array())
+    {
+        if (YII_DEBUG) {
 			$time = microtime(true);
 			Yii::log('calling SOAP function ' . htmlspecialchars($name) . ' with args: ' . (defined('JSON_UNESCAPED_UNICODE') ? json_encode($params, JSON_UNESCAPED_UNICODE) : preg_replace('#\\\\u([0-9a-f]{4})#se','iconv("UTF-16BE","UTF-8",pack("H4","$1"))', json_encode($params))), CLogger::LEVEL_INFO, 'soap');
 		}
 
-		// initing soap if needed
-		if ($this->soap_client === NULL) { $this->delay_init(); }
+		// init soap if needed
+		if ($this->soap_client === NULL){
+            $this->delay_init();
+        }
 
 		if ($this->soap_method_exists($name)) {
 			try {

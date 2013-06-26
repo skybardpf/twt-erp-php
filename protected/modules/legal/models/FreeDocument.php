@@ -2,22 +2,22 @@
 /**
  * Свободный документ
  *
- * User: Forgon
- * Date: 25.02.13
- * @property int $id
- * @property string $id_yur
+ * User: Skibardin A.A.
+ * Date: 24.06.13
+ *
+ * @property int    $id
+ * @property int    $id_yur
  * @property string $name
  * @property string $date
  * @property string $expire
- * @property string $typ_doc
+ * @property string $type_yur
  * @property string $from_user
- * @property string $nom
+ * @property string $num
  * @property string $user
- *
- * @property string $deleted
+ * @property bool   $deleted
  */
-class FreeDocument extends SOAPModel {
-
+class FreeDocument extends SOAPModel
+{
 	/**
 	 * @static
 	 *
@@ -47,9 +47,8 @@ class FreeDocument extends SOAPModel {
 
 	/**
 	 * Свободный документ
-	 * @param $id
-	 *
-	 * @return FoundingDocument
+	 * @param   int $id
+	 * @return  FreeDocument
 	 */
 	public function findByPk($id) {
 		$ret = $this->SOAP->getFreeDocument(array('id' => $id));
@@ -75,15 +74,21 @@ class FreeDocument extends SOAPModel {
 	 * @return array
 	 */
 	public function save() {
-		$attrs = $this->getAttributes();
+		$data = $this->getAttributes();
 
-		if (!$this->getprimaryKey()) unset($attrs['id']); // New record
-		unset($attrs['deleted']);
-		unset($attrs['file']); // TODO когда появятся файлы
-		$attrs['user'] = 'test';
-		$attrs['from_user'] = true;
+		if (!$this->getprimaryKey()){
+            unset($data['id']);
+        }
+		unset($data['deleted']);
+		unset($data['file']); // TODO когда появятся файлы
+		$data['type_yur']   = 'Организации';
+//        (isset($this->_aTypeYur[$data['type_yur']])) ? $this->_aTypeYur[$data['type_yur']] : $this->_aTypeYur[0];
+		$data['user']       = SOAPModel::USER_NAME;
+		$data['from_user']  = true;
 
-		$ret = $this->SOAP->saveFreeDocument(array('data' => SoapComponent::getStructureElement($attrs)));
+		$ret = $this->SOAP->saveFreeDocument(array(
+            'data' => SoapComponent::getStructureElement($data)
+        ));
 		$ret = SoapComponent::parseReturn($ret, false);
 		return $ret;
 	}
@@ -95,12 +100,14 @@ class FreeDocument extends SOAPModel {
 		return array(
 			'id'                => '#',
 			'id_yur'            => 'Юр.Лицо',
+			'type_yur'          => 'Тип юр. лица',
 			'name'              => 'Название',
 			'date'              => 'Дата загрузки',
 			'expire'            => 'Срок действия',
 			'from_user'         => 'От пользователя',
-			'nom'               => 'Номер документа',
+			'num'               => 'Номер документа',
 			'user'              => 'Пользователь',
+			'comment'           => 'Комментарий',
 			'deleted'           => 'Помечен на удаление',
 			'file'              => 'Электронная версия'
 
@@ -135,13 +142,25 @@ class FreeDocument extends SOAPModel {
 	/**
 	 * @return array validation rules for model attributes.
 	 */
-	public function rules() {
+	public function rules()
+    {
 		return array(
-			array('name, date, id_yur, expire', 'required'),
-			array('id, from_user, nom, user, deleted', 'safe'),
+			array('name, id_yur, type_yur, date, expire', 'required'),
+			array('id, from_user, num, user, deleted', 'safe'),
 
-			array('id, name', 'safe', 'on'=>'search'),
+            array('num', 'validNum'),
+            array('date', 'validDate'),
+            array('expire', 'validDate'),
+
+//			array('id, name', 'safe', 'on'=>'search'),
 		);
 	}
 
+    public function validNum($attribute)
+    {
+    }
+
+    public function validDate($attribute)
+    {
+    }
 }

@@ -49,5 +49,5 @@
     )); ?>
 </div>
 <div class="yur-content">
-	<?=$content?>
+	<?= $content; ?>
 </div>

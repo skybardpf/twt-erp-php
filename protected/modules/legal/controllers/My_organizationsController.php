@@ -32,7 +32,9 @@ class My_organizationsController extends Controller {
 
 		/** @var $model Organizations */
 		$model = Organizations::model()->findByPk($id);
-		if (!$model) throw new CHttpException(404);
+		if (!$model) {
+            throw new CHttpException(404, 'Не найдено юридическое лицо.');
+        }
 		$this->organization = $model;
 
 		$this->render('tab_info');
@@ -103,7 +105,9 @@ class My_organizationsController extends Controller {
 
 	    /** @var $model Organizations */
 	    $model = Organizations::model()->findByPk($id);
-	    if (!$model) throw new CHttpException(404);
+	    if (!$model) {
+            throw new CHttpException(404, 'Не найдено юридическое лицо.');
+        }
 		$this->organization = $model;
 
 	    // Учредительные документы
@@ -120,7 +124,16 @@ class My_organizationsController extends Controller {
 		    ->where('type_yur', 'Организации')
 		    ->findAll();
 
-	    $this->render('documents/list', array('Fdocs' => $Fdocs, 'PAdocs' => $PAdocs));
+        $freeDocs = FreeDocument::model()
+		    ->where('deleted', false)
+		    ->where('id_yur', $model->primaryKey)
+		    ->findAll();
+
+	    $this->render('documents/list', array(
+            'freeDocs'  => $freeDocs,
+            'Fdocs'     => $Fdocs,
+            'PAdocs'    => $PAdocs
+        ));
     }
 
 	/**
@@ -551,6 +564,114 @@ class My_organizationsController extends Controller {
         $this->render('show', array('tab_content' => $this->renderPartial('../template_example/my_events/list', array('id' => $id), true), 'model' => $model));
     }
 
+// ╔═════════════════════╗
+// ║ Свободные документы ║
+// ╚════════════════════╝
 
+    /**
+     *  @param  string  $action
+     *  @param  int     $id
+     *  @throws CHttpException
+     */
+    public function actionFree_document($action, $id) {
+        $this->cur_tab = 'documents';
+
+        if ($action == 'create'){
+            $doc = new FreeDocument();
+            $doc->id_yur    = $id;
+            $doc->type_yur  = 'Организации';
+        } else {
+            $doc = FreeDocument::model()->findByPk($id);
+            if (!$doc){
+                throw new CHttpException(404, 'Не найден указанный документ.');
+            }
+        }
+        $org = Organizations::model()->findByPk($doc->id_yur);
+        if (!$org){
+            throw new CHttpException(404, 'Не найдена указанная организация.');
+        }
+        $this->organization = $org;
+
+        if ($action == 'show'){
+            $this->menu_current = 'index';
+            $this->render('show', array(
+                'content' => $this->renderPartial('documents/free_document/show',
+                    array(
+                        'id'        => $id,
+                        'freeDoc'   => $doc
+                    ), true),
+                'model'  => $doc
+            ));
+
+        } elseif ($action == 'create'){
+            $error = '';
+            if ($_POST && !empty($_POST['FreeDocument'])) {
+                $doc->setAttributes($_POST['FreeDocument']);
+                if ($doc->validate()) {
+                    try {
+                        $doc->save();
+                        $this->redirect($this->createUrl('documents', array('id' => $id)));
+                    } catch (Exception $e) {
+                        $error = $e->getMessage();
+                    }
+                }
+            }
+            $this->render('documents/free_document/form',
+                array(
+                    'doc'   => $doc,
+                    'error' => $error
+                )
+            );
+
+        } elseif ($action == 'update'){
+            $error = '';
+            if ($_POST && !empty($_POST['FreeDocument'])) {
+                $doc->setAttributes($_POST['FreeDocument']);
+                if ($doc->validate()) {
+                    try {
+                        $doc->save();
+                        $this->redirect($this->createUrl('free_document', array('action' => 'show', 'id' => $id)));
+                    } catch (Exception $e) {
+                        $error = $e->getMessage();
+                    }
+                }
+            }
+            $this->render('documents/free_document/form', array(
+                'doc'   => $doc,
+                'error' => $error
+            ));
+
+        } elseif ($action == 'delete'){
+            if (Yii::app()->request->isAjaxRequest) {
+                $ret = array();
+                try {
+                    $doc->delete();
+                } catch (Exception $e) {
+                    $ret['error'] = $e->getMessage();
+                }
+                echo CJSON::encode($ret);
+                Yii::app()->end();
+            } else {
+                if (isset($_POST['result'])) {
+                    switch ($_POST['result']) {
+                        case 'yes':
+                            if ($doc->delete()) {
+                                $this->redirect($this->createUrl('documents', array('id' => $this->organization->primaryKey)));
+                            } else {
+                                throw new CHttpException(500, 'Не удалось удалить свободный документ');
+                            }
+                            break;
+                        default:
+                            $this->redirect($this->createUrl('free_document', array('action' => 'show', 'id' => $doc->primaryKey)));
+                            break;
+                    }
+                }
+                $this->render('documents/free_document/delete', array('model' => $doc));
+            }
+
+        }
+
+
+    }
 
 }
