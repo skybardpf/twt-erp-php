@@ -146,7 +146,7 @@ class Individuals extends SOAPModel {
 	 * Список доступных значений Физ.лиц
 	 * @return array
 	 */
-	static function getValues() {
+	public static function getValues() {
 		$cacher = new CFileCache();
 		$cache = $cacher->get(__CLASS__.'_values');
 		if ($cache === false) {

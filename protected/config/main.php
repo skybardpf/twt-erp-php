@@ -44,12 +44,13 @@ return array(
 		),
 		'soap' => array(
 			'class'     => 'SoapComponent',
-//			'wsdl'      => 'http://192.168.0.101/InfoBase/ws/twt?wsdl',
-//			'wsdl'      => 'http://192.168.0.101/testBase/ws/twt?wsdl',
-			'wsdl'      => 'http://80.250.210.238/TWT_backend/ws/twt?wsdl',
+//			'wsdl'      => 'http://80.250.210.238/TWT_backend/ws/twt?wsdl',
+			'wsdl'      => 'http://144.76.90.162/twt_erp/ws/erp?wsdl',
 			'connection_options' => array(
-				'login'     => 'test',
-                'password'  => '',
+//				'login'     => 'test',
+//                'password'  => '',
+                'login'     => 'Site',
+                'password'  => 'Site',
 			)
 		),
 		'calc' => array(

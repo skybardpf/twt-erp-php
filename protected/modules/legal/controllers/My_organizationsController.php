@@ -136,31 +136,6 @@ class My_organizationsController extends Controller {
         ));
     }
 
-	/**
-	 * Список счетов
-	 *
-	 * @param $id
-	 *
-	 * @throws CHttpException
-	 */
-	public function actionSettlements($id) {
-		$this->cur_tab = 'settlements';
-
-		/** @var $model Organizations */
-		$model = Organizations::model()->findByPk($id);
-		if (!$model) throw new CHttpException(404);
-		$this->organization = $model;
-
-		$accs = SettlementAccount::model()
-			->where('deleted', false)
-			->where('id_yur', $model->primaryKey)
-			->where('type_yur', 'Организации')
-			->findAll();
-
-		$this->render('settlements/list', array('accs' => $accs));
-//		$this->render('show', array('tab_content' => $this->renderPartial('../template_example/settlement/list', array('id' => $id), true), 'model' => $model));
-	}
-
 // ╔═════════════════════════╗
 // ║ Учредительные документы ║
 // ╚═════════════════════════╝
@@ -301,43 +276,43 @@ class My_organizationsController extends Controller {
 	}
 
 // ╔══════════════╗
-// ║ Доверенности ║
+// ║ Доверенности old ║
 // ╚══════════════╝
 
-	/**
-	 * Создание учредительного документа
-	 *
-	 * @param $id
-	 *
-	 * @throws CHttpException
-	 */
-	public function actionAdd_attorney($id) {
-		$this->cur_tab = 'documents';
-
-		/** @var $model Organizations */
-		$model = Organizations::model()->findByPk($id);
-		if (!$model) throw new CHttpException(404);
-		$this->organization = $model;
-
-		$doc = new PowerAttorneysLE();
-		$doc->id_yur    = $id;
-		$doc->type_yur  = "Организации";
-		$doc->from_user = true;
-		$doc->user      = SOAPModel::USER_NAME;
-		$error = '';
-		if ($_POST && !empty($_POST['PowerAttorneysLE'])) {
-			$doc->setAttributes($_POST['PowerAttorneysLE']);
-			if ($doc->validate()) {
-				try {
-					$doc->save();
-					$this->redirect($this->createUrl('documents', array('id' => $id)));
-				} catch (Exception $e) {
-					$error = $e->getMessage();
-				}
-			}
-		}
-		$this->render('documents/attorney_form', array('doc' => $doc, 'error' => $error));
-	}
+//	/**
+//	 * Создание учредительного документа
+//	 *
+//	 * @param $id
+//	 *
+//	 * @throws CHttpException
+//	 */
+//	public function actionAdd_attorney($id) {
+//		$this->cur_tab = 'documents';
+//
+//		/** @var $model Organizations */
+//		$model = Organizations::model()->findByPk($id);
+//		if (!$model) throw new CHttpException(404);
+//		$this->organization = $model;
+//
+//		$doc = new PowerAttorneysLE();
+//		$doc->id_yur    = $id;
+//		$doc->type_yur  = "Организации";
+//		$doc->from_user = true;
+//		$doc->user      = SOAPModel::USER_NAME;
+//		$error = '';
+//		if ($_POST && !empty($_POST['PowerAttorneysLE'])) {
+//			$doc->setAttributes($_POST['PowerAttorneysLE']);
+//			if ($doc->validate()) {
+//				try {
+//					$doc->save();
+//					$this->redirect($this->createUrl('documents', array('id' => $id)));
+//				} catch (Exception $e) {
+//					$error = $e->getMessage();
+//				}
+//			}
+//		}
+//		$this->render('documents/attorney_form', array('doc' => $doc, 'error' => $error));
+//	}
 
 	/**
 	 * Редактирование учредительного документа
@@ -504,19 +479,19 @@ class My_organizationsController extends Controller {
 
 
 
-    public function actionSettlement_add($id) {
-        $this->menu_current = 'index';
-        $this->cur_tab = 'settlements';
-        $model = Organizations::model()->findByPk($id);
-        $this->render('show', array('tab_content' => $this->renderPartial('../template_example/settlement/add', array('id' => $id), true), 'model' => $model));
-    }
+//    public function actionSettlement_add($id) {
+//        $this->menu_current = 'index';
+//        $this->cur_tab = 'settlements';
+//        $model = Organizations::model()->findByPk($id);
+//        $this->render('show', array('tab_content' => $this->renderPartial('../template_example/settlement/add', array('id' => $id), true), 'model' => $model));
+//    }
 
-    public function actionSettlement_show($id) {
-        $this->menu_current = 'index';
-        $this->cur_tab = 'settlements';
-        $model = Organizations::model()->findByPk($id);
-        $this->render('show', array('tab_content' => $this->renderPartial('../template_example/settlement/show', array('id' => $id), true), 'model' => $model));
-    }
+//    public function actionSettlement_show($id) {
+//        $this->menu_current = 'index';
+//        $this->cur_tab = 'settlements';
+//        $model = Organizations::model()->findByPk($id);
+//        $this->render('show', array('tab_content' => $this->renderPartial('../template_example/settlement/show', array('id' => $id), true), 'model' => $model));
+//    }
 
     public function actionBenefits($id) {
         $this->menu_current = 'index';
@@ -564,9 +539,9 @@ class My_organizationsController extends Controller {
         $this->render('show', array('tab_content' => $this->renderPartial('../template_example/my_events/list', array('id' => $id), true), 'model' => $model));
     }
 
-// ╔═════════════════════╗
-// ║ Свободные документы ║
-// ╚════════════════════╝
+    // ╔═════════════════════╗
+    // ║ Свободные документы ║
+    // ╚═════════════════════╝
 
     /**
      *  @param  string  $action
@@ -588,90 +563,368 @@ class My_organizationsController extends Controller {
         }
         $org = Organizations::model()->findByPk($doc->id_yur);
         if (!$org){
-            throw new CHttpException(404, 'Не найдена указанная организация.');
+            throw new CHttpException(404, 'Не найдено указанное юридическое лицо.');
         }
         $this->organization = $org;
 
-        if ($action == 'show'){
-            $this->menu_current = 'index';
-            $this->render('show', array(
-                'content' => $this->renderPartial('documents/free_document/show',
-                    array(
-                        'id'        => $id,
-                        'freeDoc'   => $doc
-                    ), true),
-                'model'  => $doc
-            ));
+        switch ($action){
+            /** Action show */
+            case 'show': {
+                $this->menu_current = 'index';
+                $this->render('show', array(
+                    'content' => $this->renderPartial('documents/free_document/show',
+                        array(
+                            'id'        => $id,
+                            'freeDoc'   => $doc
+                        ), true),
+                    'model'  => $doc
+                ));
+            } break;
 
-        } elseif ($action == 'create'){
-            $error = '';
-            if ($_POST && !empty($_POST['FreeDocument'])) {
-                $doc->setAttributes($_POST['FreeDocument']);
-                if ($doc->validate()) {
-                    try {
-                        $doc->save();
-                        $this->redirect($this->createUrl('documents', array('id' => $id)));
-                    } catch (Exception $e) {
-                        $error = $e->getMessage();
+            /** Action create */
+            case 'create': {
+                $error = '';
+                if ($_POST && !empty($_POST['FreeDocument'])) {
+                    $doc->setAttributes($_POST['FreeDocument']);
+                    if ($doc->validate()) {
+                        try {
+                            $doc->save();
+                            $this->redirect($this->createUrl('documents', array('id' => $id)));
+                        } catch (Exception $e) {
+                            $error = $e->getMessage();
+                        }
                     }
                 }
-            }
-            $this->render('documents/free_document/form',
-                array(
+                $this->render('documents/free_document/form',
+                    array(
+                        'doc'   => $doc,
+                        'error' => $error
+                    )
+                );
+            } break;
+
+            /** Action update */
+            case 'update': {
+                $error = '';
+                if ($_POST && !empty($_POST['FreeDocument'])) {
+                    $doc->setAttributes($_POST['FreeDocument']);
+                    if ($doc->validate()) {
+                        try {
+                            $doc->save();
+                            $this->redirect($this->createUrl('free_document', array('action' => 'show', 'id' => $id)));
+                        } catch (Exception $e) {
+                            $error = $e->getMessage();
+                        }
+                    }
+                }
+                $this->render('documents/free_document/form', array(
                     'doc'   => $doc,
                     'error' => $error
-                )
-            );
+                ));
+            } break;
 
-        } elseif ($action == 'update'){
-            $error = '';
-            if ($_POST && !empty($_POST['FreeDocument'])) {
-                $doc->setAttributes($_POST['FreeDocument']);
-                if ($doc->validate()) {
+            /** Action delete */
+            case 'delete': {
+                if (Yii::app()->request->isAjaxRequest) {
+                    $ret = array();
                     try {
-                        $doc->save();
-                        $this->redirect($this->createUrl('free_document', array('action' => 'show', 'id' => $id)));
+                        $doc->delete();
                     } catch (Exception $e) {
-                        $error = $e->getMessage();
+                        $ret['error'] = $e->getMessage();
                     }
-                }
-            }
-            $this->render('documents/free_document/form', array(
-                'doc'   => $doc,
-                'error' => $error
-            ));
-
-        } elseif ($action == 'delete'){
-            if (Yii::app()->request->isAjaxRequest) {
-                $ret = array();
-                try {
-                    $doc->delete();
-                } catch (Exception $e) {
-                    $ret['error'] = $e->getMessage();
-                }
-                echo CJSON::encode($ret);
-                Yii::app()->end();
-            } else {
-                if (isset($_POST['result'])) {
-                    switch ($_POST['result']) {
-                        case 'yes':
-                            if ($doc->delete()) {
-                                $this->redirect($this->createUrl('documents', array('id' => $this->organization->primaryKey)));
-                            } else {
-                                throw new CHttpException(500, 'Не удалось удалить свободный документ');
-                            }
-                            break;
-                        default:
-                            $this->redirect($this->createUrl('free_document', array('action' => 'show', 'id' => $doc->primaryKey)));
-                            break;
+                    echo CJSON::encode($ret);
+                    Yii::app()->end();
+                } else {
+                    if (isset($_POST['result'])) {
+                        switch ($_POST['result']) {
+                            case 'yes':
+                                if ($doc->delete()) {
+                                    $this->redirect($this->createUrl('documents', array('id' => $this->organization->primaryKey)));
+                                } else {
+                                    throw new CHttpException(500, 'Не удалось удалить свободный документ');
+                                }
+                                break;
+                            default:
+                                $this->redirect($this->createUrl('free_document', array('action' => 'show', 'id' => $doc->primaryKey)));
+                                break;
+                        }
                     }
+                    $this->render('documents/free_document/delete', array('model' => $doc));
                 }
-                $this->render('documents/free_document/delete', array('model' => $doc));
-            }
+            } break;
 
+            default: {
+                throw new CHttpException(500, 'Указано неверное действие.');
+            }
         }
-
-
     }
 
+    // ╔══════════════╗
+    // ║ Доверенности ║
+    // ╚══════════════╝
+
+    /**
+     *  @param  string  $action
+     *  @param  int     $id
+     *
+     *  @throws CHttpException
+     */
+    public function actionPower_attorney_le($action, $id) {
+        $this->cur_tab = 'documents';
+
+        if ($action == 'create'){
+            $doc = new PowerAttorneysLE();
+            $doc->id_yur    = $id;
+//            $doc->type_yur  = 'Организации';
+        } else {
+            $doc = PowerAttorneysLE::model()->findByPk($id);
+            if (!$doc){
+                throw new CHttpException(404, 'Не найдена указаная доверенность.');
+            }
+        }
+        $org = Organizations::model()->findByPk($doc->id_yur);
+        if (!$org){
+            throw new CHttpException(404, 'Не найдено указанное юридическое лицо.');
+        }
+        $this->organization = $org;
+
+        switch ($action){
+            /** Action show */
+            case 'show': {
+                $this->render('show', array(
+                    'content' => $this->renderPartial('documents/power_attorney_le/show',
+                        array(
+                            'id'    => $id,
+                            'doc'   => $doc
+                        ), true),
+                    'model' => $doc
+                ));
+            } break;
+
+            /** Action update */
+            case 'update': {
+                $error = '';
+                if ($_POST && !empty($_POST['PowerAttorneysLE'])) {
+                    $doc->setAttributes($_POST['PowerAttorneysLE']);
+                    if ($doc->validate()) {
+                        try {
+                            $doc->save();
+                            $this->redirect($this->createUrl('power_attorney_le', array('action' => 'show', 'id' => $id)));
+                        } catch (Exception $e) {
+                            $error = $e->getMessage();
+                        }
+                    }
+                }
+                $this->render('documents/power_attorney_le/form', array(
+                    'doc'   => $doc,
+                    'error' => $error
+                ));
+            } break;
+
+            /** Action create */
+            case 'create': {
+                $error = '';
+                if ($_POST && !empty($_POST['PowerAttorneysLE'])) {
+                    $doc->setAttributes($_POST['PowerAttorneysLE']);
+                    if ($doc->validate()) {
+                        try {
+                            $doc->save();
+                            $this->redirect($this->createUrl('documents', array('id' => $id)));
+                        } catch (Exception $e) {
+                            $error = $e->getMessage();
+                        }
+                    }
+                }
+                $this->render('documents/power_attorney_le/form',
+                    array(
+                        'doc'   => $doc,
+                        'error' => $error
+                    )
+                );
+            } break;
+
+            /** Action delete */
+            case 'delete': {
+                if (Yii::app()->request->isAjaxRequest) {
+                    $ret = array();
+                    try {
+                        $doc->delete();
+                    } catch (Exception $e) {
+                        $ret['error'] = $e->getMessage();
+                    }
+                    echo CJSON::encode($ret);
+                    Yii::app()->end();
+                } else {
+                    if (isset($_POST['result'])) {
+                        switch ($_POST['result']) {
+                            case 'yes':
+                                if ($doc->delete()) {
+                                    $this->redirect($this->createUrl('documents', array('id' => $this->organization->primaryKey)));
+                                } else {
+                                    throw new CHttpException(500, 'Не удалось удалить довереность.');
+                                }
+                                break;
+                            default:
+                                $this->redirect($this->createUrl('power_attorney_le', array('action' => 'show', 'id' => $doc->primaryKey)));
+                                break;
+                        }
+                    }
+                    $this->render('documents/power_attorney_le/delete', array('model' => $doc));
+                }
+            } break;
+
+            default: {
+                throw new CHttpException(500, 'Указано неверное действие.');
+            }
+        }
+    }
+
+    // ╔══════════════════╗
+    // ║ Банковские счета ║
+    // ╚══════════════════╝
+    /**
+     * Список банковских счетов для указзаного юр. лица $id.
+     *
+     * @param   int $id
+     *
+     * @throws  CHttpException
+     */
+    public function actionSettlements($id) {
+        $this->cur_tab = 'settlements';
+
+        $org = Organizations::model()->findByPk($id);
+        if (!$org) {
+            throw new CHttpException(404, 'Не найдено указанное юридическое лицо.');
+        }
+        $this->organization = $org;
+
+        $accounts = SettlementAccount::model()
+            ->where('deleted', false)
+            ->where('id_yur', $org->primaryKey)
+//            ->where('type_yur', 'Организации')
+            ->findAll();
+
+        $this->render('settlements/list', array('accounts' => $accounts));
+    }
+
+    /**
+     *  Управление банковским счетом. В $action передается выполняемое действие.
+     *  Если создается новый банковский счет, тогда в $id передается id_yur (идентификатор юр. лица),
+     *  к которому привязывается счет. Во всех остальных случаях $id счета (атрибут id).
+     *
+     *  @param  string  $action
+     *  @param  int     $id
+     *
+     *  @throws CHttpException
+     */
+    public function actionSettlement($action, $id) {
+        $this->cur_tab = 'settlements';
+
+        if ($action == 'create'){
+            $acc = new SettlementAccount();
+            $acc->id_yur = $id;
+        } else {
+            $acc = SettlementAccount::model()->findByPk($id);
+            if (!$acc){
+                throw new CHttpException(404, 'Не найден банковский счет.');
+            }
+        }
+        $org = Organizations::model()->findByPk($acc->id_yur);
+        if (!$org){
+            throw new CHttpException(404, 'Не найдено указанное юридическое лицо.');
+        }
+        $this->organization = $org;
+
+        switch ($action){
+            /** Action show */
+            case 'show': {
+                $this->render('show', array(
+                    'content' => $this->renderPartial('settlements/show',
+                        array(
+                            'id'    => $id,
+                            'acc'   => $acc
+                        ), true),
+                    'model' => $acc
+                ));
+            } break;
+
+            /** Action update */
+            case 'update': {
+                $error = '';
+                if ($_POST && !empty($_POST['SettlementAccount'])) {
+                    $acc->setAttributes($_POST['SettlementAccount']);
+                    if ($acc->validate()) {
+                        try {
+                            $acc->save();
+                            $this->redirect($this->createUrl('settlement', array('action' => 'show', 'id' => $id)));
+                        } catch (Exception $e) {
+                            $error = $e->getMessage();
+                        }
+                    }
+                }
+                $this->render('settlements/form',
+                    array(
+                        'model' => $acc,
+                        'error' => $error
+                    )
+                );
+            } break;
+
+            /** Action create */
+            case 'create': {
+                $error = '';
+                if ($_POST && !empty($_POST['SettlementAccount'])) {
+                    $acc->setAttributes($_POST['SettlementAccount']);
+                    if ($acc->validate()) {
+                        try {
+                            $acc->save();
+                            $this->redirect($this->createUrl('settlements', array('id' => $this->organization->primaryKey)));
+                        } catch (Exception $e) {
+                            $error = $e->getMessage();
+                        }
+                    }
+                }
+                $this->render('settlements/form',
+                    array(
+                        'model' => $acc,
+                        'error' => $error
+                    )
+                );
+            } break;
+
+            /** Action delete */
+            case 'delete': {
+                if (Yii::app()->request->isAjaxRequest) {
+                    $ret = array();
+                    try {
+                        $acc->delete();
+                    } catch (Exception $e) {
+                        $ret['error'] = $e->getMessage();
+                    }
+                    echo CJSON::encode($ret);
+                    Yii::app()->end();
+                } else {
+                    if (isset($_POST['result'])) {
+                        switch ($_POST['result']) {
+                            case 'yes':
+                                if ($acc->delete()) {
+                                    $this->redirect($this->createUrl('settlements', array('id' => $this->organization->primaryKey)));
+                                } else {
+                                    throw new CHttpException(500, 'Не удалось удалить банковский счет.');
+                                }
+                            break;
+                            default:
+                                $this->redirect($this->createUrl('settlements', array('action' => 'show', 'id' => $acc->primaryKey)));
+                            break;
+                        }
+                    }
+                    $this->render('settlements/delete', array('model' => $acc));
+                }
+            } break;
+
+            default: {
+                throw new CHttpException(500, 'Указано неверное действие.');
+            }
+        }
+    }
 }

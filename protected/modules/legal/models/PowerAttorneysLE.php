@@ -1,24 +1,23 @@
 <?php
 /**
- * User: Forgon
- * Date: 02.04.13
+ *  User: Skibardin A.A.
+ *  Date: 27.06.13
  *
  * @property string $id             Идентификатор доверенности
  *
  * @property string $id_yur         Идентификатор юрлица
  * @property string $type_yur       Тип юрлица ("Контрагенты", "Организации")
- *
- * @property string $name           наименование
- * @property string $date           дата доверенности (дата)
-
  * @property string $nom            номер доверенности
  * @property string $typ_doc        вид доверенности («Генеральная», «Свободная», «ПоВидамДоговоров»)
  * @property string $id_lico        идентификатор физлица, на которое выписана доверенность
- * @property string $loaded         дата загрузки доверенности (дата)
+ * @property string $name           наименование
+ * @property string $date           дата доверенности (дата)
  * @property string $expire         дата окончания действия доверенности (дата)
  * @property string $break          дата досрочного окончания действия доверенности (дата)
- * @property string $e_ver          ссылка на электронную версию доверенности
  * @property string $comment        комментрий
+ *
+ * @property string $loaded         дата загрузки доверенности (дата)
+ * @property string $e_ver          ссылка на электронную версию доверенности
  * @property string $contract_types массив строк-идентификаторов видов договоров, на которые распространяется доверенность
  * @property string $scans          массив строк-ссылок на сканы доверенности
  *
@@ -68,33 +67,96 @@ class PowerAttorneysLE extends SOAPModel {
 	}
     
     /**
-     * Сохранение доверенности
-     * @return array
+     *  Сохранение доверенности
+     *
+     *  @return array
      */
     public function save() {
-        $cacher = new CFileCache();
-        $cacher->set('PowerAttorneysLE_values', false, 1);
+//        $cache = new CFileCache();
+//        $cache->set('PowerAttorneysLE_values', false, 1);
 
-        $attrs = $this->getAttributes();
+//        $attrs = $this->getAttributes();
+//
+//        $attrs['from_user'] = intval($attrs['from_user']) ? 'true' : 'false';
+//        foreach ($attrs as $k => $a) {
+//	        if (!in_array($k, array('from_user'))) {
+//		        if (!$a) $attrs[$k] = '';
+//	        }
+//        }
 
-        $attrs['from_user'] = intval($attrs['from_user']) ? 'true' : 'false';
-        foreach ($attrs as $k => $a) {
-	        if (!in_array($k, array('from_user'))) {
-		        if (!$a) $attrs[$k] = '';
-	        }
+//        if (!$this->getprimaryKey()) $attr['id'] = ''; //unset($attrs['id']); // New record
+//        unset($attrs['deleted']);
+
+//        $ret = $this->SOAP->savePowerAttorneyLE(SoapComponent::getStructureElement(array('data' => $attrs)));
+//        $ret = SoapComponent::parseReturn($ret, false);
+//        return $ret;
+
+
+        $data = $this->getAttributes();
+
+//        $data['from_user'] = intval($data['from_user']) ? 'true' : 'false';
+//        foreach ($data as $k => $a) {
+//            if (!in_array($k, array('from_user'))) {
+//                if (!$a) $data[$k] = '';
+//            }
+//        }
+
+        if (!$this->getprimaryKey()){
+            unset($data['id']);
         }
+        unset($data['deleted']);
+//        unset($data['file']); // TODO когда появятся файлы
+//        $data['type_yur']   = 'Организации';
+//        (isset($this->_aTypeYur[$data['type_yur']])) ? $this->_aTypeYur[$data['type_yur']] : $this->_aTypeYur[0];
+        $data['user']       = SOAPModel::USER_NAME;
+        $data['from_user']  = true;
 
-        if (!$this->getprimaryKey()) $attr['id'] = ''; //unset($attrs['id']); // New record
-        unset($attrs['deleted']);
+        unset($data['scans']);
+        unset($data['e_ver']);
+        unset($data['contract_types']);
+        unset($data['loaded']);
 
-        $ret = $this->SOAP->savePowerAttorneyLE(SoapComponent::getStructureElement(array('data' => $attrs)));
+        $arr = array(
+            'ElementsStructure' => SoapComponent::getStructureElement($data, array('lang' => 'eng')),
+            'Tables' => array(
+                array(
+                    "Name" => "СписокДействий",
+                    "Value" => array(
+                        'column' => array(),
+                        'index' => array(),
+                        'row'   => array(),
+                    )
+                ),
+
+                array(
+                    "Name" => "Сканы",
+                    "Value" => array(
+                        'column' => array(),
+                        'index' => array(),
+                        'row' => array(),
+                    )
+                ),
+                array(
+                    "Name" => "Файлы",
+                    "Value" => array(
+                        'column' => array(),
+                        'index' => array(),
+                        'row' => array(),
+                    )
+                ),
+
+            )
+        );
+        $ret = $this->SOAP->savePowerAttorneyLE(array(
+            'data' => $arr
+        ));
         $ret = SoapComponent::parseReturn($ret, false);
         return $ret;
     }
 	/**
-	 * Удаление Доверенности
+	 *  Удаление Доверенности
 	 *
-	 * @return bool
+	 *  @return bool
 	 */
 	public function delete() {
 		if ($pk = $this->getprimaryKey()) {
@@ -105,9 +167,9 @@ class PowerAttorneysLE extends SOAPModel {
 	}
 
 	/**
-	 * Виды доверенностей
+	 *  Виды доверенностей
 	 *
-	 * @return array
+	 *  @return array
 	 */
 	public static function getDocTypes(){
 		return array(
@@ -116,6 +178,18 @@ class PowerAttorneysLE extends SOAPModel {
 			'ПоВидамДоговоров'  => 'По видам договоров'
 		);
 	}
+
+    /**
+     *  Виды юр. лиц
+     *
+     *  @return array
+     */
+    public static function getYurTypes(){
+        return array(
+            'Организации' => 'Организации',
+            'Контрагенты' => 'Контрагенты',
+        );
+    }
 
 	/**
 	 * Returns the list of attribute names of the model.
@@ -128,21 +202,19 @@ class PowerAttorneysLE extends SOAPModel {
 			'type_yur'       => 'Вид Юр.лица',
 
 			'id_lico'        => 'На кого оформлена',
-            'name'           => 'Наименование',
-            'num'            => 'Номер документа',
+            'name'           => 'Название',
+            'nom'            => 'Номер документа',
             'typ_doc'        => 'Вид',                  // см. getDocTypes()
             'date'           => 'Дата начала действия',
             'expire'         => 'Срок действия',
             'break'          => 'Недействительна с',
             'comment'        => 'Комментарий',
 
+            // не исполозованные поля
             'scans'          => 'Сканы',
             'e_ver'          => 'Файлы',
-
-            // не исполозованные поля
             'contract_types' => 'Виды договоров',
             'loaded'         => 'Дата загрузки документа',
-
             'user'           => 'Пользователь',
 			'from_user'      => 'Загружен пользователем',
 
@@ -150,13 +222,22 @@ class PowerAttorneysLE extends SOAPModel {
 		);
 	}
 
-	public function rules()
+    /**
+     *  Валидация атрибутов.
+     *
+     *  @return array
+     */
+    public function rules()
 	{
 		return array(
-			array('typ_doc', 'in', 'range' => array_keys(PowerAttorneysLE::getDocTypes())),
-			array('id, name, id_lico, num, date, expire, break, comment', 'safe')
+			array('typ_doc', 'in', 'range'  => array_keys(PowerAttorneysLE::getDocTypes())),
+			array('type_yur', 'in', 'range' => array_keys(PowerAttorneysLE::getYurTypes())),
+			array('id_lico', 'in', 'range'  => array_keys(Individuals::getValues())),
+//			array('id_yur', 'in', 'range'  => array_keys(Organizations::getValues())),
+//            id_yur,
+            array('name, type_yur, typ_doc, id_lico, nom, date, expire', 'required'),
+            array('date, expire, break', 'date', 'format' => 'yyyy-MM-dd'),
+			array('name, nom, comment', 'safe'),
 		);
 	}
-
-
 }

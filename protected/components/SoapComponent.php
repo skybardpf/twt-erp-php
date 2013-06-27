@@ -20,7 +20,7 @@
  * @method mixed listIndividuals        Список
  * @method mixed getIndividual          Просмотр
  * @method mixed saveIndividual         Сохранение
- * @method mixed depr_adeletePowerAttorneyLE  Удаление
+ * @method mixed deleteIndividual         Удаление
  *
  * Учредительные документы
  * @method mixed listFoundingDocuments  Список
@@ -29,10 +29,16 @@
  * @method mixed deleteFoundingDocument Удаление
  *
  * Свободные документы
- * @method mixed listFreeDocuments      Список
- * @method mixed getFreeDocument        Просмотр
- * @method mixed saveFreeDocument       Сохранение
- * @method mixed deleteFreeDocument     Удаление
+ * @method mixed listFreeDocuments          Список
+ * @method mixed getFreeDocument            Просмотр
+ * @method mixed saveFreeDocument           Сохранение
+ * @method mixed deleteFreeDocument         Удаление
+ *
+ * Банковские счета
+ * @method mixed listSettlementAccounts     Список
+ * @method mixed getSettlementAccount       Просмотр
+ * @method mixed saveSettlementAccount      Сохранение
+ * @method mixed deleteSettlementAccount    Удаление
  *
  * Банковские счета
  * @method mixed listSettlementAccount      Список
@@ -73,13 +79,21 @@ class SoapComponent extends CApplicationComponent
 	 * @return array
 	 */
 	static public function getStructureElement(array $properties = array(), $options = array()) {
-		$ret = array();
+		if (isset($options['lang']) && $options['lang'] == 'eng'){
+            $keyName = 'Field';
+            $valName = 'Value';
+        } else {
+            $keyName = 'Поле';
+            $valName = 'Значение';
+        }
+
+        $ret = array();
 		$options += array('convert_boolean' => true);
 		foreach ($properties as $key => $val) {
 			if ($options['convert_boolean'] && is_bool($val)) {
 				$val = $val ? 'true' : 'false';
 			}
-			$ret[] = array('Поле' => $key, 'Значение' => $val);
+			$ret[] = array($keyName => $key, $valName => $val);
 		}
 		return $ret;
 	}

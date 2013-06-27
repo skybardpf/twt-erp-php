@@ -1,17 +1,15 @@
 <?php
 /**
- * @var $this   My_OrganizationsController
- * @var $doc    FreeDocument
+ *  Документы -> Свободный документ. Удаление.
+ *  User: Skibardin A.A.
+ *  Date: 26.06.13
+ *
+ *  @var $this   My_OrganizationsController
+ *  @var $doc    FreeDocument
  */
-
-/*$this->breadcrumbs=array(
-	$this->controller_title => array('/legal/entities/'),
-	'Удаление',
-);*/
-
 $this->beginContent('/my_organizations/show');
 ?>
-Вы действительно хотите <?=$doc->deleted ? '<b>восстановить учредительный документ</b>': '<b>удалить учредительный документ</b>'?> «<?=CHtml::encode($doc->name)?>»?
+Вы действительно хотите <?=$doc->deleted ? '<b>восстановить свободный документ</b>': '<b>удалить свободный документ</b>'?> «<?=CHtml::encode($doc->name)?>»?
 
 <?php $form = $this->beginWidget('bootstrap.widgets.TbActiveForm', array(
 	'id'   => 'news-delete-form',

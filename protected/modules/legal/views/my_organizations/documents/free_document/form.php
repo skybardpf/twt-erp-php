@@ -1,7 +1,7 @@
 <?php
 /**
  * User: Skibardin A.A.
- * Date: 25.06.2013 от Рождества Христова
+ * Date: 25.06.2013
  *
  * @var $this   My_organizationsController
  * @var $doc    FreeDocument

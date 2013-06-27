@@ -39,49 +39,13 @@ $this->beginContent('/my_organizations/show'); ?>
     </div>
 </div>
 
-<?php /* Доверенности */?>
-<div class="row-fluid">
-    <div class="span12">
-        <div class="pull-right" style="margin-top: 15px;">
-            <?php $this->widget('bootstrap.widgets.TbButton', array(
-                'label'=>'Новая доверенность',
-                'type'=>'success', // null, 'primary', 'info', 'success', 'warning', 'danger' or 'inverse'
-                'size'=>'normal', // null, 'large', 'small' or 'mini'
-                'url' => Yii::app()->getController()->createUrl("add_attorney", array('id' => $this->organization->primaryKey))
-            )); ?>
-        </div>
-        <h3>Доверенности</h3>
+<?php
+/* Доверенности */
+$this->renderPartial('documents/power_attorney_le/list', array(
+    'docs' => $PAdocs
+));
+?>
 
-        <?php
-        $gridDataProvider = new CArrayDataProvider($PAdocs);
-
-        $this->widget('bootstrap.widgets.TbGridView', array(
-            'type'=>'striped bordered condensed',
-            'dataProvider'=>$gridDataProvider,
-            'template'=>"{items}",
-            'columns'=>array(
-                /*
-                 номер, название, кому выдана, срок действия
-                */
-	            array('name' => 'id', 'header' => '#'),
-                array(
-                    'name'   => 'name',
-                    'header' => 'Название',
-                    'type'   => 'raw',
-                    'value'  => 'CHtml::link($data["name"], Yii::app()->getController()->createUrl("document_show", array("id" => $data["id"])))'
-                ),
-                /*array(
-                    'name'   => 'owner',
-                    'header' => 'Кому выдана',
-                    'type'   => 'raw',
-                    'value'  => 'CHtml::link($data["owner"], Yii::app()->getController()->createUrl("person_show", array("id" => $data["id"])))'
-                ),*/
-                //array('name'=>'term', 'header'=>'Срок действия'),
-            ),
-        ));
-        ?>
-    </div>
-</div>
 
 <?php /* Свободные документы */?>
 <div class="row-fluid">

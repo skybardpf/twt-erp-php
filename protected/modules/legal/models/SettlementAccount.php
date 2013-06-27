@@ -1,9 +1,18 @@
 <?php
 /**
- * User: Forgon
- * Date: 03.04.13
+ *  User: Skibardin A.A.
+ *  Date: 27.06.13
+ *
+ *  @property string $name          наименование счета (представление)
+ *  @property string $id_yur        идентификатор юрлица-владельца счета
+ *  @property string $type_yur      Тип юрлица ("Контрагенты", "Организации")
+ *  @property string $deleted       признак пометки удаления (булево)
+ *  @property string $s_nom         номер счета (для российских счетов)
+ *  @property int    $cur           идентификатор валюты счета
+ *  @property array  $managing_persons  массив идентификаторов физических лиц – управляющих счетом персон
  */
 class SettlementAccount extends SOAPModel {
+    public $bank_name = 'test bank bane';
 	/**
 	 * @static
 	 *
@@ -33,12 +42,38 @@ class SettlementAccount extends SOAPModel {
 	 * @return array
 	 */
 	public function save() {
-		$attrs = $this->getAttributes();
+		$data = $this->getAttributes();
 
-		if (!$this->getprimaryKey()) unset($attrs['id']); // New record
-		unset($attrs['deleted']);
+		if (!$this->getprimaryKey()) {
+            unset($data['id']);
+        }
+		unset($data['deleted']);
+        unset($data['managing_persons']);
 
-		$ret = $this->SOAP->saveSettlementAccount(array('data' => SoapComponent::getStructureElement($attrs)));
+        unset($data['bank_name']);
+        unset($data['corrbank']);
+        unset($data['corr_account']);
+
+        // Что подставлять ?????
+        $data['type_yur'] = 'Организации';
+        $data['type_recomend'] = 'ФизическиеЛица';
+        $data['recomend'] = '0000000007';
+        $data['e_nom'] = '1234-02-13';
+
+        $management_method = array(
+            'Все вместе' => 'ВсеВместе',
+            'По одному' => 'ПоОдному',
+        );
+        $data['management_method'] = $management_method[$data['management_method']];
+
+
+
+		$ret = $this->SOAP->saveSettlementAccount(
+            array(
+                'data' => SoapComponent::getStructureElement($data),
+                'managing_persons' => array('0000000003', '0000000006')
+            )
+        );
 		$ret = SoapComponent::parseReturn($ret, false);
 		return $ret;
 	}
@@ -78,28 +113,61 @@ class SettlementAccount extends SOAPModel {
 	public function attributeLabels() {
 		return array(
 			'id'            => '#',                                 // +
-			'name'          => 'Название',                          // +
-			'id_yur'        => 'Юр.лицо',                           // +
-			'deleted'       => 'Помечен на удаление',               // +
-			'bank'          => 'Банк',                              // +
-			'corrbank'      => 'Банк-корреспондент',
-			'service'       => '',
-			'recomend'      => 'Рекомендатель',
-			'data_closed'   => 'Дата закрытия',
-			'address'       => '',
-			's_nom'         => 'Номер счета',
-			'cur'           => 'Валюта',
-			'vid'           => 'Вид счета',
-			'iban'          => 'IBAN',
-			'contact'       => 'Контакты в отделении',
-			'data_open'     => 'Дата открытия',
+			'name'          => 'Представление',                     // +
+            'id_yur'        => 'Юр.лицо',                           // +
+            'type_yur'      => 'Тип юр.лица',                       // +
+            'deleted'       => 'Помечен на удаление',               // +
+			'bank'          => 'БИК / SWIFT',                       // +
+			'service'       => 'Вид обслуживания счета',
+
+            's_nom'         => 'Номер счета',
+            'iban'          => 'IBAN',
+            'cur'           => 'Валюта',
+            'vid'           => 'Вид счета',
+            'data_open'     => 'Дата открытия',
+            'data_closed'   => 'Дата закрытия',
+
+            'address'       => 'Адрес отделения',
+            'contact'       => 'Контакты в отделении',
+
+            'managing_persons' => 'Управляющие персоны',
+            'management_method' => 'Метод управления',
+
+            'corrbank'      => 'Банк-корреспондент',
+            'recomend'      => 'Рекомендатель',
+
 			'e_nom'         => '',
 			'corr_account'  => 'Счет банка-корреспондента'
-/*
-Мультивалютный (флаг: да или нет, обязательное);
-Субсчет? (флаг: да или нет, обязательное);
-Родительский счет (другой элемент сущности расчетный счет, обязательное для субсчетов);
-*/
+            /*
+                Мультивалютный (флаг: да или нет, обязательное);
+                Субсчет? (флаг: да или нет, обязательное);
+                Родительский счет (другой элемент сущности расчетный счет, обязательное для субсчетов);
+            */
 		);
 	}
+
+    /**
+     *  Валидация атрибутов.
+     *
+     *  @return array
+     */
+    public function rules()
+    {
+        return array(
+//            array('typ_doc', 'in', 'range'  => array_keys(PowerAttorneysLE::getDocTypes())),
+//            array('type_yur', 'in', 'range' => array_keys(PowerAttorneysLE::getYurTypes())),
+//            array('id_lico', 'in', 'range'  => array_keys(Individuals::getValues())),
+//			array('id_yur', 'in', 'range'  => array_keys(Organizations::getValues())),
+//            id_yur,
+            array(
+                's_nom, iban, cur, vid, service, bank, name, address, contact, management_method, data_open, data_closed',
+                'required'
+            ),
+            array('data_open, data_closed', 'date', 'format' => 'yyyy-MM-dd'),
+//            array('', 'safe'),
+
+            // Использую для вывода названия банка. Ищется по полю bank.
+            array('bank_name', 'safe'),
+        );
+    }
 }

@@ -268,8 +268,9 @@ class Organizations extends SOAPModel {
 	}
 
 	/**
-	 * Список доступных значений Собственных Юр.Лиц
-	 * @return array
+	 *  Список доступных значений Собственных Юр.Лиц
+	 *
+     *  @return array
 	 */
 	static function getValues() {
 		$cacher = new CFileCache();

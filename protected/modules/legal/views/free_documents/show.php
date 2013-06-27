@@ -21,7 +21,6 @@ LUser::getValues();
 			array('name' => 'date',         'label' => 'Дата загрузки'),
 			array('name' => 'expire',       'label' => 'Срок действия'),
 			array('name' => 'nom',          'label' => 'Номер документа'),
-			//"return":"[{\"user\":\"\",
 		)
 	));
 	?>
