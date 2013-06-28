@@ -12,7 +12,7 @@
 //
 ?>
 <h2>Свободный документ "<?= $freeDoc->name; ?>"</h2>
-<a href="<?=$this->createUrl('documents', array('id' => $this->organization->primaryKey))?>">Назад к списку</a>
+<!--<a href="--><?//=$this->createUrl('documents', array('id' => $this->organization->primaryKey))?><!--">Назад к списку</a>-->
 
 
 <?php
@@ -41,18 +41,19 @@ if (!$freeDoc->deleted) {
     ));
 }
 ?>
+<br/><br/>
 <div>
 	<?php
 	$this->widget('bootstrap.widgets.TbDetailView', array(
 		'data' => $freeDoc,
 		'attributes'=>array(
-			array('name' => 'id',           'label' => '#'),
-            array('name' => 'type_yur',     'label' => 'Тип юр. лица'),
+//			array('name' => 'id',           'label' => '#'),
+//            array('name' => 'type_yur',     'label' => 'Тип юр. лица'),
             array('name' => 'num',          'label' => 'Номер документа'),
 			array('name' => 'name',         'label' => 'Название'),
-			array('name' => 'id_yur',       'label' => 'Юр.Лицо', 'value' => $freeDoc->id_yur),
+//			array('name' => 'id_yur',       'label' => 'Юр.Лицо', 'value' => $freeDoc->id_yur),
 //			array('name' => 'id_yur',       'label' => 'Юр.Лицо', 'value' => $freeDoc->id_yur ? LegalEntities::$values[$freeDoc->id_yur] : 'Не указан'),
-			array('name' => 'date',         'label' => 'Дата загрузки'),
+			array('name' => 'date',         'label' => 'Дата начала действия'),
 			array('name' => 'expire',       'label' => 'Срок действия'),
 
 		)

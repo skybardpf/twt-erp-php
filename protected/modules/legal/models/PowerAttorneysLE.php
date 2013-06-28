@@ -103,6 +103,7 @@ class PowerAttorneysLE extends SOAPModel {
 
         if (!$this->getprimaryKey()){
             unset($data['id']);
+            $data['type_yur'] = 'Организации';
         }
         unset($data['deleted']);
 //        unset($data['file']); // TODO когда появятся файлы
@@ -235,7 +236,8 @@ class PowerAttorneysLE extends SOAPModel {
 			array('id_lico', 'in', 'range'  => array_keys(Individuals::getValues())),
 //			array('id_yur', 'in', 'range'  => array_keys(Organizations::getValues())),
 //            id_yur,
-            array('name, type_yur, typ_doc, id_lico, nom, date, expire', 'required'),
+            array('name, typ_doc, id_lico, nom, date, expire', 'required'),
+//            type_yur,
             array('date, expire, break', 'date', 'format' => 'yyyy-MM-dd'),
 			array('name, nom, comment', 'safe'),
 		);

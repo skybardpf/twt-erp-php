@@ -35,9 +35,14 @@
     ));
 
     if ($error) {
+        echo '<br/><br/>';
         echo CHtml::openTag('div', array('class' => 'alert alert-error')).$error.CHtml::closeTag('div');
     }
-    echo $form->errorSummary($doc);
+    $error = $form->errorSummary($doc);
+    if (empty($error)) {
+//        echo '<br/><br/>';
+        echo $error;
+    }
 ?>
 
 <?
@@ -74,7 +79,9 @@
     echo $form->dropDownListRow($doc, 'id_lico', Individuals::getValues(), array('class' => 'span6'));
     echo $form->textFieldRow($doc, 'nom', array('class' => 'span6'));
     echo $form->textFieldRow($doc, 'name', array('class' => 'span6'));
-    echo $form->dropDownListRow($doc, 'type_yur', PowerAttorneysLE::getYurTypes(), array('class' => 'span6'));
+//    if (!$doc->getprimaryKey()){
+//        echo $form->dropDownListRow($doc, 'type_yur', PowerAttorneysLE::getYurTypes(), array('class' => 'span6'));
+//    }
     echo $form->dropDownListRow($doc, 'typ_doc', PowerAttorneysLE::getDocTypes(), array('class' => 'span6'));
     //
     // Список видов договоров будет здесь.

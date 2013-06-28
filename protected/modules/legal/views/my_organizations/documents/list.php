@@ -68,7 +68,7 @@ $this->renderPartial('documents/power_attorney_le/list', array(
             'dataProvider'=>$gridDataProvider,
             'template'=>"{items}",
             'columns'=>array(
-                array('name'=>'id', 'header'=>'#'),
+                array('name'=>'num', 'header'=>'Номер'),
                 array(
                     'name'  => 'name',
                     'header'=> 'Название',

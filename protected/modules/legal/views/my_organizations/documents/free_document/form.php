@@ -45,8 +45,13 @@ $this->widget('bootstrap.widgets.TbButton', array(
 ));
 ?>
 
-<?php if ($error) echo CHtml::openTag('div', array('class' => 'alert alert-error')).$error.CHtml::closeTag('div'); ?>
-<?=$form->errorSummary($doc)?>
+<?php
+if ($error) {
+    echo '<br/><br/>';
+    echo CHtml::openTag('div', array('class' => 'alert alert-error')).$error.CHtml::closeTag('div');
+}
+?>
+<?= $form->errorSummary($doc)?>
 
 <fieldset>
 <!--	--><?//= $form->dropDownListRow(
@@ -63,8 +68,11 @@ $this->widget('bootstrap.widgets.TbButton', array(
 
 	<?php /* date */?>
 	<div class="control-group">
-		<label class="control-label" for="FreeDocument_date"><?= $doc->getAttributeLabel("date"); ?></label>
-		<div class="controls">
+		<label class="control-label" for="FreeDocument_date">
+            <?= $doc->getAttributeLabel("date") . CHtml::tag('span', array('class' => 'required')) .'&nbsp;*&nbsp;'; ?>
+        </label>
+
+        <div class="controls">
 			<?php $this->widget('zii.widgets.jui.CJuiDatePicker',array_merge(
 				array(
 					'model'     => $doc,
@@ -76,7 +84,9 @@ $this->widget('bootstrap.widgets.TbButton', array(
 
 	<?php /* expire */?>
 	<div class="control-group">
-		<label class="control-label" for="FreeDocument_expire"><?= $doc->getAttributeLabel("expire"); ?></label>
+		<label class="control-label" for="FreeDocument_expire">
+            <?= $doc->getAttributeLabel("expire") . CHtml::tag('span', array('class' => 'required')) .'&nbsp;*&nbsp;'; ?>
+        </label>
 		<div class="controls">
 			<?php $this->widget('zii.widgets.jui.CJuiDatePicker',array_merge(
 				array(

@@ -10,7 +10,7 @@
 ?>
 
 <h2>Доверенность "<?= $doc->name; ?>"</h2>
-<a href="<?=$this->createUrl('documents', array('id' => $this->organization->primaryKey))?>">Назад к списку</a>
+<!--<a href="--><?//=$this->createUrl('documents', array('id' => $this->organization->primaryKey))?><!--">Назад к списку</a>-->
 
 <?
 $this->widget('bootstrap.widgets.TbButton', array(
@@ -39,14 +39,23 @@ if (!$doc->deleted) {
 }
 ?>
 <br/>
+<br/>
 <div>
 	<?php
     $individuals = Individuals::getValues();
+    if (!isset($individuals[$doc->id_lico])){
+        $p = 'Не задано';
+    } else {
+        $p = CHtml::link(
+            $individuals[$doc->id_lico],
+            $this->createUrl('/legal/individuals/view/', array('id' => $doc->id_lico))
+        );
+    }
 	$this->widget('bootstrap.widgets.TbDetailView', array(
 		'data' => $doc,
 		'attributes'=>array(
-			array('name' => 'id',           'label' => '#'),
-			array('name' => 'id_lico',      'label' => 'На кого оформлена', 'value' => (isset($individuals[$doc->id_lico]) ? $individuals[$doc->id_lico] : 'Не задано')),
+//			array('name' => 'id',           'label' => '#'),
+			array('name' => 'id_lico', 'type' => 'raw', 'label' => 'На кого оформлена', 'value' => $p),
             array('name' => 'nom',          'label' => 'Номер'),
 			array('name' => 'name',         'label' => 'Название'),
             array('name' => 'typ_doc',      'label' => 'Вид'),
