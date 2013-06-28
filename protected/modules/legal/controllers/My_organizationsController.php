@@ -853,6 +853,7 @@ class My_organizationsController extends Controller {
                 $error = '';
                 if ($_POST && !empty($_POST['SettlementAccount'])) {
                     $acc->setAttributes($_POST['SettlementAccount']);
+                    $acc->str_managing_persons = $_POST['SettlementAccount']['str_managing_persons'];
                     if ($acc->validate()) {
                         try {
                             $acc->save();
@@ -862,6 +863,20 @@ class My_organizationsController extends Controller {
                         }
                     }
                 }
+
+                // BIK
+                if (strlen($acc->bank) == 9 && is_integer($acc->bank)){
+                    $bank = Banks::model()
+                        ->where('bik', $acc->bank)
+                        ->findAll();
+                } else {
+                    $bank = Banks::model()
+                        ->where('swift', $acc->bank)
+                        ->findAll();
+                }
+//                'UNVKCY2NXXX'
+                $acc->bank_name = (isset($bank[0])) ? $bank[0]->name : '';
+
                 $this->render('settlements/form',
                     array(
                         'model' => $acc,
@@ -875,6 +890,7 @@ class My_organizationsController extends Controller {
                 $error = '';
                 if ($_POST && !empty($_POST['SettlementAccount'])) {
                     $acc->setAttributes($_POST['SettlementAccount']);
+                    $acc->str_managing_persons = $_POST['SettlementAccount']['str_managing_persons'];
                     if ($acc->validate()) {
                         try {
                             $acc->save();

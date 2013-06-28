@@ -31,7 +31,7 @@
     $this->widget('bootstrap.widgets.TbGridView', array(
         'type'=>'striped bordered condensed',
         'dataProvider' => $data,
-        'template'=>"{items}",
+//        'template'=>"{items}",
         'columns'=>array(
             array(
                 'name'  => 'id',
@@ -46,7 +46,7 @@
             ),
             array(
                 'name'  => 'name',
-                'header'=>'Название'
+                'header'=> 'Название'
             ),
         ),
     ));

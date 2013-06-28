@@ -1,18 +1,25 @@
 <?php
 /**
- *  User: Skibardin A.A.
- *  Date: 27.06.13
+ *  Сущность банковский счет.
  *
+ *  User: Skibardin A.A.
+ *  Date: 28.06.13
+ *
+ *  @property string $bank          идентификатор банка, в котором открыт счет (БИК или СВИФТ)
  *  @property string $name          наименование счета (представление)
  *  @property string $id_yur        идентификатор юрлица-владельца счета
  *  @property string $type_yur      Тип юрлица ("Контрагенты", "Организации")
  *  @property string $deleted       признак пометки удаления (булево)
  *  @property string $s_nom         номер счета (для российских счетов)
+ *  @property string $vid           вид счета
+ *  @property string $service       вид обслуживания счета
  *  @property int    $cur           идентификатор валюты счета
  *  @property array  $managing_persons  массив идентификаторов физических лиц – управляющих счетом персон
+ *  @property string $management_method  метод управления счетом управляющими персонами
  */
 class SettlementAccount extends SOAPModel {
-    public $bank_name = 'test bank bane';
+    public $bank_name = '';
+    public $str_managing_persons = '';
 	/**
 	 * @static
 	 *
@@ -23,6 +30,49 @@ class SettlementAccount extends SOAPModel {
 	public static function model($className = __CLASS__) {
 		return parent::model($className);
 	}
+
+    /**
+     *  Список доступных видов счетов.
+     *
+     *  @static
+     *  @return  array
+     */
+    public static function getAccountTypes() {
+        return array(
+            'Расчетный' => 'Расчетный',
+            'Депзитный' => 'Депзитный',
+            'Ссудный'   => 'Ссудный',
+            'Аккредитивный' => 'Аккредитивный',
+            'Иной'      => 'Иной',
+        );
+    }
+
+    /**
+     *  Список доступных видов обслуживания счета.
+     *
+     *  @static
+     *  @return  array
+     */
+    public static function getServiceTypes() {
+        return array(
+            'Самостоятельно'    => 'Самостоятельно',
+            'По доверению подписанту' => 'По доверению подписанту',
+            'Обслуживание у нас' => 'Обслуживание у нас'
+        );
+    }
+
+    /**
+     *  Список доступных видов обслуживания счета.
+     *
+     *  @static
+     *  @return  array
+     */
+    public static function getManagementMethods() {
+        return array(
+            'Все вместе'    => 'Все вместе',
+            'По одному'     => 'По одному',
+        );
+    }
 
 	/**
 	 * Удаление Расчетного счета
@@ -66,12 +116,10 @@ class SettlementAccount extends SOAPModel {
         );
         $data['management_method'] = $management_method[$data['management_method']];
 
-
-
 		$ret = $this->SOAP->saveSettlementAccount(
             array(
                 'data' => SoapComponent::getStructureElement($data),
-                'managing_persons' => array('0000000003', '0000000006')
+                'managing_persons' => CJSON::decode($this->str_managing_persons)
             )
         );
 		$ret = SoapComponent::parseReturn($ret, false);
@@ -118,6 +166,7 @@ class SettlementAccount extends SOAPModel {
             'type_yur'      => 'Тип юр.лица',                       // +
             'deleted'       => 'Помечен на удаление',               // +
 			'bank'          => 'БИК / SWIFT',                       // +
+			'bank_name'     => 'Название банка',                    // +
 			'service'       => 'Вид обслуживания счета',
 
             's_nom'         => 'Номер счета',
@@ -166,8 +215,7 @@ class SettlementAccount extends SOAPModel {
             array('data_open, data_closed', 'date', 'format' => 'yyyy-MM-dd'),
 //            array('', 'safe'),
 
-            // Использую для вывода названия банка. Ищется по полю bank.
-            array('bank_name', 'safe'),
+            array('bank_name, str_managing_persons', 'safe'),
         );
     }
 }
