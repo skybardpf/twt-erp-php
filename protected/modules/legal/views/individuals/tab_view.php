@@ -15,26 +15,28 @@
 		    'buttonType'=>'link',
 		    'type'=>'success',
 		    'label'=>'Редактировать',
-		    'url' => Yii::app()->getController()->createUrl("edit", array('id' => $element->id))));
-echo "&nbsp;";
-if (!$element->deleted) {
-	Yii::app()->clientScript->registerScriptFile($this->asset_static.'/js/legal/delete_item.js');
-	$this->widget(
-		'bootstrap.widgets.TbButton',
-		array(
-			'buttonType'    => 'submit',
-			'type'          => 'danger',
-			'label'         => 'Удалить',
-			'htmlOptions'   => array(
-				'data-question'     => 'Вы уверены, что хотите удалить данное лицо?',
-				'data-title'        => 'Удаление лица',
-				'data-url'          => $this->createUrl('/legal/individuals/delete', array('id' => $element->id)),
-				'data-redirect_url' => $this->createUrl('/legal/individuals', array()),
-				'data-delete_item_element' => '1'
-			)
-		)
-	);
-}
+		    'url' => Yii::app()->getController()->createUrl("edit", array('id' => $element->id))
+        )
+    );
+    echo "&nbsp;";
+    if (!$element->deleted) {
+        Yii::app()->clientScript->registerScriptFile($this->asset_static.'/js/legal/delete_item.js');
+        $this->widget(
+            'bootstrap.widgets.TbButton',
+            array(
+                'buttonType'    => 'submit',
+                'type'          => 'danger',
+                'label'         => 'Удалить',
+                'htmlOptions'   => array(
+                    'data-question'     => 'Вы уверены, что хотите удалить данное лицо?',
+                    'data-title'        => 'Удаление лица',
+                    'data-url'          => $this->createUrl('/legal/individuals/delete', array('id' => $element->id)),
+                    'data-redirect_url' => $this->createUrl('/legal/individuals', array()),
+                    'data-delete_item_element' => '1'
+                )
+            )
+        );
+    }
 ?>
 <div>
 	<?php
@@ -47,12 +49,12 @@ if (!$element->deleted) {
 			array( /* citizenship */
 				'label' => 'Гражданство',
 				'type'  => 'raw',
-				'value' => $element->citizenship ?: '&mdash;',
+				'value' => $element->citizenship ? $element->citizenship : '&mdash;',
 			),
 			array( /* citizenship */
 				'label' => 'Место рождения',
 				'type'  => 'raw',
-				'value' => $element->birth_place ?: '&mdash;',
+				'value' => $element->birth_place ? $element->birth_place : '&mdash;',
 			),
 			array('name' => 'adres',            'label' => 'Адрес прописки'),
 			array('name' => 'phone',            'label' => 'Номер телефона'),
@@ -66,8 +68,6 @@ if (!$element->deleted) {
 			array('name' => 'organ_passrf',     'label' => 'Орган, выдавший паспорт РФ'),
 			array('name' => 'date_exp_passrf',  'label' => 'Срок действия паспорта РФ'),*/
 			//array('name' => 'group_code',       'label' => 'Группа физ.лиц'),
-
-
 		)
 	));
 	?>
