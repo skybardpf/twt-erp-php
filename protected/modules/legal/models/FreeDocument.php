@@ -146,7 +146,7 @@ class FreeDocument extends SOAPModel
     {
 		return array(
 			array('name, id_yur, type_yur, date, expire', 'required'),
-			array('id, from_user, num, user, deleted', 'safe'),
+			array('id, from_user, num, user, deleted, comment', 'safe'),
 
             array('num', 'validNum'),
             array('date', 'validDate'),

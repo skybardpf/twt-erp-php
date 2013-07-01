@@ -18,7 +18,8 @@
  *  @property string $management_method  метод управления счетом управляющими персонами
  */
 class SettlementAccount extends SOAPModel {
-    public $bank_name = '';
+    public $cur_name    = '';
+//    public $bank_name   = '';
     public $str_managing_persons = '';
 	/**
 	 * @static
@@ -82,31 +83,31 @@ class SettlementAccount extends SOAPModel {
      *  @return     string
      */
     public static function getBankName($bank) {
-        $bank_name = '';
-        if (!empty($bank)){
-            $cache = new CFileCache();
-            $cache_id = __CLASS__.'_bank_'.$bank;
-            Yii::log('cache id = '.$cache_id);
-            $bank_name = $cache->get($cache_id);
-            Yii::log('$bank_name = '.$bank_name);
-            if ($bank_name === false) {
-                Yii::log('bank_name = null');
-
-                // BIK
-                if (strlen($bank) == 9 && ctype_digit($bank)){
-                    $bank = Banks::model()
-                        ->where('bik', $bank)
-                        ->findAll();
-                } else {
-                    $bank = Banks::model()
-                        ->where('swift', $bank)
-                        ->findAll();
-                }
-                $bank_name = (isset($bank[0])) ? $bank[0]->name : '';
-                $cache->set($cache_id, $bank_name);
-                Yii::log('set $bank_name = '.$bank_name);
-            }
-        }
+        $bank_name = 'TEST';
+//        if (!empty($bank)){
+//            $cache = new CFileCache();
+//            $cache_id = __CLASS__.'_bank_'.$bank;
+//            Yii::log('cache id = '.$cache_id);
+//            $bank_name = $cache->get($cache_id);
+//            Yii::log('$bank_name = '.$bank_name);
+//            if ($bank_name === false) {
+//                Yii::log('bank_name = null');
+//
+//                // BIK
+//                if (strlen($bank) == 9 && ctype_digit($bank)){
+//                    $bank = Banks::model()
+//                        ->where('bik', $bank)
+//                        ->findAll();
+//                } else {
+//                    $bank = Banks::model()
+//                        ->where('swift', $bank)
+//                        ->findAll();
+//                }
+//                $bank_name = (isset($bank[0])) ? $bank[0]->name : '';
+//                $cache->set($cache_id, $bank_name);
+//                Yii::log('set $bank_name = '.$bank_name);
+//            }
+//        }
         return $bank_name;
     }
 
@@ -136,7 +137,7 @@ class SettlementAccount extends SOAPModel {
 		unset($data['deleted']);
         unset($data['managing_persons']);
 
-        unset($data['bank_name']);
+//        unset($data['bank_name']);
         unset($data['corrbank']);
         unset($data['corr_account']);
 
@@ -250,7 +251,7 @@ class SettlementAccount extends SOAPModel {
             ),
             array('data_open, data_closed', 'date', 'format' => 'yyyy-MM-dd'),
             array('managing_persons', 'emptyPersons'),
-//            array('', 'safe'),
+            array('bank', 'isBank'),
 
             array('bank_name, str_managing_persons', 'safe'),
         );
@@ -260,5 +261,11 @@ class SettlementAccount extends SOAPModel {
         if (empty($this->$attribute) || !is_array($this->$attribute)){
             $this->addError($attribute, 'Укажите список управляющих персон.');
         }
+    }
+
+    public function isBank($attribute){
+//        if (empty($this->$attribute)){
+//            $this->addError($attribute, 'Укажите список управляющих персон.');
+//        }
     }
 }

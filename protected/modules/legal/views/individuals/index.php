@@ -1,9 +1,9 @@
 <?php
 /**
- * Список Физ.Лиц
+ *  Список Физ.Лиц
  *
- * @var $this IndividualsController
-/* @var $elements array
+ *  @var $this      IndividualsController
+ *  @var $elements  array
  */
  ?>
 <div class="pull-right" style="margin-top: 15px;">
@@ -18,13 +18,14 @@
 <?php
 // Инициализируем список стран
 Countries::getValues();
-;
+
 if ($elements) {
 	$gridDataProvider = new CArrayDataProvider($elements);
 
 	$this->widget('bootstrap.widgets.TbGridView', array(
 		'type'          => 'striped',
 		'dataProvider'  => $gridDataProvider,
+//        'template'      => "{pager}\n{items}\n{pager}",
 		'columns'       => array(
 			array('name' => 'id', 'header' => '#'),
             array(
@@ -36,7 +37,7 @@ if ($elements) {
 			array(
 				'header' => 'Гражданин',
 				'type'   => 'raw',
-				'value'  => 'isset(Countries::$values[$data["citizenship"]]) ? Countries::$values[$data["citizenship"]] : ($data["citizenship"] ?: "&mdash;")'
+				'value'  => 'isset(Countries::$values[$data["citizenship"]]) ? Countries::$values[$data["citizenship"]] : ($data["citizenship"] ? $data["citizenship"] : "&mdash;")'
 			),
 			array('name' => 'ser_nom_pass', 'header' => 'Серия и номер удостоверения'),
 			array(

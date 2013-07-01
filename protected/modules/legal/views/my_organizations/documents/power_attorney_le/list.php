@@ -46,7 +46,8 @@
                 array(
                     'name'  => 'nom',
                     'header'=> 'Номер',
-                    'value' => '$data["nom"]'
+                    'type'  => 'raw',
+                    'value' => 'CHtml::link($data["nom"], Yii::app()->getController()->createUrl("power_attorney_le", array("action" => "show", "id" => $data["id"])))'
                 ),
 //                array(
 //                    'name'   => 'id',
@@ -57,8 +58,8 @@
                 array(
                     'name'   => 'name',
                     'header' => 'Название',
-                    'type'   => 'raw',
-                    'value'  => 'CHtml::link($data["name"], Yii::app()->getController()->createUrl("power_attorney_le", array("action" => "show", "id" => $data["id"])))'
+//                    'type'   => 'raw',
+//                    'value'  => 'CHtml::link($data["name"], Yii::app()->getController()->createUrl("power_attorney_le", array("action" => "show", "id" => $data["id"])))'
                 ),
                 array(
                     'name'   => 'owner_name',
