@@ -9,7 +9,7 @@
  */
 ?>
 
-<h2>Доверенность "<?= $doc->name; ?>"</h2>
+<h2>Доверенность</h2>
 <!--<a href="--><?//=$this->createUrl('documents', array('id' => $this->organization->primaryKey))?><!--">Назад к списку</a>-->
 
 <?

@@ -22,32 +22,55 @@
         <h3>Доверенности</h3>
 
         <?php
-        $gridDataProvider = new CArrayDataProvider($docs);
+        $data = new CArrayDataProvider($docs);
+
+//        var_dump($data->rawData);die;
+        $p = Individuals::getValues();
+
+//        $s = (is_null($data["owner_name"])) ? "Не задано" : CHtml::link($data["owner_name"], Yii::app()->getController()->createUrl("/legal/individuals/view/", array("id" => $data["id_lico"])));
+
+//        var
+        foreach ($data->rawData as $k=>$v){
+//            var_dump('key = ' . $k);
+//            var_dump($k, $v);
+            $data->rawData[$k]['owner_name'] = (isset($p[$v['id_lico']])) ? $p[$v['id_lico']] : NULL;
+        }
+//
+//        die;
 
         $this->widget('bootstrap.widgets.TbGridView', array(
             'type'      => 'striped bordered condensed',
-            'dataProvider' => $gridDataProvider,
+            'dataProvider' => $data,
             'template'  => "{items}",
             'columns'   => array(
                 array(
-                    'name'   => 'id',
-                    'header' => '#',
-                    'type'   => 'raw',
-                    'value'  => 'CHtml::link($data["id"], Yii::app()->getController()->createUrl("power_attorney_le", array("action" => "show", "id" => $data["id"])))'
+                    'name'  => 'nom',
+                    'header'=> 'Номер',
+                    'value' => '$data["nom"]'
                 ),
+//                array(
+//                    'name'   => 'id',
+//                    'header' => '#',
+//                    'type'   => 'raw',
+//                    'value'  => 'CHtml::link($data["id"], Yii::app()->getController()->createUrl("power_attorney_le", array("action" => "show", "id" => $data["id"])))'
+//                ),
                 array(
                     'name'   => 'name',
                     'header' => 'Название',
-//                    'type'   => 'raw',
-//                    'value'  => 'CHtml::link($data["name"], Yii::app()->getController()->createUrl("document_show", array("id" => $data["id"])))'
+                    'type'   => 'raw',
+                    'value'  => 'CHtml::link($data["name"], Yii::app()->getController()->createUrl("power_attorney_le", array("action" => "show", "id" => $data["id"])))'
                 ),
-                /*array(
-                    'name'   => 'owner',
+                array(
+                    'name'   => 'owner_name',
                     'header' => 'Кому выдана',
                     'type'   => 'raw',
-                    'value'  => 'CHtml::link($data["owner"], Yii::app()->getController()->createUrl("person_show", array("id" => $data["id"])))'
-                ),*/
-                //array('name'=>'term', 'header'=>'Срок действия'),
+//                    'value'  => '(isset($persons[$data["id_lico"]])) ? CHtml::link($persons[$data["id_lico"]], Yii::app()->getController()->createUrl("/legal/individuals/view/", array("id" => $data["id_lico"]))) : "Не задано"'
+                    'value'  => '(is_null($data["owner_name"])) ? "Не задано" : CHtml::link($data["owner_name"], Yii::app()->getController()->createUrl("/legal/individuals/view/", array("id" => $data["id_lico"])))'
+
+//                    'CHtml::link($data["owner"], Yii::app()->getController()->createUrl("person_show", array("id" => $data["id_lico"])))'
+                ),
+                array('name'=>'expire', 'header'=>'Срок действия'),
+//                array('name'=>'nom', 'value' => '$data["nom"]'),
             ),
         ));
         ?>

@@ -27,6 +27,8 @@
 class PowerAttorneysLE extends SOAPModel {
 
 	public $from_user = true;
+	public $owner_name = '';
+
 	/**
 	 * @static
 	 *
