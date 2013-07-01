@@ -74,6 +74,42 @@ class SettlementAccount extends SOAPModel {
         );
     }
 
+    /**
+     *  Название банка по его идентификатору БИК или СВИФТ.
+     *
+     *  @static
+     *  @param      string $bank (BIK or SWIFT)
+     *  @return     string
+     */
+    public static function getBankName($bank) {
+        $bank_name = '';
+        if (!empty($bank)){
+            $cache = new CFileCache();
+            $cache_id = __CLASS__.'_bank_'.$bank;
+            Yii::log('cache id = '.$cache_id);
+            $bank_name = $cache->get($cache_id);
+            Yii::log('$bank_name = '.$bank_name);
+            if ($bank_name === false) {
+                Yii::log('bank_name = null');
+
+                // BIK
+                if (strlen($bank) == 9 && ctype_digit($bank)){
+                    $bank = Banks::model()
+                        ->where('bik', $bank)
+                        ->findAll();
+                } else {
+                    $bank = Banks::model()
+                        ->where('swift', $bank)
+                        ->findAll();
+                }
+                $bank_name = (isset($bank[0])) ? $bank[0]->name : '';
+                $cache->set($cache_id, $bank_name);
+                Yii::log('set $bank_name = '.$bank_name);
+            }
+        }
+        return $bank_name;
+    }
+
 	/**
 	 * Удаление Расчетного счета
 	 *
@@ -213,9 +249,16 @@ class SettlementAccount extends SOAPModel {
                 'required'
             ),
             array('data_open, data_closed', 'date', 'format' => 'yyyy-MM-dd'),
+            array('managing_persons', 'emptyPersons'),
 //            array('', 'safe'),
 
             array('bank_name, str_managing_persons', 'safe'),
         );
+    }
+
+    public function emptyPersons($attribute){
+        if (empty($this->$attribute) || !is_array($this->$attribute)){
+            $this->addError($attribute, 'Укажите список управляющих персон.');
+        }
     }
 }

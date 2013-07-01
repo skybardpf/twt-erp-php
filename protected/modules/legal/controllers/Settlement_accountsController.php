@@ -9,7 +9,7 @@ class Settlement_accountsController extends Controller {
     public $layout = 'inner';
 
     /** @var string Пункт левого меню */
-    public $menu_current = 'legal';
+    public $menu_current = 'settlements';
 
 	/**
 	 *  Список банковских счетов для всех юр. лиц.
@@ -28,20 +28,8 @@ class Settlement_accountsController extends Controller {
      */
     public function actionGet_bank_name($bank) {
         if (Yii::app()->request->isAjaxRequest) {
-            // BIK
-            if (strlen($bank) == 9 && is_integer($bank)){
-                $b = Banks::model()
-                    ->where('bik', $bank)
-                    ->findAll();
-            } else {
-                $b = Banks::model()
-                    ->where('swift', $bank)
-                    ->findAll();
-            }
-            $bank_name = (isset($b[0])) ? $b[0]->name : '';
-
             echo CJSON::encode(array(
-                'bank_name' => $bank_name
+                'bank_name' => SettlementAccount::getBankName($bank)
             ));
         }
     }

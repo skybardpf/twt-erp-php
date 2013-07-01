@@ -838,6 +838,8 @@ class My_organizationsController extends Controller {
         switch ($action){
             /** Action show */
             case 'show': {
+                $acc->bank_name = SettlementAccount::getBankName($acc->bank);
+
                 $this->render('show', array(
                     'content' => $this->renderPartial('settlements/show',
                         array(
@@ -854,6 +856,7 @@ class My_organizationsController extends Controller {
                 if ($_POST && !empty($_POST['SettlementAccount'])) {
                     $acc->setAttributes($_POST['SettlementAccount']);
                     $acc->str_managing_persons = $_POST['SettlementAccount']['str_managing_persons'];
+                    $acc->managing_persons = CJSON::decode($acc->str_managing_persons);
                     if ($acc->validate()) {
                         try {
                             $acc->save();
@@ -863,19 +866,7 @@ class My_organizationsController extends Controller {
                         }
                     }
                 }
-
-                // BIK
-                if (strlen($acc->bank) == 9 && is_integer($acc->bank)){
-                    $bank = Banks::model()
-                        ->where('bik', $acc->bank)
-                        ->findAll();
-                } else {
-                    $bank = Banks::model()
-                        ->where('swift', $acc->bank)
-                        ->findAll();
-                }
-//                'UNVKCY2NXXX'
-                $acc->bank_name = (isset($bank[0])) ? $bank[0]->name : '';
+                $acc->bank_name = SettlementAccount::getBankName($acc->bank);
 
                 $this->render('settlements/form',
                     array(
@@ -891,6 +882,7 @@ class My_organizationsController extends Controller {
                 if ($_POST && !empty($_POST['SettlementAccount'])) {
                     $acc->setAttributes($_POST['SettlementAccount']);
                     $acc->str_managing_persons = $_POST['SettlementAccount']['str_managing_persons'];
+                    $acc->managing_persons = CJSON::decode($acc->str_managing_persons);
                     if ($acc->validate()) {
                         try {
                             $acc->save();
@@ -900,6 +892,8 @@ class My_organizationsController extends Controller {
                         }
                     }
                 }
+                $acc->bank_name = SettlementAccount::getBankName($acc->bank);
+
                 $this->render('settlements/form',
                     array(
                         'model' => $acc,

@@ -19,17 +19,28 @@ class IndividualsController extends Controller {
 	}
 
 	/**
-	 * Просмотр физ.лица
-	 * @param $id
+	 *  Просмотр физ.лица
+     *
+	 *  @param  string $id
+     *  @throws CHttpException
 	 */
 	public function actionView($id) {
 		$this->cur_tab = 'view';
 		$entity = Individuals::model()->findByPk($id);
+        if (!$entity){
+            throw new CHttpException(404, 'Не найдено указанное физическое лицо.');
+        }
 		$this->render(
 			'show',
 			array(
 				'model' => $entity,
-				'tab_content' => $this->renderPartial('tab_view', array('element' => $entity), 1)
+				'tab_content' => $this->renderPartial(
+                    'tab_view',
+                    array(
+                        'element' => $entity
+                    ),
+                    1
+                )
 			)
 		);
 	}

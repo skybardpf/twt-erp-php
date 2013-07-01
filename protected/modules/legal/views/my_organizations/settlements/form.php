@@ -11,7 +11,7 @@
 ?>
 
 <?php
-    Yii::app()->clientScript->registerScriptFile('/static/js/legal/jquery.json-2.4.min.js');
+    Yii::app()->clientScript->registerScriptFile('/static/js/jquery.json-2.4.min.js');
 
     $this->beginContent('/my_organizations/show');
 
@@ -25,7 +25,7 @@
     // Опции для JUI селектора даты
     $jui_date_options = array(
         'options'=>array(
-            'showAnim'=>'fold',
+            'showAnim'  =>'fold',
             'dateFormat' => 'yy-mm-dd',
         ),
         'htmlOptions'=>array(
@@ -123,13 +123,15 @@
         }
     }
     $model->str_managing_persons = CJSON::encode($model->managing_persons);
-    echo $form->textField($model, 'str_managing_persons', array('class' => 'hide'));
+    $class = (empty($model->managing_persons) ? 'controls' : 'controls hide');
+//    echo $form->textField($model, 'str_managing_persons', array('class' => 'hide'));
+    echo $form->hiddenField($model, 'str_managing_persons');
 ?>
 <div class="control-group">
     <label class="control-label" for="SettlementAccount_managing_persons">
         <?= $model->getAttributeLabel("managing_persons") . CHtml::tag('span', array('class' => 'required')) .'&nbsp;*&nbsp;'; ?>
     </label>
-    <div class="controls hide" id="managing_person_message">
+    <div class="<?= $class; ?>" id="managing_person_message">
         Добавьте физ. лиц, управляющих счетом
     </div>
     <div class="controls" id='managing_persons'>
@@ -177,7 +179,13 @@
 
 <script>
     $(document).ready(function(){
+        $('#managing_persons .managing_person .icon-trash').each(function(i,e){
+            $(e).on('click', delete_managing_person);
+        });
 
+        /**
+         *  Получаем название банка по его идентификатору (БИК или СВИФТ)
+         */
         $('#SettlementAccount_bank').change(function(){
             Loading.show();
 
@@ -197,7 +205,7 @@
                     res = data.bank_name
                 }
                 bank_name.val(res);
-                console.log(arguments);
+//                console.log(arguments);
             })
             .fail(function(a, ret, message) {
                 alert(ret + ': ' + message);
@@ -211,7 +219,7 @@
         /**
          *  Добавляем управляющего счетом
          */
-        $('#dataModal .button_save').click(function(){
+        $('#dataModal .button_save').live('click', function(){
             var sel = $('#select_managing_person option:selected');
             var pid = sel.val();
             var name = sel.html();
@@ -229,12 +237,15 @@
                 }
                 el.val($.toJSON(persons));
 
-                $('#managing_persons').append(
+                var div_person = $(
                     '<div class="managing_person" data-pid="'+pid+'">' +
-                        '<a href="/legal/individuals/view/id/'+pid+'">'+name+'</a>&nbsp;' +
-                        '<span class="icon-trash" style="cursor: pointer;"></span>' +
+                    '<a href="/legal/individuals/view/id/'+pid+'">'+name+'</a>&nbsp;' +
+                    '<span class="icon-trash" style="cursor: pointer;"></span>' +
                     '</div>'
-                ).click(delete_managing_person);
+                );
+                $('#managing_persons').append(div_person);
+                div_person.find('.icon-trash').on('click', delete_managing_person);
+                $('#managing_person_message').addClass('hide');
             }
         });
 
@@ -249,7 +260,7 @@
 
             $.ajax({
 //                type: 'POST',
-                dataType: "json",
+//                dataType: "json",
                 url: "<?=
                     CController::createUrl(
                         '/legal/settlement_accounts/selected_managing_persons',
@@ -281,10 +292,6 @@
                 $(button).button('reset');
             })
         });
-
-        $('#managing_persons .managing_person').each(function(i,e){
-            $(e).click(delete_managing_person);
-        });
     });
 
     /**
@@ -303,24 +310,31 @@
                     class: 'btn btn-danger',
                     click: function(event){
                         var button = $(event.target);
+                        var div_person = target.parent('.managing_person');
+//                        console.log(div_person);
                         var dialog = $(this);
+
                         button.attr('disabled', 'disabled');
                         Loading.show();
 
                         var el = $('#SettlementAccount_str_managing_persons');
                         var persons = eval(el.val());
-                        var ind = persons.indexOf(target.data('pid'));
+                        var ind = persons.indexOf(div_person.data('pid'));
+
+//                        console.log(div_person.data('pid'));
+//                        console.log(ind);
+
                         if (ind != -1){
                             persons.splice(ind, 1);
                             el.val($.toJSON(persons));
                             if (!persons.length){
                                 $('#managing_person_message').removeClass('hide');
                             }
-                            $(this).dialog('destroy');
-                            target.off('click');
-                            target.remove();
+//                            target.off('click');
+                            div_person.remove();
                         }
                         Loading.hide();
+                        dialog.dialog('destroy');
                     }
                 },{
                     text: 'Отмена',

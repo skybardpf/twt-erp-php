@@ -1,6 +1,6 @@
 <?php
 /**
- *  Банковские счета. Информация о счете.
+ *  Банковские счета. Информация о банковском счете.
  *
  *  User: Skibardin A.A.
  *  Date: 27.06.13
@@ -10,8 +10,8 @@
  */
 ?>
 
-<h2>Банковский счет "<?= $acc->s_nom; ?>"</h2>
-<a href="<?=$this->createUrl('settlements', array('id' => $this->organization->primaryKey))?>">Назад к списку</a>
+<h2>Банковский счет</h2>
+<!--<a href="--><?//=$this->createUrl('settlements', array('id' => $this->organization->primaryKey))?><!--">Назад к списку</a>-->
 
 <?
 $this->widget('bootstrap.widgets.TbButton', array(
@@ -39,8 +39,8 @@ if (!$acc->deleted) {
     ));
 }
 ?>
+<br/><br/>
 <div>
-
 <?php
     $person = '';
     $p = Individuals::getValues();
@@ -62,7 +62,7 @@ if (!$acc->deleted) {
             array('name' => 's_nom',        'label' => 'Номер счета'),
             array('name' => 'iban',         'label' => 'IBAN'),
             array('name' => 'cur_name',     'label' => 'Валюта', 'value' => $cur),
-            array('name' => 'bank',         'label' => 'Банк'),
+            array('name' => 'bank_name',    'label' => 'Банк'),
             array('name' => 'vid',          'label' => 'Вид счета'),
             array('name' => 'service',      'label' => 'Вид обслуживания счета'),
 			array('name' => 'name',         'label' => 'Представление'),
