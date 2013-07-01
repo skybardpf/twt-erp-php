@@ -13,7 +13,13 @@ if ($_SERVER['HTTP_HOST'] == 'twt.local') {
 	defined('YII_DEBUG') or define('YII_DEBUG',true);
 } elseif ($_SERVER['HTTP_HOST'] == 'twt-erp.artektiv.ru') {
 	$yii = 'framework/yii.php';
-} else {
+} elseif ($_SERVER['HTTP_HOST'] == 'twt-1c') {
+    $yii = dirname(__FILE__).'/../yii/yii.php';
+    defined('YII_DEBUG') or define('YII_DEBUG',true);
+} elseif ($_SERVER['HTTP_HOST'] == 'local.twt-1c.ru') {
+//    $yii = dirname(__FILE__).'/../yii/yii.php';
+    defined('YII_DEBUG') or define('YII_DEBUG',true);
+}else {
 	defined('YII_DEBUG') or define('YII_DEBUG',true);
 }
 
