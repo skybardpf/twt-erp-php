@@ -29,7 +29,7 @@ if (!$accounts) {
                 'name'  => 'id',
                 'header'=> '#',
                 'type'  => 'raw',
-                'value' => 'CHtml::link($data["id"], Yii::app()->getController()->createUrl("/legal/my_organizations/settlement", array("action" => "show", "id" => $data["id"])))'
+                'value' => 'CHtml::link($data["id"], Yii::app()->getController()->createUrl("/legal/my_organizations/show_settlement", array("id" => $data["id"])))'
             ),
             array(
                 'name'  => 'type_yur',
