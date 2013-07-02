@@ -31,6 +31,7 @@ class Settlement_accountsController extends Controller {
             echo CJSON::encode(array(
                 'bank_name' => SettlementAccount::getBankName($bank)
             ));
+            Yii::app()->end();
         }
     }
 

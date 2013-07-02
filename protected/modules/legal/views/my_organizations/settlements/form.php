@@ -212,7 +212,8 @@
 //                console.log(arguments);
             })
             .fail(function(a, ret, message) {
-                alert(ret + ': ' + message);
+//                alert(ret + ': ' + message);
+                console.log(ret + ': ' + message);
                 bank_name.val('');
             })
             .always(function(){

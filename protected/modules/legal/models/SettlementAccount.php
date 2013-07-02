@@ -80,37 +80,36 @@ class SettlementAccount extends SOAPModel {
      *  Название банка по его идентификатору БИК или СВИФТ.
      *
      *  @static
-     *  @param      string $bank (BIK or SWIFT)
+     *  @param      string $bank_id (BIK or SWIFT)
      *  @return     string
      */
-    public static function getBankName($bank) {
-        $bank_name = 'TEST';
-
-
-//        if (!empty($bank)){
-//            $cache = new CFileCache();
-//            $cache_id = __CLASS__.'_bank_'.$bank;
-//            Yii::log('cache id = '.$cache_id);
-//            $bank_name = $cache->get($cache_id);
-//            Yii::log('$bank_name = '.$bank_name);
-//            if ($bank_name === false) {
-//                Yii::log('bank_name = null');
-//
-//                // BIK
-//                if (strlen($bank) == 9 && ctype_digit($bank)){
-//                    $bank = Banks::model()
-//                        ->where('bik', $bank)
-//                        ->findAll();
-//                } else {
-//                    $bank = Banks::model()
-//                        ->where('swift', $bank)
-//                        ->findAll();
-//                }
-//                $bank_name = (isset($bank[0])) ? $bank[0]->name : '';
-//                $cache->set($cache_id, $bank_name);
-//                Yii::log('set $bank_name = '.$bank_name);
-//            }
-//        }
+    public static function getBankName($bank_id) {
+        $bank_name = '';
+        if (!empty($bank_id)){
+            $cache = new CFileCache();
+            $cache_id = __CLASS__.'_bank_'.$bank_id;
+            $bank_name = $cache->get($cache_id);
+            if ($bank_name === false) {
+                // BIK
+                if (strlen($bank_id) == 9 && ctype_digit($bank_id)){
+                    $banks = Banks::model()
+                        ->where('deleted', false)
+                        ->where('id', $bank_id)
+                        ->findAll();
+                } else {
+                    $banks = Banks::model()
+                        ->where('deleted', false)
+                        ->where('swift', $bank_id)
+                        ->findAll();
+                }
+                if (!empty($banks) && isset($banks[0]) && !empty($banks[0]->name)){
+                    $bank_name = $banks[0]->name;
+                    $cache->set($cache_id, $bank_name);
+                } else {
+                    $bank_name = '';
+                }
+            }
+        }
         return $bank_name;
     }
 
@@ -268,8 +267,13 @@ class SettlementAccount extends SOAPModel {
     }
 
     public function isBank($attribute){
-//        if (empty($this->$attribute)){
-//            $this->addError($attribute, 'Укажите список управляющих персон.');
-//        }
+        if (empty($this->$attribute)){
+            $this->addError($attribute, 'Необходимо указать БИК / SWIFT');
+        } else {
+            $name = SettlementAccount::getBankName($this->$attribute);
+            if (empty($name)){
+                $this->addError($attribute, 'Необходимо указать правильный БИК / SWIFT');
+            }
+        }
     }
 }
