@@ -5,7 +5,7 @@
  *  Date: 27.06.13
  *
  *  @var $this       My_organizationsController
- *  @var $doc        PowerAttorneysLE
+ *  @var $model      PowerAttorneysLE
  *  @var $form       TbActiveForm
  */
 ?>
@@ -13,7 +13,7 @@
 <?php
     $this->beginContent('/my_organizations/show');
 
-    echo '<h2>'.($doc->primaryKey ? 'Редактирование ' : 'Создание ').'доверенности</h2>';
+    echo '<h2>'.($model->primaryKey ? 'Редактирование ' : 'Создание ').'доверенности</h2>';
 
     $form = $this->beginWidget('bootstrap.widgets.TbActiveForm', array(
         'id'    => 'model-form-form',
@@ -29,8 +29,8 @@
     $this->widget('bootstrap.widgets.TbButton', array(
         'buttonType' => 'link',
         'label'      => 'Отмена',
-        'url'        => $doc->primaryKey
-            ? $this->createUrl('power_attorney_le', array('action' => 'show', 'id' => $doc->primaryKey))
+        'url'        => $model->primaryKey
+            ? $this->createUrl('show_power_attorney_le', array('id' => $model->primaryKey))
             : $this->createUrl('documents', array('id' => $this->organization->primaryKey))
     ));
 
@@ -38,29 +38,11 @@
         echo '<br/><br/>';
         echo CHtml::openTag('div', array('class' => 'alert alert-error')).$error.CHtml::closeTag('div');
     }
-    $error = $form->errorSummary($doc);
+    $error = $form->errorSummary($model);
     if (empty($error)) {
 //        echo '<br/><br/>';
         echo $error;
     }
-?>
-
-<?
-    /*id:,
-    name: rt300000002,
-    date: 2013-11-25,
-    from_user:true,
-    user: Главбух,
-    id_yur: 1000000005,
-    nom:75,
-    typ_doc: Генеральная,
-    id_lico: 0000000001,
-    loaded: 2013-11-25,
-    expire: 2013-11-25,
-    break: 2013-11-25,
-    e_ver: rt34000000002,
-    contract_types: [100432, 030432, 005432],
-    scans: [ 00432, 00432, 00432]*/
 ?>
 
 <fieldset>
@@ -76,13 +58,13 @@
         )
     );
 
-    echo $form->dropDownListRow($doc, 'id_lico', Individuals::getValues(), array('class' => 'span6'));
-    echo $form->textFieldRow($doc, 'nom', array('class' => 'span6'));
-    echo $form->textFieldRow($doc, 'name', array('class' => 'span6'));
-//    if (!$doc->getprimaryKey()){
-//        echo $form->dropDownListRow($doc, 'type_yur', PowerAttorneysLE::getYurTypes(), array('class' => 'span6'));
+    echo $form->dropDownListRow($model, 'id_lico', Individuals::getValues(), array('class' => 'span6'));
+    echo $form->textFieldRow($model, 'nom', array('class' => 'span6'));
+    echo $form->textFieldRow($model, 'name', array('class' => 'span6'));
+//    if (!$model->getprimaryKey()){
+//        echo $form->dropDownListRow($model, 'type_yur', PowerAttorneysLE::getYurTypes(), array('class' => 'span6'));
 //    }
-    echo $form->dropDownListRow($doc, 'typ_doc', PowerAttorneysLE::getDocTypes(), array('class' => 'span6'));
+    echo $form->dropDownListRow($model, 'typ_doc', PowerAttorneysLE::getDocTypes(), array('class' => 'span6'));
     //
     // Список видов договоров будет здесь.
     //
@@ -90,12 +72,12 @@
 <?php /** date */ ?>
 <div class="control-group">
     <label class="control-label" for="PowerAttorneysLE_date">
-        <?= $doc->getAttributeLabel("date") . CHtml::tag('span', array('class' => 'required')) .'&nbsp;*&nbsp;'; ?>
+        <?= $model->getAttributeLabel("date") . CHtml::tag('span', array('class' => 'required')) .'&nbsp;*&nbsp;'; ?>
     </label>
     <div class="controls">
         <?php $this->widget('zii.widgets.jui.CJuiDatePicker',array_merge(
             array(
-                'model'     => $doc,
+                'model'     => $model,
                 'attribute' => 'date'
             ), $jui_date_options
         )); ?>
@@ -105,12 +87,12 @@
 <?php /* expire */?>
 <div class="control-group">
     <label class="control-label" for="PowerAttorneysLE_expire">
-        <?= $doc->getAttributeLabel("expire") . CHtml::tag('span', array('class' => 'required')) .'&nbsp;*&nbsp;'; ?>
+        <?= $model->getAttributeLabel("expire") . CHtml::tag('span', array('class' => 'required')) .'&nbsp;*&nbsp;'; ?>
     </label>
     <div class="controls">
         <?php $this->widget('zii.widgets.jui.CJuiDatePicker',array_merge(
             array(
-                'model'     => $doc,
+                'model'     => $model,
                 'attribute' => 'expire'
             ), $jui_date_options
         )); ?>
@@ -120,12 +102,12 @@
 <?php /* break */?>
 <div class="control-group">
     <label class="control-label" for="PowerAttorneysLE_break">
-        <?= $doc->getAttributeLabel("break"); ?>
+        <?= $model->getAttributeLabel("break"); ?>
     </label>
     <div class="controls">
         <?php $this->widget('zii.widgets.jui.CJuiDatePicker',array_merge(
             array(
-                'model'     => $doc,
+                'model'     => $model,
                 'attribute' => 'break'
             ), $jui_date_options
         )); ?>
@@ -133,9 +115,7 @@
 </div>
 
 <?php
-    echo $form->textAreaRow($doc, 'comment', array('class' => 'span6'));
-    //echo $form->textFieldRow($doc, 'loaded',      array('class'=>'span6'));
-    //echo $form->textFieldRow($doc, 'e_ver',         array('class' => 'span6'));
+    echo $form->textAreaRow($model, 'comment', array('class' => 'span6'));
 ?>
 </fieldset>
 

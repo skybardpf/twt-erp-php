@@ -16,15 +16,7 @@
         'enableAjaxValidation'=>false,
         'type' => 'horizontal',
     ));
+    echo CHtml::dropDownList('select_managing_person', '', $data);
+
+    $this->endWidget();
 ?>
-
-<!-- Здесь могут быть Ваши поля формы -->
-<?php echo $form->errorSummary($model);?>
-
-<?php //echo $form->dropDownListRow($model, 'name');?>
-<?php echo CHtml::dropDownList('select_managing_person', '', $data);?>
-
-    <!-- Скрытое поле, в котором лежит data_id -->
-<?php //echo $form->textField($model,'data_id',array('class'=>'hide')); ?>
-
-<?php $this->endWidget(); ?>

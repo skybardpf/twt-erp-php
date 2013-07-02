@@ -43,7 +43,7 @@
         'buttonType' => 'link',
         'label'      => 'Отмена',
         'url'        => $model->primaryKey
-            ? $this->createUrl('settlement', array('action' => 'show', 'id' => $model->primaryKey))
+            ? $this->createUrl('show_settlement', array('id' => $model->primaryKey))
             : $this->createUrl('settlements', array('id' => $this->organization->primaryKey))
     ));
 
@@ -104,27 +104,31 @@
 <?php
     /** managing_persons */
     $person = '';
-    $p = Individuals::getValues();
-    foreach ($model->managing_persons as $pid){
-        if (!isset($p[$pid])){
-            $person .= $pid;
-        } else {
-            $person .= CHtml::tag('div', array(
-                    'class'     => 'managing_person',
-                    'data-pid'  => $pid,
-                ),
-                CHtml::link($p[$pid], $this->createUrl('/legal/individuals/view/', array('id' => $pid))) .
-                '&nbsp;' .
-                CHtml::tag('span', array(
-                    'class' => 'icon-trash',
-                    'style' => 'cursor: pointer;'
-                ))
-            );
+    if (empty($model->managing_persons)){
+        $class = 'controls';
+        $model->str_managing_persons = CJSON::encode(array());
+    } else {
+        $p = Individuals::getValues();
+        foreach ($model->managing_persons as $pid){
+            if (!isset($p[$pid])){
+                $person .= $pid;
+            } else {
+                $person .= CHtml::tag('div', array(
+                        'class'     => 'managing_person',
+                        'data-pid'  => $pid,
+                    ),
+                    CHtml::link($p[$pid], $this->createUrl('/legal/individuals/view/', array('id' => $pid))) .
+                    '&nbsp;' .
+                    CHtml::tag('span', array(
+                        'class' => 'icon-trash',
+                        'style' => 'cursor: pointer;'
+                    ))
+                );
+            }
         }
+        $model->str_managing_persons = CJSON::encode($model->managing_persons);
+        $class = 'controls hide';
     }
-    $model->str_managing_persons = CJSON::encode($model->managing_persons);
-    $class = (empty($model->managing_persons) ? 'controls' : 'controls hide');
-//    echo $form->textField($model, 'str_managing_persons', array('class' => 'hide'));
     echo $form->hiddenField($model, 'str_managing_persons');
 ?>
 <div class="control-group">
@@ -261,14 +265,7 @@
             $.ajax({
 //                type: 'POST',
 //                dataType: "json",
-                url: "<?=
-                    CController::createUrl(
-                        '/legal/settlement_accounts/selected_managing_persons',
-                        array(
-                            'id' => $model->primaryKey,
-                        )
-                    );
-                 ?>",
+                url: "<?= CController::createUrl('/legal/settlement_accounts/selected_managing_persons'); ?>",
                 cache: false,
                 data: {
                     'selected_ids': $('#SettlementAccount_str_managing_persons').val()
@@ -285,7 +282,7 @@
                 });
             })
             .fail(function(a, ret, message) {
-                alert(ret + ': ' + message);
+//                alert(ret + ': ' + message);
             })
             .always(function(){
                 Loading.hide();

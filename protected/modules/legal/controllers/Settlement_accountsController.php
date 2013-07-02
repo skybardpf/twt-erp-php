@@ -37,16 +37,10 @@ class Settlement_accountsController extends Controller {
     /**
      *  Управление менеджерами счета.
      */
-    public function actionSelected_managing_persons($id, $selected_ids) {
+    public function actionSelected_managing_persons($selected_ids) {
         if (Yii::app()->request->isAjaxRequest) {
             try {
-
                 $selected_ids = CJSON::decode($selected_ids);
-                $acc = SettlementAccount::model()->findByPk($id);
-                if (!$acc) {
-                    throw new CException(404, 'Не найден указанный банковский счет.');
-                }
-
                 $p = Individuals::getValues();
                 foreach ($selected_ids as $pid){
                     if (isset($p[$pid])){
@@ -57,7 +51,6 @@ class Settlement_accountsController extends Controller {
 
                 $this->renderPartial('/settlement_accounts/select_managing_persons',array(
                     'data'  => $p,
-                    'model' => $acc,
                 ), false);
 
             } catch (CException $e){

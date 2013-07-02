@@ -1,15 +1,16 @@
 <?php
 /**
- *  Сущность банковский счет.
+ *  Сущность: Банковский счет.
  *
  *  User: Skibardin A.A.
  *  Date: 28.06.13
  *
  *  @property string $bank          идентификатор банка, в котором открыт счет (БИК или СВИФТ)
+ *  @property string $bank_name     название банка
  *  @property string $name          наименование счета (представление)
  *  @property string $id_yur        идентификатор юрлица-владельца счета
  *  @property string $type_yur      Тип юрлица ("Контрагенты", "Организации")
- *  @property string $deleted       признак пометки удаления (булево)
+ *  @property bool   $deleted       признак пометки удаления (булево)
  *  @property string $s_nom         номер счета (для российских счетов)
  *  @property string $vid           вид счета
  *  @property string $service       вид обслуживания счета
@@ -19,7 +20,7 @@
  */
 class SettlementAccount extends SOAPModel {
     public $cur_name    = '';
-//    public $bank_name   = '';
+    public $div_persons = '';
     public $str_managing_persons = '';
 	/**
 	 * @static
@@ -84,6 +85,8 @@ class SettlementAccount extends SOAPModel {
      */
     public static function getBankName($bank) {
         $bank_name = 'TEST';
+
+
 //        if (!empty($bank)){
 //            $cache = new CFileCache();
 //            $cache_id = __CLASS__.'_bank_'.$bank;
@@ -137,7 +140,8 @@ class SettlementAccount extends SOAPModel {
 		unset($data['deleted']);
         unset($data['managing_persons']);
 
-//        unset($data['bank_name']);
+//        $data['bank_name'] = 'USB BANK PLC (FORMERLY UNIVERSAL BANK PUBLIC LTD) // UNVKCY2NXXX';
+        unset($data['bank_name']);
         unset($data['corrbank']);
         unset($data['corr_account']);
 
@@ -151,7 +155,7 @@ class SettlementAccount extends SOAPModel {
             'Все вместе' => 'ВсеВместе',
             'По одному' => 'ПоОдному',
         );
-        $data['management_method'] = $management_method[$data['management_method']];
+        $data['management_method'] = isset($management_method[$data['management_method']]) ? $management_method[$data['management_method']] : $management_method['Все вместе'];
 
 		$ret = $this->SOAP->saveSettlementAccount(
             array(
@@ -198,12 +202,12 @@ class SettlementAccount extends SOAPModel {
 	public function attributeLabels() {
 		return array(
 			'id'            => '#',                                 // +
-			'name'          => 'Представление',                     // +
+			'name'          => 'Представление',                     //
             'id_yur'        => 'Юр.лицо',                           // +
-            'type_yur'      => 'Тип юр.лица',                       // +
-            'deleted'       => 'Помечен на удаление',               // +
-			'bank'          => 'БИК / SWIFT',                       // +
-			'bank_name'     => 'Название банка',                    // +
+            'type_yur'      => 'Тип юр.лица',                       //
+            'deleted'       => 'Помечен на удаление',               //
+			'bank'          => 'БИК / SWIFT',                       //
+			'bank_name'     => 'Название банка',                    //
 			'service'       => 'Вид обслуживания счета',
 
             's_nom'         => 'Номер счета',

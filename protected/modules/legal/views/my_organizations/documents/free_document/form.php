@@ -4,7 +4,7 @@
  * Date: 25.06.2013
  *
  * @var $this   My_organizationsController
- * @var $doc    FreeDocument
+ * @var $model    FreeDocument
  */
 
 $this->beginContent('/my_organizations/show');
@@ -26,7 +26,7 @@ $jui_date_options = array(
 	)
 );
 ?>
-<h2><?=($doc->primaryKey ? 'Редактирование ' : 'Создание ').'свободного документа'?></h2>
+<h2><?=($model->primaryKey ? 'Редактирование ' : 'Создание ').'свободного документа'?></h2>
 <?php
 $this->widget('bootstrap.widgets.TbButton', array(
     'buttonType'=> 'submit',
@@ -39,8 +39,8 @@ $this->widget('bootstrap.widgets.TbButton', array(
 $this->widget('bootstrap.widgets.TbButton', array(
 	'buttonType' => 'link',
 	'label'      => 'Отмена',
-	'url'        => $doc->primaryKey
-						? $this->createUrl('free_document', array('action' => 'show', 'id' => $doc->primaryKey))
+	'url'        => $model->primaryKey
+						? $this->createUrl('show_free_document', array('id' => $model->primaryKey))
 						: $this->createUrl('documents', array('id' => $this->organization->primaryKey))
 ));
 ?>
@@ -51,11 +51,11 @@ if ($error) {
     echo CHtml::openTag('div', array('class' => 'alert alert-error')).$error.CHtml::closeTag('div');
 }
 ?>
-<?= $form->errorSummary($doc)?>
+<?= $form->errorSummary($model)?>
 
 <fieldset>
 <!--	--><?//= $form->dropDownListRow(
-//            $doc,
+//            $model,
 //            'type_yur',
 //            CHtml::listData(array(
 //                array('id' => 'Организации', 'type_yur' => 'Организации'),
@@ -63,19 +63,19 @@ if ($error) {
 //            ), 'id', 'type_yur')
 //        );
 //    ?>
-	<?= $form->textFieldRow($doc, 'num', array('class' => 'span6')); ?>
-	<?= $form->textFieldRow($doc, 'name', array('class' => 'span6')); ?>
+	<?= $form->textFieldRow($model, 'num', array('class' => 'span6')); ?>
+	<?= $form->textFieldRow($model, 'name', array('class' => 'span6')); ?>
 
 	<?php /* date */?>
 	<div class="control-group">
 		<label class="control-label" for="FreeDocument_date">
-            <?= $doc->getAttributeLabel("date") . CHtml::tag('span', array('class' => 'required')) .'&nbsp;*&nbsp;'; ?>
+            <?= $model->getAttributeLabel("date") . CHtml::tag('span', array('class' => 'required')) .'&nbsp;*&nbsp;'; ?>
         </label>
 
         <div class="controls">
 			<?php $this->widget('zii.widgets.jui.CJuiDatePicker',array_merge(
 				array(
-					'model'     => $doc,
+					'model'     => $model,
 					'attribute' => 'date'
 				), $jui_date_options
 			)); ?>
@@ -85,18 +85,18 @@ if ($error) {
 	<?php /* expire */?>
 	<div class="control-group">
 		<label class="control-label" for="FreeDocument_expire">
-            <?= $doc->getAttributeLabel("expire") . CHtml::tag('span', array('class' => 'required')) .'&nbsp;*&nbsp;'; ?>
+            <?= $model->getAttributeLabel("expire") . CHtml::tag('span', array('class' => 'required')) .'&nbsp;*&nbsp;'; ?>
         </label>
 		<div class="controls">
 			<?php $this->widget('zii.widgets.jui.CJuiDatePicker',array_merge(
 				array(
-					'model'     => $doc,
+					'model'     => $model,
 					'attribute' => 'expire'
 				), $jui_date_options
 			)); ?>
 		</div>
 	</div>
-	<?= $form->textAreaRow($doc, 'comment', array('class' => 'span6')); ?>
+	<?= $form->textAreaRow($model, 'comment', array('class' => 'span6')); ?>
 </fieldset>
 <?php $this->endWidget(); ?>
 <?php $this->endContent(); ?>

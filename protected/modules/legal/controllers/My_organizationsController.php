@@ -544,118 +544,161 @@ class My_organizationsController extends Controller {
     // ╚═════════════════════╝
 
     /**
-     *  @param  string  $action
-     *  @param  int     $id
+     *  Просмотр свободного документа с идентификатором $id.
+     *
+     *  @param  int $id
+     *
      *  @throws CHttpException
      */
-    public function actionFree_document($action, $id) {
+    public function actionShow_free_document($id)
+    {
         $this->cur_tab = 'documents';
 
-        if ($action == 'create'){
-            $doc = new FreeDocument();
-            $doc->id_yur    = $id;
-            $doc->type_yur  = 'Организации';
-        } else {
-            $doc = FreeDocument::model()->findByPk($id);
-            if (!$doc){
-                throw new CHttpException(404, 'Не найден указанный документ.');
-            }
+        $doc = FreeDocument::model()->findByPk($id);
+        if (!$doc){
+            throw new CHttpException(404, 'Не найден свободный документ с ID = ' . $id);
         }
         $org = Organizations::model()->findByPk($doc->id_yur);
         if (!$org){
-            throw new CHttpException(404, 'Не найдено указанное юридическое лицо.');
+            throw new CHttpException(404, 'Не найдено юридическое лицо с ID = ' . $doc->id_yur);
         }
         $this->organization = $org;
 
-        switch ($action){
-            /** Action show */
-            case 'show': {
-                $this->menu_current = 'index';
-                $this->render('show', array(
-                    'content' => $this->renderPartial('documents/free_document/show',
-                        array(
-                            'id'        => $id,
-                            'freeDoc'   => $doc
-                        ), true),
-                    'model'  => $doc
-                ));
-            } break;
+        $this->render('show', array(
+            'content' => $this->renderPartial('documents/free_document/show',
+                array(
+                    'model' => $doc
+                ), true),
+            'model' => $doc
+        ));
+    }
 
-            /** Action create */
-            case 'create': {
-                $error = '';
-                if ($_POST && !empty($_POST['FreeDocument'])) {
-                    $doc->setAttributes($_POST['FreeDocument']);
-                    if ($doc->validate()) {
-                        try {
-                            $doc->save();
-                            $this->redirect($this->createUrl('documents', array('id' => $id)));
-                        } catch (Exception $e) {
-                            $error = $e->getMessage();
-                        }
-                    }
+    /**
+     *  Добавление нового свободного документа к указанному в $org_id юридическому лицу.
+     *
+     *  @param  int $org_id
+     *
+     *  @throws CHttpException
+     */
+    public function actionAdd_free_document($org_id)
+    {
+        $this->cur_tab = 'documents';
+
+        $org = Organizations::model()->findByPk($org_id);
+        if (!$org){
+            throw new CHttpException(404, 'Не найдено юридическое лицо с ID = ' . $org_id);
+        }
+        $this->organization = $org;
+
+        $doc = new FreeDocument();
+        $doc->id_yur    = $org->primaryKey;
+        $doc->type_yur  = 'Организации';
+
+        $error = '';
+        if ($_POST && !empty($_POST['FreeDocument'])) {
+            $doc->setAttributes($_POST['FreeDocument']);
+            if ($doc->validate()) {
+                try {
+                    $doc->save();
+                    $this->redirect($this->createUrl('documents', array('id' => $org->primaryKey)));
+                } catch (Exception $e) {
+                    $error = $e->getMessage();
                 }
-                $this->render('documents/free_document/form',
-                    array(
-                        'doc'   => $doc,
-                        'error' => $error
-                    )
-                );
-            } break;
-
-            /** Action update */
-            case 'update': {
-                $error = '';
-                if ($_POST && !empty($_POST['FreeDocument'])) {
-                    $doc->setAttributes($_POST['FreeDocument']);
-                    if ($doc->validate()) {
-                        try {
-                            $doc->save();
-                            $this->redirect($this->createUrl('free_document', array('action' => 'show', 'id' => $id)));
-                        } catch (Exception $e) {
-                            $error = $e->getMessage();
-                        }
-                    }
-                }
-                $this->render('documents/free_document/form', array(
-                    'doc'   => $doc,
-                    'error' => $error
-                ));
-            } break;
-
-            /** Action delete */
-            case 'delete': {
-                if (Yii::app()->request->isAjaxRequest) {
-                    $ret = array();
-                    try {
-                        $doc->delete();
-                    } catch (Exception $e) {
-                        $ret['error'] = $e->getMessage();
-                    }
-                    echo CJSON::encode($ret);
-                    Yii::app()->end();
-                } else {
-                    if (isset($_POST['result'])) {
-                        switch ($_POST['result']) {
-                            case 'yes':
-                                if ($doc->delete()) {
-                                    $this->redirect($this->createUrl('documents', array('id' => $this->organization->primaryKey)));
-                                } else {
-                                    throw new CHttpException(500, 'Не удалось удалить свободный документ');
-                                }
-                                break;
-                            default:
-                                $this->redirect($this->createUrl('free_document', array('action' => 'show', 'id' => $doc->primaryKey)));
-                                break;
-                        }
-                    }
-                    $this->render('documents/free_document/delete', array('model' => $doc));
-                }
-            } break;
-
-            default: {
-                throw new CHttpException(500, 'Указано неверное действие.');
             }
+        }
+        $this->render('documents/free_document/form',
+            array(
+                'model' => $doc,
+                'error' => $error
+            )
+        );
+    }
+
+    /**
+     *  Редактирование свободного документа с идентификатором $id.
+     *
+     *  @param  int $id
+     *
+     *  @throws CHttpException
+     */
+    public function actionEdit_free_document($id)
+    {
+        $this->cur_tab = 'documents';
+
+        $doc = FreeDocument::model()->findByPk($id);
+        if (!$doc){
+            throw new CHttpException(404, 'Не найден свободный документ с ID = ' . $id);
+        }
+        $org = Organizations::model()->findByPk($doc->id_yur);
+        if (!$org){
+            throw new CHttpException(404, 'Не найдено юридическое лицо с ID = ' . $doc->id_yur);
+        }
+        $this->organization = $org;
+
+        $error = '';
+        if ($_POST && !empty($_POST['FreeDocument'])) {
+            $doc->setAttributes($_POST['FreeDocument']);
+            if ($doc->validate()) {
+                try {
+                    $doc->save();
+                    $this->redirect($this->createUrl('show_free_document', array('id' => $id)));
+                } catch (Exception $e) {
+                    $error = $e->getMessage();
+                }
+            }
+        }
+        $this->render('documents/free_document/form', array(
+            'model' => $doc,
+            'error' => $error
+        ));
+    }
+
+    /**
+     *  Удаление свободного документа с идентификатором $id.
+     *
+     *  @param  int $id
+     *
+     *  @throws CHttpException
+     */
+    public function actionDelete_free_document($id)
+    {
+        $this->cur_tab = 'documents';
+
+        $doc = FreeDocument::model()->findByPk($id);
+        if (!$doc){
+            throw new CHttpException(404, 'Не найден свободный документ с ID = ' . $id);
+        }
+        $org = Organizations::model()->findByPk($doc->id_yur);
+        if (!$org){
+            throw new CHttpException(404, 'Не найдено юридическое лицо с ID = ' . $doc->id_yur);
+        }
+        $this->organization = $org;
+
+        if (Yii::app()->request->isAjaxRequest) {
+            $ret = array();
+            try {
+                $doc->delete();
+            } catch (Exception $e) {
+                $ret['error'] = $e->getMessage();
+            }
+            echo CJSON::encode($ret);
+            Yii::app()->end();
+        } else {
+            if (isset($_POST['result'])) {
+                switch ($_POST['result']) {
+                    case 'yes':
+                        if ($doc->delete()) {
+                            $this->redirect($this->createUrl('documents', array('id' => $this->organization->primaryKey)));
+                        } else {
+                            throw new CHttpException(500, 'Не удалось удалить свободный документ');
+                        }
+                        break;
+                    default:
+                        $this->redirect($this->createUrl('show_free_document', array('id' => $doc->primaryKey)));
+                        break;
+                }
+            }
+            $this->render('documents/free_document/delete', array('model' => $doc));
         }
     }
 
@@ -664,118 +707,160 @@ class My_organizationsController extends Controller {
     // ╚══════════════╝
 
     /**
-     *  @param  string  $action
-     *  @param  int     $id
+     *  Просмотр доверености с идентификатором $id.
+     *
+     *  @param  int $id
      *
      *  @throws CHttpException
      */
-    public function actionPower_attorney_le($action, $id) {
+    public function actionShow_power_attorney_le($id)
+    {
         $this->cur_tab = 'documents';
 
-        if ($action == 'create'){
-            $doc = new PowerAttorneysLE();
-            $doc->id_yur    = $id;
-//            $doc->type_yur  = 'Организации';
-        } else {
-            $doc = PowerAttorneysLE::model()->findByPk($id);
-            if (!$doc){
-                throw new CHttpException(404, 'Не найдена указаная доверенность.');
-            }
+        $doc = PowerAttorneysLE::model()->findByPk($id);
+        if (!$doc){
+            throw new CHttpException(404, 'Не найдена довереность с ID = ' . $id);
         }
         $org = Organizations::model()->findByPk($doc->id_yur);
         if (!$org){
-            throw new CHttpException(404, 'Не найдено указанное юридическое лицо.');
+            throw new CHttpException(404, 'Не найдено юридическое лицо с ID = ' . $doc->id_yur);
         }
         $this->organization = $org;
 
-        switch ($action){
-            /** Action show */
-            case 'show': {
-                $this->render('show', array(
-                    'content' => $this->renderPartial('documents/power_attorney_le/show',
-                        array(
-                            'id'    => $id,
-                            'doc'   => $doc
-                        ), true),
+        $this->render('show', array(
+            'content' => $this->renderPartial('documents/power_attorney_le/show',
+                array(
                     'model' => $doc
-                ));
-            } break;
+                ), true),
+            'model' => $doc
+        ));
+    }
 
-            /** Action update */
-            case 'update': {
-                $error = '';
-                if ($_POST && !empty($_POST['PowerAttorneysLE'])) {
-                    $doc->setAttributes($_POST['PowerAttorneysLE']);
-                    if ($doc->validate()) {
-                        try {
-                            $doc->save();
-                            $this->redirect($this->createUrl('power_attorney_le', array('action' => 'show', 'id' => $id)));
-                        } catch (Exception $e) {
-                            $error = $e->getMessage();
-                        }
-                    }
+    /**
+     *  Добавление новой доверености к указанному в $org_id юридическому лицу.
+     *
+     *  @param  int $org_id
+     *
+     *  @throws CHttpException
+     */
+    public function actionAdd_power_attorney_le($org_id)
+    {
+        $this->cur_tab = 'documents';
+
+        $org = Organizations::model()->findByPk($org_id);
+        if (!$org){
+            throw new CHttpException(404, 'Не найдено юридическое лицо с ID = ' . $org_id);
+        }
+        $this->organization = $org;
+
+        $doc = new PowerAttorneysLE();
+        $doc->id_yur = $org->primaryKey;
+
+        $error = '';
+        if ($_POST && !empty($_POST['PowerAttorneysLE'])) {
+            $doc->setAttributes($_POST['PowerAttorneysLE']);
+            if ($doc->validate()) {
+                try {
+                    $doc->save();
+                    $this->redirect($this->createUrl('documents', array('id' => $org->primaryKey)));
+                } catch (Exception $e) {
+                    $error = $e->getMessage();
                 }
-                $this->render('documents/power_attorney_le/form', array(
-                    'doc'   => $doc,
-                    'error' => $error
-                ));
-            } break;
-
-            /** Action create */
-            case 'create': {
-                $error = '';
-                if ($_POST && !empty($_POST['PowerAttorneysLE'])) {
-                    $doc->setAttributes($_POST['PowerAttorneysLE']);
-                    if ($doc->validate()) {
-                        try {
-                            $doc->save();
-                            $this->redirect($this->createUrl('documents', array('id' => $id)));
-                        } catch (Exception $e) {
-                            $error = $e->getMessage();
-                        }
-                    }
-                }
-                $this->render('documents/power_attorney_le/form',
-                    array(
-                        'doc'   => $doc,
-                        'error' => $error
-                    )
-                );
-            } break;
-
-            /** Action delete */
-            case 'delete': {
-                if (Yii::app()->request->isAjaxRequest) {
-                    $ret = array();
-                    try {
-                        $doc->delete();
-                    } catch (Exception $e) {
-                        $ret['error'] = $e->getMessage();
-                    }
-                    echo CJSON::encode($ret);
-                    Yii::app()->end();
-                } else {
-                    if (isset($_POST['result'])) {
-                        switch ($_POST['result']) {
-                            case 'yes':
-                                if ($doc->delete()) {
-                                    $this->redirect($this->createUrl('documents', array('id' => $this->organization->primaryKey)));
-                                } else {
-                                    throw new CHttpException(500, 'Не удалось удалить довереность.');
-                                }
-                                break;
-                            default:
-                                $this->redirect($this->createUrl('power_attorney_le', array('action' => 'show', 'id' => $doc->primaryKey)));
-                                break;
-                        }
-                    }
-                    $this->render('documents/power_attorney_le/delete', array('model' => $doc));
-                }
-            } break;
-
-            default: {
-                throw new CHttpException(500, 'Указано неверное действие.');
             }
+        }
+        $this->render('documents/power_attorney_le/form',
+            array(
+                'model' => $doc,
+                'error' => $error
+            )
+        );
+    }
+
+    /**
+     *  Редактирование доверености с идентификатором $id.
+     *
+     *  @param  int $id
+     *
+     *  @throws CHttpException
+     */
+    public function actionEdit_power_attorney_le($id)
+    {
+        $this->cur_tab = 'documents';
+
+        $doc = PowerAttorneysLE::model()->findByPk($id);
+        if (!$doc){
+            throw new CHttpException(404, 'Не найдена довереность с ID = ' . $id);
+        }
+        $org = Organizations::model()->findByPk($doc->id_yur);
+        if (!$org){
+            throw new CHttpException(404, 'Не найдено юридическое лицо с ID = ' . $doc->id_yur);
+        }
+        $this->organization = $org;
+
+        $error = '';
+        if ($_POST && !empty($_POST['PowerAttorneysLE'])) {
+            $doc->setAttributes($_POST['PowerAttorneysLE']);
+            if ($doc->validate()) {
+                try {
+                    $doc->save();
+                    $this->redirect($this->createUrl('show_power_attorney_le', array('id' => $id)));
+                } catch (Exception $e) {
+                    $error = $e->getMessage();
+                }
+            }
+        }
+        $this->render('documents/power_attorney_le/form', array(
+            'model' => $doc,
+            'error' => $error
+        ));
+    }
+
+    /**
+     *  Удаление доверености с идентификатором $id.
+     *
+     *  @param  int $id
+     *
+     *  @throws CHttpException
+     */
+    public function actionDelete_power_attorney_le($id)
+    {
+        $this->cur_tab = 'documents';
+
+        $doc = PowerAttorneysLE::model()->findByPk($id);
+        if (!$doc){
+            throw new CHttpException(404, 'Не найдена довереность с ID = ' . $id);
+        }
+        $org = Organizations::model()->findByPk($doc->id_yur);
+        if (!$org){
+            throw new CHttpException(404, 'Не найдено юридическое лицо с ID = ' . $doc->id_yur);
+        }
+        $this->organization = $org;
+//
+        if (Yii::app()->request->isAjaxRequest) {
+            $ret = array();
+            try {
+                $doc->delete();
+            } catch (Exception $e) {
+                $ret['error'] = $e->getMessage();
+            }
+            echo CJSON::encode($ret);
+            Yii::app()->end();
+        } else {
+            if (isset($_POST['result'])) {
+                switch ($_POST['result']) {
+                    case 'yes':
+                        if ($doc->delete()) {
+                            $this->redirect($this->createUrl('documents', array('id' => $this->organization->primaryKey)));
+                        } else {
+                            throw new CHttpException(500, 'Не удалось удалить довереность.');
+                        }
+                        break;
+                    default:
+                        $this->redirect($this->createUrl('power_attorney_le', array('action' => 'show', 'id' => $doc->primaryKey)));
+                        break;
+                }
+            }
+            $this->render('documents/power_attorney_le/delete', array('model' => $doc));
         }
     }
 
@@ -808,133 +893,171 @@ class My_organizationsController extends Controller {
     }
 
     /**
-     *  Управление банковским счетом. В $action передается выполняемое действие.
-     *  Если создается новый банковский счет, тогда в $id передается id_yur (идентификатор юр. лица),
-     *  к которому привязывается счет. Во всех остальных случаях $id счета (атрибут id).
+     *  Просмотр банковского счета с идентификатором $id.
      *
-     *  @param  string  $action
-     *  @param  int     $id
+     *  @param  int $id
      *
      *  @throws CHttpException
      */
-    public function actionSettlement($action, $id) {
+    public function actionShow_settlement($id) {
         $this->cur_tab = 'settlements';
 
-        if ($action == 'create'){
-            $acc = new SettlementAccount();
-            $acc->id_yur = $id;
-        } else {
-            $acc = SettlementAccount::model()->findByPk($id);
-            if (!$acc){
-                throw new CHttpException(404, 'Не найден банковский счет.');
-            }
+        $account = SettlementAccount::model()->findByPk($id);
+        if (!$account){
+            throw new CHttpException(404, 'Не найден банковский счет c ID = ' . $id);
         }
-        $org = Organizations::model()->findByPk($acc->id_yur);
+
+        $org = Organizations::model()->findByPk($account->id_yur);
         if (!$org){
-            throw new CHttpException(404, 'Не найдено указанное юридическое лицо.');
+            throw new CHttpException(404, 'Не найдено юридическое лицо с ID = ' . $account->id_yur);
         }
         $this->organization = $org;
 
-        switch ($action){
-            /** Action show */
-            case 'show': {
-                $acc->bank_name = SettlementAccount::getBankName($acc->bank);
+        $this->render('show', array(
+            'content' => $this->renderPartial('settlements/show',
+                array(
+                    'model' => $account
+                ), true),
+            'model' => $account
+        ));
+    }
 
-                $this->render('show', array(
-                    'content' => $this->renderPartial('settlements/show',
-                        array(
-                            'id'    => $id,
-                            'acc'   => $acc
-                        ), true),
-                    'model' => $acc
-                ));
-            } break;
+    /**
+     *  Добавление нового банковского счета к указанному в $org_id юридическому лицу.
+     *
+     *  @param  int $org_id
+     *
+     *  @throws CHttpException
+     */
+    public function actionAdd_settlement($org_id) {
+        $this->cur_tab = 'settlements';
 
-            /** Action update */
-            case 'update': {
-                $error = '';
-                if ($_POST && !empty($_POST['SettlementAccount'])) {
-                    $acc->setAttributes($_POST['SettlementAccount']);
-                    $acc->str_managing_persons = $_POST['SettlementAccount']['str_managing_persons'];
-                    $acc->managing_persons = CJSON::decode($acc->str_managing_persons);
-                    if ($acc->validate()) {
-                        try {
-                            $acc->save();
-                            $this->redirect($this->createUrl('settlement', array('action' => 'show', 'id' => $id)));
-                        } catch (Exception $e) {
-                            $error = $e->getMessage();
-                        }
-                    }
+        $org = Organizations::model()->findByPk($org_id);
+        if (!$org){
+            throw new CHttpException(404, 'Не найдено юридическое лицо с ID = ' . $org_id);
+        }
+        $this->organization = $org;
+
+        $account = new SettlementAccount();
+        $account->id_yur = $org->primaryKey;
+
+        $error = '';
+        if ($_POST && !empty($_POST['SettlementAccount'])) {
+            $account->setAttributes($_POST['SettlementAccount']);
+            $account->str_managing_persons = $_POST['SettlementAccount']['str_managing_persons'];
+            $account->managing_persons = CJSON::decode($account->str_managing_persons);
+            if ($account->validate()) {
+                try {
+                    $account->save();
+                    $this->redirect($this->createUrl('settlements', array('id' => $this->organization->primaryKey)));
+                } catch (Exception $e) {
+                    $error = $e->getMessage();
                 }
-                $acc->bank_name = SettlementAccount::getBankName($acc->bank);
-
-                $this->render('settlements/form',
-                    array(
-                        'model' => $acc,
-                        'error' => $error
-                    )
-                );
-            } break;
-
-            /** Action create */
-            case 'create': {
-                $error = '';
-                if ($_POST && !empty($_POST['SettlementAccount'])) {
-                    $acc->setAttributes($_POST['SettlementAccount']);
-                    $acc->str_managing_persons = $_POST['SettlementAccount']['str_managing_persons'];
-                    $acc->managing_persons = CJSON::decode($acc->str_managing_persons);
-                    if ($acc->validate()) {
-                        try {
-                            $acc->save();
-                            $this->redirect($this->createUrl('settlements', array('id' => $this->organization->primaryKey)));
-                        } catch (Exception $e) {
-                            $error = $e->getMessage();
-                        }
-                    }
-                }
-                $acc->bank_name = SettlementAccount::getBankName($acc->bank);
-
-                $this->render('settlements/form',
-                    array(
-                        'model' => $acc,
-                        'error' => $error
-                    )
-                );
-            } break;
-
-            /** Action delete */
-            case 'delete': {
-                if (Yii::app()->request->isAjaxRequest) {
-                    $ret = array();
-                    try {
-                        $acc->delete();
-                    } catch (Exception $e) {
-                        $ret['error'] = $e->getMessage();
-                    }
-                    echo CJSON::encode($ret);
-                    Yii::app()->end();
-                } else {
-                    if (isset($_POST['result'])) {
-                        switch ($_POST['result']) {
-                            case 'yes':
-                                if ($acc->delete()) {
-                                    $this->redirect($this->createUrl('settlements', array('id' => $this->organization->primaryKey)));
-                                } else {
-                                    throw new CHttpException(500, 'Не удалось удалить банковский счет.');
-                                }
-                            break;
-                            default:
-                                $this->redirect($this->createUrl('settlements', array('action' => 'show', 'id' => $acc->primaryKey)));
-                            break;
-                        }
-                    }
-                    $this->render('settlements/delete', array('model' => $acc));
-                }
-            } break;
-
-            default: {
-                throw new CHttpException(500, 'Указано неверное действие.');
             }
+            $account->bank_name = SettlementAccount::getBankName($account->bank);
+        }
+        $this->render('settlements/form',
+            array(
+                'model' => $account,
+                'error' => $error
+            )
+        );
+    }
+
+    /**
+     *  Редактирование банковского счета с идентификатором $id.
+     *
+     *  @param  int $id
+     *
+     *  @throws CHttpException
+     */
+    public function actionEdit_settlement($id) {
+        $this->cur_tab = 'settlements';
+
+        $account = SettlementAccount::model()->findByPk($id);
+        if (!$account){
+            throw new CHttpException(404, 'Не найден банковский счет c ID = ' . $id);
+        }
+
+        $org = Organizations::model()->findByPk($account->id_yur);
+        if (!$org){
+            throw new CHttpException(404, 'Не найдено юридическое лицо с ID = ' . $account->id_yur);
+        }
+        $this->organization = $org;
+
+        $error = '';
+        if ($_POST && !empty($_POST['SettlementAccount'])) {
+            $bank_id = $account->bank;
+
+            $account->setAttributes($_POST['SettlementAccount']);
+            $account->str_managing_persons = $_POST['SettlementAccount']['str_managing_persons'];
+            $account->managing_persons = CJSON::decode($account->str_managing_persons);
+
+            if ($account->validate()) {
+                try {
+                    $account->save();
+                    $this->redirect($this->createUrl('show_settlement', array('id' => $id)));
+                } catch (Exception $e) {
+                    $error = $e->getMessage();
+                }
+            }
+            if ($bank_id != $account->bank){
+                $account->bank_name = SettlementAccount::getBankName($account->bank);
+            }
+        }
+        $this->render('settlements/form',
+            array(
+                'model' => $account,
+                'error' => $error
+            )
+        );
+    }
+
+    /**
+     *  Удаление банковского счета с идентификатором $id.
+     *
+     *  @param  int $id
+     *
+     *  @throws CHttpException
+     */
+    public function actionDelete_settlement($id) {
+        $this->cur_tab = 'settlements';
+
+        $account = SettlementAccount::model()->findByPk($id);
+        if (!$account){
+            throw new CHttpException(404, 'Не найден банковский счет c ID = ' . $id);
+        }
+        $org = Organizations::model()->findByPk($account->id_yur);
+        if (!$org){
+            throw new CHttpException(404, 'Не найдено юридическое лицо с ID = ' . $account->id_yur);
+        }
+        $this->organization = $org;
+
+        if (Yii::app()->request->isAjaxRequest) {
+            $ret = array();
+            try {
+                $account->delete();
+            } catch (Exception $e) {
+                $ret['error'] = $e->getMessage();
+            }
+            echo CJSON::encode($ret);
+            Yii::app()->end();
+        } else {
+            if (isset($_POST['result'])) {
+                switch ($_POST['result']) {
+                    case 'yes':
+                        if ($account->delete()) {
+                            $this->redirect($this->createUrl('settlements', array('id' => $this->organization->primaryKey)));
+                        } else {
+                            throw new CHttpException(500, 'Не удалось удалить банковский счет.');
+                        }
+                        break;
+                    default:
+                        $this->redirect($this->createUrl('show_settlement', array('id' => $account->primaryKey)));
+                        break;
+                }
+            }
+            $this->render('settlements/delete', array('model' => $account));
         }
     }
 }

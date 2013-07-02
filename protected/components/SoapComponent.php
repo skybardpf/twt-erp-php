@@ -115,7 +115,7 @@ class SoapComponent extends CApplicationComponent
 			throw new Exception($data->return);
 		} else {
 			if (is_string($data->return) && $json) {
-				$data = json_decode($data->return, true);
+                $data = CJSON::decode($data->return);
 			} elseif (!$json) {
 				$data = $data->return;
 			} else {

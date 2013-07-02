@@ -1,50 +1,51 @@
 <?php
 /**
- *  Банковские счета. Информация о банковском счете.
+ *  Банковские счета.Просмотр информации о банковском счете.
  *
  *  User: Skibardin A.A.
  *  Date: 27.06.13
  *
  *  @var $this       My_organizationsController
- *  @var $acc        SettlementAccount
+ *  @var $model      SettlementAccount
  */
 ?>
 
 <h2>Банковский счет</h2>
-<!--<a href="--><?//=$this->createUrl('settlements', array('id' => $this->organization->primaryKey))?><!--">Назад к списку</a>-->
 
-<?
-$this->widget('bootstrap.widgets.TbButton', array(
-    'buttonType' => 'link',
-    'type'       => 'success',
-    'label'      => 'Редактировать',
-    'url'        => $this->createUrl("settlement", array('action' => 'update', 'id' => $acc->primaryKey))
-));
-
-if (!$acc->deleted) {
-    echo "&nbsp;";
-    Yii::app()->clientScript->registerScriptFile($this->asset_static.'/js/legal/delete_item.js');
-
+<?php
     $this->widget('bootstrap.widgets.TbButton', array(
-        'buttonType'    => 'submit',
-        'type'          => 'danger',
-        'label'         => 'Удалить',
-        'htmlOptions'   => array(
-            'data-question'     => 'Вы уверены, что хотите удалить данный документ?',
-            'data-title'        => 'Удаление документа',
-            'data-url'          => $this->createUrl('settlement', array('action' => 'delete','id' => $acc->primaryKey)),
-            'data-redirect_url' => $this->createUrl('settlements', array('id' => $this->organization->primaryKey)),
-            'data-delete_item_element' => '1'
-        )
+        'buttonType' => 'link',
+        'type'       => 'success',
+        'label'      => 'Редактировать',
+        'url'        => $this->createUrl("edit_settlement", array('id' => $model->primaryKey))
     ));
-}
+
+    if (!$model->deleted) {
+        echo "&nbsp;";
+        Yii::app()->clientScript->registerScriptFile($this->asset_static.'/js/legal/delete_item.js');
+
+        $this->widget('bootstrap.widgets.TbButton', array(
+            'buttonType'    => 'submit',
+            'type'          => 'danger',
+            'label'         => 'Удалить',
+            'htmlOptions'   => array(
+                'data-question'     => 'Вы уверены, что хотите удалить данный документ?',
+                'data-title'        => 'Удаление документа',
+                'data-url'          => $this->createUrl('delete_settlement', array('id' => $model->primaryKey)),
+                'data-redirect_url' => $this->createUrl('settlements', array('id' => $this->organization->primaryKey)),
+                'data-delete_item_element' => '1'
+            )
+        ));
+    }
 ?>
+
 <br/><br/>
 <div>
+
 <?php
     $person = '';
     $p = Individuals::getValues();
-    foreach ($acc->managing_persons as $pid){
+    foreach ($model->managing_persons as $pid){
         if (isset($p[$pid])){
             $person .= CHtml::link($p[$pid], $this->createUrl('/legal/individuals/view/', array('id' => $pid)));
         } else {
@@ -54,10 +55,10 @@ if (!$acc->deleted) {
     }
 
     $cur = Currencies::getValues();
-    $cur = (isset($cur[$acc->cur])) ? $cur[$acc->cur] : 'Не указано';
+    $cur = (isset($cur[$model->cur])) ? $cur[$model->cur] : 'Не указано';
 
 	$this->widget('bootstrap.widgets.TbDetailView', array(
-		'data' => $acc,
+		'data' => $model,
 		'attributes' => array(
             array('name' => 's_nom',        'label' => 'Номер счета'),
             array('name' => 'iban',         'label' => 'IBAN'),
