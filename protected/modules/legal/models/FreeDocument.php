@@ -145,14 +145,11 @@ class FreeDocument extends SOAPModel
 	public function rules()
     {
 		return array(
-			array('name, id_yur, type_yur, date, expire', 'required'),
-			array('id, from_user, num, user, deleted, comment', 'safe'),
-
-            array('num', 'validNum'),
-            array('date', 'validDate'),
-            array('expire', 'validDate'),
-
-//			array('id, name', 'safe', 'on'=>'search'),
+			array('name', 'length', 'max' => 25),
+			array('name', 'required'),
+            array('date, expire', 'date', 'format' => 'yyyy-MM-dd'),
+            array('comment', 'length', 'max' => 50),
+            array('num', 'length', 'max' => 50),
 		);
 	}
 

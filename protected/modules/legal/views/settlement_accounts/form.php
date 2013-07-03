@@ -6,7 +6,7 @@
  *
  *  @var $this          Settlement_accountsController
  *  @var $model         SettlementAccount
- *  @var $form          TbActiveForm
+ *  @var $form          MTbActiveForm
  *  @var $organization  Organizations
  *  @var $error         string
  */
@@ -15,11 +15,9 @@
 <?php
     Yii::app()->clientScript->registerScriptFile('/static/js/jquery.json-2.4.min.js');
 
-//    $this->beginContent('/my_organizations/show');
-
     echo '<h2>'.($model->primaryKey ? 'Редактирование ' : 'Создание ').'банковского счета</h2>';
 
-    $form = $this->beginWidget('bootstrap.widgets.TbActiveForm', array(
+    $form = $this->beginWidget('bootstrap.widgets.MTbActiveForm', array(
         'id'    => 'horizontalForm',
         'type'  => 'horizontal',
     ));
@@ -48,11 +46,16 @@
             ? $this->createUrl('view', array('id' => $model->primaryKey))
             : $this->createUrl('list', array('org_id' => $organization->primaryKey))
     ));
+?>
 
+<?php
     if ($error) {
+        echo '<br/><br/>';
         echo CHtml::openTag('div', array('class' => 'alert alert-error')).$error.CHtml::closeTag('div');
+    } elseif ($model->getErrors()) {
+        echo '<br/><br/>';
+        echo $form->errorSummary($model);
     }
-    echo $form->errorSummary($model);
 ?>
 
 <fieldset>
@@ -70,9 +73,7 @@
 ?>
 <?php /** data_open */ ?>
 <div class="control-group">
-    <label class="control-label" for="SettlementAccount_data_open">
-        <?= $model->getAttributeLabel("data_open") . CHtml::tag('span', array('class' => 'required')) .'&nbsp;*&nbsp;'; ?>
-    </label>
+    <?= $form->labelEx($model, 'data_open', array('class' => 'control-label')); ?>
     <div class="controls">
         <?php $this->widget('zii.widgets.jui.CJuiDatePicker',array_merge(
             array(
@@ -85,9 +86,7 @@
 
 <?php /** data_closed */ ?>
 <div class="control-group">
-    <label class="control-label" for="SettlementAccount_data_closed">
-        <?= $model->getAttributeLabel("data_closed") . CHtml::tag('span', array('class' => 'required')) .'&nbsp;*&nbsp;'; ?>
-    </label>
+    <?= $form->labelEx($model, 'data_closed', array('class' => 'control-label')); ?>
     <div class="controls">
         <?php $this->widget('zii.widgets.jui.CJuiDatePicker',array_merge(
             array(
@@ -119,7 +118,7 @@
                         'class'     => 'managing_person',
                         'data-pid'  => $pid,
                     ),
-                    CHtml::link($p[$pid], $this->createUrl('/legal/individuals/view/', array('id' => $pid))) .
+                    CHtml::link($p[$pid], $this->createUrl('individuals/view', array('id' => $pid))) .
                     '&nbsp;' .
                     CHtml::tag('span', array(
                         'class' => 'icon-trash',
@@ -134,9 +133,7 @@
     echo $form->hiddenField($model, 'str_managing_persons');
 ?>
 <div class="control-group">
-    <label class="control-label" for="SettlementAccount_managing_persons">
-        <?= $model->getAttributeLabel("managing_persons") . CHtml::tag('span', array('class' => 'required')) .'&nbsp;*&nbsp;'; ?>
-    </label>
+    <?= $form->labelEx($model, 'managing_persons', array('class' => 'control-label')); ?>
     <div class="<?= $class; ?>" id="managing_person_message">
         Добавьте физ. лиц, управляющих счетом
     </div>
@@ -181,7 +178,6 @@
     </div>
 
 <?php $this->endWidget(); ?>
-<?php //$this->endContent(); ?>
 
 <script>
     $(document).ready(function(){

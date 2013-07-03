@@ -247,8 +247,16 @@ class Organizations extends SOAPModel {
 	 */
 	public function rules() {
 		return array(
-			array('country, name, full_name', 'required'),
-			array('id, resident, type_no_res, contragent, parent, comment, inn, kpp, ogrn, yur_address, fact_address, reg_nom, sert_nom, sert_date, vat_nom, profile, eng_name', 'safe'),
+			array('country', 'required'),
+			array('country', 'in', 'range' => array_keys(Countries::getValues())),
+
+			array('name, full_name', 'required'),
+
+            array('id, resident, type_no_res, contragent, parent,
+                comment, inn, kpp, ogrn, yur_address, fact_address,
+                reg_nom, sert_nom, sert_date, vat_nom,
+                profile, eng_name', 'safe'
+            ),
 
 			array('id, title, show', 'safe', 'on'=>'search'),
 		);

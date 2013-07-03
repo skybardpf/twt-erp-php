@@ -20,7 +20,6 @@
  * @property string $deleted
  */
 class FoundingDocument extends SOAPModel {
-
 	public $from_user = true;
 
 	/**
@@ -92,8 +91,9 @@ class FoundingDocument extends SOAPModel {
 	 */
 	public function save() {
 		$attr = $this->attributes;
-		if (!$this->primaryKey) unset($attr['id']);
-		else {
+		if (!$this->primaryKey) {
+            unset($attr['id']);
+        } else {
 			$cacher = new CFileCache();
 			$cacher->set(__CLASS__.'_objects_'.$this->primaryKey, false, 1);
 		}
@@ -122,7 +122,10 @@ class FoundingDocument extends SOAPModel {
 			'typ_doc'           => 'Тип документа',
 			'deleted'           => 'Помечен на удаление',
 			'from_user'         => 'Добавлено пользователем',
-			'user'              => 'Пользователь'
+			'user'              => 'Пользователь',
+
+//			'scans'             => 'Сканы',
+//			'files'             => 'Файлы'
 		);
 
 		/*
@@ -146,9 +149,17 @@ class FoundingDocument extends SOAPModel {
 	 */
 	public function rules() {
 		return array(
-			array('name, id_yur, date, expire, typ_doc', 'required'),
-			array('num, comment', 'safe'),
-			//array('id, name', 'safe', 'on'=>'search'),
+            array('name', 'required'),
+            array('name', 'length', 'max' => 25),
+
+            array('num', 'length', 'max' => 10),
+
+            array('typ_doc', 'required'),
+            array('typ_doc', 'in', 'range'  => array_keys(LEDocumentType::getValues())),
+
+            array('date, expire', 'date', 'format' => 'yyyy-MM-dd'),
+
+            array('comment', 'length', 'max' => 50),
 		);
 	}
 }

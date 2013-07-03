@@ -7,14 +7,14 @@
  *  @var $this          Power_attorney_leController
  *  @var $model         PowerAttorneysLE
  *  @var $organization  Organizations
- *  @var $form          TbActiveForm
  */
 ?>
 
 <?php
     echo '<h2>'.($model->primaryKey ? 'Редактирование ' : 'Создание ').'доверенности</h2>';
 
-    $form = $this->beginWidget('bootstrap.widgets.TbActiveForm', array(
+    /* @var $form MTbActiveForm */
+    $form = $this->beginWidget('bootstrap.widgets.MTbActiveForm', array(
         'id'    => 'model-form-form',
         'type'  => 'horizontal',
         'enableAjaxValidation' => false,
@@ -32,15 +32,15 @@
             ? $this->createUrl('view', array('id' => $model->primaryKey))
             : $this->createUrl('documents/list', array('org_id' => $organization->primaryKey))
     ));
+?>
 
+<?php
     if ($error) {
         echo '<br/><br/>';
         echo CHtml::openTag('div', array('class' => 'alert alert-error')).$error.CHtml::closeTag('div');
-    }
-    $error = $form->errorSummary($model);
-    if (empty($error)) {
-//        echo '<br/><br/>';
-        echo $error;
+    } elseif ($model->getErrors()) {
+        echo '<br/><br/>';
+        echo $form->errorSummary($model);
     }
 ?>
 
@@ -70,9 +70,7 @@
 ?>
 <?php /** date */ ?>
 <div class="control-group">
-    <label class="control-label" for="PowerAttorneysLE_date">
-        <?= $model->getAttributeLabel("date") . CHtml::tag('span', array('class' => 'required')) .'&nbsp;*&nbsp;'; ?>
-    </label>
+    <?= $form->labelEx($model, 'date', array('class' => 'control-label')); ?>
     <div class="controls">
         <?php $this->widget('zii.widgets.jui.CJuiDatePicker',array_merge(
             array(
@@ -85,9 +83,7 @@
 
 <?php /* expire */?>
 <div class="control-group">
-    <label class="control-label" for="PowerAttorneysLE_expire">
-        <?= $model->getAttributeLabel("expire") . CHtml::tag('span', array('class' => 'required')) .'&nbsp;*&nbsp;'; ?>
-    </label>
+    <?= $form->labelEx($model, 'expire', array('class' => 'control-label')); ?>
     <div class="controls">
         <?php $this->widget('zii.widgets.jui.CJuiDatePicker',array_merge(
             array(
@@ -100,9 +96,7 @@
 
 <?php /* break */?>
 <div class="control-group">
-    <label class="control-label" for="PowerAttorneysLE_break">
-        <?= $model->getAttributeLabel("break"); ?>
-    </label>
+    <?= $form->labelEx($model, 'break', array('class' => 'control-label')); ?>
     <div class="controls">
         <?php $this->widget('zii.widgets.jui.CJuiDatePicker',array_merge(
             array(

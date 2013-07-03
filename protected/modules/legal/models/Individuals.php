@@ -168,9 +168,14 @@ class Individuals extends SOAPModel {
 
 	public function rules() {
 		return array(
+            array('citizenship', 'required'),
+            array('citizenship', 'in', 'range'  => array_keys(Countries::getValues())),
+
+            array('name', 'required'),
+            array('family', 'required'),
+
 			array('name, parent_name, family, birth_date, birth_place, date_exp_pass',     'safe'),
-			array('phone, email, adres, ser_nom_pass, date_pass, organ_pass, citizenship', 'safe'),
-			//array('id, name, show', 'safe', 'on'=>'search'),
+            array('phone, email, adres, ser_nom_pass, date_pass, organ_pass, citizenship', 'safe'),
 		);
 	}
 }

@@ -75,34 +75,7 @@ class PowerAttorneysLE extends SOAPModel {
      *  @return array
      */
     public function save() {
-//        $cache = new CFileCache();
-//        $cache->set('PowerAttorneysLE_values', false, 1);
-
-//        $attrs = $this->getAttributes();
-//
-//        $attrs['from_user'] = intval($attrs['from_user']) ? 'true' : 'false';
-//        foreach ($attrs as $k => $a) {
-//	        if (!in_array($k, array('from_user'))) {
-//		        if (!$a) $attrs[$k] = '';
-//	        }
-//        }
-
-//        if (!$this->getprimaryKey()) $attr['id'] = ''; //unset($attrs['id']); // New record
-//        unset($attrs['deleted']);
-
-//        $ret = $this->SOAP->savePowerAttorneyLE(SoapComponent::getStructureElement(array('data' => $attrs)));
-//        $ret = SoapComponent::parseReturn($ret, false);
-//        return $ret;
-
-
         $data = $this->getAttributes();
-
-//        $data['from_user'] = intval($data['from_user']) ? 'true' : 'false';
-//        foreach ($data as $k => $a) {
-//            if (!in_array($k, array('from_user'))) {
-//                if (!$a) $data[$k] = '';
-//            }
-//        }
 
         if (!$this->getprimaryKey()){
             unset($data['id']);
@@ -119,6 +92,14 @@ class PowerAttorneysLE extends SOAPModel {
         unset($data['e_ver']);
         unset($data['contract_types']);
         unset($data['loaded']);
+
+        $doc_types = array(
+            'Генеральная'       => 'Генеральная',
+            'Свободная'         => 'Свободная',
+            'По видам договоров'=> 'ПоВидамДоговоров'
+        );
+
+        $data['typ_doc'] = (isset($doc_types[$data['typ_doc']])) ? $doc_types[$data['typ_doc']] : $doc_types['Генеральная'];
 
         $arr = array(
             'ElementsStructure' => SoapComponent::getStructureElement($data, array('lang' => 'eng')),
@@ -179,7 +160,7 @@ class PowerAttorneysLE extends SOAPModel {
 		return array(
 			'Генеральная'       => 'Генеральная',
 			'Свободная'         => 'Свободная',
-			'ПоВидамДоговоров'  => 'По видам договоров'
+			'По видам договоров'=> 'По видам договоров'
 		);
 	}
 
@@ -234,15 +215,19 @@ class PowerAttorneysLE extends SOAPModel {
     public function rules()
 	{
 		return array(
-			array('typ_doc', 'in', 'range'  => array_keys(PowerAttorneysLE::getDocTypes())),
-			array('type_yur', 'in', 'range' => array_keys(PowerAttorneysLE::getYurTypes())),
-			array('id_lico', 'in', 'range'  => array_keys(Individuals::getValues())),
-//			array('id_yur', 'in', 'range'  => array_keys(Organizations::getValues())),
-//            id_yur,
-            array('name, typ_doc, id_lico, nom, date, expire', 'required'),
-//            type_yur,
+            array('id_lico', 'required'),
+            array('id_lico', 'in', 'range'  => array_keys(Individuals::getValues())),
+
+            array('typ_doc', 'required'),
+            array('typ_doc', 'in', 'range'  => array_keys(PowerAttorneysLE::getDocTypes())),
+
+            array('name', 'required'),
+            array('name', 'length', 'max' => 25),
+
+            array('nom', 'length', 'max' => 20),
+            array('comment', 'length', 'max' => 50),
+
             array('date, expire, break', 'date', 'format' => 'yyyy-MM-dd'),
-			array('name, nom, comment', 'safe'),
 		);
 	}
 }

@@ -44,7 +44,7 @@ class SettlementAccount extends SOAPModel {
     public static function getAccountTypes() {
         return array(
             'Расчетный' => 'Расчетный',
-            'Депзитный' => 'Депзитный',
+            'Депозитный' => 'Депозитный',
             'Ссудный'   => 'Ссудный',
             'Аккредитивный' => 'Аккредитивный',
             'Иной'      => 'Иной',
@@ -252,30 +252,50 @@ class SettlementAccount extends SOAPModel {
     public function rules()
     {
         return array(
-//            array('typ_doc', 'in', 'range'  => array_keys(PowerAttorneysLE::getDocTypes())),
-//            array('type_yur', 'in', 'range' => array_keys(PowerAttorneysLE::getYurTypes())),
-//            array('id_lico', 'in', 'range'  => array_keys(Individuals::getValues())),
-//			array('id_yur', 'in', 'range'  => array_keys(Organizations::getValues())),
-//            id_yur,
-            array(
-                's_nom, iban, cur, vid, service, bank, name, address, contact, management_method, data_open, data_closed',
-                'required'
-            ),
+            array('s_nom', 'length', 'max' => 20),
+            array('iban', 'length', 'max' => 33),
+
+            array('cur', 'required'),
+            array('cur', 'in', 'range'  => array_keys(Currencies::getValues())),
+
+            array('bank', 'required'),
+            array('bank', 'isValidBank'),
+
+            array('vid', 'required'),
+            array('vid', 'in', 'range'  => array_keys(SettlementAccount::getAccountTypes())),
+
+            array('service', 'required'),
+            array('service', 'in', 'range'  => array_keys(SettlementAccount::getServiceTypes())),
+
+            array('name', 'length', 'max' => 50),
+
             array('data_open, data_closed', 'date', 'format' => 'yyyy-MM-dd'),
-            array('managing_persons', 'emptyPersons'),
-            array('bank', 'isBank'),
+
+            array('address', 'length', 'max' => 100),
+            array('contact', 'length', 'max' => 100),
+
+            array('management_method', 'required'),
+            array('management_method', 'in', 'range'  => array_keys(SettlementAccount::getManagementMethods())),
+
+            array('managing_persons', 'required'),
+//            array('managing_persons', 'emptyPersons'),
 
             array('bank_name, str_managing_persons', 'safe'),
         );
     }
 
-    public function emptyPersons($attribute){
-        if (empty($this->$attribute) || !is_array($this->$attribute)){
-            $this->addError($attribute, 'Укажите список управляющих персон.');
-        }
-    }
+//    public function emptyPersons($attribute){
+//        if (empty($this->$attribute) || !is_array($this->$attribute)){
+//            $this->addError($attribute, 'Укажите список управляющих персон.');
+//        }
+//    }
 
-    public function isBank($attribute){
+    /**
+     *  Проверка правильности введенного идентификатора банка.
+     *
+     *  @param $attribute
+     */
+    public function isValidBank($attribute){
         if (empty($this->$attribute)){
             $this->addError($attribute, 'Необходимо указать БИК / SWIFT');
         } else {

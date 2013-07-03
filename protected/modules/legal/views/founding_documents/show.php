@@ -9,7 +9,11 @@
  *  @var $model         FoundingDocument
  *  @var $organization  Organizations
  */
+?>
 
+<h2>Учредительный документ</h2>
+
+<?php
 $this->widget('bootstrap.widgets.TbButton', array(
     'buttonType' => 'link',
     'type'       => 'success',

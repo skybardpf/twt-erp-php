@@ -4,11 +4,10 @@
  * @var $model Individuals
  * @var $form  TbActiveForm
  */
-
-if ($error) echo CHtml::openTag('div', array('class' => 'alert alert-error')).$error.CHtml::closeTag('div'); ?>
+?>
 
 <div class="form">
-	<?php $form = $this->beginWidget('bootstrap.widgets.TbActiveForm', array(
+	<?php $form = $this->beginWidget('bootstrap.widgets.MTbActiveForm', array(
 		'id'    => 'model-form-form',
 		'type'  => 'horizontal',
 		'enableAjaxValidation' => false,
@@ -23,8 +22,16 @@ if ($error) echo CHtml::openTag('div', array('class' => 'alert alert-error')).$e
 								: $this->createUrl('index')
 							)
 	)); ?>
-    
-	<?=$form->errorSummary($model)?>
+
+<?php
+    if ($error) {
+        echo '<br/><br/>';
+        echo CHtml::openTag('div', array('class' => 'alert alert-error')).$error.CHtml::closeTag('div');
+    } elseif ($model->getErrors()) {
+        echo '<br/><br/>';
+        echo $form->errorSummary($model);
+    }
+?>
 
 	<fieldset>
 		<?= $form->textFieldRow(    $model, 'family',      array('class' => 'span6')); ?>
@@ -133,25 +140,6 @@ if ($error) echo CHtml::openTag('div', array('class' => 'alert alert-error')).$e
 		array('name' => 'adres',            'label' => 'Адрес'),
 		array('name' => 'email',            'label' => 'E-mail'),--> */?>
 	</fieldset>
-	<div class="control-group ">
-		<div class="controls">
-			<?php
-			$this->widget('bootstrap.widgets.TbButton', array(
-				'buttonType' => 'submit',
-				'type' => 'primary',
-				'label'=> (!$model->getprimaryKey() ? 'Добавить' : 'Сохранить'))
-			);
-			echo '&nbsp;';
-			$this->widget('bootstrap.widgets.TbButton', array(
-					'url' => $this->createUrl('index'),
-					'buttonType' => '',
-					'type' => '',
-					'label'=> 'Отмена')
-			);
-			?>
-		</div>
-	</div>
 
 	<?php $this->endWidget(); ?>
-
 </div>

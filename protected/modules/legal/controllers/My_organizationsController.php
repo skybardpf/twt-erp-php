@@ -64,46 +64,76 @@ class My_organizationsController extends Controller {
 		}
 	}
 
-    public function actionAdd($id = false)
+    /**
+     *  Добавление новой организации.
+     *
+     *  @throws CHttpException
+     */
+    public function actionAdd()
     {
-        Yii::app()->clientScript->registerScriptFile($this->asset_static.'/js/legal/organizations/one.js', CClientScript::POS_HEAD);
+        /** @var $org Organizations */
+        $org = new Organizations();
 
-        $form_url_params = array();
-        if(empty($_POST['Organizations'])){ // вгружаем форму
-            if($id){
-                $model = Organizations::model()->findByPk($id);
-                $form_url_params['id'] = $id;
-            }
-            else{
-                $model = Organizations::model();
-            }
-            $countries = Countries::getValues();
-            $this->render('add', array('model' => $model, 'countries' => $countries, 'url_params' => $form_url_params));
-        }
-        else{ // если POST не пустой, значит сохраняем форму и редиректим на страницу организации
-            $organization = Organizations::model();
-
-            foreach($_POST['Organizations'] as $parameter => $value){
-                $organization->$parameter = $value;
-            }
-            if($id){
-                $organization->id = $id;
-            }
-            //CVarDumper::dump($organization);
-            //CVarDumper::dump($organization->save());
-            $result = $organization->save();
-            if(!$result['error'])
-                $this->actionView($result['id']);
-            else{
-                $countries = Countries::getValues();
-                $this->render('add', array('model' => $organization, 'countries' => $countries, 'url_params' => $form_url_params, 'error_message' => $result['errorMessage']));
+        $error = '';
+        if ($_POST && !empty($_POST['Organizations'])) {
+            $org->setAttributes($_POST['Organizations']);
+            if ($org->validate()) {
+                try {
+                    $org->save();
+                    $this->redirect($this->createUrl('index'));
+                } catch (Exception $e) {
+                    $error = $e->getMessage();
+                }
             }
         }
+
+        $this->render('/my_organizations/show', array(
+            'content' => $this->renderPartial('/my_organizations/form',
+                array(
+                    'model' => $org,
+                    'error' => $error,
+                ), true),
+            'organization' => $org,
+            'cur_tab' => 'info',
+        ));
     }
 
+    /**
+     *  Редактирование организации.
+     *
+     *  @param  string $id
+     *  @throws CHttpException
+     */
     public function actionEdit($id)
     {
-        $this->actionAdd($id);
+        /** @var $org Organizations */
+        $org = Organizations::model()->findByPk($id);
+        if (!$org) {
+            throw new CHttpException(404, 'Не найдено юр. лицо.');
+        }
+
+        $error = '';
+        if ($_POST && !empty($_POST['Organizations'])) {
+            $org->setAttributes($_POST['Organizations']);
+            if ($org->validate()) {
+                try {
+                    $org->save();
+                    $this->redirect($this->createUrl('view', array('id' => $id)));
+                } catch (Exception $e) {
+                    $error = $e->getMessage();
+                }
+            }
+        }
+
+        $this->render('/my_organizations/show', array(
+            'content' => $this->renderPartial('/my_organizations/form',
+                array(
+                    'model' => $org,
+                    'error' => $error,
+                ), true),
+            'organization' => $org,
+            'cur_tab' => 'info',
+        ));
     }
 
 // ╔══════════════╗

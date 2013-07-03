@@ -124,7 +124,7 @@ class IndividualsController extends Controller {
 			if ($model->validate()) {
 				try {
 					$model->save();
-					$this->redirect($this->createUrl('index'));
+					$this->redirect($this->createUrl('view', array('id' => $model->primaryKey)));
 				} catch (Exception $e) {
 					$error = $e->getMessage();
 				}

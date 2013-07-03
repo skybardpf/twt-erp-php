@@ -79,7 +79,7 @@ class Founding_documentsController extends Controller {
             throw new CHttpException(404, 'Юр.лицо данного документа не получено.');
         }
 
-        $doc->user      = SOAPModel::USER_NAME;
+        $doc->user = SOAPModel::USER_NAME;
         $error = '';
         if ($_POST && !empty($_POST['FoundingDocument'])) {
             $doc->setAttributes($_POST['FoundingDocument']);

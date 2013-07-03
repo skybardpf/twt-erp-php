@@ -134,7 +134,7 @@ class LEDocumentType extends SOAPModel {
 	 * Список доступных значений Типов документов
 	 * @return array
 	 */
-	static function getValues() {
+    public static function getValues() {
 		$cacher = new CFileCache();
 		$cache = $cacher->get('LEDoc_type_values');
 		if ($cache === false) {
