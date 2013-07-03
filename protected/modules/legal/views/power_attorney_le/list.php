@@ -2,10 +2,11 @@
 /**
  *  Документы -> Доверенности
  *  User: Skibardin A.A.
- *  Date: 26.06.13
+ *  Date: 03.07.13
  *
- *  @var $this       My_organizationsController
- *  @var $docs       PowerAttorneysLE[]
+ *  @var $this          DocumentsController
+ *  @var $docs          PowerAttorneysLE[]
+ *  @var $organization  Organizations
  */
 ?>
 
@@ -16,7 +17,7 @@
                 'label'=>'Новая доверенность',
                 'type'=>'success', // null, 'primary', 'info', 'success', 'warning', 'danger' or 'inverse'
                 'size'=>'normal', // null, 'large', 'small' or 'mini'
-                'url' => $this->createUrl("add_power_attorney_le", array('org_id' => $this->organization->primaryKey))
+                'url' => $this->createUrl("power_attorney_le/add", array('org_id' => $organization->primaryKey))
             )); ?>
         </div>
         <h3>Доверенности</h3>
@@ -37,22 +38,24 @@
                 array(
                     'name'  => 'nom',
                     'header'=> 'Номер',
-                    'type'  => 'raw',
-                    'value' => 'CHtml::link($data["nom"], Yii::app()->getController()->createUrl("show_power_attorney_le", array("id" => $data["id"])))'
+//                    'type'  => 'raw',
+//                    'value' => 'CHtml::link($data["nom"], Yii::app()->getController()->createUrl("show_power_attorney_le", array("id" => $data["id"])))'
                 ),
                 array(
                     'name'   => 'name',
+                    'type'  => 'raw',
                     'header' => 'Название',
+                    'value' => 'CHtml::link($data["name"], Yii::app()->getController()->createUrl("power_attorney_le/view", array("id" => $data["id"])))'
                 ),
-                array(
-                    'name'   => 'id_yur',
-//                    'header' => 'Название',
-                ),
+//                array(
+//                    'name'   => 'id_yur',
+////                    'header' => 'Название',
+//                ),
                 array(
                     'name'   => 'owner_name',
                     'header' => 'Кому выдана',
                     'type'   => 'raw',
-                    'value'  => '(is_null($data["owner_name"])) ? "Не задано" : CHtml::link($data["owner_name"], Yii::app()->getController()->createUrl("/legal/individuals/view/", array("id" => $data["id_lico"])))'
+                    'value'  => '(is_null($data["owner_name"])) ? "Не задано" : CHtml::link($data["owner_name"], Yii::app()->getController()->createUrl("individuals/view", array("id" => $data["id_lico"])))'
                 ),
                 array('name'=>'expire', 'header'=>'Срок действия'),
             ),

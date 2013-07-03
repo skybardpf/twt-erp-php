@@ -1,19 +1,20 @@
 <?php
 /**
- * User: Forgon
- * Date: 11.06.2013 от Рождества Христова
+ *  Просмотр учредительного документа.
  *
- * @var $this   My_OrganizationsController
- * @var $model  FoundingDocument
+ *  User: Skibardin A.A.
+ *  Date: 03.07.2013
+ *
+ *  @var $this          Founding_documentsController
+ *  @var $model         FoundingDocument
+ *  @var $organization  Organizations
  */
-
-$this->beginContent('/my_organizations/show');
 
 $this->widget('bootstrap.widgets.TbButton', array(
     'buttonType' => 'link',
     'type'       => 'success',
     'label'      => 'Редактировать',
-    'url'        => Yii::app()->getController()->createUrl("edit_founding", array('id' => $model->id))
+    'url'        => $this->createUrl("edit", array('id' => $model->primaryKey))
 ));
 
 if (!$model->deleted) {
@@ -26,14 +27,15 @@ if (!$model->deleted) {
 		'htmlOptions'   => array(
 			'data-question'     => 'Вы уверены, что хотите удалить данный учредительный документ?',
 			'data-title'        => 'Удаление учредительного документа',
-			'data-url'          => $this->createUrl('/legal/my_organizations/delete_founding', array('id' => $model->primaryKey)),
-			'data-redirect_url' => $this->createUrl('/legal/my_organizations/documents', array('id' => $this->organization->primaryKey)),
+			'data-url'          => $this->createUrl('delete', array('id' => $model->primaryKey)),
+			'data-redirect_url' => $this->createUrl('documents/list', array('org_id' => $organization->primaryKey)),
 			'data-delete_item_element' => '1'
 		)
 	));
 }
 ?>
 
+<br/><br/>
 <div>
 	<?php
 	$doc_types = LEDocumentType::getValues();
@@ -51,5 +53,9 @@ if (!$model->deleted) {
 	));
 	?>
 </div>
-<?php
-$this->endContent();
+
+<fieldset>
+    <?= CHtml::link('Скачать электронную версию', '#') . '<br/>'; ?>
+    <?= CHtml::link('Скачать сканы', '#') . '<br/>'; ?>
+    <?= CHtml::link('Сгенерировать документ', '#') . '<br/>'; ?>
+</fieldset>

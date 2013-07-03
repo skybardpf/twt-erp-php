@@ -38,6 +38,7 @@
         );
     }
 ?>
+<br/><br/>
 <div>
 	<?php
 	$this->widget('bootstrap.widgets.TbDetailView', array(

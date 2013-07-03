@@ -11,7 +11,7 @@
         'label'=>'Новое физическое лицо',
         'type'=>'success', // null, 'primary', 'info', 'success', 'warning', 'danger' or 'inverse'
         'size'=>'normal', // null, 'large', 'small' or 'mini'
-        'url' => Yii::app()->getController()->createUrl("add")
+        'url' => $this->createUrl("add")
     )); ?>
 </div>
 <h2>Мои физические лица</h2>

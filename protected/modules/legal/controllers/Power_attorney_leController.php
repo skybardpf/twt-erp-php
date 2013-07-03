@@ -1,106 +1,171 @@
 <?php
 /**
- * User: Forgon
- * Date: 02.04.13
+ *  Управление довереностями.
+ *
+ *  User: Skibardin A.A.
+ *  Date: 03.07.13
  */
 class Power_attorney_leController extends Controller {
-	public $menu_elem = 'legal.PowerAttorneyLE';
-	public $controller_title = 'Доверенности Юр.Лиц';
+    public $layout = 'inner';
+    public $menu_current = 'legal';
 
-	/**
-	 * Список доверенностей
-	 */
-	public function actionIndex() {
-		$entities = PowerAttorneysLE::model()->where('deleted', false)->findAll();
-		$this->render('index', array('elements' => $entities));
-	}
+    /**
+     *  Просмотр доверености с идентификатором $id.
+     *
+     *  @param  string  $id
+     *
+     *  @throws CHttpException
+     */
+    public function actionView($id)
+    {
+        $doc = PowerAttorneysLE::model()->findByPk($id);
+        if (!$doc){
+            throw new CHttpException(404, 'Не найдена довереность.');
+        }
+        $org = Organizations::model()->findByPk($doc->id_yur);
+        if (!$org){
+            throw new CHttpException(404, 'Не найдено юридическое лицо.');
+        }
 
-	/**
-	 * Просмотр доверенности
-	 * @param $id
-	 */
-	public function actionView($id) {
-		$model = PowerAttorneysLE::model()->findByPk($id);
-		$this->render('show', array('model' => $model));
-	}
+        $this->render('/my_organizations/show', array(
+            'content' => $this->renderPartial('/power_attorney_le/show',
+                array(
+                    'model'         => $doc,
+                    'organization'  => $org
+                ), true),
+            'organization' => $org,
+            'cur_tab' => 'documents',
+        ));
+    }
 
-	/**
-	 * Удаление доверенности
-	 * @param $id
-	 *
-	 * @throws CHttpException
-	 */
-	public function actionDelete($id) {
-		/** @var $model PowerAttorneysLE */
-		$model = PowerAttorneysLE::model()->findByPk($id);
-		if (empty($model)) throw new CHttpException(404);
-		if (Yii::app()->request->isAjaxRequest) {
-			$model->delete();
-		}
-		if (isset($_POST['result'])) {
-			switch ($_POST['result']) {
-				case 'yes':
-					if ($model->delete()) {
-						$this->redirect($this->createUrl('index'));
-					} else {
-						//throw new CException('Не удалось удалить страницу');
-					}
-					break;
-				default:
-					$this->redirect($this->createUrl('show', array('id' => $model->id)));
-					break;
-			}
-		}
-		$this->render('delete', array('model' => $model));
-	}
+    /**
+     *  Добавление новой доверености к указанному в $org_id юридическому лицу.
+     *
+     *  @param  string $org_id
+     *
+     *  @throws CHttpException
+     */
+    public function actionAdd($org_id)
+    {
+        $org = Organizations::model()->findByPk($org_id);
+        if (!$org){
+            throw new CHttpException(404, 'Не найдено юридическое лицо.');
+        }
 
-	/**
-	 * Добавление доверенности
-	 */
-	public function actionAdd() {
-		$model = new PowerAttorneysLE();
-		$error = '';
-		if (isset($_POST[get_class($model)])) {
-			$model->setAttributes($_POST[get_class($model)]);
-			if ($model->validate()) {
-				try {
-					$model->save();
-					//$this->redirect($this->createUrl('index'));
-				} catch (Exception $e) {
-					$error = $e->getMessage();
-				}
-			}
-		}
-		$this->render('add', array('model' => $model, 'error' => $error));
-	}
+        $doc = new PowerAttorneysLE();
+        $doc->id_yur = $org->primaryKey;
 
-	/**
-	 * Редактирование доверенности
-	 * @param $id
-	 *
-	 * @throws CHttpException
-	 */
-	public function actionUpdate($id) {
-		$model = PowerAttorneysLE::model()->findByPk($id);
-		if (empty($model)) throw new CHttpException(404);
+        $error = '';
+        if ($_POST && !empty($_POST['PowerAttorneysLE'])) {
+            $doc->setAttributes($_POST['PowerAttorneysLE']);
+            if ($doc->validate()) {
+                try {
+                    $doc->save();
+                    $this->redirect($this->createUrl('documents/list', array('org_id' => $org->primaryKey)));
+                } catch (Exception $e) {
+                    $error = $e->getMessage();
+                }
+            }
+        }
 
-		if(isset($_POST['ajax']) && $_POST['ajax']==='model-form-form') {
-			echo CActiveForm::validate($model);
-			Yii::app()->end();
-		}
+        $this->render('/my_organizations/show', array(
+            'content' => $this->renderPartial('/power_attorney_le/form',
+                array(
+                    'model'         => $doc,
+                    'error'         => $error,
+                    'organization'  => $org
+                ), true),
+            'organization' => $org,
+            'cur_tab' => 'documents',
+        ));
+    }
 
-		$error = '';
-		if (isset($_POST[get_class($model)])) {
-			$model->setAttributes($_POST[get_class($model)]);
-			if ($model->validate()) {
-				try {
-					$model->save();
-					//$this->redirect($this->createUrl('index'));
-				} catch (Exception $e) {
-					$error = $e->getMessage();
-				}
-			}
-		}
-		$this->render('update', array('model' => $model, 'error' => $error));
-	}
+    /**
+     *  Редактирование доверености с идентификатором $id.
+     *
+     *  @param  string $id
+     *
+     *  @throws CHttpException
+     */
+    public function actionEdit($id)
+    {
+        $doc = PowerAttorneysLE::model()->findByPk($id);
+        if (!$doc){
+            throw new CHttpException(404, 'Не найдена довереность.');
+        }
+        $org = Organizations::model()->findByPk($doc->id_yur);
+        if (!$org){
+            throw new CHttpException(404, 'Не найдено юридическое лицо.');
+        }
+
+        $error = '';
+        if ($_POST && !empty($_POST['PowerAttorneysLE'])) {
+            $doc->setAttributes($_POST['PowerAttorneysLE']);
+            if ($doc->validate()) {
+                try {
+                    $doc->save();
+                    $this->redirect($this->createUrl('view', array('id' => $doc->primaryKey)));
+                } catch (Exception $e) {
+                    $error = $e->getMessage();
+                }
+            }
+        }
+
+        $this->render('/my_organizations/show', array(
+            'content' => $this->renderPartial('/power_attorney_le/form',
+                array(
+                    'model'         => $doc,
+                    'error'         => $error,
+                    'organization'  => $org
+                ), true),
+            'organization' => $org,
+            'cur_tab' => 'documents',
+        ));
+    }
+
+    /**
+     *  Удаление доверености с идентификатором $id.
+     *
+     *  @param  string $id
+     *
+     *  @throws CHttpException
+     */
+    public function actionDelete($id)
+    {
+        $doc = PowerAttorneysLE::model()->findByPk($id);
+        if (!$doc){
+            throw new CHttpException(404, 'Не найдена довереность.');
+        }
+        $org = Organizations::model()->findByPk($doc->id_yur);
+        if (!$org){
+            throw new CHttpException(404, 'Не найдено юридическое лицо.');
+        }
+
+        if (Yii::app()->request->isAjaxRequest) {
+            $ret = array();
+            try {
+                $doc->delete();
+            } catch (Exception $e) {
+                $ret['error'] = $e->getMessage();
+            }
+            echo CJSON::encode($ret);
+            Yii::app()->end();
+        } else {
+            if (isset($_POST['result'])) {
+                switch ($_POST['result']) {
+                    case 'yes':
+                        if ($doc->delete()) {
+                            $this->redirect($this->createUrl('documents/list', array('org_id' => $org->primaryKey)));
+                        } else {
+                            throw new CHttpException(500, 'Не удалось удалить довереность.');
+                        }
+                    break;
+                    default:
+                        $this->redirect($this->createUrl('view', array('id' => $doc->primaryKey)));
+                    break;
+                }
+            }
+//            $this->render('documents/power_attorney_le/delete', array('model' => $doc));
+        }
+    }
 }

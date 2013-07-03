@@ -8,7 +8,6 @@ class IndividualsController extends Controller {
     public $layout       = 'inner';
     public $menu_current = 'individuals';
 	public $cur_tab      = '';
-    //public $menu_elem = 'legal.Individual';
 
 	/**
 	 * Список Физических лиц
@@ -28,7 +27,7 @@ class IndividualsController extends Controller {
 		$this->cur_tab = 'view';
 		$entity = Individuals::model()->findByPk($id);
         if (!$entity){
-            throw new CHttpException(404, 'Не найдено указанное физическое лицо.');
+            throw new CHttpException(404, 'Не найдено физ. лицо.');
         }
 		$this->render(
 			'show',

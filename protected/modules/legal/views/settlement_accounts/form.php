@@ -4,16 +4,18 @@
  *  User: Skibardin A.A.
  *  Date: 27.06.13
  *
- *  @var $this       My_OrganizationsController
- *  @var $model      SettlementAccount
- *  @var $form       TbActiveForm
+ *  @var $this          Settlement_accountsController
+ *  @var $model         SettlementAccount
+ *  @var $form          TbActiveForm
+ *  @var $organization  Organizations
+ *  @var $error         string
  */
 ?>
 
 <?php
     Yii::app()->clientScript->registerScriptFile('/static/js/jquery.json-2.4.min.js');
 
-    $this->beginContent('/my_organizations/show');
+//    $this->beginContent('/my_organizations/show');
 
     echo '<h2>'.($model->primaryKey ? 'Редактирование ' : 'Создание ').'банковского счета</h2>';
 
@@ -43,8 +45,8 @@
         'buttonType' => 'link',
         'label'      => 'Отмена',
         'url'        => $model->primaryKey
-            ? $this->createUrl('show_settlement', array('id' => $model->primaryKey))
-            : $this->createUrl('settlements', array('id' => $this->organization->primaryKey))
+            ? $this->createUrl('view', array('id' => $model->primaryKey))
+            : $this->createUrl('list', array('org_id' => $organization->primaryKey))
     ));
 
     if ($error) {
@@ -179,7 +181,7 @@
     </div>
 
 <?php $this->endWidget(); ?>
-<?php $this->endContent(); ?>
+<?php //$this->endContent(); ?>
 
 <script>
     $(document).ready(function(){

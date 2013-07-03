@@ -15,6 +15,7 @@
  * @property string $expire         дата окончания действия доверенности (дата)
  * @property string $break          дата досрочного окончания действия доверенности (дата)
  * @property string $comment        комментрий
+ * @property bool   $deleted        флаг, удален ли данный документ
  *
  * @property string $loaded         дата загрузки доверенности (дата)
  * @property string $e_ver          ссылка на электронную версию доверенности

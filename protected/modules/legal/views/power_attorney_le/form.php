@@ -1,67 +1,121 @@
 <?php
 /**
- * @var $this Power_attorney_leController
- * @var $model PowerAttorneysLE
- * @var $form TbActiveForm
+ *  Документы -> Доверенности. Форма редактирования.
+ *  User: Skibardin A.A.
+ *  Date: 03.07.13
+ *
+ *  @var $this          Power_attorney_leController
+ *  @var $model         PowerAttorneysLE
+ *  @var $organization  Organizations
+ *  @var $form          TbActiveForm
  */
+?>
 
-if ($error) echo CHtml::openTag('div', array('class' => 'alert alert-error')).$error.CHtml::closeTag('div'); ?>
+<?php
+    echo '<h2>'.($model->primaryKey ? 'Редактирование ' : 'Создание ').'доверенности</h2>';
 
-<div class="form">
-	<?php $form = $this->beginWidget('bootstrap.widgets.TbActiveForm', array(
-		'id'    => 'model-form-form',
-		'type'  => 'horizontal',
-		'enableAjaxValidation' => false,
-	))?>
+    $form = $this->beginWidget('bootstrap.widgets.TbActiveForm', array(
+        'id'    => 'model-form-form',
+        'type'  => 'horizontal',
+        'enableAjaxValidation' => false,
+    ));
+    $this->widget('bootstrap.widgets.TbButton', array(
+        'buttonType'=> 'submit',
+        'type'      => 'primary',
+        'label'     => 'Сохранить'
+    ));
+    echo '&nbsp;';
+    $this->widget('bootstrap.widgets.TbButton', array(
+        'buttonType' => 'link',
+        'label'      => 'Отмена',
+        'url'        => $model->primaryKey
+            ? $this->createUrl('view', array('id' => $model->primaryKey))
+            : $this->createUrl('documents/list', array('org_id' => $organization->primaryKey))
+    ));
 
-	<?=$form->errorSummary($model)?>
+    if ($error) {
+        echo '<br/><br/>';
+        echo CHtml::openTag('div', array('class' => 'alert alert-error')).$error.CHtml::closeTag('div');
+    }
+    $error = $form->errorSummary($model);
+    if (empty($error)) {
+//        echo '<br/><br/>';
+        echo $error;
+    }
+?>
 
-	<fieldset>
-		<?= $form->textFieldRow(    $model, 'name',         array('class' => 'span6')); ?>
-		<?= $form->textFieldRow(    $model, 'date',    array('class' => 'span6')); ?>
-		<?= $form->dropDownListRow( $model, 'id_yur', array('' => 'не задано') + LegalEntities::getValues(), array('class' => 'span6')); ?>
-		<?= $form->textFieldRow(    $model, 'nom',     array('class' => 'span6')); ?>
-		<?= $form->dropDownListRow( $model, 'typ_doc', array('' => 'Непонятные типы доверенностей'), array('class' => 'span6')); ?>
-		<?= $form->dropDownListRow( $model, 'id_lico', array('' => 'Непонятные лица'), array('class' => 'span6')); ?>
-		<?= $form->textFieldRow(     $model, 'loaded',      array('class'=>'span6')); ?>
-		<?= $form->textFieldRow(    $model, 'expire',          array('class' => 'span6')); ?>
-		<?= $form->textFieldRow(    $model, 'break',          array('class' => 'span6')); ?>
-		<?= $form->textFieldRow(    $model, 'e_ver',         array('class' => 'span6')); ?>
-		<!--id:,
-		name: rt300000002,
-		date: 2013-11-25,
-		from_user:true,
-		user: Главбух,
-		id_yur: 1000000005,
-		nom:75,
-		typ_doc: Генеральная,
-		id_lico: 0000000001,
-		loaded: 2013-11-25,
-		expire: 2013-11-25,
-		break: 2013-11-25,
-		e_ver: rt34000000002,
-		contract_types: [100432, 030432, 005432],
-		scans: [ 00432, 00432, 00432]-->
-	</fieldset>
-	<div class="control-group ">
-		<div class="controls">
-			<?php
-			$this->widget('bootstrap.widgets.TbButton', array(
-				'buttonType' => 'submit',
-				'type' => 'primary',
-				'label'=> (!$model->getprimaryKey() ? 'Добавить' : 'Сохранить'))
-			);
-			echo '&nbsp;';
-			$this->widget('bootstrap.widgets.TbButton', array(
-					'url' => $this->createUrl('index'),
-					'buttonType' => '',
-					'type' => '',
-					'label'=> 'Отмена')
-			);
-			?>
-		</div>
-	</div>
+<fieldset>
+<?php
+    // Опции для JUI селектора даты
+    $jui_date_options = array(
+        'options'=>array(
+            'showAnim' => 'fold',
+            'dateFormat' => 'yy-mm-dd',
+        ),
+        'htmlOptions'=>array(
+            'style' => 'height:20px;'
+        )
+    );
 
-	<?php $this->endWidget(); ?>
-
+    echo $form->dropDownListRow($model, 'id_lico', Individuals::getValues(), array('class' => 'span6'));
+    echo $form->textFieldRow($model, 'nom', array('class' => 'span6'));
+    echo $form->textFieldRow($model, 'name', array('class' => 'span6'));
+//    if (!$model->getprimaryKey()){
+//        echo $form->dropDownListRow($model, 'type_yur', PowerAttorneysLE::getYurTypes(), array('class' => 'span6'));
+//    }
+    echo $form->dropDownListRow($model, 'typ_doc', PowerAttorneysLE::getDocTypes(), array('class' => 'span6'));
+    //
+    // Список видов договоров будет здесь.
+    //
+?>
+<?php /** date */ ?>
+<div class="control-group">
+    <label class="control-label" for="PowerAttorneysLE_date">
+        <?= $model->getAttributeLabel("date") . CHtml::tag('span', array('class' => 'required')) .'&nbsp;*&nbsp;'; ?>
+    </label>
+    <div class="controls">
+        <?php $this->widget('zii.widgets.jui.CJuiDatePicker',array_merge(
+            array(
+                'model'     => $model,
+                'attribute' => 'date'
+            ), $jui_date_options
+        )); ?>
+    </div>
 </div>
+
+<?php /* expire */?>
+<div class="control-group">
+    <label class="control-label" for="PowerAttorneysLE_expire">
+        <?= $model->getAttributeLabel("expire") . CHtml::tag('span', array('class' => 'required')) .'&nbsp;*&nbsp;'; ?>
+    </label>
+    <div class="controls">
+        <?php $this->widget('zii.widgets.jui.CJuiDatePicker',array_merge(
+            array(
+                'model'     => $model,
+                'attribute' => 'expire'
+            ), $jui_date_options
+        )); ?>
+    </div>
+</div>
+
+<?php /* break */?>
+<div class="control-group">
+    <label class="control-label" for="PowerAttorneysLE_break">
+        <?= $model->getAttributeLabel("break"); ?>
+    </label>
+    <div class="controls">
+        <?php $this->widget('zii.widgets.jui.CJuiDatePicker',array_merge(
+            array(
+                'model'     => $model,
+                'attribute' => 'break'
+            ), $jui_date_options
+        )); ?>
+    </div>
+</div>
+
+<?php
+    echo $form->textAreaRow($model, 'comment', array('class' => 'span6'));
+?>
+</fieldset>
+
+<?php $this->endWidget(); ?>

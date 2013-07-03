@@ -1,14 +1,13 @@
 <?php
 /**
- * Вкладка информация о Юр.Лице
+ *  Вкладка информация о Юр.Лице
  *
- * User: Forgon
- * Date: 23.04.2013 от рождества Христова
+ *  User: Forgon
+ *  Date: 23.04.2013 от рождества Христова
  *
- * @var $this My_OrganizationsController
+ *  @var $this My_OrganizationsController
+ *  @var $organization  Organizations
  */
-
-$this->beginContent('/my_organizations/show');
 
 Countries::getValues();
 
@@ -16,10 +15,10 @@ $this->widget('bootstrap.widgets.TbButton', array(
     'buttonType'=>'link',
     'type'=>'success',
     'label'=>'Редактировать',
-    'url' => Yii::app()->getController()->createUrl("edit", array('id' => $this->organization->primaryKey))
+    'url' => Yii::app()->getController()->createUrl("edit", array('id' => $organization->primaryKey))
 ));
 echo "&nbsp;";
-if (!$this->organization->deleted) {
+if (!$organization->deleted) {
 	Yii::app()->clientScript->registerScriptFile($this->asset_static.'/js/legal/delete_item.js');
 	$this->widget(
 		'bootstrap.widgets.TbButton',
@@ -30,20 +29,19 @@ if (!$this->organization->deleted) {
 			'htmlOptions'   => array(
 				'data-question'     => 'Вы уверены, что хотите удалить данную организацию?',
 				'data-title'        => 'Удаление организации',
-				'data-url'          => $this->createUrl('/legal/my_organizations/delete', array('id' => $this->organization->primaryKey)),
-				'data-redirect_url' => $this->createUrl('/legal/my_organizations', array()),
+				'data-url'          => $this->createUrl('delete', array('id' => $organization->primaryKey)),
+				'data-redirect_url' => $this->createUrl('my_organizations/', array()),
 				'data-delete_item_element' => '1'
 			)
 		)
 	);
 }
 ?>
-<br>
-<br>
+<br/><br/>
 <?php
     $attributes = array();
-    $labels = $this->organization->attributeLabels();
-    foreach($this->organization as $field => $value){
+    $labels = $organization->attributeLabels();
+    foreach($organization as $field => $value){
         if($value != ''){
             $attributes[] = array(
                 'name' => $field,
@@ -54,7 +52,7 @@ if (!$this->organization->deleted) {
     }
 
     $this->widget('bootstrap.widgets.TbDetailView', array(
-    'data'=> $this->organization,
+    'data'=> $organization,
     'attributes' => $attributes
     /*'attributes'=>array(
         array('name'=>'country',        'label'=>'Страна',                  'value' => isset(Countries::$values[$model->country]) ? Countries::$values[$model->country] : '—'),
@@ -79,6 +77,4 @@ if (!$this->organization->deleted) {
         //array('name'=>'comment',        'label'=>'Комментарий'),
     ),*/
 ));
-
-$this->endContent();
 ?>

@@ -1,58 +1,65 @@
 <?php
 /**
- * User: Forgon
- * Date: 02.04.13
+ *  Заинтересованные лица.
+ *
+ *  User: Skibardin A.A.
+ *  Date: 03.07.13
  */
 class BeneficiaryController extends Controller {
-    public $menu_elem = 'legal.Beneficiary';
-	public $controller_title = 'Бенефициары';
+    public $layout = 'inner';
+    public $menu_current = 'legal';
 
-	/**
-	 * Список Бенефициаров
+    /**
+	 *  Список Бенефициаров
+     *
+     *  @param  string $org_id
 	 */
-	public function actionIndex() {
-		$entities = Beneficiary::model()->where('deleted', false)->findAll();
-		$this->render('index', array('elements' => $entities));
+	public function actionIndex($org_id)
+    {
+        $this->redirect($this->createUrl('list', array('org_id' => $org_id)));
 	}
 
-	/**
-	 * Просмотр Бенефициара
-	 * @param $id
-	 * @param $id_yur
-	 */
-	public function actionView($id, $id_yur) {
-		$entity = Beneficiary::model()->findByPk($id, $id_yur);
-		$this->render('show', array('element' => $entity));
-	}
+    /**
+     *  Список Бенефициаров
+     *
+     *  @param  string $org_id
+     *
+     *  @throws CHttpException
+     */
+    public function actionList($org_id)
+    {
+        $org = Organizations::model()->findByPk($org_id);
+        if (!$org) {
+            throw new CHttpException(404, 'Не найдено юридическое лицо.');
+        }
 
-	/**
-	 * Удаление Бенефициара
-	 * @param $id
-	 * @param $id_yur
-	 *
-	 * @throws CHttpException
-	 */
-	public function actionDelete($id, $id_yur) {
-		/** @var $model LegalEntities */
-		$model = Beneficiary::model()->findByPk($id, $id_yur);
-		if (empty($model)) throw new CHttpException(404);
-		if (Yii::app()->request->isAjaxRequest) {
-			$model->delete();
-		}
-		if (isset($_POST['result'])) {
-			switch ($_POST['result']) {
-				case 'yes':
-					if ($model->delete()) {
-						$this->redirect($this->createUrl('index'));
-					} else {
-						//throw new CException('Не удалось удалить страницу');
-					}
-					break;
-				default:
-					$this->redirect($this->createUrl('show', array('id' => $model->id)));
-					break;
-			}
-		}
-		$this->render('delete', array('model' => $model));
-	}
+        $this->render('/my_organizations/show', array(
+            'content' => $this->renderPartial('/beneficiary/list',
+                array(
+                    'organization' => $org
+                ), true),
+            'organization' => $org,
+            'cur_tab' => 'benefits',
+        ));
+    }
+
+    public function actionBenefits($id) {
+        $this->menu_current = 'index';
+        $this->cur_tab = 'benefits';
+        $this->render('show', array('tab_content' => $this->renderPartial('../template_example/benefits/list', array('id' => $id), true), 'model' => $model));
+    }
+
+    public function actionBenefit_add($id) {
+        $this->menu_current = 'index';
+        $this->cur_tab = 'benefits';
+        $model = Organizations::model()->findByPk($id);
+        $this->render('show', array('tab_content' => $this->renderPartial('../template_example/benefits/add', array('id' => $id), true), 'model' => $model));
+    }
+
+    public function actionBenefit_show($id) {
+        $this->menu_current = 'index';
+        $this->cur_tab = 'benefits';
+        $this->render('show', array('tab_content' => $this->renderPartial('../template_example/benefits/show', array('id' => $id), true), 'model' => $model));
+    }
+
 }

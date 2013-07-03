@@ -1,12 +1,13 @@
 <?php
 /**
- *  Банковские счета.Просмотр информации о банковском счете.
+ *  Банковские счета. Просмотр информации о банковском счете.
  *
  *  User: Skibardin A.A.
- *  Date: 27.06.13
+ *  Date: 02.07.13
  *
- *  @var $this       My_organizationsController
- *  @var $model      SettlementAccount
+ *  @var $this          Settlement_accountsController
+ *  @var $model         SettlementAccount
+ *  @var $organization  Organizations
  */
 ?>
 
@@ -17,7 +18,7 @@
         'buttonType' => 'link',
         'type'       => 'success',
         'label'      => 'Редактировать',
-        'url'        => $this->createUrl("edit_settlement", array('id' => $model->primaryKey))
+        'url'        => $this->createUrl("edit", array('id' => $model->primaryKey))
     ));
 
     if (!$model->deleted) {
@@ -31,8 +32,8 @@
             'htmlOptions'   => array(
                 'data-question'     => 'Вы уверены, что хотите удалить данный документ?',
                 'data-title'        => 'Удаление документа',
-                'data-url'          => $this->createUrl('delete_settlement', array('id' => $model->primaryKey)),
-                'data-redirect_url' => $this->createUrl('settlements', array('id' => $this->organization->primaryKey)),
+                'data-url'          => $this->createUrl('delete', array('id' => $model->primaryKey)),
+                'data-redirect_url' => $this->createUrl('list', array('org_id' => $organization->primaryKey)),
                 'data-delete_item_element' => '1'
             )
         ));

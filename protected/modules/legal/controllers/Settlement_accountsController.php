@@ -60,49 +60,211 @@ class Settlement_accountsController extends Controller {
         }
     }
 
-//    /**
-//     *  Управление менеджерами счета.
-//     */
-//    public function actionManaging_persons($action, $id, $pid) {
-//        try {
-//            $acc = SettlementAccount::model()->findByPk($id);
-//            if (!$acc) {
-//                throw new CException(404, 'Не найден указанный банковский счет.');
-//            }
-//
-//            var_dump($acc->managing_persons);
-//
-//
-//            $data = array();
-//
-//            switch ($action) {
-//                case 'add' : {
-//
-//                } break;
-//
-//                case 'delete' : {
-//
-//                } break;
-//
-//                default : {
-//                    throw new CException(500, 'Не найдено указанное действие.');
-//                }
-//            }
-//
-//            echo CJSON::encode(
-//                array(
-//                    'success'   => true,
-//                    'data'      => $data,
-//                    'html'      => 'delete'
-//                )
-//            );
-//        } catch (CException $e){
-//            echo CJSON::encode(
-//                array(
-//                    'success' => false,
-//                    'message' => $e->getMessage()
-//                )
-//            );
-//        }
-//    }
+    /**
+     * Список банковских счетов для указаного в $org_id юр. лица.
+     *
+     * @param   string $org_id
+     *
+     * @throws  CHttpException
+     */
+    public function actionList($org_id) {
+        $this->menu_current = 'legal';
+
+        $org = Organizations::model()->findByPk($org_id);
+        if (!$org) {
+            throw new CHttpException(404, 'Не найдено указанное юридическое лицо.');
+        }
+
+        $accounts = SettlementAccount::model()
+            ->where('deleted', false)
+            ->where('id_yur', $org->primaryKey)
+//            ->where('type_yur', 'Организации')
+            ->findAll();
+
+        $this->render('/my_organizations/show', array(
+            'content' => $this->renderPartial('/settlement_accounts/list',
+                array(
+                    'accounts'      => $accounts,
+                    'organization'  => $org
+                ), true),
+            'organization' => $org,
+            'cur_tab' => 'settlements',
+        ));
+    }
+
+    /**
+     *  Просмотр банковского счета с идентификатором $id.
+     *
+     *  @param  string $id
+     *
+     *  @throws CHttpException
+     */
+    public function actionView($id) {
+        $this->menu_current = 'legal';
+
+        $account = SettlementAccount::model()->findByPk($id);
+        if (!$account){
+            throw new CHttpException(404, 'Не найден банковский счет c ID = ' . $id);
+        }
+
+        $org = Organizations::model()->findByPk($account->id_yur);
+        if (!$org){
+            throw new CHttpException(404, 'Не найдено юридическое лицо с ID = ' . $account->id_yur);
+        }
+
+        $this->render('/my_organizations/show', array(
+            'content' => $this->renderPartial('/settlement_accounts/show',
+                array(
+                    'model'         => $account,
+                    'organization'  => $org
+                ), true),
+            'organization' => $org,
+            'cur_tab' => 'settlements',
+        ));
+    }
+
+    /**
+     *  Добавление нового банковского счета к указанному в $org_id юридическому лицу.
+     *
+     *  @param  string $org_id
+     *
+     *  @throws CHttpException
+     */
+    public function actionAdd($org_id) {
+        $this->menu_current = 'legal';
+
+        $org = Organizations::model()->findByPk($org_id);
+        if (!$org){
+            throw new CHttpException(404, 'Не найдено юридическое лицо.');
+        }
+
+        $account = new SettlementAccount();
+        $account->id_yur = $org->primaryKey;
+
+        $error = '';
+        if ($_POST && !empty($_POST['SettlementAccount'])) {
+            $account->setAttributes($_POST['SettlementAccount']);
+            $account->str_managing_persons = $_POST['SettlementAccount']['str_managing_persons'];
+            $account->managing_persons = CJSON::decode($account->str_managing_persons);
+            if ($account->validate()) {
+                try {
+                    $account->save();
+                    $this->redirect($this->createUrl('list', array('org_id' => $org->primaryKey)));
+                } catch (Exception $e) {
+                    $error = $e->getMessage();
+                }
+            }
+            $account->bank_name = SettlementAccount::getBankName($account->bank);
+        }
+
+        $this->render('/my_organizations/show', array(
+            'content' => $this->renderPartial('/settlement_accounts/form',
+                array(
+                    'model'         => $account,
+                    'organization'  => $org,
+                    'error'         => $error
+                ), true),
+            'organization' => $org,
+            'cur_tab' => 'settlements',
+        ));
+    }
+
+    /**
+     *  Редактирование банковского счета с идентификатором $id.
+     *
+     *  @param  int $id
+     *
+     *  @throws CHttpException
+     */
+    public function actionEdit($id) {
+        $this->menu_current = 'legal';
+
+        $account = SettlementAccount::model()->findByPk($id);
+        if (!$account){
+            throw new CHttpException(404, 'Не найден банковский счет c ID = ' . $id);
+        }
+
+        $org = Organizations::model()->findByPk($account->id_yur);
+        if (!$org){
+            throw new CHttpException(404, 'Не найдено юридическое лицо с ID = ' . $account->id_yur);
+        }
+
+        $error = '';
+        if ($_POST && !empty($_POST['SettlementAccount'])) {
+            $bank_id = $account->bank;
+
+            $account->setAttributes($_POST['SettlementAccount']);
+            $account->str_managing_persons = $_POST['SettlementAccount']['str_managing_persons'];
+            $account->managing_persons = CJSON::decode($account->str_managing_persons);
+
+            if ($account->validate()) {
+                try {
+                    $account->save();
+                    $this->redirect($this->createUrl('view', array('id' => $account->primaryKey)));
+                } catch (Exception $e) {
+                    $error = $e->getMessage();
+                }
+            }
+            if ($bank_id != $account->bank){
+                $account->bank_name = SettlementAccount::getBankName($account->bank);
+            }
+        }
+
+        $this->render('/my_organizations/show', array(
+            'content' => $this->renderPartial('/settlement_accounts/form',
+                array(
+                    'model'         => $account,
+                    'organization'  => $org,
+                    'error'         => $error
+                ), true),
+            'organization' => $org,
+            'cur_tab' => 'settlements',
+        ));
+    }
+
+    /**
+     *  Удаление банковского счета с идентификатором $id.
+     *
+     *  @param  int $id
+     *
+     *  @throws CHttpException
+     */
+    public function actionDelete($id) {
+        $account = SettlementAccount::model()->findByPk($id);
+        if (!$account){
+            throw new CHttpException(404, 'Не найден банковский счет.');
+        }
+        $org = Organizations::model()->findByPk($account->id_yur);
+        if (!$org){
+            throw new CHttpException(404, 'Не найдено юридическое лицо.');
+        }
+//        $this->organization = $org;
+
+        if (Yii::app()->request->isAjaxRequest) {
+            $ret = array();
+            try {
+                $account->delete();
+            } catch (Exception $e) {
+                $ret['error'] = $e->getMessage();
+            }
+            echo CJSON::encode($ret);
+            Yii::app()->end();
+        } else {
+            if (isset($_POST['result'])) {
+                switch ($_POST['result']) {
+                    case 'yes':
+                        if ($account->delete()) {
+                            $this->redirect($this->createUrl('settlements', array('id' => $org->primaryKey)));
+                        } else {
+                            throw new CHttpException(500, 'Не удалось удалить банковский счет.');
+                        }
+                        break;
+                    default:
+                        $this->redirect($this->createUrl('show_settlement', array('id' => $account->primaryKey)));
+                        break;
+                }
+            }
+            $this->render('settlements/delete', array('model' => $account));
+        }
+    }
 }

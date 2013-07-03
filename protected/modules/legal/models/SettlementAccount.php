@@ -9,6 +9,7 @@
  *  @property string $bank_name     название банка
  *  @property string $name          наименование счета (представление)
  *  @property string $id_yur        идентификатор юрлица-владельца счета
+ *  @property string $yur_name      название юр. лица
  *  @property string $type_yur      Тип юрлица ("Контрагенты", "Организации")
  *  @property bool   $deleted       признак пометки удаления (булево)
  *  @property string $s_nom         номер счета (для российских счетов)
@@ -20,6 +21,7 @@
  */
 class SettlementAccount extends SOAPModel {
     public $cur_name    = '';
+    public $yur_name    = '';
     public $div_persons = '';
     public $str_managing_persons = '';
 	/**
