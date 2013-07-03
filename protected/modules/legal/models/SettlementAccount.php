@@ -158,6 +158,13 @@ class SettlementAccount extends SOAPModel {
         );
         $data['management_method'] = isset($management_method[$data['management_method']]) ? $management_method[$data['management_method']] : $management_method['Все вместе'];
 
+        $service = array(
+            'Самостоятельно' => 'Самостоятельно',
+            'По доверению подписанту' => 'ПоДоверениюПодписанту',
+            'Обслуживание у нас' => 'ОбслуживаниеУНас'
+        );
+        $data['service'] = isset($service[$data['service']]) ? $service[$data['service']] : $service['Самостоятельно'];
+
 		$ret = $this->SOAP->saveSettlementAccount(
             array(
                 'data' => SoapComponent::getStructureElement($data),

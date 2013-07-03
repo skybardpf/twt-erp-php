@@ -104,12 +104,12 @@ class Settlement_accountsController extends Controller {
 
         $account = SettlementAccount::model()->findByPk($id);
         if (!$account){
-            throw new CHttpException(404, 'Не найден банковский счет c ID = ' . $id);
+            throw new CHttpException(404, 'Не найден банковский счет.');
         }
 
         $org = Organizations::model()->findByPk($account->id_yur);
         if (!$org){
-            throw new CHttpException(404, 'Не найдено юридическое лицо с ID = ' . $account->id_yur);
+            throw new CHttpException(404, 'Не найдено юридическое лицо.');
         }
 
         $this->render('/my_organizations/show', array(
@@ -181,12 +181,12 @@ class Settlement_accountsController extends Controller {
 
         $account = SettlementAccount::model()->findByPk($id);
         if (!$account){
-            throw new CHttpException(404, 'Не найден банковский счет c ID = ' . $id);
+            throw new CHttpException(404, 'Не найден банковский счет.');
         }
 
         $org = Organizations::model()->findByPk($account->id_yur);
         if (!$org){
-            throw new CHttpException(404, 'Не найдено юридическое лицо с ID = ' . $account->id_yur);
+            throw new CHttpException(404, 'Не найдено юридическое лицо.');
         }
 
         $error = '';
@@ -238,7 +238,6 @@ class Settlement_accountsController extends Controller {
         if (!$org){
             throw new CHttpException(404, 'Не найдено юридическое лицо.');
         }
-//        $this->organization = $org;
 
         if (Yii::app()->request->isAjaxRequest) {
             $ret = array();
@@ -254,17 +253,17 @@ class Settlement_accountsController extends Controller {
                 switch ($_POST['result']) {
                     case 'yes':
                         if ($account->delete()) {
-                            $this->redirect($this->createUrl('settlements', array('id' => $org->primaryKey)));
+                            $this->redirect($this->createUrl('list', array('org_id' => $org->primaryKey)));
                         } else {
                             throw new CHttpException(500, 'Не удалось удалить банковский счет.');
                         }
                         break;
                     default:
-                        $this->redirect($this->createUrl('show_settlement', array('id' => $account->primaryKey)));
+                        $this->redirect($this->createUrl('view', array('id' => $account->primaryKey)));
                         break;
                 }
             }
-            $this->render('settlements/delete', array('model' => $account));
+//            $this->render('settlements/delete', array('model' => $account));
         }
     }
 }
