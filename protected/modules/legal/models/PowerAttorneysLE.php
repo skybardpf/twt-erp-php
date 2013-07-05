@@ -20,14 +20,14 @@
  * @property string $loaded         дата загрузки доверенности (дата)
  * @property string $e_ver          ссылка на электронную версию доверенности
  * @property string $contract_types массив строк-идентификаторов видов договоров, на которые распространяется доверенность
- * @property string $scans          массив строк-ссылок на сканы доверенности
+ *
+ * @property array  $list_scans     массив строк-ссылок на сканы доверенности
+ * @property array  $list_files     массив строк-ссылок на файлы доверенности
  *
  * @property string $from_user      признак того, что доверенность загружена пользователем
  * @property string $user           идентификатор пользователя
  */
 class PowerAttorneysLE extends SOAPModel {
-
-	public $from_user = true;
 	public $owner_name = '';
 
 	/**
@@ -37,7 +37,8 @@ class PowerAttorneysLE extends SOAPModel {
 	 *
 	 * @return PowerAttorneysLE
 	 */
-	public static function model($className = __CLASS__) {
+	public static function model($className = __CLASS__)
+    {
 		return parent::model($className);
 	}
 
@@ -46,7 +47,8 @@ class PowerAttorneysLE extends SOAPModel {
 	 *
 	 * @return PowerAttorneysLE[]
 	 */
-	public function findAll() {
+	public function findAll()
+    {
 		$filters = SoapComponent::getStructureElement($this->where);
 		if (!$filters) $filters = array(array());
 		$request = array('filters' => $filters, 'sort' => array($this->order));
@@ -63,87 +65,104 @@ class PowerAttorneysLE extends SOAPModel {
 	 * @return bool|PowerAttorneysLE
 	 * @internal param array $filter
 	 */
-	public function findByPk($id) {
+	public function findByPk($id)
+    {
 		$ret = $this->SOAP->getPowerAttorneyLE(array('id' => $id));
 		$ret = SoapComponent::parseReturn($ret);
 		return $this->publish_elem(current($ret), __CLASS__);
 	}
-    
+
     /**
      *  Сохранение доверенности
      *
      *  @return array
+     *  @throws CHttpException
      */
-    public function save() {
+    public function save()
+    {
         $data = $this->getAttributes();
-
-        if (!$this->getprimaryKey()){
-            unset($data['id']);
-            $data['type_yur'] = 'Организации';
-        }
-        unset($data['deleted']);
-//        unset($data['file']); // TODO когда появятся файлы
-//        $data['type_yur']   = 'Организации';
-//        (isset($this->_aTypeYur[$data['type_yur']])) ? $this->_aTypeYur[$data['type_yur']] : $this->_aTypeYur[0];
         $data['user']       = SOAPModel::USER_NAME;
         $data['from_user']  = true;
 
-        unset($data['scans']);
-        unset($data['e_ver']);
-        unset($data['contract_types']);
-        unset($data['loaded']);
+        if (!$this->getprimaryKey()){
+            unset($data['id']);
+            $data['type_yur']  = 'Организации';
+        }
 
         $doc_types = array(
             'Генеральная'       => 'Генеральная',
             'Свободная'         => 'Свободная',
             'По видам договоров'=> 'ПоВидамДоговоров'
         );
-
         $data['typ_doc'] = (isset($doc_types[$data['typ_doc']])) ? $doc_types[$data['typ_doc']] : $doc_types['Генеральная'];
 
-        $arr = array(
-            'ElementsStructure' => SoapComponent::getStructureElement($data, array('lang' => 'eng')),
-            'Tables' => array(
-                array(
-                    "Name" => "СписокДействий",
-                    "Value" => array(
-                        'column' => array(),
-                        'index' => array(),
-                        'row'   => array(),
-                    )
-                ),
+        $upload_ids = array();
+        if (!empty($this->upload_scans)) {
+            foreach ($this->upload_scans as $f) {
+                $uf = new UploadFile();
+                $id = ($this->primaryKey) ? $this->primaryKey : 0;
+                $id = $uf->upload($f, UploadFile::CLIENT_ID, __CLASS__, $id, UploadFile::TYPE_FILE_SCANS);
+                if (!is_null($id)){
+                    $upload_ids[] = $id;
+                }
+            }
+        }
+        if (!empty($this->upload_files)) {
+            foreach ($this->upload_files as $f) {
+                $uf = new UploadFile();
+                $id = ($this->primaryKey) ? $this->primaryKey : 0;
+                $id = $uf->upload($f, UploadFile::CLIENT_ID, __CLASS__, $id, UploadFile::TYPE_FILE_FILES);
+                if (!is_null($id)){
+                    $upload_ids[] = $id;
+                }
+            }
+        }
 
-                array(
-                    "Name" => "Сканы",
-                    "Value" => array(
-                        'column' => array(),
-                        'index' => array(),
-                        'row' => array(),
-                    )
-                ),
-                array(
-                    "Name" => "Файлы",
-                    "Value" => array(
-                        'column' => array(),
-                        'index' => array(),
-                        'row' => array(),
-                    )
-                ),
+        unset($data['deleted']);
+        unset($data['list_scans']);
+        unset($data['list_files']);
+        unset($data['upload_scans']);
+        unset($data['upload_files']);
+        // unused
+        unset($data['e_ver']);
+        unset($data['contract_types']);
+        unset($data['loaded']);
 
-            )
-        );
         $ret = $this->SOAP->savePowerAttorneyLE(array(
-            'data' => $arr
+            'data' => array(
+                'ElementsStructure' => SoapComponent::getStructureElement($data, array('lang' => 'eng')),
+                'Tables' => array(
+                    SoapComponent::getStructureActions($this),
+                    SoapComponent::getStructureScans($this),
+                    SoapComponent::getStructureFiles($this),
+                )
+            )
         ));
         $ret = SoapComponent::parseReturn($ret, false);
+
+        if (!$this->primaryKey) {
+            if (!ctype_digit($ret)){
+                foreach($upload_ids as $id){
+                    $uf = new UploadFile();
+                    $uf->delete($id);
+                }
+            } else {
+                foreach($upload_ids as $id){
+                    $uf = new UploadFile();
+                    $uf->move($id, $ret);
+                }
+            }
+        }
         return $ret;
     }
+
 	/**
 	 *  Удаление Доверенности
 	 *
 	 *  @return bool
 	 */
-	public function delete() {
+	public function delete()
+    {
 		if ($pk = $this->getprimaryKey()) {
 			$ret = $this->SOAP->deletePowerAttorneyLE(array('id' => $pk));
 			return $ret->return;
@@ -156,7 +175,8 @@ class PowerAttorneysLE extends SOAPModel {
 	 *
 	 *  @return array
 	 */
-	public static function getDocTypes(){
+	public static function getDocTypes()
+    {
 		return array(
 			'Генеральная'       => 'Генеральная',
 			'Свободная'         => 'Свободная',
@@ -169,7 +189,8 @@ class PowerAttorneysLE extends SOAPModel {
      *
      *  @return array
      */
-    public static function getYurTypes(){
+    public static function getYurTypes()
+    {
         return array(
             'Организации' => 'Организации',
             'Контрагенты' => 'Контрагенты',
@@ -180,7 +201,8 @@ class PowerAttorneysLE extends SOAPModel {
 	 * Returns the list of attribute names of the model.
 	 * @return array list of attribute names.
 	 */
-	public function attributeLabels() {
+	public function attributeLabels()
+    {
 		return array(
 			'id'             => '#',
 			'id_yur'         => 'Юр.лицо',
@@ -195,8 +217,12 @@ class PowerAttorneysLE extends SOAPModel {
             'break'          => 'Недействительна с',
             'comment'        => 'Комментарий',
 
+            'list_scans'     => 'Сканы',
+            'list_files'     => 'Файлы',
+            'upload_scans'   => '',
+            'upload_files'   => '',
+
             // не исполозованные поля
-            'scans'          => 'Сканы',
             'e_ver'          => 'Файлы',
             'contract_types' => 'Виды договоров',
             'loaded'         => 'Дата загрузки документа',
@@ -228,6 +254,69 @@ class PowerAttorneysLE extends SOAPModel {
             array('comment', 'length', 'max' => 50),
 
             array('date, expire, break', 'date', 'format' => 'yyyy-MM-dd'),
+
+            array('list_scans', 'existsScans'),
+            array('list_files', 'existsFiles'),
 		);
 	}
+
+    /**
+     *  Валидатор. Проверяет, что имена файлов-сканов, которые хотят загрузить
+     *  не совпадают с именами файлов, которые были загружены прежде.
+     *
+     *  @return void
+     */
+    public function existsScans(){
+        if ($this->primaryKey && !empty($this->upload_scans)) {
+            $arr = array();
+            foreach ($this->upload_scans as $f) {
+                $arr[] = '"'.$f->name.'"';
+            }
+            $cmd = Yii::app()->db->createCommand(
+                'SELECT filename
+                FROM '.UploadFile::model()->tableName().'
+                WHERE filename IN ('.implode(',', $arr).')
+                    AND client_id = :client_id AND model_name=:model_name AND model_id=:model_id AND type=:type'
+            );
+            $files = $cmd->queryAll(true, array(
+                ':client_id'    => UploadFile::CLIENT_ID,
+                ':model_name'   => __CLASS__,
+                ':model_id'     => $this->primaryKey,
+                ':type'         => UploadFile::TYPE_FILE_SCANS,
+            ));
+            foreach($files as $f){
+                $this->addError('list_scans', 'Скан с таким именем уже существует: '.$f['filename']);
+            }
+        }
+    }
+
+    /**
+     *  Валидатор. Проверяет, что имена файлов, которые хотят загрузить
+     *  не совпадают с именами файлов, которые были загружены прежде.
+     *
+     *  @return void
+     */
+    public function existsFiles(){
+        if ($this->primaryKey && !empty($this->upload_files)) {
+            $arr = array();
+            foreach ($this->upload_files as $f) {
+                $arr[] = '"'.$f->name.'"';
+            }
+            $cmd = Yii::app()->db->createCommand(
+                'SELECT filename
+                FROM '.UploadFile::model()->tableName().'
+                WHERE filename IN ('.implode(',', $arr).')
+                    AND client_id=:client_id AND model_name=:model_name AND model_id=:model_id AND type=:type'
+            );
+            $files = $cmd->queryAll(true, array(
+                ':client_id'    => UploadFile::CLIENT_ID,
+                ':model_name'   => __CLASS__,
+                ':model_id'     => $this->primaryKey,
+                ':type'         => UploadFile::TYPE_FILE_FILES,
+            ));
+            foreach($files as $f){
+                $this->addError('list_files', 'Файл с таким именем уже существует: '.$f['filename']);
+            }
+        }
+    }
 }

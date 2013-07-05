@@ -58,6 +58,10 @@ class Power_attorney_leController extends Controller {
         $error = '';
         if ($_POST && !empty($_POST['PowerAttorneysLE'])) {
             $doc->setAttributes($_POST['PowerAttorneysLE']);
+
+            $doc->upload_scans  = CUploadedFile::getInstancesByName('upload_scans');
+            $doc->upload_files  = CUploadedFile::getInstancesByName('upload_files');
+
             if ($doc->validate()) {
                 try {
                     $doc->save();
@@ -69,12 +73,15 @@ class Power_attorney_leController extends Controller {
         }
 
         $this->render('/my_organizations/show', array(
-            'content' => $this->renderPartial('/power_attorney_le/form',
+            'content' => $this->renderPartial(
+                '/power_attorney_le/form',
                 array(
                     'model'         => $doc,
                     'error'         => $error,
                     'organization'  => $org
-                ), true),
+                ),
+                true
+            ),
             'organization' => $org,
             'cur_tab' => 'documents',
         ));
@@ -101,6 +108,10 @@ class Power_attorney_leController extends Controller {
         $error = '';
         if ($_POST && !empty($_POST['PowerAttorneysLE'])) {
             $doc->setAttributes($_POST['PowerAttorneysLE']);
+
+            $doc->upload_scans  = CUploadedFile::getInstancesByName('upload_scans');
+            $doc->upload_files  = CUploadedFile::getInstancesByName('upload_files');
+
             if ($doc->validate()) {
                 try {
                     $doc->save();
@@ -112,12 +123,17 @@ class Power_attorney_leController extends Controller {
         }
 
         $this->render('/my_organizations/show', array(
-            'content' => $this->renderPartial('/power_attorney_le/form',
+            'content' => $this->renderPartial(
+                '/power_attorney_le/form',
                 array(
                     'model'         => $doc,
+//                    'scans'         => $scans,
+//                    'files'         => $files,
                     'error'         => $error,
                     'organization'  => $org
-                ), true),
+                ),
+                true
+            ),
             'organization' => $org,
             'cur_tab' => 'documents',
         ));
@@ -166,6 +182,72 @@ class Power_attorney_leController extends Controller {
                 }
             }
 //            $this->render('documents/power_attorney_le/delete', array('model' => $doc));
+        }
+    }
+
+    /**
+     *  Скачать архив с файлами для определенного файла.
+     *
+     *  @param  string $id
+     *  @param  string $type
+     *
+     *  @throws CHttpException
+     */
+    public function actionDownload_archive($id, $type)
+    {
+        $uf = new UploadFile();
+        $uf->download_archive(UploadFile::CLIENT_ID, get_class(PowerAttorneysLE::model()), $id, $type);
+    }
+
+    /**
+     *  Скачать файл по его $id.
+     *
+     *  @param  int $id
+     *
+     *  @throws CHttpException
+     */
+    public function actionDownload_file($id)
+    {
+        $uf = new UploadFile();
+        $uf->download($id);
+    }
+
+    /**
+     *  Удалить файл по его $id.
+     *
+     *  @param  int $id
+     *
+     *  @throws CHttpException
+     */
+    public function actionDelete_file($id)
+    {
+        try {
+            $uf = new UploadFile();
+            $uf->delete($id);
+
+            if (Yii::app()->request->isAjaxRequest) {
+                echo CJSON::encode(
+                    array(
+                        'success' => true,
+                    )
+                );
+                Yii::app()->end();
+            } else {
+                echo 'Файл успешно удален.';
+            }
+
+        } catch(UploadFileException $e) {
+            if (Yii::app()->request->isAjaxRequest) {
+                echo CJSON::encode(
+                    array(
+                        'success' => false,
+                        'message' => $e->getMessage()
+                    )
+                );
+                Yii::app()->end();
+            } else {
+                throw new CHttpException(500, $e->getMessage());
+            }
         }
     }
 }

@@ -11,9 +11,16 @@
  */
 ?>
 
+<script>
+    window.controller_name = '<?= $this->getId(); ?>';
+</script>
+
 <h2>Доверенность</h2>
 
 <?php
+    Yii::app()->clientScript->registerScriptFile('/static/js/legal/show_manage_files.js');
+
+
     $this->widget('bootstrap.widgets.TbButton', array(
         'buttonType' => 'link',
         'type'       => 'success',
@@ -43,25 +50,47 @@
 <br/><br/>
 <div>
 	<?php
-    $individuals = Individuals::getValues();
-    if (!isset($individuals[$model->id_lico])){
-        $p = 'Не задано';
-    } else {
-        $p = CHtml::link(
-            $individuals[$model->id_lico],
-            $this->createUrl('individuals/view', array('id' => $model->id_lico))
-        );
-    }
-	$this->widget('bootstrap.widgets.TbDetailView', array(
-		'data' => $model,
-		'attributes'=>array(
-			array('name' => 'id_lico', 'type' => 'raw', 'label' => 'На кого оформлена', 'value' => $p),
-            array('name' => 'nom',          'label' => 'Номер'),
-			array('name' => 'name',         'label' => 'Название'),
-            array('name' => 'typ_doc',      'label' => 'Вид'),
-			array('name' => 'date',         'label' => 'Дата начала действия'),
-			array('name' => 'expire',       'label' => 'Срок действия'),
-		)
-	));
+        $individuals = Individuals::getValues();
+        if (!isset($individuals[$model->id_lico])){
+            $p = 'Не задано';
+        } else {
+            $p = CHtml::link(
+                $individuals[$model->id_lico],
+                $this->createUrl('individuals/view', array('id' => $model->id_lico))
+            );
+        }
+        $this->widget('bootstrap.widgets.TbDetailView', array(
+            'data' => $model,
+            'attributes'=>array(
+                array('name' => 'id_lico', 'type' => 'raw', 'label' => 'На кого оформлена', 'value' => $p),
+                array('name' => 'nom',          'label' => 'Номер'),
+                array('name' => 'name',         'label' => 'Название'),
+                array('name' => 'typ_doc',      'label' => 'Вид'),
+                array('name' => 'date',         'label' => 'Дата начала действия'),
+                array('name' => 'expire',       'label' => 'Срок действия'),
+            )
+        ));
 	?>
 </div>
+
+<?php
+    $counts = UploadFile::getCountTypeFiles(UploadFile::CLIENT_ID, get_class($model), $model->primaryKey);
+    $div = '';
+    if (isset($counts['files']) && $counts['files']){
+        $div .= CHtml::link('Скачать электронную версию', '#', array('class' => 'download_online')) . '<br/>';
+    }
+    if (isset($counts['scans']) && $counts['scans']){
+        $div .= CHtml::link('Скачать сканы', '#', array('class' => 'download_scans')) . '<br/>';
+    }
+    if (!empty($div)){
+        echo CHtml::tag('fieldset',
+            array(
+                'class' => 'links_for_download',
+                'data-id' => $model->primaryKey
+            ),
+            $div
+        //        . '<br/>'
+        //        . CHtml::link('Сгенерировать документ', '#', array('class' => 'download_generic_doc'))
+        );
+    }
+?>

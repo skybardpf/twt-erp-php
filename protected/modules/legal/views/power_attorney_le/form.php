@@ -10,7 +10,12 @@
  */
 ?>
 
+<script>
+    window.controller_name = '<?= $this->getId(); ?>';
+</script>
 <?php
+    Yii::app()->clientScript->registerScriptFile('/static/js/legal/form_manage_files.js');
+
     echo '<h2>'.($model->primaryKey ? 'Редактирование ' : 'Создание ').'доверенности</h2>';
 
     /* @var $form MTbActiveForm */
@@ -18,6 +23,9 @@
         'id'    => 'model-form-form',
         'type'  => 'horizontal',
         'enableAjaxValidation' => false,
+        'htmlOptions' => array(
+            'enctype' => 'multipart/form-data'
+        ),
     ));
     $this->widget('bootstrap.widgets.TbButton', array(
         'buttonType'=> 'submit',
@@ -38,7 +46,7 @@
     if ($error) {
         echo '<br/><br/>';
         echo CHtml::openTag('div', array('class' => 'alert alert-error')).$error.CHtml::closeTag('div');
-    } elseif ($model->getErrors()) {
+    } elseif ($model->hasErrors()) {
         echo '<br/><br/>';
         echo $form->errorSummary($model);
     }
@@ -110,6 +118,67 @@
 <?php
     echo $form->textAreaRow($model, 'comment', array('class' => 'span6'));
 ?>
+
+<?php
+    $div_scans  = '';
+    $div_files  = '';
+    if ($model->primaryKey){
+        $files = UploadFile::getListFiles(UploadFile::CLIENT_ID, get_class($model), $model->primaryKey);
+        foreach ($files as $f){
+            if ($f['type'] == UploadFile::TYPE_FILE_SCANS){
+                $div_scans .= CHtml::tag('div',
+                    array(
+                        'class' => 'block'
+                    ),
+                    CHtml::link($f['filename'], '#', array('class' => 'download_scan', 'data-file_id' => $f['id'])) .
+                    '&nbsp;&nbsp;&nbsp;' .
+                    CHtml::link('', '#', array('class' => 'icon-remove', 'data-file_id' => $f['id']))
+                );
+            } elseif ($f['type'] == UploadFile::TYPE_FILE_FILES){
+                $div_files .= CHtml::tag('div',
+                    array(
+                        'class' => 'block'
+                    ),
+                    CHtml::link($f['filename'], '#', array('class' => 'download_file', 'data-file_id' => $f['id'])) .
+                    '&nbsp;&nbsp;&nbsp;' .
+                    CHtml::link('', '#', array('class' => 'icon-remove', 'data-file_id' => $f['id']))
+                );
+            }
+        }
+    }
+?>
+    <div class="control-group">
+        <?= $form->labelEx($model, 'list_scans', array('class' => 'control-label')); ?>
+        <div class="controls bordered" id="list_uploaded_scans">
+            <?php
+                echo (empty($div_scans)) ? '' : $div_scans.'<br/>';
+                $this->widget('CMultiFileUpload', array(
+                    'name' => 'upload_scans',
+        //                'accept' => 'jpeg|jpg|gif|png', // useful for verifying files
+                    'duplicate' => 'Duplicate file!', // useful, i think
+                    'denied' => 'Invalid file type', // useful, i think
+                    'htmlOptions' => array( 'multiple' => 'multiple', ),
+                ));
+            ?>
+        </div>
+    </div>
+
+    <div class="control-group">
+        <?= $form->labelEx($model, 'list_files', array('class' => 'control-label')); ?>
+        <div class="controls bordered" id="list_uploaded_files">
+            <?php
+            echo (empty($div_files)) ? '' : $div_files.'<br/>';
+            $this->widget('CMultiFileUpload', array(
+                'name' => 'upload_files',
+//                'accept' => 'jpeg|jpg|gif|png', // useful for verifying files
+                'duplicate' => 'Duplicate file!', // useful, i think
+                'denied' => 'Invalid file type', // useful, i think
+                'htmlOptions' => array( 'multiple' => 'multiple', ),
+            ));
+            ?>
+        </div>
+    </div>
+
 </fieldset>
 
 <?php $this->endWidget(); ?>

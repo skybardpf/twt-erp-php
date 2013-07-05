@@ -239,4 +239,147 @@ class SoapComponent extends CApplicationComponent
 		return false;
 	}
 
+    /**
+     *  Возвращает формат структуры для дейстий в документах.
+     *
+     *  @static
+     *  @param  SOAPModel $model
+     *  @return array
+     */
+    public static function getStructureActions(SOAPModel $model)
+    {
+        $class = get_class($model);
+        if (!in_array($class, array('PowerAttorneysLE', 'FoundingDocument'))){
+            return false;
+        }
+
+        return array(
+            "Name" => "СписокДействий",
+            "Value" => array(
+                'column' => array(),
+                'index' => array(),
+                'row'   => array(),
+            )
+        );
+    }
+
+    /**
+     *  Возвращает формат структуры для сканов документов.
+     *
+     *  @static
+     *  @param  SOAPModel $model
+     *  @return array
+     */
+    public static function getStructureScans(SOAPModel $model)
+    {
+        $class = get_class($model);
+        if (!in_array($class, array('PowerAttorneysLE', 'FoundingDocument'))){
+            return false;
+        }
+
+        $cmd = Yii::app()->db->createCommand(
+            'SELECT id, load_date
+            FROM '.UploadFile::model()->tableName().'
+            WHERE client_id = :client_id AND model_name=:model_name AND model_id=:model_id AND type=:type'
+        );
+        $files = $cmd->queryAll(true, array(
+            ':client_id'    => UploadFile::CLIENT_ID,
+            ':model_name'   => $class,
+            ':model_id'     => $model->primaryKey,
+            ':type'         => UploadFile::TYPE_FILE_SCANS,
+        ));
+
+        if (empty($files)) {
+            $res = array(
+                "Name" => "Сканы",
+                "Value" => array(
+                    'column' => array(),
+                    'index' => array(),
+                    'row' => array(),
+                )
+            );
+        } else {
+            $rows = array();
+            foreach($files as $f){
+                $rows[] = array(
+                    'Value' => array(
+                        $f['id'],
+                        date('Y-m-d', $f['load_date'])
+                    )
+                );
+            }
+            $res = array(
+                "Name" => "Сканы",
+                "Value" => array(
+                    'column' => array(
+                        array("Name" => "Скан"),
+                        array("Name" => "ДатаЗагрузки")
+                    ),
+                    'index' => array(),
+                    'row'   => $rows,
+                )
+            );
+        }
+        return $res;
+    }
+
+    /**
+     *  Возвращает правильный формат структуры для файлов, которая отдается на сохранение.
+     *
+     *  @static
+     *  @param  SOAPModel $model
+     *  @return array
+     */
+    public static function getStructureFiles(SOAPModel $model)
+    {
+        $class = get_class($model);
+        if (!in_array($class, array('PowerAttorneysLE', 'FoundingDocument'))){
+            return false;
+        }
+
+        $cmd = Yii::app()->db->createCommand(
+            'SELECT id, load_date
+            FROM '.UploadFile::model()->tableName().'
+        WHERE client_id = :client_id AND model_name=:model_name AND model_id=:model_id AND type=:type'
+        );
+        $files = $cmd->queryAll(true, array(
+            ':client_id'    => UploadFile::CLIENT_ID,
+            ':model_name'   => $class,
+            ':model_id'     => $model->primaryKey,
+            ':type'         => UploadFile::TYPE_FILE_FILES,
+        ));
+
+        if (empty($files)) {
+            $res = array(
+                "Name" => "Файлы",
+                "Value" => array(
+                    'column' => array(),
+                    'index' => array(),
+                    'row' => array(),
+                )
+            );
+        } else {
+            $rows = array();
+            foreach($files as $f){
+                $rows[] = array(
+                    'Value' => array(
+                        $f['id'],
+                        date('Y-m-d', $f['load_date'])
+                    )
+                );
+            }
+            $res = array(
+                "Name" => "Файлы",
+                "Value" => array(
+                    'column' => array(
+                        array("Name" => "Файл"),
+                        array("Name" => "ДатаЗагрузки")
+                    ),
+                    'index' => array(),
+                    'row'   => $rows,
+                )
+            );
+        }
+        return $res;
+    }
 }
