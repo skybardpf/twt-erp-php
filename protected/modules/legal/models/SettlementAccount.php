@@ -5,7 +5,9 @@
  *  User: Skibardin A.A.
  *  Date: 28.06.13
  *
- *  @property string $bank          идентификатор банка, в котором открыт счет (БИК или СВИФТ)
+ *  @property string $bank          (БИК or СВИФТ)
+ *  @property string $bank_bik      идентификатор банка, в котором открыт счет (БИК)
+ *  @property string $bank_swift    идентификатор банка, в котором открыт счет (СВИФТ)
  *  @property string $bank_name     название банка
  *  @property string $name          наименование счета (представление)
  *  @property string $id_yur        идентификатор юрлица-владельца счета
@@ -134,23 +136,21 @@ class SettlementAccount extends SOAPModel {
 	 */
 	public function save() {
 		$data = $this->getAttributes();
+        $data['type_yur'] = 'Организации';
+        $data['type_recomend'] = 'ФизическиеЛица';
+        $data['recomend'] = '';
+        $data['e_nom'] = '';
 
 		if (!$this->getprimaryKey()) {
             unset($data['id']);
         }
 		unset($data['deleted']);
         unset($data['managing_persons']);
-
-//        $data['bank_name'] = 'USB BANK PLC (FORMERLY UNIVERSAL BANK PUBLIC LTD) // UNVKCY2NXXX';
+        unset($data['bank_bik']);
+        unset($data['bank_swift']);
         unset($data['bank_name']);
         unset($data['corrbank']);
         unset($data['corr_account']);
-
-        // Что подставлять ?????
-        $data['type_yur'] = 'Организации';
-        $data['type_recomend'] = 'ФизическиеЛица';
-        $data['recomend'] = '0000000007';
-        $data['e_nom'] = '1234-02-13';
 
         $management_method = array(
             'Все вместе' => 'ВсеВместе',
@@ -214,9 +214,13 @@ class SettlementAccount extends SOAPModel {
             'id_yur'        => 'Юр.лицо',                           // +
             'type_yur'      => 'Тип юр.лица',                       //
             'deleted'       => 'Помечен на удаление',               //
-			'bank'          => 'БИК / SWIFT',                       //
+
+            'bank'          => 'БИК / SWIFT',                       //
 			'bank_name'     => 'Название банка',                    //
-			'service'       => 'Вид обслуживания счета',
+			'bank_bik'      => 'БИК',
+			'bank_swift'    => 'SWIFT',
+
+            'service'       => 'Вид обслуживания счета',
 
             's_nom'         => 'Номер счета',
             'iban'          => 'IBAN',
@@ -296,9 +300,7 @@ class SettlementAccount extends SOAPModel {
      *  @param $attribute
      */
     public function isValidBank($attribute){
-        if (empty($this->$attribute)){
-            $this->addError($attribute, 'Необходимо указать БИК / SWIFT');
-        } else {
+        if (!empty($this->$attribute)){
             $name = SettlementAccount::getBankName($this->$attribute);
             if (empty($name)){
                 $this->addError($attribute, 'Необходимо указать правильный БИК / SWIFT');

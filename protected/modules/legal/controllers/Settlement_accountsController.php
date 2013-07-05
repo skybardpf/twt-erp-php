@@ -191,8 +191,6 @@ class Settlement_accountsController extends Controller {
 
         $error = '';
         if ($_POST && !empty($_POST['SettlementAccount'])) {
-            $bank_id = $account->bank;
-
             $account->setAttributes($_POST['SettlementAccount']);
             $account->str_managing_persons = $_POST['SettlementAccount']['str_managing_persons'];
             $account->managing_persons = CJSON::decode($account->str_managing_persons);
@@ -205,10 +203,11 @@ class Settlement_accountsController extends Controller {
                     $error = $e->getMessage();
                 }
             }
-            if ($bank_id != $account->bank){
-                $account->bank_name = SettlementAccount::getBankName($account->bank);
-            }
+
+        } else {
+            $account->bank = ((int)$account->bank_bik > 0) ? $account->bank_bik : (!empty($account->bank_swift) ? $account->bank_swift : '');
         }
+        $account->bank_name = SettlementAccount::getBankName($account->bank);
 
         $this->render('/my_organizations/show', array(
             'content' => $this->renderPartial('/settlement_accounts/form',

@@ -195,7 +195,7 @@
             $.ajax({
 //                type: 'POST',
                 dataType: "json",
-                url: "<?= CController::createUrl('/legal/settlement_accounts/get_bank_name'); ?>",
+                url: "<?= $this->createUrl('get_bank_name'); ?>",
 //                cache: false,
                 data: {
                     'bank': $('#SettlementAccount_bank').val()
@@ -264,7 +264,7 @@
             $.ajax({
 //                type: 'POST',
 //                dataType: "json",
-                url: "<?= CController::createUrl('/legal/settlement_accounts/selected_managing_persons'); ?>",
+                url: "<?= $this->createUrl('selected_managing_persons'); ?>",
                 cache: false,
                 data: {
                     'selected_ids': $('#SettlementAccount_str_managing_persons').val()
