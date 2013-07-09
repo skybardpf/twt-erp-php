@@ -1,5 +1,7 @@
 <?php
 
+Yii::setPathOfAlias('bootstrap', dirname(__FILE__).'/../extensions/bootstrap');
+
 // uncomment the following to define a path alias
 // Yii::setPathOfAlias('local','path/to/local-folder');
 
@@ -61,9 +63,13 @@ return array(
 				'password'  => 'Site',
 			)
 		),
-		'bootstrap' => array(
-			'class' => 'ext.bootstrap.components.Bootstrap', // assuming you extracted bootstrap under extensions
-		),
+//		'bootstrap' => array(
+//			'class' => 'ext.bootstrap.components.Bootstrap', // assuming you extracted bootstrap under extensions
+//		),
+
+        'bootstrap'=>array(
+            'class'=>'bootstrap.components.Bootstrap',
+        ),
 		// uncomment the following to enable URLs in path-format
 
 		'urlManager' => array(
