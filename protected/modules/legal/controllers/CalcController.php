@@ -26,49 +26,59 @@ class CalcController extends Controller
 
 		// todo Авторизованный пользователь. пока передается пустой.
 		$data = array('UserID' => 'test_user@nomail.asd', 'Strings' => array());
+        try {
+            if (!empty($_POST['parse_file'])) {
+                // Парсинг XML файла с кодами ТНВЭД
+                $file = CUploadedFile::getInstance($model, 'excel_file');
+                $excel = Yii::app()->yexcel->readActiveSheet($file->getTempName());
+                if ($excel) { foreach($excel as $e_row) {
+                    if (!empty($e_row['A']) || !empty($e_row['B'])) {
+                        $values[] = array('code' => $e_row['A'], 'summ' => $e_row['B']);
+                        $data['Strings'][] = array('Kod' => $e_row['A'], 'Summ' => $e_row['B']);
+                    }
+                } }
+            } elseif (isset($_POST['data'])) {
+                // Нажали кнопку расчитать
+                if (!$error) {
+                    if (isset($_POST['tnved'])) {
+                        $data['ItIsCategory'] = $_POST['tnved'] == 'yes' ? 'false' : 'true';
+                    }
+                    foreach($_POST['data'] as $val){
+                        if (!empty($val['code']) || !empty($val['summ'])) {
+                            $values[] = $val;
+                            $needed_length = (isset($_POST['tnved']) && $_POST['tnved'] == 'yes') ? 10 : 9;
+                            $code_length = strlen($val['code']);
+                            $code = ($code_length == $needed_length) ? $val['code'] : str_repeat('0', $needed_length-$code_length).$val['code'];
+                            $data['Strings'][] = array('Kod' => $code, 'Summ' => $val['summ']);
+                        }
+                    }
+                    if (empty($data['Strings'])){
+                        throw new Exception('Введите стоимость ваших товаров.');
+                    }
 
-		if (!empty($_POST['parse_file'])) {
-			// Парсинг XML файла с кодами ТНВЭД
-			$file = CUploadedFile::getInstance($model, 'excel_file');
-			$excel = Yii::app()->yexcel->readActiveSheet($file->getTempName());
-			if ($excel) { foreach($excel as $e_row) {
-				if (!empty($e_row['A']) || !empty($e_row['B'])) {
-					$values[] = array('code' => $e_row['A'], 'summ' => $e_row['B']);
-					$data['Strings'][] = array('Kod' => $e_row['A'], 'Summ' => $e_row['B']);
-				}
-			} }
-		} elseif (isset($_POST['data'])) {
-			// Нажали кнопку расчитать
-			if (!$error) {
-				if (isset($_POST['tnved'])) $data['ItIsCategory'] = $_POST['tnved'] == 'yes' ? 'false' : 'true';
-				foreach($_POST['data'] as $val){
-					if (!empty($val['code']) || !empty($val['summ'])) {
-						$values[] = $val;
-						$needed_length = (isset($_POST['tnved']) && $_POST['tnved'] == 'yes') ? 10 : 9;
-                        $code_length = strlen($val['code']);
-						$code = ($code_length == $needed_length) ? $val['code'] : str_repeat('0', $needed_length-$code_length).$val['code'];
-						$data['Strings'][] = array('Kod' => $code, 'Summ' => $val['summ']);
-					}
-				}
-				try {
-					Currencies::getValues();
-					if (isset($_POST['currency']) && $_POST['currency'] && isset(Currencies::$values[$_POST['currency']])) $data['Currency'] = $_POST['currency'];
-					else throw new Exception('Укажите валюту');
-					$ret = Yii::app()->calc->GetSumm(array('Data' => $data));
-					$ret = SoapComponent::parseReturn($ret);
-					if (isset($ret['variants'])) {
-						$i = 1;
-						foreach ($ret['variants'] as &$variant) {
-							$variant['number'] = $i++;
-						}
-					}
-					$this->render('step2', array('insurance' => $ret));
-					return;
-				} catch (Exception $e) {
-					$error = $e->getMessage();
-				}
-			}
-		}
+                    Currencies::getValues();
+                    if (isset($_POST['currency']) && $_POST['currency'] && isset(Currencies::$values[$_POST['currency']])) $data['Currency'] = $_POST['currency'];
+                    else throw new Exception('Укажите валюту');
+
+//                    var_dump($data);die;
+                    $ret = Yii::app()->calc->GetSumm(array('Data' => $data));
+
+
+                    $ret = SoapComponent::parseReturn($ret);
+                    if (isset($ret['variants'])) {
+                        $i = 1;
+                        foreach ($ret['variants'] as &$variant) {
+                            $variant['number'] = $i++;
+                        }
+                    }
+                    $this->render('step2', array('insurance' => $ret));
+                    return;
+
+                }
+            }
+        } catch (Exception $e) {
+            $error = $e->getMessage();
+        }
 		if ($error) {
 			Yii::app()->user->setFlash('error', $error);
 		}
@@ -137,19 +147,57 @@ class CalcController extends Controller
 		if ($_POST && isset($_POST['order'])) {
 			$order = $_POST['order'];
 			try {
-				$send_order['UserID'] = 'test_user@nomail.asd';
-				if (!empty($_POST['order']['NumberOfPreOrder']))     $send_order['NumberOfPreOrder']     = $_POST['order']['NumberOfPreOrder'];
-				if (!empty($_POST['order']['DateOfPreOrder']))       $send_order['DateOfPreOrder']       = $_POST['order']['DateOfPreOrder'];
-				if (!empty($_POST['order']['CompanyName']))          $send_order['CompanyName']          = $_POST['order']['CompanyName'];
-				if (!empty($_POST['order']['Beneficiary']))          $send_order['Beneficiary']          = $_POST['order']['Beneficiary'];
-				if (!empty($_POST['order']['Consignment']))          $send_order['Consignment']          = $_POST['order']['Consignment'];
-				if (!empty($_POST['order']['NumberOfSeat']))         $send_order['NumberOfSeat']         = $_POST['order']['NumberOfSeat'];
-				if (!empty($_POST['order']['NumberOfSeatMeasure']))  $send_order['NumberOfSeatMeasure']  = $_POST['order']['NumberOfSeatMeasure'];
-				if (!empty($_POST['order']['Weight']))               $send_order['Weight']               = $_POST['order']['Weight'];
-				if (!empty($_POST['order']['WeightMeasure']))        $send_order['WeightMeasure']        = $_POST['order']['WeightMeasure'];
-				if (!empty($_POST['order']['Documents']))            $send_order['Documents']            = $_POST['order']['Documents'];
-				if (!empty($_POST['order']['StartDate']))            $send_order['StartDate']            = $_POST['order']['StartDate'];
-				if (!empty($_POST['order']['EndDate']))              $send_order['EndDate']              = $_POST['order']['EndDate'];
+                /**
+                 * TODO. Нужно все переписать с использованием CFormModel.
+                 */
+//                if (empty($_POST['order']['CompanyName']))
+//                {
+//                    throw new Exception("Нужно указать название компании.");
+//                }
+//                if (empty($_POST['order']['Beneficiary']))
+//                {
+//                    throw new Exception("Нужно указать выгодоприобретателя.");
+//                }
+
+                $send_order['UserID'] = 'test_user@nomail.asd';
+
+                $send_order['DateOfPreOrder'] = (!empty($_POST['order']['DateOfPreOrder'])) ? $_POST['order']['DateOfPreOrder'] : '';
+                $send_order['NumberOfPreOrder'] = (!empty($_POST['order']['NumberOfPreOrder'])) ? $_POST['order']['NumberOfPreOrder'] : '';
+                $send_order['CompanyName'] = (!empty($_POST['order']['CompanyName'])) ? $_POST['order']['CompanyName'] : '';
+                $send_order['Beneficiary'] = (!empty($_POST['order']['Beneficiary'])) ? $_POST['order']['Beneficiary'] : '';
+                $send_order['NumberOfSeat'] = (!empty($_POST['order']['NumberOfSeat'])) ? $_POST['order']['NumberOfSeat'] : '';
+                $send_order['Consignment'] = (!empty($_POST['order']['Consignment'])) ? $_POST['order']['Consignment'] : '';
+                $send_order['NumberOfSeatMeasure'] = (!empty($_POST['order']['NumberOfSeatMeasure'])) ? $_POST['order']['NumberOfSeatMeasure'] : '';
+                $send_order['Weight'] = (!empty($_POST['order']['Weight'])) ? $_POST['order']['Weight'] : '';
+                $send_order['WeightMeasure'] = (!empty($_POST['order']['WeightMeasure'])) ? $_POST['order']['WeightMeasure'] : '';
+                $send_order['Documents'] = (!empty($_POST['order']['Documents'])) ? $_POST['order']['Documents'] : '';
+
+                if (empty($_POST['order']['StartDate'])){
+                    throw new Exception("Нужно указать дату начала страхования.");
+                } elseif (strtotime($_POST['order']['StartDate']) === false){
+                    throw new Exception("Неправильный формат даты начала страхования.");
+                }
+                $send_order['StartDate'] = $_POST['order']['StartDate'];
+
+                if (empty($_POST['order']['EndDate'])){
+                    throw new Exception("Нужно указать дату окончания страхования.");
+                } elseif (strtotime($_POST['order']['EndDate']) === false){
+                    throw new Exception("Неправильный формат даты окончания страхования.");
+                }
+                $send_order['EndDate'] = $_POST['order']['EndDate'];
+
+//				if (!empty($_POST['order']['NumberOfPreOrder']))     $send_order['NumberOfPreOrder']     = $_POST['order']['NumberOfPreOrder'];
+//				if (!empty($_POST['order']['DateOfPreOrder']))       $send_order['DateOfPreOrder']       = $_POST['order']['DateOfPreOrder'];
+//				if (!empty($_POST['order']['Beneficiary']))          $send_order['Beneficiary']          = $_POST['order']['Beneficiary'];
+//				if (!empty($_POST['order']['Beneficiary']))          $send_order['Beneficiary']          = $_POST['order']['Beneficiary'];
+//				if (!empty($_POST['order']['Consignment']))          $send_order['Consignment']          = $_POST['order']['Consignment'];
+//				if (!empty($_POST['order']['NumberOfSeat']))         $send_order['NumberOfSeat']         = $_POST['order']['NumberOfSeat'];
+//				if (!empty($_POST['order']['NumberOfSeatMeasure']))  $send_order['NumberOfSeatMeasure']  = $_POST['order']['NumberOfSeatMeasure'];
+//				if (!empty($_POST['order']['Weight']))               $send_order['Weight']               = $_POST['order']['Weight'];
+//				if (!empty($_POST['order']['WeightMeasure']))        $send_order['WeightMeasure']        = $_POST['order']['WeightMeasure'];
+//				if (!empty($_POST['order']['Documents']))            $send_order['Documents']            = $_POST['order']['Documents'];
+//				if (!empty($_POST['order']['StartDate']))            $send_order['StartDate']            = $_POST['order']['StartDate'];
+//				if (!empty($_POST['order']['EndDate']))              $send_order['EndDate']              = $_POST['order']['EndDate'];
 
 				$send_order['Transports'] = array();
 				if (isset($_POST['order']['route']) && isset($_POST['order']['route']['begin'])
@@ -181,7 +229,7 @@ class CalcController extends Controller
 				}
 				$ret = Yii::app()->calc->CreateOrder(array('Data' => $send_order));
 				$ret = SoapComponent::parseReturn($ret, false);
-				CVarDumper::dump($ret,5,1);
+//				CVarDumper::dump($ret,5,1);
 			} catch (Exception $e) {
 				Yii::app()->user->setFlash('error', $e->getMessage());
 			}
