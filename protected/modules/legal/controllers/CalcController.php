@@ -44,7 +44,7 @@ class CalcController extends Controller
                         $data['ItIsCategory'] = $_POST['tnved'] == 'yes' ? 'false' : 'true';
                     }
                     foreach($_POST['data'] as $val){
-                        if (!empty($val['code']) || !empty($val['summ'])) {
+                        if (!empty($val['code']) && !empty($val['summ'])) {
                             $values[] = $val;
                             $needed_length = (isset($_POST['tnved']) && $_POST['tnved'] == 'yes') ? 10 : 9;
                             $code_length = strlen($val['code']);
@@ -53,7 +53,7 @@ class CalcController extends Controller
                         }
                     }
                     if (empty($data['Strings'])){
-                        throw new Exception('Введите стоимость ваших товаров.');
+                        throw new Exception('Выберите товар и его стоимость.');
                     }
 
                     Currencies::getValues();
@@ -137,7 +137,6 @@ class CalcController extends Controller
 			$this->render('step2', array('insurance' => $data));
 		}
 	}
-
 
 	public function actionOrder($order_id = '', $order_date = '') {
 		$send_order = ($order_id && $order_date)
@@ -258,7 +257,7 @@ class CalcController extends Controller
 				);
 			} else {
 				$arr = $this->getCategories();
-				if (isset($arr[$_GET['id']])) {
+				if (isset($arr[strtolower($_GET['id'])])) {
 					$values = array(
 						'id' => $_GET['id'],
 						'text' => $_GET['id'].' - '.$arr[$_GET['id']]
@@ -282,8 +281,9 @@ class CalcController extends Controller
 				} }
 			} else {
 				$arr = $this->getCategories();
+                $q = mb_convert_case($q, MB_CASE_LOWER, "UTF-8");
 				array_walk($arr, function($val, $key) use ($q, &$values) {
-					if (stripos($val, $q) !== false || stripos($key, $q) !== false) {
+					if (mb_strpos(mb_convert_case($val, MB_CASE_LOWER, "UTF-8"), $q) !== false || mb_stripos($key, $q) !== false) {
 						$values[] = array(
 							'id' => $key,
 							'text' => $key.' - '.$val
@@ -410,7 +410,7 @@ class CalcController extends Controller
 				$return   = array();
 				if ($tmp) foreach ($tmp as $sub_tmp) {
 					// Т.к. sub_tmp = array('key' => 'title');
-					$return[key($sub_tmp)] = current($sub_tmp);
+					$return[strtolower(key($sub_tmp))] = current($sub_tmp);
 				}
 				$this->_categories = $return;
 			}

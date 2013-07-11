@@ -40,11 +40,18 @@
  * @method mixed saveSettlementAccount      Сохранение
  * @method mixed deleteSettlementAccount    Удаление
  *
- * Банковские счета
- * @method mixed listSettlementAccount      Список
- * @method mixed aaageatFoundingDocument    Просмотр
- * @method mixed aaasaveFoundingDocument   Сохранение
- * @method mixed aaadeleteFoundingDocument Удаление
+ * Мои события (мероприятия)
+ * @method mixed listEvents                 Список
+ * @method mixed getEvent                   Просмотр
+ * @method mixed saveEvent                  Сохранение
+ * @method mixed deleteEvent                Удаление
+ *
+ * Контрагенты
+ * @method mixed listContragents            Список
+ * @method mixed getContragent              Просмотр
+ * @method mixed saveContragent             Сохранение
+ * @method mixed deleteContragent           Удаление
+ *
  *
  * Страны
  * @method mixed listCountries          Список
@@ -340,7 +347,7 @@ class SoapComponent extends CApplicationComponent
         $cmd = Yii::app()->db->createCommand(
             'SELECT id, load_date
             FROM '.UploadFile::model()->tableName().'
-        WHERE client_id = :client_id AND model_name=:model_name AND model_id=:model_id AND type=:type'
+            WHERE client_id=:client_id AND model_name=:model_name AND model_id=:model_id AND type=:type'
         );
         $files = $cmd->queryAll(true, array(
             ':client_id'    => UploadFile::CLIENT_ID,

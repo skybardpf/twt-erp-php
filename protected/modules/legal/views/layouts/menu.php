@@ -27,10 +27,15 @@
                 'active'=> ($this->menu_current == 'individuals')
             ),
             array(
+                'label' => 'Мои события',
+                'url'   => '/legal/my_events/',
+                'active'=> ($this->menu_current == 'my_events')
+            ),
+            array(
                 'label' => 'Мои счета',
                 'url'   => '/legal/settlement_accounts/',
                 'active'=> ($this->menu_current == 'settlements')
-            )
+            ),
         ),
     ));
 ?>

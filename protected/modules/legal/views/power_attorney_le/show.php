@@ -20,7 +20,6 @@
 <?php
     Yii::app()->clientScript->registerScriptFile('/static/js/legal/show_manage_files.js');
 
-
     $this->widget('bootstrap.widgets.TbButton', array(
         'buttonType' => 'link',
         'type'       => 'success',

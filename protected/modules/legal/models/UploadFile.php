@@ -493,12 +493,22 @@ class UploadFile extends CActiveRecord {
     }
 
     /**
-     *  Получить корень директории загрузки.
+     * Получить корень директории загрузки.
      *
-     *  @return string
+     * @return string
+     * @throws CHttpException
      */
     private function getDirUpload()
     {
-        return Yii::getPathOfAlias('webroot') . self::DIR_UPLOADS;
+        $dir = Yii::getPathOfAlias('webroot') . self::DIR_UPLOADS;
+        if (!file_exists($dir)){
+            if (!mkdir($dir, 0777)){
+                throw new CHttpException(500, 'Не удалось создать директорию для загрузки файлов.');
+            }
+        }
+        if (!is_dir($dir) || !is_writable($dir)){
+            throw new CHttpException(500, 'Не доступна директория для загрузки файлов.');
+        }
+        return $dir;
     }
 }
