@@ -235,7 +235,7 @@ class My_eventsController extends Controller{
     {
         try {
             $uf = new UploadFile();
-            $uf->delete($id);
+            $uf->delete_file($id);
 
             if (Yii::app()->request->isAjaxRequest) {
                 echo CJSON::encode(

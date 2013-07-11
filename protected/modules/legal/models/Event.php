@@ -127,7 +127,7 @@ class Event extends SOAPModel {
             if (!ctype_digit($ret)){
                 foreach($upload_ids as $id){
                     $uf = new UploadFile();
-                    $uf->delete($id);
+                    $uf->delete_file($id);
                 }
             } else {
                 foreach($upload_ids as $id){

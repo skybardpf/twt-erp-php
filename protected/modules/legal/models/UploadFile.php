@@ -406,7 +406,7 @@ class UploadFile extends CActiveRecord {
      *
      *  @throws UploadFileException
      */
-    public function delete($file_id)
+    public function delete_file($file_id)
     {
         $cmd = Yii::app()->db->createCommand(
             'SELECT filename, client_id, model_name, model_id, type
