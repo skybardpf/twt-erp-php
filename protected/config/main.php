@@ -12,7 +12,7 @@ return array(
 	'name'=>'TWT Consult',
 	'sourceLanguage' => 'root',
 	'language' => 'ru',
-    'defaultController' => 'legal/calc',
+    'defaultController' => 'legal/my_organizations',
 
 	// preloading 'log' component
 	'preload'=>array('log', 'bootstrap'),
