@@ -212,7 +212,7 @@ class My_eventsController extends Controller{
                         if ($model->delete()) {
                             $this->redirect($this->createUrl('index'));
                         } else {
-                            throw new CHttpException(500, 'Не удалось удалить довереность.');
+                            throw new CHttpException(500, 'Не удалось удалить событие.');
                         }
                     break;
                     default:
@@ -220,7 +220,9 @@ class My_eventsController extends Controller{
                     break;
                 }
             }
-//            $this->render('documents/power_attorney_le/delete', array('model' => $model));
+            $this->render('/my_events/delete', array(
+                'model' => $model
+            ));
         }
     }
 

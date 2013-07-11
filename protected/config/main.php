@@ -14,10 +14,8 @@ return array(
 	'language' => 'ru',
     'defaultController' => 'legal/my_organizations',
 
-	// preloading 'log' component
 	'preload'=>array('log', 'bootstrap'),
 
-	// autoloading model and component classes
 	'import'=>array(
 		'application.models.*',
 		'application.components.*',

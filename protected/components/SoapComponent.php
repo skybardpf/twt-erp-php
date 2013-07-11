@@ -52,7 +52,6 @@
  * @method mixed saveContragent             Сохранение
  * @method mixed deleteContragent           Удаление
  *
- *
  * Страны
  * @method mixed listCountries          Список
  */
@@ -143,9 +142,12 @@ class SoapComponent extends CApplicationComponent
 		Yii::log('Connecting to '.$this->wsdl, CLogger::LEVEL_INFO, 'soap');
 		try {
 			$this->soap_client = new SoapClient($this->wsdl, $this->_connection_options);
-		} catch(Exception $e) {
+            if (is_null($this->soap_client)){
+                throw new CHttpException(500, 'Не удалось установить соединение с SOAP сервисом.');
+            }
+		} catch(SoapFault $e) {
 			Yii::log($e->getCode().'(at file '.$e->getFile().':'.$e->getLine().'): '.$e->getMessage(),CLogger::LEVEL_ERROR, 'soap');
-			throw new CHttpException(500, $e->getMessage());
+			throw new CHttpException(500, 'Не удалось установить соединение с SOAP сервисом.');
 		}
 		$time = microtime(true) - $time;
 		Yii::log('Connected to '.$this->wsdl.' in '.$time.' seconds.', CLogger::LEVEL_INFO, 'soap');

@@ -10,6 +10,7 @@
  * @property string $countries
  * @property bool   $for_yur       если "true" для юр.лица, если "false", то для страны.
  * @property bool   $made_by_user  если "true" создано юзером, иначе админом. Нелья удалять и редактировать.
+ * @property bool   $deleted
  *
  * @property string $json_organizations  внутренняя переменая.
  * @property string $json_contractors  внутренняя переменая.
