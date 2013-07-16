@@ -19,13 +19,20 @@ class CalcController extends Controller
 	/**
 	 * Список позиций
 	 */
-	public function actionIndex() {
+	public function actionIndex($email = "") {
 		$values = array();
 		$model = new Calc();
 		$error = '';
-
+	
+		$user_id = "test_user@nomail.asd";
+		if(!empty($email)) {
+			if(preg_match("/^.+@.+\..+$/", $email)) {
+				$user_id = $email;
+			}
+		}
+		
 		// todo Авторизованный пользователь. пока передается пустой.
-		$data = array('UserID' => 'test_user@nomail.asd', 'Strings' => array());
+		$data = array('UserID' => $user_id, 'Strings' => array());
         try {
             if (!empty($_POST['parse_file'])) {
                 // Парсинг XML файла с кодами ТНВЭД
