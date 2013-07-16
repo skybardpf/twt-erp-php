@@ -48,10 +48,7 @@ $this->widget('bootstrap.widgets.TbButton', array(
 ?>
 
 <?php
-    if ($error) {
-        echo '<br/><br/>';
-        echo CHtml::openTag('div', array('class' => 'alert alert-error')).$error.CHtml::closeTag('div');
-    } elseif ($model->getErrors()) {
+    if ($model->hasErrors()) {
         echo '<br/><br/>';
         echo $form->errorSummary($model);
     }

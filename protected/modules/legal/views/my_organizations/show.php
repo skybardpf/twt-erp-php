@@ -34,8 +34,8 @@
             ),
             array(
                 'label' => 'Заинтересованные лица',
-                'url'   => $this->createUrl('beneficiary/list', array('org_id' => $organization->primaryKey)),
-                'active'=> ($cur_tab == 'benefits'),
+                'url'   => $this->createUrl('interested_persons/index', array('org_id' => $organization->primaryKey)),
+                'active' => ($cur_tab == 'interested_persons'),
                 'itemOptions' => array('class'=>'narrow')
             ),
             array(

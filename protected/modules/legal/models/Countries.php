@@ -30,7 +30,9 @@ class Countries extends SOAPModel {
 	 * @return Countries[]
 	 */
 	public function findAll() {
-		$ret = $this->SOAP->listCountries();
+        $request = array('filters' => array(), 'sort' => array($this->order));
+
+		$ret = $this->SOAP->listCountries($request);
 		$ret = SoapComponent::parseReturn($ret);
 		return $this->publish_list($ret, __CLASS__);
 	}
@@ -69,9 +71,12 @@ class Countries extends SOAPModel {
 			if (!self::$values) {
 				$elements = self::model()->findAll();
 				$return   = array();
-				if ($elements) { foreach ($elements as $elem) {
-					$return[$elem->getprimaryKey()] = $elem->name;
-				} }
+				if ($elements) {
+                    foreach ($elements as $elem) {
+					    $return[$elem->getprimaryKey()] = $elem->name;
+				    }
+                    asort($return);
+                }
 				self::$values = $return;
 
 			}
