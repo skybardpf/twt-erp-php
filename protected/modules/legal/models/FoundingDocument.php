@@ -90,16 +90,25 @@ class FoundingDocument extends SOAPModel {
 	 * @return array
 	 */
 	public function save() {
-		$attr = $this->attributes;
+		$data = $this->attributes;
 		if (!$this->primaryKey) {
-            unset($attr['id']);
+            unset($data['id']);
         } else {
 			$cacher = new CFileCache();
 			$cacher->set(__CLASS__.'_objects_'.$this->primaryKey, false, 1);
 		}
-		unset($attr['deleted']);
+		unset($data['deleted']);
 
-		$data = array('data' => SoapComponent::getStructureElement($attr));
+		$data = array(
+            'data' => array(
+                'ElementsStructure' => SoapComponent::getStructureElement($data, array('lang' => 'eng')),
+                'Tables' => array(
+                    SoapComponent::getStructureActions($this),
+                    SoapComponent::getStructureScans($this),
+                    SoapComponent::getStructureFiles($this),
+                )
+            )
+        );
 		$ret = $this->SOAP->saveFoundingDocument($data);
 		$ret = SoapComponent::parseReturn($ret);
 		return $ret;

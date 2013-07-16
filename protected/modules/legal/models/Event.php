@@ -43,12 +43,10 @@ class Event extends SOAPModel {
 	public function findAll()
     {
 		$filters = SoapComponent::getStructureElement($this->where);
-
 		$ret = $this->SOAP->listEvents(array(
             'filters' => (!$filters) ? array(array()) : $filters,
             'sort' => array($this->order)
         ));
-//        var_dump($ret);die;
 		$ret = SoapComponent::parseReturn($ret);
 		return $this->publish_list($ret, __CLASS__);
 	}
@@ -149,8 +147,7 @@ class Event extends SOAPModel {
     public function delete()
     {
         if ($pk = $this->getprimaryKey()) {
-//            $ret = $this->SOAP->deleteEvent(array('id' => '1'.$pk));
-            $ret = $this->SOAP->deleteEvent(array('id' => '1'.$pk));
+            $ret = $this->SOAP->deleteEvent(array('id' => $pk));
             return $ret->return;
         }
         return false;
@@ -160,7 +157,8 @@ class Event extends SOAPModel {
 	 * Returns the list of attribute names of the model.
 	 * @return array list of attribute names.
 	 */
-	public function attributeLabels() {
+	public function attributeLabels()
+    {
 		return array(
 			'id'                => '#',                   // +
 			'name'              => 'Название',            // +
@@ -179,29 +177,6 @@ class Event extends SOAPModel {
 			'for_yur'           => 'Тип',
 			'json_organizations' => '',
 			'json_contractors' => '',
-
-//
-
-
-			/*
-		user:,
-		period:Месяц,
-		id:000000002,
-		deleted:false,
-		notification_date:2013-03-01,
-		event_date:2013-03-14,
-		description:всывсыфвсфыс,
-		made_by_user:false,
-		name:Тест2,
-		files:
-			file1:D:_DOCUMENTS_07 IT DepartmentPRICE_1C.XLS,
-            file2:D:_DOCUMENTS_07 IT DepartmentТестовое ТЗ v2.doc
-
-Юридическое лицо (выбор из справочника, обязательное);
-Дата появления/актуализации (дата, обязательное);
-Дата наступления (дата, обязательное);
-Периодичность (выбор из списка: разовое, ежемесячное, ежеквартальное, ежегодное);
-			*/
 		);
 	}
 
@@ -229,26 +204,19 @@ class Event extends SOAPModel {
             array('for_yur', 'in', 'range' => array(self::FOR_ORGANIZATIONS,self::FOR_JURISDICTION)),
             array('period', 'required'),
 
-//            array('name', 'length', 'max' => 25),
-
-//            array('nom', 'length', 'max' => 20),
-//            array('comment', 'length', 'max' => 50),
-
             array('event_date, notification_date', 'required'),
             array('event_date, notification_date', 'date', 'format' => 'yyyy-MM-dd'),
 
             array('description', 'safe'),
             array('made_by_user', 'boolean'),
-
-//            array('list_scans', 'existsScans'),
-//            array('list_files', 'existsFiles'),
         );
     }
 
     /**
      * @param string $attribute
      */
-    public function validListYur($attribute){
+    public function validListYur($attribute)
+    {
         if ($this->for_yur == self::FOR_ORGANIZATIONS){
             $org = CJSON::decode($this->json_organizations);
             $c  = CJSON::decode($this->json_contractors);
@@ -261,7 +229,8 @@ class Event extends SOAPModel {
     /**
      * @param string $attribute
      */
-    public function validJson($attribute){
+    public function validJson($attribute)
+    {
         if ($this->for_yur == self::FOR_ORGANIZATIONS){
             if (null === CJSON::decode($this->json_organizations)){
                 $this->addError($attribute, 'Не правильный формат строки JSON.');
@@ -272,7 +241,8 @@ class Event extends SOAPModel {
     /**
      * @return array
      */
-    public function getStructureOrg(){
+    public function getStructureOrg()
+    {
         $organizations = CJSON::decode($this->json_organizations);
         $contractors  = CJSON::decode($this->json_contractors);
 

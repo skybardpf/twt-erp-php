@@ -40,9 +40,15 @@ if (!$organization->deleted) {
 <br/><br/>
 <?php
     $attributes = array();
+    $countries = Countries::getValues();
     $labels = $organization->attributeLabels();
     foreach($organization as $field => $value){
         if($value != ''){
+            if ($field == 'country'){
+                $value = (isset($countries[$value]) ? $countries[$value] : '');
+            } elseif ($field == 'okopf'){
+//                $value = (isset($countries[$value]) ? $countries[$value] : '');
+            }
             $attributes[] = array(
                 'name' => $field,
                 'label' => $labels[$field],

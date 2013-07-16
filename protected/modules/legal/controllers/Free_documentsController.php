@@ -56,7 +56,6 @@ class Free_documentsController extends Controller {
         $doc->id_yur    = $org->primaryKey;
         $doc->type_yur  = 'Организации';
 
-        $error = '';
         if ($_POST && !empty($_POST['FreeDocument'])) {
             $doc->setAttributes($_POST['FreeDocument']);
             if ($doc->validate()) {
@@ -64,18 +63,20 @@ class Free_documentsController extends Controller {
                     $doc->save();
                     $this->redirect($this->createUrl('documents/list', array('org_id' => $org->primaryKey)));
                 } catch (Exception $e) {
-                    $error = $e->getMessage();
+                    $doc->addError('id', $e->getMessage());
                 }
             }
         }
 
         $this->render('/my_organizations/show', array(
-            'content' => $this->renderPartial('/free_documents/form',
+            'content' => $this->renderPartial(
+                '/free_documents/form',
                 array(
                     'model'         => $doc,
-                    'error'         => $error,
                     'organization'  => $org,
-                ), true),
+                ),
+                true
+            ),
             'organization' => $org,
             'cur_tab' => 'documents',
         ));
@@ -99,7 +100,6 @@ class Free_documentsController extends Controller {
             throw new CHttpException(404, 'Не найдено юридическое лицо.');
         }
 
-        $error = '';
         if ($_POST && !empty($_POST['FreeDocument'])) {
             $doc->setAttributes($_POST['FreeDocument']);
             if ($doc->validate()) {
@@ -107,18 +107,20 @@ class Free_documentsController extends Controller {
                     $doc->save();
                     $this->redirect($this->createUrl('view', array('id' => $doc->primaryKey)));
                 } catch (Exception $e) {
-                    $error = $e->getMessage();
+                    $doc->addError('id', $e->getMessage());
                 }
             }
         }
 
         $this->render('/my_organizations/show', array(
-            'content' => $this->renderPartial('/free_documents/form',
+            'content' => $this->renderPartial(
+                '/free_documents/form',
                 array(
-                    'model'         => $doc,
-                    'error'         => $error,
-                    'organization'  => $org,
-                ), true),
+                    'model' => $doc,
+                    'organization' => $org,
+                ),
+                true
+            ),
             'organization' => $org,
             'cur_tab' => 'documents',
         ));

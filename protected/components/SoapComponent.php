@@ -52,6 +52,18 @@
  * @method mixed saveContragent             Сохранение
  * @method mixed deleteContragent           Удаление
  *
+ * Заинтересованные лица
+ * @method mixed listInterestedPersons      Список
+ * @method mixed getInterestedPerson        Просмотр
+ * @method mixed saveInterestedPerson      Сохранение
+ * @method mixed deleteInterestedPersons    Удаление
+ *
+ * Заинтересованные лица - бенефициары
+ * @method mixed listBeneficiary            Список
+ * @method mixed getBeneficiary             Просмотр
+ * @method mixed saveBeneficiary            Сохранение
+ * @method mixed deleteBeneficiary          Удаление
+ *
  * Страны
  * @method mixed listCountries          Список
  */
@@ -142,16 +154,14 @@ class SoapComponent extends CApplicationComponent
 		Yii::log('Connecting to '.$this->wsdl, CLogger::LEVEL_INFO, 'soap');
 		try {
 			$this->soap_client = new SoapClient($this->wsdl, $this->_connection_options);
-            if (is_null($this->soap_client)){
+            if (empty($this->soap_client)){
                 throw new CHttpException(500, 'Не удалось установить соединение с SOAP сервисом.');
             }
 		} catch(SoapFault $e) {
 			Yii::log($e->getCode().'(at file '.$e->getFile().':'.$e->getLine().'): '.$e->getMessage(),CLogger::LEVEL_ERROR, 'soap');
 			throw new CHttpException(500, 'Не удалось установить соединение с SOAP сервисом.');
 		}
-		$time = microtime(true) - $time;
-		Yii::log('Connected to '.$this->wsdl.' in '.$time.' seconds.', CLogger::LEVEL_INFO, 'soap');
-	}
+    }
 
 	public function cache($duration, $dependency = NULL) {
 		$this->requestCachingDuration   = $duration;

@@ -256,7 +256,9 @@ class SettlementAccount extends SOAPModel {
     public function rules()
     {
         return array(
+            array('s_nom', 'required'),
             array('s_nom', 'length', 'max' => 20),
+
             array('iban', 'length', 'max' => 33),
 
             array('cur', 'required'),

@@ -1,27 +1,35 @@
 <?php
-/* @var $this PegroupController */
-/* @var $model PEGroup */
+/**
+ * Форма удаления заинтересованного лица.
+ *
+ * @author Skibardin A.A. <skybardpf@artektiv.ru>
+ *
+ * @var $this   Interested_personsController
+ * @var $model  InterestedPerson
+ */
+?>
 
-$this->breadcrumbs=array(
-	$this->controller_title => array('/legal/counterparties_groups/'),
-	'Удаление',
-);?>
-Вы действительно хотите <?=$model->deleted ? '<b>восстановить заинтересованное лицо</b>': '<b>удалить заинтересованное лицо</b>'?> «<?=CHtml::encode($model->role)?>»?
+Вы действительно хотите <?= $model->deleted ? '<b>восстановить заинтересованное лицо</b>': '<b>удалить заинтересованное лицо</b>'?> «<?=CHtml::encode($model->lico)?>»?
 
-<?php $form = $this->beginWidget('bootstrap.widgets.TbActiveForm', array(
-	'id'=>'news-delete-form',
-	'type'=>'horizontal',
-))?>
-<?php $this->widget('bootstrap.widgets.TbButton', array(
-	'buttonType'=>'submit',
-	'type'=>'danger',
-	'label'=>'Да',
-	'htmlOptions' => array('name' => 'result', 'value' => 'yes')
-)); ?>
-<?php $this->widget('bootstrap.widgets.TbButton', array(
-	'buttonType'=>'submit',
-	'type'=>'success',
-	'label'=>'Нет',
-	'htmlOptions' => array('name' => 'result', 'value' => 'no')
-)); ?>
-<?php $this->endWidget(); ?>
+<?php
+    $form = $this->beginWidget('bootstrap.widgets.TbActiveForm', array(
+        'id'=>'news-delete-form',
+        'type'=>'horizontal',
+    ));
+
+    $this->widget('bootstrap.widgets.TbButton', array(
+        'buttonType'=>'submit',
+        'type'=>'danger',
+        'label'=>'Да',
+        'htmlOptions' => array('name' => 'result', 'value' => 'yes')
+    ));
+
+    $this->widget('bootstrap.widgets.TbButton', array(
+        'buttonType'=>'submit',
+        'type'=>'success',
+        'label'=> 'Нет',
+        'htmlOptions' => array('name' => 'result', 'value' => 'no')
+    ));
+
+    $this->endWidget();
+?>
