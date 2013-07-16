@@ -16,6 +16,20 @@ class CalcController extends Controller
 
 	public $layout = '//layouts/calc';
 
+    public function filters() {
+        return array(
+            'accessControl',
+        );
+    }
+    public function actions()
+    {
+        return array(
+            'captcha'=>array(
+                'class'=>'CCaptchaAction',
+            ),
+        );
+    }
+
 	/**
 	 * Список позиций
 	 */
@@ -43,19 +57,20 @@ class CalcController extends Controller
                     if (isset($_POST['tnved'])) {
                         $data['ItIsCategory'] = $_POST['tnved'] == 'yes' ? 'false' : 'true';
                     }
-                    foreach($_POST['data'] as $val){
+                    foreach($_POST['data'] as $k => $val){
                         if (!empty($val['code']) && !empty($val['summ'])) {
                             $values[] = $val;
                             $needed_length = (isset($_POST['tnved']) && $_POST['tnved'] == 'yes') ? 10 : 9;
                             $code_length = strlen($val['code']);
                             $code = ($code_length == $needed_length) ? $val['code'] : str_repeat('0', $needed_length-$code_length).$val['code'];
                             $data['Strings'][] = array('Kod' => $code, 'Summ' => $val['summ']);
+                        } else {
+                            unset($_POST['data'][$k]);
                         }
                     }
                     if (empty($data['Strings'])){
                         throw new Exception('Выберите товар и его стоимость.');
                     }
-
                     Currencies::getValues();
                     if (isset($_POST['currency']) && $_POST['currency'] && isset(Currencies::$values[$_POST['currency']])) $data['Currency'] = $_POST['currency'];
                     else throw new Exception('Укажите валюту');
@@ -63,7 +78,7 @@ class CalcController extends Controller
 //                    var_dump($data);die;
                     $ret = Yii::app()->calc->GetSumm(array('Data' => $data));
 
-
+                    Yii::app()->session['calc'] = $_POST;
                     $ret = SoapComponent::parseReturn($ret);
                     if (isset($ret['variants'])) {
                         $i = 1;
@@ -82,7 +97,14 @@ class CalcController extends Controller
 		if ($error) {
 			Yii::app()->user->setFlash('error', $error);
 		}
-		$this->render('index', array('model' => $model, 'values' => $values));
+        if (Yii::app()->request->isAjaxRequest) {
+            $ret = $this->render('index', array('model' => $model, 'values' => $values), 1);
+            echo CJSON::encode(array('result' => $ret));
+            Yii::app()->end();
+        } else {
+            $this->render('index', array('model' => $model, 'values' => $values));
+        }
+
 	}
 
 	/**
@@ -103,7 +125,6 @@ class CalcController extends Controller
 				'variants' =>  $_POST['variants']
 			);
 		}
-
 		if (!isset($_POST['variant']) || !$_POST['variant']) {
 			Yii::app()->user->setFlash('error', 'Выберите вариант страхования');
 			$this->render('step2', array('insurance' => $data));
@@ -125,6 +146,24 @@ class CalcController extends Controller
 						'NumberOfPreOrder'  => $_POST['order_number'],
 						'DateOfPreOrder'    => $_POST['order_date'],
 					);
+                    // достаём из сессии коды категорий
+                    $session_calc = Yii::app()->session['calc'];
+                    if ($session_calc['tnved'] == 'no') {
+                        $values = '';
+                        $arr = $this->getCategories();
+                        if (!empty($session_calc['data'])) {
+                            foreach($session_calc['data'] as $kode){
+                                $q = mb_convert_case($kode['code'], MB_CASE_LOWER, "UTF-8");
+                                array_walk($arr, function($val, $key) use ($q, &$values) {
+                                    if (mb_strpos(mb_convert_case($val, MB_CASE_LOWER, "UTF-8"), $q) !== false || mb_stripos($key, $q) !== false) {
+                                        $values .= trim($val).":\n";
+                                    }
+                                });
+                            }
+                        }
+
+                        $order['Consignment'] = $values;
+                    }
 					$this->render('order', array('order' => $order));
 					return;
 					//$this->redirect($this->createUrl('order', array('order_id' => $_POST['order_number'])));
@@ -144,7 +183,8 @@ class CalcController extends Controller
 			: array();
 
 		if ($_POST && isset($_POST['order'])) {
-			$order = $_POST['order'];
+            $calc = new Calc();
+            $calc->attributes = $order = $_POST['order'];
 			try {
                 /**
                  * TODO. Нужно все переписать с использованием CFormModel.
@@ -184,6 +224,19 @@ class CalcController extends Controller
                     throw new Exception("Неправильный формат даты окончания страхования.");
                 }
                 $send_order['EndDate'] = $_POST['order']['EndDate'];
+
+                if ($send_order['StartDate'] > $send_order['EndDate']) {
+                    throw new Exception("Дата начала страхования не может быть позже даты окончания страхования.");
+                }
+
+                // вычисляем разницу между датами
+
+                $EndDate = new DateTime($send_order['EndDate']);
+                $StartDate = new DateTime($send_order['StartDate']);
+                $diff = $EndDate->diff($StartDate, 1);
+                if ($diff->days > 60) {
+                    throw new Exception("Разница между датой начала и датой окончания страхования не может превышать более 60 дней.");
+                }
 
 //				if (!empty($_POST['order']['NumberOfPreOrder']))     $send_order['NumberOfPreOrder']     = $_POST['order']['NumberOfPreOrder'];
 //				if (!empty($_POST['order']['DateOfPreOrder']))       $send_order['DateOfPreOrder']       = $_POST['order']['DateOfPreOrder'];
@@ -226,9 +279,13 @@ class CalcController extends Controller
 				} else {
 					throw new Exception("Нужно указать конечную точку маршрута.");
 				}
-				$ret = Yii::app()->calc->CreateOrder(array('Data' => $send_order));
-				$ret = SoapComponent::parseReturn($ret, false);
-//				CVarDumper::dump($ret,5,1);
+                if ($calc->validate(array('verifyCode'))) {
+                    $ret = Yii::app()->calc->CreateOrder(array('Data' => $send_order));
+                    $ret = SoapComponent::parseReturn($ret, false);
+//				    CVarDumper::dump($ret,5,1);
+                } else {
+                    Yii::app()->user->setFlash('error', $calc->getError('verifyCode'));
+                }
 			} catch (Exception $e) {
 				Yii::app()->user->setFlash('error', $e->getMessage());
 			}

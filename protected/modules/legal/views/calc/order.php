@@ -71,10 +71,6 @@ $this->widget('bootstrap.widgets.TbAlert', array(
 		<div class="span9"><?=CHtml::textField('order[Weight]', isset($order['Weight']) ? $order['Weight'] : '', array('class' => 'span12'))?></div>
 	</div><br/>
 	<div class="row-fluid">
-		<div class="span3" style="padding-left: 20px;"><label class="pull-right" for="order_WeightMeasure">Единица измерения веса</label></div>
-		<div class="span9"><?=CHtml::dropDownList('order[WeightMeasure]', isset($order['WeightMeasure']) ? $order['WeightMeasure'] : '', array('' => 'Не выбрано') + $this->getWeightMeasures(), array('class' => 'span12'))?></div>
-	</div><br/>
-	<div class="row-fluid">
 		<div class="span3" style="padding-left: 20px;"><label class="pull-right" for="order_Documents">Список документов</label></div>
 		<div class="span9"><?=CHtml::textArea('order[Documents]', isset($order['Documents']) ? $order['Documents'] : '', array('class' => 'span12'))?></div>
 	</div><br/>
@@ -144,6 +140,16 @@ $this->widget('bootstrap.widgets.TbAlert', array(
 		</tr>
 	</table>
 
+    <div class="row-fluid">
+        <div class="span3" style="padding-left: 20px;"><label class="pull-right" for="order_EndDate">Введите текст с картинки</label></div>
+        <div class="span9">
+
+            <?if (CCaptcha::checkRequirements()) :?>
+                <?php $this->widget('CCaptcha');?>
+                <?=CHtml::textField('order[verifyCode]', '', array('class' => 'span12'));?>
+            <?endif?>
+        </div>
+    </div><br/>
 	<div class="row-fluid">
 		<div class="span3">
 			<div class="pull-right">
