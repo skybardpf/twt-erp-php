@@ -5,7 +5,8 @@
  */
 /* @var $this CalcController */
 /* @var $insurance array */
-
+Yii::app()->clientScript->registerScriptFile($this->module->assets.'/js/calc/postmessage.js');
+Yii::app()->clientScript->registerScriptFile($this->module->assets.'/js/calc/Frame.js');
 Currencies::getValues();
 ?>
 <h2><?=$this->controller_title?>. Шаг 2</h2>

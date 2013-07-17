@@ -15,6 +15,10 @@ Yii::app()->clientScript->registerCssFile($asset_path.'/select2.css');
 Yii::app()->clientScript->registerScriptFile($asset_path.'/select2.js');
 Yii::app()->clientScript->registerScriptFile(CHtml::asset(Yii::app()->basePath.'/../static/js/calc.js'));
 
+Yii::app()->clientScript->registerScriptFile($this->module->assets.'/js/calc/postmessage.js');
+Yii::app()->clientScript->registerScriptFile(CHtml::asset(Yii::app()->basePath.'/../static/js/numeric.js'));
+Yii::app()->clientScript->registerScriptFile($this->module->assets.'/js/calc/Frame.js');
+
 
 ?>
 <h2><?=$this->controller_title?>. Шаг 1</h2>
@@ -90,7 +94,8 @@ Yii::app()->clientScript->registerScriptFile(CHtml::asset(Yii::app()->basePath.'
 								data-ajax="1"
 								data-ajax_url="<?=$this->createUrl('tnved')?>">
 						</td>
-						<td class="span3"><input type="text" name="data[new][summ]" placeholder="Стоимость"></td>
+
+						<td class="span3"><input class='numeric' id='price_1' ajax_url='<?=$this->createUrl('format')?>' type="text" name="data[new][summ]" placeholder="Стоимость"></td>
 					</tr>
 				    <?php if ($values) :?><?php $i = 0; ?>
 					    <?php foreach($values as $val) :?>
@@ -107,13 +112,15 @@ Yii::app()->clientScript->registerScriptFile(CHtml::asset(Yii::app()->basePath.'
 								        data-ajax_url="<?=$this->createUrl('tnved')?>"
 								        value="<?=$val['code']?>">
 						        </td>
-							    <td><input type="text" name="data[old_<?=$i++?>][summ]" value="<?=$val['summ']?>" placeholder="Стоимость"></td>
+
+							    <td><input class='numeric' id='price_2' ajax_url='<?=$this->createUrl('format')?>' type="text" name="data[old_<?=$i++?>][summ]" value="<?=$val['summ']?>" placeholder="Стоимость"></td>
 						    </tr>
 					    <?php endforeach; ?>
 				    <?php endif; ?>
 				    <tr data-one_row="1" data-new_row="1">
 						<td style="max-width: 250px;">
 					        <input
+					        	id='ty'
 						        type="hidden"
 						        name="data[0][code]"
 						        data-placeholder="Код ТНВЭД или наименование категории"
@@ -123,7 +130,8 @@ Yii::app()->clientScript->registerScriptFile(CHtml::asset(Yii::app()->basePath.'
 						        data-ajax="1"
 						        data-ajax_url="<?=$this->createUrl('tnved')?>">
 				        </td>
-				        <td class="span3"><input type="text" name="data[0][summ]" placeholder="Стоимость"></td>
+
+				        <td class="span3"><input style='text-align: right;' class='numeric' id='price_3' ajax_url='<?=$this->createUrl('format')?>' type="text" name="data[0][summ]" placeholder="Стоимость"></td>
 				    </tr>
 			    </tbody>
 		    </table>
