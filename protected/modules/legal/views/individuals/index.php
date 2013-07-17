@@ -47,7 +47,7 @@ if ($elements) {
 			),
 			array(
 				'class' => 'bootstrap.widgets.TbButtonColumn',
-				'updateButtonUrl' => 'Yii::app()->controller->createUrl("edit",array("id"=>$data->primaryKey))'
+				'updateButtonUrl' => 'Yii::app()->controller->createUrl("edit",array("id"=>$data["id"]))'
 			),
 		),
 	));

@@ -41,13 +41,15 @@ if (!$organization->deleted) {
 <?php
     $attributes = array();
     $countries = Countries::getValues();
+    $okopf = CodesOKOPF::getValues();
+
     $labels = $organization->attributeLabels();
     foreach($organization as $field => $value){
         if($value != ''){
             if ($field == 'country'){
                 $value = (isset($countries[$value]) ? $countries[$value] : '');
             } elseif ($field == 'okopf'){
-//                $value = (isset($countries[$value]) ? $countries[$value] : '');
+                $value = (isset($okopf[$value]) ? $okopf[$value] : '');
             }
             $attributes[] = array(
                 'name' => $field,

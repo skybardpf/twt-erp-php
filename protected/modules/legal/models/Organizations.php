@@ -250,6 +250,9 @@ class Organizations extends SOAPModel {
 			array('country', 'required'),
 			array('country', 'in', 'range' => array_keys(Countries::getValues())),
 
+            array('okopf', 'required'),
+            array('okopf', 'in', 'range' => array_keys(CodesOKOPF::getValues())),
+
 			array('name, full_name', 'required'),
 
             array('id, resident, type_no_res, contragent, parent,

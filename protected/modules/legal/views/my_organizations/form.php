@@ -50,7 +50,7 @@
 
 <fieldset>
     <?php echo $form->dropDownListRow($model, 'country', Countries::getValues()); ?>
-	<?php echo $form->textFieldRow($model, 'okopf'); ?>
+	<?php echo $form->dropDownListRow($model, 'okopf', CodesOKOPF::getValues()); ?>
     <?php echo $form->textFieldRow($model, 'name'); ?>
     <?php echo $form->textFieldRow($model, 'full_name'); // на удаление ?>
 
