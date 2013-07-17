@@ -1,4 +1,4 @@
-<?php
+﻿<?php
 /**
  * User: Forgon
  * Date: 11.04.13
@@ -9,6 +9,7 @@
 
 Yii::app()->clientScript->registerScript('order_links', 'window.order_cities_link = "'.$this->createUrl('cities').'"');
 Yii::app()->clientScript->registerScriptFile($this->module->assets.'/js/calc/order.js');
+Yii::app()->clientScript->registerScriptFile(CHtml::asset(Yii::app()->basePath.'/../static/js/numeric.js'));
 
 Countries::getValues();
 ?>
@@ -60,22 +61,24 @@ $this->widget('bootstrap.widgets.TbAlert', array(
 	</div><br/>
 	<div class="row-fluid">
 		<div class="span3" style="padding-left: 20px;"><label class="pull-right" for="order_NumberOfSeat">Количество мест</label></div>
-		<div class="span9"><?=CHtml::textField('order[NumberOfSeat]', isset($order['NumberOfSeat']) ? $order['NumberOfSeat'] : '', array('class' => 'span12'))?></div>
+		<div class="span9"><?=CHtml::textField('order[NumberOfSeat]', isset($order['NumberOfSeat']) ? $order['NumberOfSeat'] : '', array('class' => 'span12 numeric', 'id' => 'places', 'ajax_url' => $this->createUrl('format')))?></div>
 	</div><br/>
 	<div class="row-fluid">
 		<div class="span3" style="padding-left: 20px;"><label class="pull-right" for="order_NumberOfSeatMeasure">Единица измерения мест</label></div>
 		<div class="span9"><?=CHtml::dropDownList('order[NumberOfSeatMeasure]', isset($order['NumberOfSeatMeasure']) ? $order['NumberOfSeatMeasure'] : '', array('' => 'Не выбрано') + $this->getSeatMeasures(), array('class' => 'span12'))?></div>
 	</div><br/>
 	<div class="row-fluid">
-		<div class="span3" style="padding-left: 20px;"><label class="pull-right" for="order_Weight">Общий вес</label></div>
-		<div class="span9"><?=CHtml::textField('order[Weight]', isset($order['Weight']) ? $order['Weight'] : '', array('class' => 'span12'))?></div>
+		<div class="span3" style="padding-left: 20px;"><label class="pull-right" for="order_Weight">Общий вес, кг</label></div>
+		<div class="span9"><?=CHtml::textField('order[Weight]', isset($order['Weight']) ? $order['Weight'] : '', array('class' => 'span12 numeric', 'id' => 'weigth', 'ajax_url' => $this->createUrl('format')))?></div>
 	</div><br/>
+<!-- 	
 	<div class="row-fluid">
 		<div class="span3" style="padding-left: 20px;"><label class="pull-right" for="order_WeightMeasure">Единица измерения веса</label></div>
 		<div class="span9"><?=CHtml::dropDownList('order[WeightMeasure]', isset($order['WeightMeasure']) ? $order['WeightMeasure'] : '', array('' => 'Не выбрано') + $this->getWeightMeasures(), array('class' => 'span12'))?></div>
 	</div><br/>
+-->	
 	<div class="row-fluid">
-		<div class="span3" style="padding-left: 20px;"><label class="pull-right" for="order_Documents">Список документов</label></div>
+		<div class="span3" style="padding-left: 20px;"><label class="pull-right" for="order_Documents">Товарно-сопроводительные документы</label></div>
 		<div class="span9"><?=CHtml::textArea('order[Documents]', isset($order['Documents']) ? $order['Documents'] : '', array('class' => 'span12'))?></div>
 	</div><br/>
 	<div class="row-fluid">

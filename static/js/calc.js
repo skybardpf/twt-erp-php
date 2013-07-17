@@ -3,12 +3,34 @@
  * Date: 27.02.13
  * Time: 15:08
  */
+
 $(document).ready(function(){
 
     select2_init($(document), false);
-
+/*    
+    var cont = document.getElementById('s2id_ty');
+    cont.parentNode.removeChild(cont);
+    var ip = document.getElementById('ty');
+    ip.className = null;
+    select2_init($(document), false, false);
+*/    
     $('input[type=radio][name=tnved]').on('change', function(e){
         $('[data-new_row="0"]').remove();
+        
+        //----------------------------------
+        var ip = document.getElementById('ty');
+        ip.className = null;
+        select2_init($(document), false);
+/*        
+        if($('[data-tnved_selection]:checked').val() == 'no'){
+            select2_init($(document), false, true);
+        }
+        else {
+            select2_init($(document), false, false);
+        }
+*/      
+        
+        
     });
 
     var iteration = 1;
@@ -30,7 +52,7 @@ $(document).ready(function(){
                 });
                 iteration++;
                 clone.appendTo(this.parentNode);
-                select2_init(clone, true);
+                select2_init(clone, true, false);
                 clone.show();
             }
         } else {
@@ -41,6 +63,8 @@ $(document).ready(function(){
         }
     });
 
+
+    
     /**
      * Инициализация select2-инпутов
      * @param elem
@@ -50,9 +74,17 @@ $(document).ready(function(){
         var selector = clone ? '[data-tnved=1]' : '[data-tnved=1][data-init_on_clone!=1]';
         if (elem.find(selector)) {
             elem.find(selector).each(function(i, e){
+            	var cat = false;
+                if($('[data-tnved_selection]:checked').val() == 'no') {
+                	cat = true;
+                }
                 var options = {width: '100%'};
                 if (e.dataset.multiple) options.multiple = true;
-                if (e.dataset.minimum_input_length) options.minimumInputLength = e.dataset.minimum_input_length;
+//                if (e.dataset.minimum_input_length) options.minimumInputLength = e.dataset.minimum_input_length;
+                if (e.dataset.minimum_input_length) {
+                	if(cat) options.minimumInputLength = 0;
+                	else options.minimumInputLength = e.dataset.minimum_input_length;
+                }
                 if (e.dataset.maximum_input_length) {
                     options.minimumInputLength = e.dataset.maximum_input_length;
                 } else {
@@ -66,6 +98,9 @@ $(document).ready(function(){
                         url: e.dataset.ajax_url,
                         dataType: 'json',
                         data: function(term, page) {
+                        	if(cat) {
+                        		term = '0000';
+                        	}
                             return {
                                 q: term,
                                 page_limit: 10,
@@ -74,6 +109,7 @@ $(document).ready(function(){
                         },
                         results: function(data, page) { return {results: data.values }}
                     };
+                    
                     options.initSelection = function(element, callback) {
                         var id = $(element).val();
                         var ajaxoptions = {dataType: "json"};
@@ -81,6 +117,7 @@ $(document).ready(function(){
                         $.ajax(e.dataset.ajax_url, ajaxoptions).done(function(data) { callback(data.values); });
                     }
                 }
+       
                 $(e).select2(options);
             });
         }

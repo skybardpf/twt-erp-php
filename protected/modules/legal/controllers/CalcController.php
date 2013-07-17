@@ -19,20 +19,13 @@ class CalcController extends Controller
 	/**
 	 * Список позиций
 	 */
-	public function actionIndex($email = "") {
+	public function actionIndex() {
 		$values = array();
 		$model = new Calc();
 		$error = '';
 	
-		$user_id = "test_user@nomail.asd";
-		if(!empty($email)) {
-			if(preg_match("/^.+@.+\..+$/", $email)) {
-				$user_id = $email;
-			}
-		}
-		
 		// todo Авторизованный пользователь. пока передается пустой.
-		$data = array('UserID' => $user_id, 'Strings' => array());
+		$data = array('UserID' => 'test_user@nomail.asd', 'Strings' => array());
         try {
             if (!empty($_POST['parse_file'])) {
                 // Парсинг XML файла с кодами ТНВЭД
@@ -56,7 +49,7 @@ class CalcController extends Controller
                             $needed_length = (isset($_POST['tnved']) && $_POST['tnved'] == 'yes') ? 10 : 9;
                             $code_length = strlen($val['code']);
                             $code = ($code_length == $needed_length) ? $val['code'] : str_repeat('0', $needed_length-$code_length).$val['code'];
-                            $data['Strings'][] = array('Kod' => $code, 'Summ' => $val['summ']);
+                            $data['Strings'][] = array('Kod' => $code, 'Summ' => (float)$val['summ']);
                         }
                     }
                     if (empty($data['Strings'])){
@@ -70,14 +63,17 @@ class CalcController extends Controller
 //                    var_dump($data);die;
                     $ret = Yii::app()->calc->GetSumm(array('Data' => $data));
 
-
                     $ret = SoapComponent::parseReturn($ret);
+
                     if (isset($ret['variants'])) {
                         $i = 1;
                         foreach ($ret['variants'] as &$variant) {
                             $variant['number'] = $i++;
+                            //округление тарифа до целых
+                            $variant['cost'] = round($variant['cost']);
                         }
                     }
+                    
                     $this->render('step2', array('insurance' => $ret));
                     return;
 
@@ -165,7 +161,7 @@ class CalcController extends Controller
 //                    throw new Exception("Нужно указать выгодоприобретателя.");
 //                }
 
-                $send_order['UserID'] = 'test_user@nomail.asd';
+                $send_order['UserID'] = $user_id;
 
                 $send_order['DateOfPreOrder'] = (!empty($_POST['order']['DateOfPreOrder'])) ? $_POST['order']['DateOfPreOrder'] : '';
                 $send_order['NumberOfPreOrder'] = (!empty($_POST['order']['NumberOfPreOrder'])) ? $_POST['order']['NumberOfPreOrder'] : '';
@@ -243,6 +239,11 @@ class CalcController extends Controller
 		$this->render('order', array('order' => $order));
 	}
 
+	public function actionFormat($id, $val = "0") {
+		echo CJSON::encode(array('id' => $id, 'values' => number_format($val, 0, ",", " ")));
+//		Yii::app()->end();
+	}
+	
 	/**
 	 * AJAX функция автодополнения кодов ТНВЭД
 	 * @param string $q
