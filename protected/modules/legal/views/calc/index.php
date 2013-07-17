@@ -14,6 +14,8 @@ $asset_path = CHtml::asset(Yii::app()->basePath.'/../static/select2/');
 Yii::app()->clientScript->registerCssFile($asset_path.'/select2.css');
 Yii::app()->clientScript->registerScriptFile($asset_path.'/select2.js');
 Yii::app()->clientScript->registerScriptFile(CHtml::asset(Yii::app()->basePath.'/../static/js/calc.js'));
+Yii::app()->clientScript->registerScriptFile($this->module->assets.'/js/calc/postmessage.js');
+Yii::app()->clientScript->registerScriptFile($this->module->assets.'/js/calc/Frame.js');
 
 
 ?>

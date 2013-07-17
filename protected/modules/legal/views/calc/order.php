@@ -8,6 +8,8 @@
 /* @var $order array */
 
 Yii::app()->clientScript->registerScript('order_links', 'window.order_cities_link = "'.$this->createUrl('cities').'"');
+Yii::app()->clientScript->registerScriptFile($this->module->assets.'/js/calc/postmessage.js');
+Yii::app()->clientScript->registerScriptFile($this->module->assets.'/js/calc/Frame.js');
 Yii::app()->clientScript->registerScriptFile($this->module->assets.'/js/calc/order.js');
 
 Countries::getValues();
