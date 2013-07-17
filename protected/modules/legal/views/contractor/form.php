@@ -1,0 +1,122 @@
+<?php
+/**
+ * Форма редактирования данных о контрагенте.
+ *
+ * @author Skibardin A.A. <skybardpf@artektiv.ru>
+ *
+ * @var $this   ContractorController
+ * @var $model  Contractor
+ */
+?>
+
+<script>
+<!--    //window.controller_name = '--><?//= $this->getId(); ?><!--';-->
+</script>
+<?php
+//    Yii::app()->clientScript->registerScriptFile('/static/js/jquery.json-2.4.min.js');
+//    Yii::app()->clientScript->registerScriptFile('/static/js/legal/my_events/form.js');
+//    Yii::app()->clientScript->registerScriptFile('/static/js/legal/form_manage_files.js');
+
+    $asset_path = CHtml::asset(Yii::app()->basePath.'/../static/select2/');
+    Yii::app()->clientScript->registerCssFile($asset_path.'/select2.css');
+    Yii::app()->clientScript->registerScriptFile($asset_path.'/select2.js');
+    Yii::app()->clientScript->registerScriptFile('/static/js/legal/contractor/form.js');
+
+
+    echo '<h2>'.($model->primaryKey ? 'Редактирование' : 'Создание').' контрагента</h2>';
+
+    /* @var $form MTbActiveForm */
+    $form = $this->beginWidget('bootstrap.widgets.MTbActiveForm', array(
+        'id' => 'form-my-events',
+        'type' => 'horizontal',
+        'enableAjaxValidation' => false,
+    ));
+
+    $this->widget('bootstrap.widgets.TbButton', array(
+        'buttonType'=> 'submit',
+        'type'      => 'primary',
+        'label'     => 'Сохранить'
+    ));
+    echo '&nbsp;';
+    $this->widget('bootstrap.widgets.TbButton', array(
+        'buttonType' => 'link',
+        'label'      => 'Отмена',
+        'url' => $model->primaryKey
+            ? $this->createUrl('view', array('id' => $model->primaryKey))
+            : $this->createUrl('index')
+    ));
+
+    if ($model->hasErrors()) {
+        echo '<br/><br/>'. $form->errorSummary($model);
+    }
+?>
+
+<fieldset>
+<?php
+    // Опции для JUI селектора даты
+    $jui_date_options = array(
+        'options'=>array(
+            'showAnim' => 'fold',
+            'dateFormat' => 'yy-mm-dd',
+        ),
+        'htmlOptions'=>array(
+            'style' => 'height:20px;'
+        )
+    );
+
+    echo $form->dropDownListRow($model, 'country', Countries::getValues());
+    echo $form->dropDownListRow($model, 'okopf', CodesOKOPF::getValues());
+    echo $form->textFieldRow($model, 'name');
+    echo $form->textFieldRow($model, 'full_name');
+?>
+
+<div class="control-group">
+    <?= $form->labelEx($model, 'sert_date', array('class' => 'control-label')); ?>
+    <div class="controls">
+        <?php $this->widget('zii.widgets.jui.CJuiDatePicker',array_merge(
+            array(
+                'model'     => $model,
+                'attribute' => 'sert_date'
+            ), $jui_date_options
+        )); ?>
+    </div>
+</div>
+
+<?php
+    echo $form->textFieldRow($model, 'inn');
+    echo $form->textFieldRow($model, 'kpp');
+    echo $form->textAreaRow($model, 'info');
+
+//    echo $form->textFieldRow($model, 'profile', array('disabled' => true));
+//var_dump($model->profile);die;
+?>
+
+<div class="control-group">
+    <?= $form->labelEx($model, 'profile', array('class' => 'control-label')); ?>
+    <div class="controls">
+        <input
+            type=""
+            name="<?= get_class($model).'[profile]'; ?>"
+            data-placeholder="Виды деятельности"
+            data-tnved="1"
+            data-minimum_input_length="4"
+            data-allow_clear="1"
+            data-ajax="1"
+            data-ajax_url="<?= $this->createUrl('get_activities_types'); ?>"
+            value="<?= $model->profile; ?>">
+    </div>
+</div>
+
+<?php
+    echo $form->textFieldRow($model, 'yur_address');
+    echo $form->textFieldRow($model, 'fact_address');
+
+    echo $form->textFieldRow($model, 'email');
+    echo $form->textFieldRow($model, 'phone');
+    echo $form->textFieldRow($model, 'fax');
+    echo $form->textAreaRow($model, 'comment');
+?>
+
+</fieldset>
+
+<?php $this->endWidget(); ?>

@@ -65,7 +65,10 @@
  * @method mixed deleteBeneficiary          Удаление
  *
  * Страны
- * @method mixed listCountries          Список
+ * @method mixed listCountries              Список
+ *
+ * Виды деятельности контрагентов (@see ContractorTypesActivities)
+ * @method mixed listTypeActContr           Список
  */
 class SoapComponent extends CApplicationComponent
 {

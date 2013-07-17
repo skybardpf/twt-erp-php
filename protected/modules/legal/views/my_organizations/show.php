@@ -40,8 +40,8 @@
             ),
             array(
                 'label' => 'Календарь событий',
-                'url'   => $this->createUrl('my_events/list', array('org_id' => $organization->primaryKey)),
-                'active'=> ($cur_tab == 'my_events'),
+                'url'   => $this->createUrl('calendar_events/list', array('org_id' => $organization->primaryKey)),
+                'active'=> ($cur_tab == 'calendar_events'),
                 'itemOptions' => array('class'=>'narrow narrower')
             ),
             array(
@@ -49,20 +49,6 @@
                 'url'   => $this->createUrl('contracts/list', array('org_id' => $organization->primaryKey)),
                 'active'=> ($cur_tab == 'contracts')
             ),
-            /*array('label'=>'Расчётные счета', 'url'=>$this->createUrl('settlements', array('id' => $model->id)), 'active'=> $cur_tab == 'settlements'),
-            array(
-                'label'=>'Заинтересованные лица и бенефициары',
-                'url'=>$this->createUrl('benefits', array('id' => $model->id)),
-                'active'=> $cur_tab == 'benefits',
-                'itemOptions' => array('class'=>'narrow')
-            ),
-            array(
-                'label'=>'Календарь событий',
-                'url'=>$this->createUrl('my_events', array('id' => $model->id)),
-                'active'=> $cur_tab == 'my_events',
-                'itemOptions' => array('class'=>'narrow narrower')
-            ),
-            array('label'=>'Договоры', 'url'=>$this->createUrl('contracts', array('id' => $model->id)), 'active'=> $cur_tab == 'contract'),*/
         ),
     ));
     ?>

@@ -48,20 +48,23 @@ class CodesOKOPF extends SOAPModel {
 
 	/**
 	 * Список доступных кодов
+	 * @param bool $key_name. Если TRUE, то ключом будет название кода ОКОПФ.
 	 * @return array
 	 */
-	public static function getValues() {
+	public static function getValues($key_name = false) {
 		$cache = new CFileCache();
-		$data = $cache->get('codes_okopf_values');
+        $cache_id = 'codes_okopf_values_' . ($key_name ? 'id' : 'name');
+		$data = $cache->get($cache_id);
 		if ($data === false) {
             $elements = self::model()->findAll();
             $data = array();
             if ($elements) {
                 foreach ($elements as $elem) {
-                    $data[$elem->getprimaryKey()] = $elem->name;
+                    $key = ($key_name ? $elem->name : $elem->getprimaryKey());
+                    $data[$key] = $elem->name;
                 }
             }
-			$cache->add('codes_okopf_values', $data, 3000);
+			$cache->add($cache_id, $data, 3000);
 		}
 		return $data;
 	}

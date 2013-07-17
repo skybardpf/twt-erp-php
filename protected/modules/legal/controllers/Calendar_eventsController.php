@@ -1,50 +1,40 @@
 <?php
 /**
- * Управление моими событиями (мероприятиями).
+ * Управление событиями (мероприятиями) для кокретной организации.
  *
  * @author Skibardin A.A. <skybardpf@artektiv.ru>
  */
-class My_eventsController extends Controller{
+class Calendar_eventsController extends Controller{
     public $layout = 'inner';
-    public $menu_current = 'my_events';
+    public $menu_current = 'legal';
+    public $current_tab = 'calendar_events';
+    public $pageTitle = 'TWT Consult | Мои организации | ';
 
     /**
-     *  Вывод списка событий (мероприятий).
+     * Распределение экшенов.
+     * @return array
      */
-    public function actionIndex()
+    public function actions()
     {
-        $models = Event::model()->where('deleted', false)->findAll();
-        $this->render(
-            'index',
-            array(
-                'models' => $models
-            )
+        return array(
+            'list' => 'application.modules.legal.controllers.Calendar_events.ListAction'
         );
     }
 
-//    /**
-//     *  Выводим календарь событий для юридического лица $org_id.
-//     *
-//     *  @param string $org_id
-//     *
-//     *  @throws CHttpException
-//     */
-//    public function actionList($org_id)
-//    {
-//        $org = Organizations::model()->findByPk($org_id);
-//        if (!$org) {
-//            throw new CHttpException(404, 'Не найдено юридическое лицо.');
-//        }
-//
-//        $this->render('/my_organizations/show', array(
-//            'content' => $this->renderPartial('/my_events/list',
-//                array(
-//                    'organization' => $org
-//                ), true),
-//            'organization' => $org,
-//            'cur_tab' => 'my_events',
-//        ));
-//    }
+    /**
+     * Получаем модель Organizations (Организация)
+     * @param string $org_id
+     * @return Organizations
+     * @throws CHttpException
+     */
+    public function loadOrganization($org_id)
+    {
+        $org = Organizations::model()->findByPk($org_id);
+        if ($org === null) {
+            throw new CHttpException(404, 'Не найдено юридическое лицо.');
+        }
+        return $org;
+    }
 
     /**
      * Просмотр мероприятия.

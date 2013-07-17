@@ -41,34 +41,18 @@ class Contractor extends SOAPModel {
     }
 
     /**
-     * Мероприятие
-     *
-     * @param $id
-     * @return bool|Event
-     * @internal param array $filter
+     * @param string $id
+     * @return Contractor Возвращает контрагента.
      */
     public function findByPk($id)
     {
-//        $cacher = new CFileCache();
-//        $data = $cacher->get(__CLASS__.'_objects_'.$id);
-//        if (!$data) {
-//            $data = $this->SOAP->getOrganization(array('id' => $id));
-//            $data = SoapComponent::parseReturn($data);
-//            $data = current($data);
-//            $cacher->set(__CLASS__.'_objects_'.$id, $data, self::CACHE_TTL);
-//        } else {
-//            if (YII_DEBUG) Yii::log('model '.__CLASS__.' id:'.$id.' from cache', CLogger::LEVEL_INFO, 'soap');
-//        }
-//        return $this->publish_elem($data, __CLASS__);
-//
-//        $ret = $this->SOAP->getEvent(array('id' => $id));
-//        $ret = SoapComponent::parseReturn($ret);
-//        return $this->publish_elem(current($ret), __CLASS__);
+        $ret = $this->SOAP->getContragent(array('id' => $id));
+        $ret = SoapComponent::parseReturn($ret);
+        return $this->publish_elem(current($ret), __CLASS__);
     }
 
     /**
      * Удаление.
-     *
      * @return bool
      */
     public function delete()
@@ -81,137 +65,59 @@ class Contractor extends SOAPModel {
     }
 
 	/**
-	 * Сохранение Юр.Лица
-	 * @return array
+	 * Сохранение контрагента
+	 * @return string Возвращает id созданой записи (при добавлении) или
+     * id отредактированного контрагента.
 	 */
 	public function save() {
-//		$cacher = new CFileCache();
-//		$cacher->set(__CLASS__.'_values', false, 1);
-//
-//		$attrs = $this->getAttributes();
-//
-//        //$attrs['resident'] = (boolean)intval($attrs['resident']);
-//        $attrs['creation_date'] = date('Y-m-d');
-//        if($attrs['sert_date'] == ''){
-//            $attrs['sert_date'] = date('Y-m-d', 0);
-//        }
-//
-//		// New record
-//		if (!$this->primaryKey) unset($attrs['id']);
-//		else $cacher->set(__CLASS__.'_objects_'.$this->primaryKey, false, 1);
-//
-//		unset($attrs['deleted']);
-//
-//        $responce = array();
-//        try{
-//            $ret = $this->SOAP->saveOrganization(array('data' => SoapComponent::getStructureElement($attrs, array('convert_boolean' => true))));
-//            $ret = SoapComponent::parseReturn($ret, false);
-//            $responce = array(
-//                'error' => false,
-//                'errorMessage' => '',
-//                'id' => $ret
-//            );
-//        }
-//        catch (Exception $e){
-//            $responce = array(
-//                'error' => true,
-//                'errorMessage' => $e->getMessage(),
-//                'id' => null
-//            );
-//        }
-//		return $responce;
-	}
+        $data = $this->getAttributes();
 
+        if (!$this->primaryKey){
+            unset($data['id']);
+            $data['creation_date'] = date('Y-m-d');
+            $data['parent'] = '000000129';
+        }
+        unset($data['deleted']);
+
+        $ret = $this->SOAP->saveContragent(array(
+            'data' => SoapComponent::getStructureElement($data),
+        ));
+        return SoapComponent::parseReturn($ret, false);
+	}
 
 	/**
 	 * Returns the list of attribute names of the model.
 	 * @return array list of attribute names.
 	 */
 	public function attributeLabels() {
-        // так должно быть по макету
-		/*return array(
-            'id'            => '#',                                 // +
-            'country'       => 'Страна',                            // + id
-            'opf'           => 'Организационно-правовая форма',     //
-            'name'          => 'Наименование',                      // +
-            'sert_date'      => 'Дата государственной регистрации',  // +
-			'inn'           => 'ИНН',                               // +
-			'kpp'           => 'КПП',                               // +
-			'ogrn'          => 'ОГРН',                              // +
-            'vat_nom'       => 'VAT',                               // +
-            'reg_nom'       => 'Регистрационный номер',             // +
-            'sert_nom'      => 'Номер сертификата',                 // +
-            'profile'       => 'Основной вид деятельности',         // +
-			'yur_address'   => 'Юридический адрес',                 // +
-			'fact_address'  => 'Фактический адрес',                 // +
-            'email'         => 'Email',                             // +
-            'phone'         => 'Телефон',                           // +
-            'fax'           => 'Факс',                              // +
-            'comment'       => 'Комментарий',                       // +
-
-            // старые поля, не используются
-            'full_name'     => 'Полное наименование',               // +
-            'resident'      => 'Резидент РФ',                       // + boolean
-            'type_no_res'   => 'Тип нерезидента',                   // + int
-            'contragent'    => 'Контрагент',                        // + boolean
-            'parent'        => 'Группа контрагентов',               // +
-			'eng_name'      => 'Английское наименование',           // +
-			'deleted'       => 'Помечен на удаление'                // +
-            //'ogrn'          => 'ОГРН',                              // +
-		);*/
-        // а так есть по тому, что приходит с 1С
         return array(
             "id"            => '#',
-//            "country"       => 'Страна',
+            "country"       => 'Страна',
             "name"          => 'Наименование',
-//            "full_name"     => 'Полное наименование',
-//            'sert_date'     => 'Дата государственной регистрации',
-//            'inn'           => 'ИНН',
-//            'kpp'           => 'КПП',
-//            'ogrn'          => 'ОГРН',
-//            'vat_nom'       => 'VAT',
-//            'reg_nom'       => 'Регистрационный номер',
-//            'sert_nom'      => 'Номер сертификата',
-//            'info'          => 'Дополнительная информация',
-//            'profile'       => 'Основной вид деятельности',
-//            'yur_address'   => 'Юридический адрес',
-//            'fact_address'  => 'Фактический адрес',
-//            'email'         => 'Email',
-//            'phone'         => 'Телефон',
-//            'fax'           => 'Факс',
-//            'comment'       => 'Комментарий',
-//            'okopf'         => 'Организационно-правовая форма',
-//            'creation_date' => 'creation_date',
+            "full_name"     => 'Полное наименование',
+            'creation_date' => 'Дата добавления',
+            'parent'        => 'Пользователь, добавивший в систему',
+            'deleted'       => 'Помечен на удаление',
+            'sert_date'     => 'Дата государственной регистрации',
+            'okopf'         => 'Организационно-правовая форма',
+            'profile'       => 'Основной вид деятельности',
+            'yur_address'   => 'Юридический адрес',
+            'fact_address'  => 'Фактический адрес',
+            'email'         => 'Email',
+            'phone'         => 'Телефон',
+            'fax'           => 'Факс',
+            'comment'       => 'Комментарий',
+            'info'          => 'Дополнительная информация',
 
-            // старые поля
-            //'opf'           => 'Организационно-правовая форма',   // нету
-            //'eng_name'      => 'Английское наименование',           // +
-            //'resident'      => 'Резидент РФ',                       // + boolean
-            //'type_no_res'   => 'Тип нерезидента',                   // + int
-//            'deleted'       => 'Помечен на удаление',                // +
+            // --- Для российских компаний
+            'inn'           => 'ИНН',
+            'kpp'           => 'КПП',
 
+            // --- Для нероссийских компаний
+            'vat_nom'       => 'VAT',
+            'reg_nom'       => 'Регистрационный номер',
+            'sert_nom'      => 'Номер сертификата',
         );
-		/*
-		"id":"000000001",
-		"country":"643",
-		"name":"ТВТконсалт",
-
-		'sert_nom' => ''
-        'eng_name' => ''
-        'reg_nom' => ''
-        'deleted' => false
-        'resident' => true
-        'profile' => ''
-        'full_name' => 'ЗАО \"ТВТ консалт\"'
-        'inn' => '7726700622'
-        'type_no_res' => ''
-        'sert_date' => ''
-        'ogrn' => '1127746529426'
-        'yur_address' => '115230, Москва г, Электролитный проезд, дом № 1, строение 3'
-        'fact_address' => '109240, Москва г, Николоямская ул, дом № 26, строение 3'
-        'kpp' => '772601001'
-        'vat_nom' => ''
-		*/
 	}
 
 	/**
@@ -219,33 +125,25 @@ class Contractor extends SOAPModel {
 	 */
 	public function rules() {
 		return array(
-//			array('country', 'required'),
-//			array('country', 'in', 'range' => array_keys(Countries::getValues())),
+			array('country', 'required'),
+			array('country', 'in', 'range' => array_keys(Countries::getValues())),
+
+            array('okopf', 'required'),
+            array('okopf', 'in', 'range' => array_keys(CodesOKOPF::getValues())),
 //
-//			array('name, full_name', 'required'),
-//
-//            array('id, resident, type_no_res, contragent, parent,
-//                comment, inn, kpp, ogrn, yur_address, fact_address,
-//                reg_nom, sert_nom, sert_date, vat_nom,
-//                profile, eng_name', 'safe'
-//            ),
-//
-//			array('id, title, show', 'safe', 'on'=>'search'),
+			array('name, full_name', 'required'),
+
+            array('sert_date', 'date', 'format' => 'yyyy-MM-dd'),
+
+            array('comment, inn, kpp, yur_address, fact_address,
+                reg_nom, sert_nom, vat_nom, profile, info,
+                phone, fax',
+                'safe'
+            ),
+
+            array('email', 'email'),
 		);
 	}
-
-//	/**
-//	 * Типы нерезидентов
-//	 * @return array
-//	 */
-//	public function getNonResidentValues() {
-//		if (!LegalEntities::$_nonResidentValues) {
-//			$ret = $this->SOAP->listNonResidentsTypes();
-//			$ret = SoapComponent::parseReturn($ret);
-//			LegalEntities::$_nonResidentValues = $ret;
-//		}
-//		return LegalEntities::$_nonResidentValues;
-//	}
 
 	/**
 	 *  Список доступных значений Собственных Юр.Лиц
