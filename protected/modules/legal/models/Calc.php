@@ -10,6 +10,9 @@
 class Calc extends SOAPModel {
 	public $excel_file;
 
+	// результат проверки
+    public $verifyCode;
+
 	static public $categories;
 	/**
 	 * Объект модели
@@ -91,6 +94,7 @@ class Calc extends SOAPModel {
 			array('name, country, city, address, phone, cor_sh, swift', 'required'),
 			array('excel_file', 'file', 'types'=>'xls, xlsx', 'maxSize' => 10485760),
 			array('id, name, show', 'safe', 'on'=>'search'),
+            array('verifyCode', 'captcha', 'allowEmpty' => !CCaptcha::checkRequirements())
 		);
 	}
 }

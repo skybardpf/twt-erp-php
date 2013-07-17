@@ -13,8 +13,16 @@ class IndividualsController extends Controller {
 	 * Список Физических лиц
 	 */
 	public function actionIndex() {
-		$entities = Individuals::model()->where('deleted', false)->findAll();
-		$this->render('index', array('elements' => $entities));
+//		$entities = Individuals::model()
+//            ->where('deleted', false)
+//            ->order('family', 'asc')
+//            ->findAll();
+//        var_dump($entities);
+//        echo '<br>';
+//        echo '<br>';
+//        var_dump();
+//        die;
+		$this->render('index', array('elements' => Individuals::getFullValues()));
 	}
 
 	/**

@@ -153,9 +153,12 @@ class Individuals extends SOAPModel {
 			if (!self::$values) {
 				$elements = self::model()->findAll();
 				$return   = array();
-				if ($elements) { foreach ($elements as $elem) {
-					$return[$elem->getprimaryKey()] = $elem->family.' '.$elem->name.' '.$elem->parent_name;
-				} }
+				if ($elements) {
+                    foreach ($elements as $elem) {
+					    $return[$elem->getprimaryKey()] = $elem->family.' '.$elem->name.' '.$elem->parent_name;
+				    }
+                    ksort($return);
+                }
 				self::$values = $return;
 
 			}
@@ -165,6 +168,37 @@ class Individuals extends SOAPModel {
 		}
 		return self::$values;
 	}
+
+    /**
+     * Список доступных значений Физ.лиц
+     * @return array
+     */
+    public static function getFullValues() {
+        $cacher = new CFileCache();
+        $cache = $cacher->get(__CLASS__.'_full_values');
+        if ($cache === false) {
+            if (!self::$values) {
+                $elements = self::model()->findAll();
+                $return   = array();
+                if ($elements) {
+                    foreach ($elements as $elem) {
+                        $return[$elem->family.'_'.$elem->primaryKey] = $elem;
+                    }
+                    ksort($return);
+                    $elements   = array();
+                    foreach ($return as $elem) {
+                        $elements[] = $elem;
+                    }
+                }
+                self::$values = $elements;
+
+            }
+            $cacher->add(__CLASS__.'_full_values', self::$values, 3000);
+        } elseif (!self::$values) {
+            self::$values = $cache;
+        }
+        return self::$values;
+    }
 
 	public function rules() {
 		return array(
