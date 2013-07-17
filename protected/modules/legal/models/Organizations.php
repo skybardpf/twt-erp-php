@@ -209,7 +209,7 @@ class Organizations extends SOAPModel {
             'fax'           => 'Факс',
             'comment'       => 'Комментарий',
             'okopf'         => 'Организационно-правовая форма',
-            'creation_date' => 'creation_date',
+            'creation_date' => 'Дата создания',
 
             // старые поля
             //'opf'           => 'Организационно-правовая форма',   // нету
