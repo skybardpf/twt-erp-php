@@ -64,14 +64,20 @@
  * @method mixed saveBeneficiary            Сохранение
  * @method mixed deleteBeneficiary          Удаление
  *
- * Страны
- * @method mixed listCountries              Список
+ * Страны {@see Countries}
+ * @method mixed listCountries
  *
  * Контактные лица для контрагентов {@see ContactPersonForContractors}
- * @method mixed listContactPersonForContractors    Список
+ * @method mixed listContactPersonForContractors
  *
  * Коды ОКОПФ {@see CodesOKOPF}
- * @method mixed listOKOPF                  Список
+ * @method mixed listOKOPF
+ *
+ * Договоры организации {@see Contract}
+ * @method mixed listContracts(array $data)
+ * @method mixed getContract(array $data)
+ * @method mixed deleteContract(array $data)
+ * @method mixed saveContract(array $data)
  *
  * Виды деятельности контрагентов (@see ContractorTypesActivities)
  * @method mixed listTypeActContr           Список

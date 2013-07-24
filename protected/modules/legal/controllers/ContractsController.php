@@ -1,65 +1,81 @@
 <?php
 /**
- *  Договоры.
+ *  Управление договорами для определенной организации.
  *
- *  User: Skibardin A.A.
- *  Date: 03.07.13
+ *  @author Skibardin A.A. <skybardpf@artektiv.ru>
  */
 class ContractsController extends Controller{
     public $layout = 'inner';
     public $menu_current = 'legal';
+    public $pageTitle = 'TWT Consult | Мои организации | Договора';
 
     /**
-     *  Выводим договоры для юридического лица $org_id.
-     *
-     *  @param string $org_id
+     * Распределение экшенов.
+     * @return array
      */
-    public function actionIndex($org_id)
+    public function actions()
     {
-        $this->redirect($this->createUrl('list', array('org_id' => $org_id)));
+        return array(
+            'list' => 'application.modules.legal.controllers.Contracts.ListAction',
+            'view' => 'application.modules.legal.controllers.Contracts.ViewAction',
+            'edit' => 'application.modules.legal.controllers.Contracts.UpdateAction',
+            'add' => 'application.modules.legal.controllers.Contracts.CreateAction',
+            'delete' => 'application.modules.legal.controllers.Contracts.DeleteAction',
+        );
     }
 
     /**
-     *  Выводим договоры для юридического лица $org_id.
+     *  Получаем модель организации.
      *
      *  @param string $org_id
-     *
+     *  @return Organizations
      *  @throws CHttpException
      */
-    public function actionList($org_id)
+    public function loadOrganization($org_id)
     {
         $org = Organizations::model()->findByPk($org_id);
-        if (!$org) {
+        if ($org === null) {
             throw new CHttpException(404, 'Не найдено юридическое лицо.');
         }
-
-        $this->render('/my_organizations/show', array(
-            'content' => $this->renderPartial('/contracts/list',
-                array(
-                    'organization' => $org
-                ), true),
-            'organization' => $org,
-            'cur_tab' => 'contracts',
-        ));
+        return $org;
     }
 
-    public function actionContracts($id) {
-        $this->menu_current = 'index';
-        $this->cur_tab = 'contract';
-        $model = Organizations::model()->findByPk($id);
-        $this->render('show', array('tab_content' => $this->renderPartial('../template_example/contracts/list', array('id' => $id), true), 'model' => $model));
+    /**
+     * @param string $id Идентификатор договора.
+     * @return Contract
+     * @throws CHttpException
+     */
+    public function loadModel($id)
+    {
+        $model = Contract::model()->findByPk($id);
+        if ($model === null) {
+            throw new CHttpException(404, 'Не найден договор.');
+        }
+        return $model;
     }
 
-    public function actionContract_add($id) {
-        $this->menu_current = 'index';
-        $this->cur_tab = 'contract';
-        $this->render('show', array('tab_content' => $this->renderPartial('../template_example/contracts/add', array('id' => $id), true), 'model' => $model));
+    /**
+     * Создаем новый договор.
+     * @param Organizations $org
+     * @return Contract
+     */
+    public function createModel(Organizations $org)
+    {
+        $model = new Contract();
+        $model->id_yur = $org->primaryKey;
+        return $model;
     }
 
-    public function actionContract_show($id) {
-        $this->menu_current = 'index';
-        $this->cur_tab = 'contract';
-        $model = Organizations::model()->findByPk($id);
-        $this->render('show', array('tab_content' => $this->renderPartial('../template_example/contracts/show', array('id' => $id), true), 'model' => $model));
+    /**
+     * Получаем список договоров указанной организации.
+     * @param Organizations $org
+     * @return Contract[]
+     */
+    public function getDataProvider(Organizations $org)
+    {
+        return Contract::model()
+            ->where('id_yur', $org->primaryKey)
+            ->where('deleted', false)
+            ->findAll();
     }
 }

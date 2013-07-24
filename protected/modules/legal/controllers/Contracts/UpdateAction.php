@@ -1,28 +1,26 @@
 <?php
 /**
- * Редактирование контрагента.
+ * Редактирование договора.
  *
  * @author Skibardin A.A. <skybardpf@artektiv.ru>
  */
 class UpdateAction extends CAction
 {
     /**
-     * Редактирование контрагента.
-     * @param string $id       Идентификатор контрагента
+     * Редактирование договора.
+     * @param string $id       Идентификатор договора
      * @throws CHttpException
      */
     public function run($id)
     {
         /**
-         * @var $controller ContractorController
+         * @var $controller ContractsController
          */
         $controller = $this->controller;
-        $controller->pageTitle .= 'Редактирование контрагента';
+        $controller->pageTitle .= ' | Редактирование договора';
 
-        /**
-         * @var $model Contractor
-         */
         $model = $controller->loadModel($id);
+        $org = $controller->loadOrganization($model->id_yur);
 
         if (isset($_POST[get_class($model)])) {
             $model->setAttributes($_POST[get_class($model)]);
@@ -42,11 +40,14 @@ class UpdateAction extends CAction
             }
         }
 
-        $controller->render(
-            'form',
-            array(
-                'model' => $model
-            )
-        );
+        $controller->render('/my_organizations/show', array(
+            'content' => $controller->renderPartial('/contracts/form',
+                array(
+                    'organization' => $org,
+                    'model' => $model
+                ), true),
+            'organization' => $org,
+            'cur_tab' => 'contracts',
+        ));
     }
 }
