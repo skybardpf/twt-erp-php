@@ -13,10 +13,10 @@
     window.controller_name = '<?= $this->getId(); ?>';
 </script>
 
-<h2>Событие "<?= $model->name; ?>"</h2>
+<h2>Событие "<?= CHtml::decode($model->name); ?>"</h2>
 
 <?php
-    Yii::app()->clientScript->registerScriptFile('/static/js/legal/show_manage_files.js');
+    Yii::app()->clientScript->registerScriptFile($this->asset_static.'/js/legal/show_manage_files.js');
 
     if ($model->made_by_user){
         $this->widget('bootstrap.widgets.TbButton', array(

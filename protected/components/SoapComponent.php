@@ -67,6 +67,12 @@
  * Страны
  * @method mixed listCountries              Список
  *
+ * Контактные лица для контрагентов {@see ContactPersonForContractors}
+ * @method mixed listContactPersonForContractors    Список
+ *
+ * Коды ОКОПФ {@see CodesOKOPF}
+ * @method mixed listOKOPF                  Список
+ *
  * Виды деятельности контрагентов (@see ContractorTypesActivities)
  * @method mixed listTypeActContr           Список
  */
@@ -160,7 +166,7 @@ class SoapComponent extends CApplicationComponent
             if (empty($this->soap_client)){
                 throw new CHttpException(500, 'Не удалось установить соединение с SOAP сервисом.');
             }
-		} catch(SoapFault $e) {
+		} catch(Exception $e) {
 			Yii::log($e->getCode().'(at file '.$e->getFile().':'.$e->getLine().'): '.$e->getMessage(),CLogger::LEVEL_ERROR, 'soap');
 			throw new CHttpException(500, 'Не удалось установить соединение с SOAP сервисом.');
 		}

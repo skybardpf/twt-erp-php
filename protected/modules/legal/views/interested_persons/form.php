@@ -1,18 +1,16 @@
 <?php
-/**
- * Форма добавления/редактирования заитересованного лица.
- *
- * @author Skibardin A.A. <skybardpf@artektiv.ru>
- *
- * @var $this           Interested_personsController
- * @var $model          InterestedPerson
- * @var $organization   Organizations
- * @var $form           TbActiveForm
- */
+    /**
+     * Форма добавления/редактирования заитересованного лица.
+     *
+     * @author Skibardin A.A. <skybardpf@artektiv.ru>
+     *
+     * @var $this           Interested_personsController
+     * @var $model          InterestedPerson
+     * @var $organization   Organizations
+     * @var $form           TbActiveForm
+     */
 
-//LegalEntities::getValues();
-//Currencies::getValues();
-    Yii::app()->clientScript->registerScriptFile($this->module->assets . '/js/legal/interested_person/form.js');
+    Yii::app()->clientScript->registerScriptFile($this->asset_static.'/js/legal/interested_person/form.js');
 ?>
 
 <h2><?=($model->primaryKey ? 'Редактирование' : 'Создание').' заинтересованного лица'?></h2>

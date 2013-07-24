@@ -75,7 +75,8 @@ class Contractor extends SOAPModel {
         if (!$this->primaryKey){
             unset($data['id']);
             $data['creation_date'] = date('Y-m-d');
-            $data['parent'] = '000000129';
+            $data['parent'] = '000000129';  // TODO изменить, когда будет авторизация
+            $data['creator'] = 'Малхасян';  // TODO изменить, когда будет авторизация
         }
         unset($data['deleted']);
 
@@ -96,7 +97,9 @@ class Contractor extends SOAPModel {
             "name"          => 'Наименование',
             "full_name"     => 'Полное наименование',
             'creation_date' => 'Дата добавления',
-            'parent'        => 'Пользователь, добавивший в систему',
+            'parent'        => '',
+            'gendirector'   => 'Ген. директор',
+            'creator'       => 'Пользователь, добавивший в систему',
             'deleted'       => 'Помечен на удаление',
             'sert_date'     => 'Дата государственной регистрации',
             'okopf'         => 'Организационно-правовая форма',
@@ -127,6 +130,9 @@ class Contractor extends SOAPModel {
 		return array(
 			array('country', 'required'),
 			array('country', 'in', 'range' => array_keys(Countries::getValues())),
+
+            array('gendirector', 'required'),
+            array('gendirector', 'in', 'range' => array_keys(ContactPersonForContractors::getValues())),
 
             array('okopf', 'required'),
             array('okopf', 'in', 'range' => array_keys(CodesOKOPF::getValues())),

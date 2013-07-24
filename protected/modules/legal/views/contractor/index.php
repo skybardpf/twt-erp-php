@@ -20,7 +20,6 @@
 
 <?php
     $countries = Countries::getValues();
-//    $persons = Individuals::getValues();
 
     /**
      * @var $data CArrayDataProvider
@@ -51,7 +50,7 @@
                 'header' => 'Дата добавления',
             ),
             array(
-                'name' => 'parent',
+                'name' => 'creator',
                 'header' => 'Пользователь, добавивший в систему',
             ),
         ),

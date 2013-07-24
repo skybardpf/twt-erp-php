@@ -9,19 +9,10 @@
  */
 ?>
 
-<script>
-<!--    //window.controller_name = '--><?//= $this->getId(); ?><!--';-->
-</script>
 <?php
-//    Yii::app()->clientScript->registerScriptFile('/static/js/jquery.json-2.4.min.js');
-//    Yii::app()->clientScript->registerScriptFile('/static/js/legal/my_events/form.js');
-//    Yii::app()->clientScript->registerScriptFile('/static/js/legal/form_manage_files.js');
-
-    $asset_path = CHtml::asset(Yii::app()->basePath.'/../static/select2/');
-    Yii::app()->clientScript->registerCssFile($asset_path.'/select2.css');
-    Yii::app()->clientScript->registerScriptFile($asset_path.'/select2.js');
-    Yii::app()->clientScript->registerScriptFile('/static/js/legal/contractor/form.js');
-
+    Yii::app()->clientScript->registerCssFile($this->asset_static.'/select2/select2.css');
+    Yii::app()->clientScript->registerScriptFile($this->asset_static.'/select2/select2.js');
+    Yii::app()->clientScript->registerScriptFile($this->asset_static.'/js/legal/contractor/form.js');
 
     echo '<h2>'.($model->primaryKey ? 'Редактирование' : 'Создание').' контрагента</h2>';
 
@@ -110,6 +101,8 @@
 <?php
     echo $form->textFieldRow($model, 'yur_address');
     echo $form->textFieldRow($model, 'fact_address');
+
+    echo $form->dropDownListRow($model, 'gendirector', ContactPersonForContractors::getValues());
 
     echo $form->textFieldRow($model, 'email');
     echo $form->textFieldRow($model, 'phone');
