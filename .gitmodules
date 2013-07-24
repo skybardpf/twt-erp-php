@@ -1,3 +1,0 @@
-[submodule "protected/modules/admin"]
-	path = protected/modules/admin
-	url = gitolite@local.git:yii-admin-module
