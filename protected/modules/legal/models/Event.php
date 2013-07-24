@@ -7,13 +7,14 @@
  * @property string $id
  * @property string $name
  * @property array  $list_yur
- * @property string $countries
+ * @property array  $countries
  * @property bool   $for_yur       если "true" для юр.лица, если "false", то для страны.
  * @property bool   $made_by_user  если "true" создано юзером, иначе админом. Нелья удалять и редактировать.
  * @property bool   $deleted
  *
  * @property string $json_organizations  внутренняя переменая.
- * @property string $json_contractors  внутренняя переменая.
+ * @property string $json_contractors   внутренняя переменая.
+ * @property string $json_countries     внутренняя переменая.
  */
 class Event extends SOAPModel {
     const FOR_ORGANIZATIONS = 1;
@@ -103,6 +104,7 @@ class Event extends SOAPModel {
         unset($data['user']);
         unset($data['json_organizations']);
         unset($data['json_contractors']);
+        unset($data['json_countries']);
         unset($data['list_yur']);
         unset($data['countries']);
 //        unset($data['made_by_user']);
@@ -176,7 +178,8 @@ class Event extends SOAPModel {
 //			'user'              => 'Пользователь',
 			'for_yur'           => 'Тип',
 			'json_organizations' => '',
-			'json_contractors' => '',
+			'json_contractors'  => '',
+			'json_countries'    => '',
 		);
 	}
 
@@ -189,12 +192,14 @@ class Event extends SOAPModel {
     {
         return array(
 //            array('countries', 'required'),
-            array('countries', 'in', 'range'  => array_keys(Countries::getValues())),
+//            array('countries', 'in', 'range'  => array_keys(Countries::getValues())),
 //
             array('json_organizations', 'validJson'),
             array('json_contractors', 'validJson'),
+            array('json_countries', 'validJson'),
 
             array('list_yur', 'validListYur'),
+            array('list_countries', 'validListCountries'),
 
 //            array('typ_doc', 'in', 'range'  => array_keys(PowerAttorneysLE::getDocTypes())),
 
@@ -229,10 +234,27 @@ class Event extends SOAPModel {
     /**
      * @param string $attribute
      */
+    public function validListCountries($attribute)
+    {
+//        var_dump($this->json_countries);die;
+        if ($this->for_yur == self::FOR_JURISDICTION){
+
+            $c  = CJSON::decode($this->json_countries);
+            if (empty($c)){
+                $this->addError($attribute, 'Укажите как минимум одну страну');
+            }
+        }
+    }
+
+
+    /**
+     * @param string $attribute
+     */
     public function validJson($attribute)
     {
         if ($this->for_yur == self::FOR_ORGANIZATIONS){
-            if (null === CJSON::decode($this->json_organizations)){
+//            var_dump($this->json_countries);
+            if (null === CJSON::decode($this->$attribute)){
                 $this->addError($attribute, 'Не правильный формат строки JSON.');
             }
         }

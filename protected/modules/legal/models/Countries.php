@@ -11,7 +11,7 @@
 */
 class Countries extends SOAPModel {
 
-	static public $values = array();
+//	static public $values = array();
 
 	/**
 	 * @static
@@ -59,31 +59,28 @@ class Countries extends SOAPModel {
 	}
 
 	/**
-	 * Список доступных значений Стран
-	 * id => name
-	 *
+	 * Список доступных значений Стран [id => name].
+     * Результат сохраняем в кеш.
 	 * @return array
 	 */
-	static function getValues() {
-		$cacher = new CFileCache();
-		$cache = $cacher->get('countries_values');
-		if ($cache === false) {
-			if (!self::$values) {
-				$elements = self::model()->findAll();
-				$return   = array();
-				if ($elements) {
-                    foreach ($elements as $elem) {
-					    $return[$elem->getprimaryKey()] = $elem->name;
-				    }
-                    asort($return);
+	public static function getValues() {
+		$cache = new CFileCache();
+        $cache_id = get_class(self::model()).'_data';
+		$data = $cache->get($cache_id);
+        if ($data === false) {
+//			if (!self::$values) {
+            $elements = self::model()->findAll();
+            $data = array();
+            if ($elements) {
+                foreach ($elements as $elem) {
+                    $data[$elem->getprimaryKey()] = $elem->name;
                 }
-				self::$values = $return;
-
-			}
-			$cacher->add('countries_values', self::$values, 3000);
-		} elseif (!self::$values) {
-			self::$values = $cache;
-		}
-		return self::$values;
+            }
+//				self::$values = $return;
+        }
+        $cache->add($cache_id, $data, 3000);
+//		} elseif (!self::$values) {
+//			self::$values = $data;
+		return $data;
 	}
 }

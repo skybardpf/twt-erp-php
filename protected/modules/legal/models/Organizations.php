@@ -81,38 +81,27 @@ class Organizations extends SOAPModel {
 		$cacher = new CFileCache();
 		$cacher->set(__CLASS__.'_values', false, 1);
 
-		$attrs = $this->getAttributes();
+		$attr = $this->getAttributes();
 
-        //$attrs['resident'] = (boolean)intval($attrs['resident']);
-        $attrs['creation_date'] = date('Y-m-d');
-        if($attrs['sert_date'] == ''){
-            $attrs['sert_date'] = date('Y-m-d', 0);
+        $attr['creation_date'] = date('Y-m-d');
+        if($attr['sert_date'] == ''){
+            $attr['sert_date'] = date('Y-m-d', 0);
         }
 
 		// New record
-		if (!$this->primaryKey) unset($attrs['id']);
-		else $cacher->set(__CLASS__.'_objects_'.$this->primaryKey, false, 1);
-
-		unset($attrs['deleted']);
-
-        $responce = array();
-        try{
-            $ret = $this->SOAP->saveOrganization(array('data' => SoapComponent::getStructureElement($attrs, array('convert_boolean' => true))));
-            $ret = SoapComponent::parseReturn($ret, false);
-            $responce = array(
-                'error' => false,
-                'errorMessage' => '',
-                'id' => $ret
-            );
+		if (!$this->primaryKey) {
+            unset($attr['id']);
+            $attr['creator'] = 'Малхасян'; // TODO изменить, когда будет авторизация
+        } else {
+            $cacher->set(__CLASS__.'_objects_'.$this->primaryKey, false, 1);
         }
-        catch (Exception $e){
-            $responce = array(
-                'error' => true,
-                'errorMessage' => $e->getMessage(),
-                'id' => null
-            );
-        }
-		return $responce;
+		unset($attr['deleted']);
+
+        $ret = $this->SOAP->saveOrganization(array(
+            'data' => SoapComponent::getStructureElement($attr, array('convert_boolean' => true)))
+        );
+        $ret = SoapComponent::parseReturn($ret, false);
+		return $ret;
 	}
 
 	/**
@@ -156,38 +145,6 @@ class Organizations extends SOAPModel {
 	 * @return array list of attribute names.
 	 */
 	public function attributeLabels() {
-        // так должно быть по макету
-		/*return array(
-            'id'            => '#',                                 // +
-            'country'       => 'Страна',                            // + id
-            'opf'           => 'Организационно-правовая форма',     //
-            'name'          => 'Наименование',                      // +
-            'sert_date'      => 'Дата государственной регистрации',  // +
-			'inn'           => 'ИНН',                               // +
-			'kpp'           => 'КПП',                               // +
-			'ogrn'          => 'ОГРН',                              // +
-            'vat_nom'       => 'VAT',                               // +
-            'reg_nom'       => 'Регистрационный номер',             // +
-            'sert_nom'      => 'Номер сертификата',                 // +
-            'profile'       => 'Основной вид деятельности',         // +
-			'yur_address'   => 'Юридический адрес',                 // +
-			'fact_address'  => 'Фактический адрес',                 // +
-            'email'         => 'Email',                             // +
-            'phone'         => 'Телефон',                           // +
-            'fax'           => 'Факс',                              // +
-            'comment'       => 'Комментарий',                       // +
-
-            // старые поля, не используются
-            'full_name'     => 'Полное наименование',               // +
-            'resident'      => 'Резидент РФ',                       // + boolean
-            'type_no_res'   => 'Тип нерезидента',                   // + int
-            'contragent'    => 'Контрагент',                        // + boolean
-            'parent'        => 'Группа контрагентов',               // +
-			'eng_name'      => 'Английское наименование',           // +
-			'deleted'       => 'Помечен на удаление'                // +
-            //'ogrn'          => 'ОГРН',                              // +
-		);*/
-        // а так есть по тому, что приходит с 1С
         return array(
             "id"            => '#',
             "country"       => 'Страна',
@@ -209,37 +166,13 @@ class Organizations extends SOAPModel {
             'fax'           => 'Факс',
             'comment'       => 'Комментарий',
             'okopf'         => 'Организационно-правовая форма',
-            'creation_date' => 'Дата создания',
 
-            // старые поля
-            //'opf'           => 'Организационно-правовая форма',   // нету
-            //'eng_name'      => 'Английское наименование',           // +
-            //'resident'      => 'Резидент РФ',                       // + boolean
-            //'type_no_res'   => 'Тип нерезидента',                   // + int
+            'creation_date' => 'Дата создания',
+            'creator'       => 'Пользователь, добавивший в систему',
+
             'deleted'       => 'Помечен на удаление',                // +
 
         );
-		/*
-		"id":"000000001",
-		"country":"643",
-		"name":"ТВТконсалт",
-
-		'sert_nom' => ''
-        'eng_name' => ''
-        'reg_nom' => ''
-        'deleted' => false
-        'resident' => true
-        'profile' => ''
-        'full_name' => 'ЗАО \"ТВТ консалт\"'
-        'inn' => '7726700622'
-        'type_no_res' => ''
-        'sert_date' => ''
-        'ogrn' => '1127746529426'
-        'yur_address' => '115230, Москва г, Электролитный проезд, дом № 1, строение 3'
-        'fact_address' => '109240, Москва г, Николоямская ул, дом № 26, строение 3'
-        'kpp' => '772601001'
-        'vat_nom' => ''
-		*/
 	}
 
 	/**
@@ -257,9 +190,11 @@ class Organizations extends SOAPModel {
 
             array('id, resident, type_no_res, contragent, parent,
                 comment, inn, kpp, ogrn, yur_address, fact_address,
-                reg_nom, sert_nom, sert_date, vat_nom,
-                profile, eng_name', 'safe'
+                reg_nom, sert_nom, sert_date, vat_nom, info,
+                phone, fax, profile, eng_name', 'safe'
             ),
+
+            array('email', 'email'),
 
 			array('id, title, show', 'safe', 'on'=>'search'),
 		);

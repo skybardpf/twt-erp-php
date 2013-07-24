@@ -47,7 +47,6 @@ $(document).ready(function(){
      * @param clone
      */
     function select2_init(elem, clone) {
-        console.log(elem)
         var selector = clone ? '[data-tnved=1]' : '[data-tnved=1][data-init_on_clone!=1]';
         if (elem.find(selector)) {
             elem.find(selector).each(function(i, e){

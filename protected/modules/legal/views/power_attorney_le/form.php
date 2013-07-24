@@ -14,7 +14,7 @@
     window.controller_name = '<?= $this->getId(); ?>';
 </script>
 <?php
-    Yii::app()->clientScript->registerScriptFile('/static/js/legal/form_manage_files.js');
+    Yii::app()->clientScript->registerScriptFile($this->asset_static.'/js/legal/form_manage_files.js');
 
     echo '<h2>'.($model->primaryKey ? 'Редактирование ' : 'Создание ').'доверенности</h2>';
 

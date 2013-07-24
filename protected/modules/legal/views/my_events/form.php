@@ -13,9 +13,9 @@
     window.controller_name = '<?= $this->getId(); ?>';
 </script>
 <?php
-    Yii::app()->clientScript->registerScriptFile('/static/js/jquery.json-2.4.min.js');
-    Yii::app()->clientScript->registerScriptFile('/static/js/legal/my_events/form.js');
-    Yii::app()->clientScript->registerScriptFile('/static/js/legal/form_manage_files.js');
+    Yii::app()->clientScript->registerScriptFile($this->asset_static.'/js/jquery.json-2.4.min.js');
+    Yii::app()->clientScript->registerScriptFile($this->asset_static.'/js/legal/my_events/form.js');
+    Yii::app()->clientScript->registerScriptFile($this->asset_static.'/js/legal/form_manage_files.js');
 
     echo '<h2>'.($model->primaryKey ? 'Редактирование' : 'Создание').' события</h2>';
 
@@ -82,17 +82,19 @@
     }
 
     /**
-     * Список огранизаций
+     * Заполняем блок, выбранных юр. лиц.
      */
-    $div = '';
-    $organizations = Organizations::getValues();
-    $contractors = Contractor::getValues();
-
+    $div_yur = '';
     if (!empty($model->list_yur)){
+        /**
+         * Список огранизаций
+         */
+        $organizations = Organizations::getValues();
+        $contractors = Contractor::getValues();
         foreach ($model->list_yur as $v){
             if ($v['type_yur'] == 'Организации'){
                 if (isset($organizations[$v['id_yur']])){
-                    $div .= CHtml::tag('div',
+                    $div_yur .= CHtml::tag('div',
                         array(
                             'class' => 'block',
                             'data-type-org' => 'organization',
@@ -105,7 +107,7 @@
                 }
             } elseif($v['type_yur'] == 'Контрагенты'){
                 if (isset($contractors[$v['id_yur']])){
-                    $div .= CHtml::tag('div',
+                    $div_yur .= CHtml::tag('div',
                         array(
                             'class' => 'block',
                             'data-type-org' => 'contractor',
@@ -119,32 +121,62 @@
             }
         }
     }
+
+    /**
+     * Заполняем блок, выбранных стран.
+     */
+    $div_countries = '';
+    if (!empty($model->countries)){
+        $countries = Countries::getValues();
+        foreach($model->countries as $v){
+            if (isset($countries[$v])){
+                $div_countries .= CHtml::tag('div',
+                    array(
+                        'class' => 'block',
+                        'data-id' => $v
+                    ),
+//                    CHtml::link($countries[$v], '#', array('class' => 'view_country')) .
+                    $countries[$v].'&nbsp;&nbsp;&nbsp;' .
+                    CHtml::link('', '#', array('class' => 'icon-remove'))
+                );
+            }
+        }
+    }
+
     echo $form->hiddenField($model, 'json_organizations');
     echo $form->hiddenField($model, 'json_contractors');
+    echo $form->hiddenField($model, 'json_countries');
 ?>
     <div class="<?= $class_yur; ?>" id="for_yur">
         <?= CHtml::label('Юр. лица <span class="required">*</span>', 'for_yur', array('class' => 'control-label required')); ?>
-<!--        <div class="controls" id="list_yur">-->
-<!--            Добавьте юр. лиц-->
-<!--        </div>-->
         <div class="controls" id='for_yur_list'>
-            <?= $div; ?>
+            <?= $div_yur; ?>
         </div>
         <div class="controls">
-            <button class="btn" id="data-add-yur" data-loading-text="..." type="button">Добавить</button>
+            <button class="btn" id="data-add-yur" data-loading-text="..." type="button">Добавить юр. лицо</button>
         </div>
     </div>
 
     <div class="<?= $class_countries; ?>" id="for_countries">
         <?= CHtml::label('Страны <span class="required">*</span>', 'for_countries', array('class' => 'control-label required')); ?>
-    <div class="controls">
-    <?php
-        echo CHtml::dropDownList('Event[countries]', $model->countries, Countries::getValues(), array(
-            'class' => 'span6'
-        ));
-    ?>
+        <div class="controls" id='for_countries_list'>
+            <?= $div_countries; ?>
+        </div>
+        <div class="controls">
+            <button class="btn" id="data-add-country" data-loading-text="..." type="button">Добавить страну</button>
+        </div>
     </div>
-    </div>
+
+<!--    <div class="--><?//= $class_countries; ?><!--" id="for_countries">-->
+<!--        --><?//= CHtml::label('Страны <span class="required">*</span>', 'for_countries', array('class' => 'control-label required')); ?>
+<!--    <div class="controls">-->
+<!--    --><?php
+//        echo CHtml::dropDownList('Event[countries]', $model->countries, Countries::getValues(), array(
+//            'class' => 'span6'
+//        ));
+//    ?>
+<!--    </div>-->
+<!--    </div>-->
 
     <div class="control-group">
         <?= $form->labelEx($model, 'event_date', array('class' => 'control-label')); ?>
@@ -210,12 +242,38 @@
 <?php $this->endWidget(); ?>
 
 <?php
-// Модальное окошко для выбора физ. лица
-$this->beginWidget('bootstrap.widgets.TbModal', array('id'=>'dataModal'));
+    // Модальное окошко для выбора физ. лица
+    $this->beginWidget('bootstrap.widgets.TbModal', array('id'=>'dataModalYur'));
 ?>
     <div class="modal-header">
         <a class="close" data-dismiss="modal">×</a>
         <h4><?=Yii::t("menu", "Выберите юр. лицо")?></h4>
+    </div>
+    <div class="modal-body"></div>
+    <div class="modal-footer">
+        <?php
+        $this->widget('bootstrap.widgets.TbButton', array(
+            'label' => Yii::t("menu", "Сохранить"),
+            'url'   => '#',
+            'htmlOptions' => array('class'=>'button_save', 'data-dismiss'=>'modal'),
+        ));
+
+        $this->widget('bootstrap.widgets.TbButton', array(
+            'label' => Yii::t("menu", "Отмена"),
+            'url'   => '#',
+            'htmlOptions' => array('data-dismiss'=>'modal'),
+        ));
+        ?>
+    </div>
+<?php $this->endWidget(); ?>
+
+<?php
+    // Модальное окошко для выбора страны
+    $this->beginWidget('bootstrap.widgets.TbModal', array('id'=>'dataModalCountries'));
+?>
+    <div class="modal-header">
+        <a class="close" data-dismiss="modal">×</a>
+        <h4><?=Yii::t("menu", "Выберите страну")?></h4>
     </div>
     <div class="modal-body"></div>
     <div class="modal-footer">
