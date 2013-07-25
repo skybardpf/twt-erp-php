@@ -49,12 +49,8 @@
 ?>
 
 <?php
-    if ($error) {
-        echo '<br/><br/>';
-        echo CHtml::openTag('div', array('class' => 'alert alert-error')).$error.CHtml::closeTag('div');
-    } elseif ($model->getErrors()) {
-        echo '<br/><br/>';
-        echo $form->errorSummary($model);
+    if ($model->hasErrors()) {
+        echo '<br/><br/>'. $form->errorSummary($model);
     }
 ?>
 

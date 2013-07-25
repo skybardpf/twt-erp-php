@@ -7,7 +7,9 @@
  * @property string     $id
  * @property string     $name
  * @property boolean    $deleted
+ * @property boolean    $invalid
  * @property string     $id_yur
+ * @property string     $le_id
  * @property string     $responsible
  * @property string     $currency
  * @property integer    $dogovor_summ
@@ -85,34 +87,34 @@ class Contract extends SOAPModel {
     public function attributeLabels() {
         return array(
             'id'                => '#',
-            'name'              => 'Название',
-            'number'            => 'Номер договора',
+            'name'              => 'Наименование:',
+            'number'            => 'Номер:',
             'deleted'           => 'Удален',
-            'invalid'           => 'Недействителен',
+            'invalid'           => 'Статус договора:',
 
-            'date'              => 'Дата заключения',
-            'expire'            => 'Действителен до',
-            'date_infomation'   => 'Срок Уведомления По Договору',
+            'date'              => 'Дата заключения:',
+            'expire'            => 'Действителен до:',
+            'date_infomation'   => 'Уведомления об окончании действия договора за:',
 
-            'responsible'       => 'Ответственный По Договору',
-            'place_contract'    => 'Место Заключения Договора', // Справочник допМестоЗаключенияДоговора
-            'typ_doc'           => 'Вид Договора',    // Справочник .допВидыДоговоров
-            'prolongation_type' => 'Тип Пролонгация Договора',
-            'everymonth_summ'   => 'Сумма Платежей В Месяц',
-            'currency'          => 'Валюта Взаиморасчетов',
-            'dogovor_summ'      => 'Сумма договора',
-            'place_court'       => 'Местонахождения Суда',
-
+            'responsible'       => 'Ответственный по договору:',
+            'place_contract'    => 'Место заключения:', // Справочник допМестоЗаключенияДоговора
+            'typ_doc'           => 'Вид договора:',    // Справочник .допВидыДоговоров
+            'prolongation_type' => 'Тип пролонгация:',
+            'everymonth_summ'   => 'Сумма ежемесячного платежа:',
+            'currency'          => 'Валюта:',
+            'dogovor_summ'      => 'Сумма договора:',
+            'place_court'       => 'Место судебной инстанции:',
 
             'role_ur_face'      => 'Роль юр. лица',
             'signatory'         => 'Подписант',
             'signatory_contr'   => 'Подписант Контрагента', // Справочник Физ. Лица
 
-            'orig_doc'          => 'Оригинальные документы',
-            'scan'              => 'Сканы',
+            'orig_doc'          => 'Оригинальный документ:',
+            'scan'              => 'Сканы:',
+            'comment'           => 'Коментарий:',
 
             'id_yur'            => 'Идентификатор юр. лица',
-            'le_id'             => 'Владелец',  // Справочник Контрагенты, Организации
+            'le_id'             => 'Контрагент',  // Справочник Контрагенты, Организации
         );
     }
 
@@ -121,7 +123,40 @@ class Contract extends SOAPModel {
      */
     public function rules() {
         return array(
-//            array('name', 'required'),
+            array('name', 'required'),
+//            array('name', 'length', 'max' => 25),
+
+            array('number', 'required'),
+//            array('name', 'length', 'max' => 25),
+
+            array('typ_doc', 'required'),
+            array('typ_doc', 'in', 'range' => array_keys(self::getTypes())),
+
+            array('le_id', 'required'),
+            array('le_id', 'in', 'range' => array_keys(Contractor::getValues())),
+
+            array('date, expire', 'required'),
+            array('date, expire', 'date', 'format' => 'yyyy-MM-dd'),
+
+            array('invalid', 'required'),
+            array('invalid', 'in', 'range' => array(0,1)),
+
+            array('prolongation_type', 'required'),
+            array('prolongation_type', 'in', 'range' => array_keys(self::getProlongationTypes())),
+
+            array('currency', 'required'),
+            array('currency', 'in', 'range' => array_keys(Currencies::getValues())),
+
+            array('responsible', 'required'),
+            array('responsible', 'in', 'range' => array_keys(Individuals::getValues())),
+
+            array('dogovor_summ', 'required'),
+            array('dogovor_summ', 'numerical', 'integerOnly' => true, 'min' => 0),
+            array('everymonth_summ', 'numerical', 'integerOnly' => true, 'min' => 0),
+            array('date_infomation', 'numerical', 'integerOnly' => true, 'min' => 0),
+
+            array('role_ur_face', 'required'),
+            array('role_ur_face', 'in', 'range' => array_keys(self::getRoles())),
         );
     }
 
@@ -144,5 +179,40 @@ class Contract extends SOAPModel {
             $cache->add($cache_id, $data, 3000);
         }
         return $data;
+    }
+
+    /**
+     * @return array Возвращает список видов договора. Формат [key => name].
+     */
+    public static function getTypes(){
+        return array(
+            'СПоставщиком' => 'С поставщиком',
+            'СПокупателем' => 'С покупателем',
+            'СКомитентом' => 'С комитентом',
+            'СКомиссионером' => 'С комиссионером',
+            'Прочее' => 'Прочее',
+        );
+    }
+
+    /**
+     * @return array Возвращает список типов прологации. Формат [key => name].
+     */
+    public static function getProlongationTypes(){
+        return array(
+            'Нет' => 'Нет',
+            'Автоматическая' => 'Автоматическая',
+            'ПоСоглашениюСторон' => 'По соглашению сторон',
+            'Перезаключение' => 'Перезаключение',
+        );
+    }
+
+    /**
+     * @return array Возвращает список ролей. Формат [key => name].
+     */
+    public static function getRoles(){
+        return array(
+            'Поставщик' => 'Поставщик',
+            'Покупатель' => 'Покупатель',
+        );
     }
 }

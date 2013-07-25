@@ -42,6 +42,8 @@
 <?php
     $currency = Currencies::getValues();
     $persons = Individuals::getValues();
+    $contractors = Contractor::getValues();
+    $contractor = (isset($contractors[$model->le_id]) ? $contractors[$model->le_id] : '---');
 
     $side_data = array();
     $side_attr['role'] = array(
@@ -106,8 +108,9 @@
                     'label' => 'Вид договора'
                 ),
                 array(
-                    'name' => 'xxx',
-                    'label' => 'Контрагент'
+                    'name' => 'le_id',
+                    'label' => 'Контрагент',
+                    'value' => $contractor
                 ),
                 array(
                     'name' => 'name',
@@ -148,14 +151,14 @@
                     'value' => (isset($persons[$model->responsible]) ? $persons[$model->responsible] : '---')
                 ),
                 array(
-                    'name' => 'xxx',
+                    'name' => 'id_yur',
                     'label' => 'Сторона 1 ('.CHtml::encode($organization->name).')',
                     'type' => 'raw',
                     'value' => $view_side_1
                 ),
                 array(
-                    'name' => 'xxx',
-                    'label' => 'Сторона 2',
+                    'name' => 'le_id',
+                    'label' => 'Сторона 2 ('.CHtml::encode($contractor).')',
                     'type' => 'raw',
                     'value' => $view_side_2
                 ),
@@ -176,5 +179,5 @@
     );
 
     echo 'Скачать электронную версию: '.CHtml::link('сгенерированную системой').' или '.CHtml::link('пользовательскую');
-    echo '<br/><br/>'.CHtml::link('Скачать скан');
+    echo '<br/>'.CHtml::link('Скачать скан');
 ?>

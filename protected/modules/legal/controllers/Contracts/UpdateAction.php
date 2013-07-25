@@ -19,7 +19,19 @@ class UpdateAction extends CAction
         $controller = $this->controller;
         $controller->pageTitle .= ' | Редактирование договора';
 
+        /**
+         * @var Contract $model
+         */
         $model = $controller->loadModel($id);
+
+        if (Yii::app()->request->isAjaxRequest){
+            echo CActiveForm::validate($model);
+            Yii::app()->end();
+        }
+
+        /**
+         * @var Organizations $org
+         */
         $org = $controller->loadOrganization($model->id_yur);
 
         if (isset($_POST[get_class($model)])) {
@@ -39,6 +51,10 @@ class UpdateAction extends CAction
                 }
             }
         }
+
+        // TODO только для тестов. Потом убрать. Здесь должен быть массив. Сейчас строка.
+        $model->signatory = array('0000000033', '0000000044');
+        $model->signatory_contr = array('0000000038', '0000000054');
 
         $controller->render('/my_organizations/show', array(
             'content' => $controller->renderPartial('/contracts/form',
