@@ -22,13 +22,22 @@
 //        return $div;
 //    }
 
+//var_dump($this->asset_static);die;
+//    Yii::app()->clientScript->registerScriptFile($this->asset_static.'/js/legal/contract/form.js');
+    Yii::app()->clientScript->registerScriptFile($this->asset_static.'/js/legal/contract/form.js');
+
     echo '<h2>'.($model->primaryKey ? 'Редактирование' : 'Создание').' договора</h2>';
 
     /* @var $form MTbActiveForm */
     $form = $this->beginWidget('bootstrap.widgets.MTbActiveForm', array(
-        'id' => 'form-my-events',
+        'id' => 'form-contract',
         'type' => 'horizontal',
         'enableAjaxValidation' => true,
+        'enableClientValidation'=>true,
+        'clientOptions' => array(
+            'validateOnSubmit' => true,
+            'validateOnChange' => true,
+        ),
     ));
 
     $this->widget('bootstrap.widgets.TbButton', array(
@@ -54,9 +63,16 @@
 <?php
     // Опции для JUI селектора даты
     $jui_date_options = array(
+        'language' => 'ru',
         'options'=>array(
             'showAnim' => 'fold',
             'dateFormat' => 'yy-mm-dd',
+            'changeMonth' => true,
+            'changeYear' => true,
+            'showOn' => 'button',
+            'constrainInput' => 'true',
+
+
         ),
         'htmlOptions'=>array(
             'style' => 'height:20px;'
@@ -207,7 +223,7 @@
                 'type' => 'primary',
                 'label' => 'Удалить',
                 'htmlOptions' => array(
-                    'class' => 'del-signatory',
+                    'class' => 'del-signatory-contractor',
                     'data-id' => $id
                 )
             ), true)
@@ -241,7 +257,7 @@
         'type' => 'primary',
         'label' => 'Добавить',
         'htmlOptions' => array(
-            'class' => 'add-signatory',
+            'class' => 'add-signatory-contractor',
         )
     ), true);
 

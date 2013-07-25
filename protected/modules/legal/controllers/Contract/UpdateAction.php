@@ -14,7 +14,7 @@ class UpdateAction extends CAction
     public function run($id)
     {
         /**
-         * @var $controller ContractController
+         * @var ContractController $controller
          */
         $controller = $this->controller;
         $controller->pageTitle .= ' | Редактирование договора';
@@ -24,7 +24,7 @@ class UpdateAction extends CAction
          */
         $model = $controller->loadModel($id);
 
-        if (Yii::app()->request->isAjaxRequest){
+        if(isset($_POST['ajax']) && $_POST['ajax']==='form-contract') {
             echo CActiveForm::validate($model);
             Yii::app()->end();
         }
