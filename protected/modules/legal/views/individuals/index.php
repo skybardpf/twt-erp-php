@@ -16,16 +16,18 @@
 </div>
 <h2>Мои физические лица</h2>
 <?php
-// Инициализируем список стран
-Countries::getValues();
+    // Инициализируем список стран
+    $countries = Countries::getValues();
 
-if ($elements) {
-	$gridDataProvider = new CArrayDataProvider($elements);
+	$data = new CArrayDataProvider($elements);
+    foreach($data->rawData as $k=>$v){
+        $data->rawData[$k]['citizenship'] = isset($countries[$v["citizenship"]]) ? $countries[$v["citizenship"]] : ($v["citizenship"] ? $v["citizenship"] : "&mdash;");
+    }
 
 	$this->widget('bootstrap.widgets.TbGridView', array(
 		'type'          => 'striped',
-		'dataProvider'  => $gridDataProvider,
-//        'template'      => "{pager}\n{items}\n{pager}",
+		'dataProvider'  => $data,
+        'template'      => "{items} {pager}",
 		'columns'       => array(
 			array('name' => 'id', 'header' => '#'),
             array(
@@ -35,9 +37,9 @@ if ($elements) {
                 'value'  => 'CHtml::link($data["family"]." ".$data["name"]." ".$data["parent_name"], Yii::app()->getController()->createUrl("view", array("id" => $data["id"])))'
 	        ),
 			array(
+                'name'   => 'citizenship',
 				'header' => 'Гражданин',
-				'type'   => 'raw',
-				'value'  => 'isset(Countries::$values[$data["citizenship"]]) ? Countries::$values[$data["citizenship"]] : ($data["citizenship"] ? $data["citizenship"] : "&mdash;")'
+				'type'   => 'raw'
 			),
 			array('name' => 'ser_nom_pass', 'header' => 'Серия и номер удостоверения'),
 			array(
@@ -45,13 +47,6 @@ if ($elements) {
 				'type'   => 'raw',
 				'value'  => '$data["email"].($data["email"] && $data["phone"] ? ",<br/>" : "").$data["phone"]'
 			),
-			array(
-				'class' => 'bootstrap.widgets.TbButtonColumn',
-				'updateButtonUrl' => 'Yii::app()->controller->createUrl("edit",array("id"=>$data["id"]))'
-			),
 		),
 	));
-} else {
-	echo 'Ни одного Физического лица не зарегистрировано.';
-}
 ?>

@@ -12,17 +12,14 @@ class IndividualsController extends Controller {
 	/**
 	 * Список Физических лиц
 	 */
-	public function actionIndex() {
-//		$entities = Individuals::model()
-//            ->where('deleted', false)
-//            ->order('family', 'asc')
-//            ->findAll();
-//        var_dump($entities);
-//        echo '<br>';
-//        echo '<br>';
-//        var_dump();
-//        die;
-		$this->render('index', array('elements' => Individuals::getFullValues()));
+	public function actionIndex()
+    {
+		$this->render(
+            'index',
+            array(
+                'elements' => Individuals::getFullValues()
+            )
+        );
 	}
 
 	/**
@@ -31,7 +28,8 @@ class IndividualsController extends Controller {
 	 *  @param  string $id
      *  @throws CHttpException
 	 */
-	public function actionView($id) {
+	public function actionView($id)
+    {
 		$this->cur_tab = 'view';
 		$entity = Individuals::model()->findByPk($id);
         if (!$entity){
