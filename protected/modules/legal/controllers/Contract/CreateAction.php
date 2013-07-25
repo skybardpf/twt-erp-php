@@ -41,6 +41,13 @@ class CreateAction extends CAction
             }
         }
 
+        // TODO только для тестов. Потом убрать. Здесь должен быть массив. Сейчас строка.
+        $model->signatory = array('0000000033', '0000000044');
+        $model->signatory_contr = array('0000000038', '0000000054');
+
+        $model->json_signatory = CJSON::encode($model->signatory);
+        $model->json_signatory_contractor = CJSON::encode($model->signatory_contr);
+
         $controller->render('/my_organizations/show', array(
             'content' => $controller->renderPartial('/contract/form',
                 array(

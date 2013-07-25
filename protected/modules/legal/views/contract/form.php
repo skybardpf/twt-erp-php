@@ -284,15 +284,66 @@
 <?php
     echo $form->textFieldRow($model, 'place_court');
     echo $form->textAreaRow($model, 'comment');
+
+    $data_scans = array();
+    $data_doc = array();
 ?>
     <div class="control-group">
         <?= $form->labelEx($model, 'scan', array('class' => 'control-label')); ?>
         <div class="controls">
+        <?php
+            $this->widget('bootstrap.widgets.TbGridView',
+                array(
+                    'type' => 'striped bordered condensed',
+                    'dataProvider' => new CArrayDataProvider($data_scans),
+                    'template' => "{items}",
+                    'columns' => array(
+                        array(
+                            'name' => 'name',
+                            'header' => 'Название файла',
+                            'type' => 'raw',
+                            'htmlOptions' => array(
+                                'style' => 'width: 90%',
+                            )
+                        ),
+                        array(
+                            'name' => 'delete',
+                            'header' => '',
+                            'type' => 'raw'
+                        ),
+                    )
+                )
+            );
+        ?>
         </div>
     </div>
     <div class="control-group">
         <?= $form->labelEx($model, 'orig_doc', array('class' => 'control-label')); ?>
         <div class="controls">
+        <?php
+            $this->widget('bootstrap.widgets.TbGridView',
+                array(
+                    'type' => 'striped bordered condensed',
+                    'dataProvider' => new CArrayDataProvider($data_doc),
+                    'template' => "{items}",
+                    'columns' => array(
+                        array(
+                            'name' => 'name',
+                            'header' => 'Название файла',
+                            'type' => 'raw',
+                            'htmlOptions' => array(
+                                'style' => 'width: 90%',
+                            )
+                        ),
+                        array(
+                            'name' => 'delete',
+                            'header' => '',
+                            'type' => 'raw'
+                        ),
+                    )
+                )
+            );
+        ?>
         </div>
     </div>
 </fieldset>
@@ -300,7 +351,9 @@
 <?php $this->endWidget(); ?>
 
 <?php
-    // Модальное окошко для подписанта
+    /**
+     * Модальное окошко для подписанта
+     */
     $this->beginWidget('bootstrap.widgets.TbModal', array('id'=>'dataModalSignatory'));
 ?>
     <div class="modal-header">

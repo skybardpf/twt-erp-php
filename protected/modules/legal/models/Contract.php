@@ -20,13 +20,15 @@
  * @property string     $json_signatory_contractor      private
  * @property string     $json_signatory                 private
  */
-class Contract extends SOAPModel {
+class Contract extends SOAPModel
+{
     /**
      * @static
      * @param string $className
      * @return Contract
      */
-    public static function model($className = __CLASS__) {
+    public static function model($className = __CLASS__)
+    {
         return parent::model($className);
     }
 
@@ -34,7 +36,8 @@ class Contract extends SOAPModel {
      * Список договоров.
      * @return Contract[]
      */
-    public function findAll() {
+    public function findAll()
+    {
         $filters = SoapComponent::getStructureElement($this->where);
         if (!$filters) $filters = array(array());
         $request = array('filters' => $filters, 'sort' => array($this->order));
@@ -77,6 +80,19 @@ class Contract extends SOAPModel {
     public function save()
     {
         $data = $this->getAttributes();
+
+        if (!$this->primaryKey){
+            unset($data['id']);
+        }
+        unset($data['deleted']);
+        unset($data['json_signatory']);
+        unset($data['json_signatory_contractor']);
+
+        unset($data['scan']);
+        unset($data['orig_doc']);
+
+//        var_dump($data);die;
+
         $ret = $this->SOAP->saveContract(array(
             'data' => SoapComponent::getStructureElement($data)
         ));
@@ -87,7 +103,8 @@ class Contract extends SOAPModel {
      * Returns the list of attribute names of the model.
      * @return array list of attribute names.
      */
-    public function attributeLabels() {
+    public function attributeLabels()
+    {
         return array(
             'id'                => '#',
             'name'              => 'Наименование',
@@ -127,7 +144,8 @@ class Contract extends SOAPModel {
     /**
      * @return array validation rules for model attributes.
      */
-    public function rules() {
+    public function rules()
+    {
         return array(
             array('name', 'required'),
 //            array('name', 'length', 'max' => 25),
@@ -161,8 +179,12 @@ class Contract extends SOAPModel {
             array('everymonth_summ', 'numerical', 'integerOnly' => true, 'min' => 0),
             array('date_infomation', 'numerical', 'integerOnly' => true, 'min' => 0),
 
+            array('json_signatory_contractor, json_signatory', 'validJson'),
+
             array('role_ur_face', 'required'),
             array('role_ur_face', 'in', 'range' => array_keys(self::getRoles())),
+
+            array('place_contract, place_court, comment', 'safe')
         );
     }
 
@@ -170,7 +192,8 @@ class Contract extends SOAPModel {
      * Список договоров. Формат [key => name]. Результат сохранеятся в кеш.
      * @return array
      */
-    public static function getValues() {
+    public static function getValues()
+    {
         $cache = new CFileCache();
         $cache_id = __CLASS__. 'values';
         $data = $cache->get($cache_id);
@@ -190,7 +213,8 @@ class Contract extends SOAPModel {
     /**
      * @return array Возвращает список видов договора. Формат [key => name].
      */
-    public static function getTypes(){
+    public static function getTypes()
+    {
         return array(
             'СПоставщиком' => 'С поставщиком',
             'СПокупателем' => 'С покупателем',
@@ -203,7 +227,8 @@ class Contract extends SOAPModel {
     /**
      * @return array Возвращает список типов прологации. Формат [key => name].
      */
-    public static function getProlongationTypes(){
+    public static function getProlongationTypes()
+    {
         return array(
             'Нет' => 'Нет',
             'Автоматическая' => 'Автоматическая',
@@ -215,10 +240,21 @@ class Contract extends SOAPModel {
     /**
      * @return array Возвращает список ролей. Формат [key => name].
      */
-    public static function getRoles(){
+    public static function getRoles()
+    {
         return array(
             'Поставщик' => 'Поставщик',
             'Покупатель' => 'Покупатель',
         );
+    }
+
+    /**
+     * @param string $attribute
+     */
+    public function validJson($attribute)
+    {
+        if (CJSON::decode($this->$attribute) === null){
+            $this->addError($attribute, 'Неправильная JSON строка.');
+        }
     }
 }
