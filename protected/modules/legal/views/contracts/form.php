@@ -17,7 +17,7 @@
     $form = $this->beginWidget('bootstrap.widgets.MTbActiveForm', array(
         'id' => 'form-my-events',
         'type' => 'horizontal',
-        'enableAjaxValidation' => false,
+        'enableAjaxValidation' => true,
     ));
 
     $this->widget('bootstrap.widgets.TbButton', array(
@@ -51,7 +51,161 @@
             'style' => 'height:20px;'
         )
     );
+
+    echo $form->dropDownListRow($model, 'typ_doc', Contract::getTypes());
+    echo $form->dropDownListRow($model, 'le_id', Contractor::getValues());
+    echo $form->textFieldRow($model, 'name');
+    echo $form->textFieldRow($model, 'number');
 ?>
+    <div class="control-group">
+        <?= $form->labelEx($model, 'date', array('class' => 'control-label')); ?>
+        <div class="controls">
+            <?php
+                $this->widget('zii.widgets.jui.CJuiDatePicker',array_merge(
+                    array(
+                        'model' => $model,
+                        'attribute' => 'date'
+                    ), $jui_date_options
+                ));
+            ?>
+            <?= $form->error($model, 'date'); ?>
+<!--            <span class="help-inline error" id="Contract_dogovor_summ_em_" style="">Сумма договора: должен быть числом.</span>-->
+        </div>
+    </div>
+
+    <div class="control-group">
+        <?= $form->labelEx($model, 'expire', array('class' => 'control-label')); ?>
+        <div class="controls">
+            <?php $this->widget('zii.widgets.jui.CJuiDatePicker',array_merge(
+                array(
+                    'model'     => $model,
+                    'attribute' => 'expire'
+                ), $jui_date_options
+            )); ?>
+        </div>
+    </div>
+
+<?php
+    $model->invalid = $model->invalid ? 1 : 0;
+    echo $form->radioButtonListInlineRow($model, 'invalid', array(
+        1 => 'Действителен',
+        0 => 'Не действителен',
+    ));
+    echo $form->textFieldRow($model, 'place_contract');
+    echo $form->dropDownListRow($model, 'prolongation_type', Contract::getProlongationTypes());
+?>
+    <div class="control-group">
+        <?= $form->labelEx($model, 'date_infomation', array('class' => 'control-label')); ?>
+        <div class="controls">
+        <?php
+            echo $form->textField($model, 'date_infomation', array('style'=> 'width: 70%')).' дней';
+        ?>
+        </div>
+    </div>
+<?php
+
+    echo $form->dropDownListRow($model, 'currency', Currencies::getValues());
+    echo $form->textFieldRow($model, 'dogovor_summ');
+    echo $form->textFieldRow($model, 'everymonth_summ');
+    echo $form->dropDownListRow($model, 'responsible', Individuals::getValues());
+
+    $contractors = Contractor::getValues();
+    $contractor = (isset($contractors[$model->le_id]) ? $contractors[$model->le_id] : '---');
+?>
+    <div class="control-group">
+        <?= CHtml::label('Роль '.CHtml::encode($organization->name).': <span class="required">*</span>', get_class($model).'[role_ur_face]', array('class' => 'control-label')); ?>
+        <div class="controls">
+        <?php
+            echo CHtml::activeDropDownList($model, 'role_ur_face', Contract::getRoles());
+        ?>
+        </div>
+    </div>
+
+<?php
+//    /** managing_persons */
+//    $person = '';
+//    if (empty($model->managing_persons)){
+//        $class = 'controls';
+//        $model->str_managing_persons = CJSON::encode(array());
+//    } else {
+//        $p = Individuals::getValues();
+//        foreach ($model->managing_persons as $pid){
+//            if (!isset($p[$pid])){
+//                $person .= $pid;
+//            } else {
+//                $person .= CHtml::tag('div', array(
+//                        'class'     => 'managing_person',
+//                        'data-pid'  => $pid,
+//                    ),
+//                    CHtml::link($p[$pid], $this->createUrl('individuals/view', array('id' => $pid))) .
+//                    '&nbsp;' .
+//                    CHtml::tag('span', array(
+//                        'class' => 'icon-trash',
+//                        'style' => 'cursor: pointer;'
+//                    ))
+//                );
+//            }
+//        }
+//        $model->str_managing_persons = CJSON::encode($model->managing_persons);
+//        $class = 'controls hide';
+//    }
+//    echo $form->hiddenField($model, 'str_managing_persons');
+
+    $div = $this->widget('bootstrap.widgets.TbGridView',
+        array(
+            'type' => 'striped bordered condensed',
+            'dataProvider' => new CArrayDataProvider(array(
+                array('id' => 111),
+                array('id' => 111),
+                array('id' => 111),
+            )),
+            'template' => "{items}",
+            'columns' => array(
+                array(
+                    'name' => 'id',
+                    'header' => 'Подписант',
+                ),
+                array(
+                    'name' => 'delete',
+                    'header' => 'Удалить',
+                ),
+            )
+        ),
+        true
+    );
+
+?>
+    <div class="control-group">
+        <?= CHtml::label('Подписанты '.CHtml::encode($organization->name), get_class($model).'[signatory]', array('class' => 'control-label')); ?>
+        <div class="controls">
+            <?php
+                echo $div;
+            ?>
+        </div>
+    </div>
+    <div class="control-group">
+        <?= CHtml::label('Подписанты '.CHtml::encode($contractor), get_class($model).'[signatory_contr]', array('class' => 'control-label')); ?>
+        <div class="controls">
+            <?php
+            //            echo CHtml::activeDropDownList($model, 'signatory', array());
+            ?>
+        </div>
+    </div>
+
+<?php
+    echo $form->textFieldRow($model, 'place_court');
+    echo $form->textAreaRow($model, 'comment');
+?>
+    <div class="control-group">
+        <?= $form->labelEx($model, 'scan', array('class' => 'control-label')); ?>
+        <div class="controls">
+        </div>
+    </div>
+    <div class="control-group">
+        <?= $form->labelEx($model, 'orig_doc', array('class' => 'control-label')); ?>
+        <div class="controls">
+        </div>
+    </div>
 </fieldset>
 
 <?php $this->endWidget(); ?>
