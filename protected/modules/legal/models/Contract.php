@@ -16,6 +16,9 @@
  * @property array      $signatory
  * @property array      $signatory_contr
  * @property string     $role_ur_face
+ *
+ * @property string     $json_signatory_contractor      private
+ * @property string     $json_signatory                 private
  */
 class Contract extends SOAPModel {
     /**
@@ -87,34 +90,37 @@ class Contract extends SOAPModel {
     public function attributeLabels() {
         return array(
             'id'                => '#',
-            'name'              => 'Наименование:',
-            'number'            => 'Номер:',
+            'name'              => 'Наименование',
+            'number'            => 'Номер',
             'deleted'           => 'Удален',
-            'invalid'           => 'Статус договора:',
+            'invalid'           => 'Статус договора',
 
-            'date'              => 'Дата заключения:',
-            'expire'            => 'Действителен до:',
-            'date_infomation'   => 'Уведомления об окончании действия договора за:',
+            'date'              => 'Дата заключения',
+            'expire'            => 'Действителен до',
+            'date_infomation'   => 'Уведомления об окончании действия договора за',
 
-            'responsible'       => 'Ответственный по договору:',
-            'place_contract'    => 'Место заключения:', // Справочник допМестоЗаключенияДоговора
-            'typ_doc'           => 'Вид договора:',    // Справочник .допВидыДоговоров
-            'prolongation_type' => 'Тип пролонгация:',
-            'everymonth_summ'   => 'Сумма ежемесячного платежа:',
-            'currency'          => 'Валюта:',
-            'dogovor_summ'      => 'Сумма договора:',
-            'place_court'       => 'Место судебной инстанции:',
+            'responsible'       => 'Ответственный по договору',
+            'place_contract'    => 'Место заключения', // Справочник допМестоЗаключенияДоговора
+            'typ_doc'           => 'Вид договора',    // Справочник .допВидыДоговоров
+            'prolongation_type' => 'Тип пролонгация',
+            'everymonth_summ'   => 'Сумма ежемесячного платежа',
+            'currency'          => 'Валюта',
+            'dogovor_summ'      => 'Сумма договора',
+            'place_court'       => 'Место судебной инстанции',
 
             'role_ur_face'      => 'Роль юр. лица',
             'signatory'         => 'Подписант',
             'signatory_contr'   => 'Подписант Контрагента', // Справочник Физ. Лица
 
-            'orig_doc'          => 'Оригинальный документ:',
-            'scan'              => 'Сканы:',
-            'comment'           => 'Коментарий:',
+            'orig_doc'          => 'Оригинальный документ',
+            'scan'              => 'Сканы',
+            'comment'           => 'Коментарий',
 
             'id_yur'            => 'Идентификатор юр. лица',
             'le_id'             => 'Контрагент',  // Справочник Контрагенты, Организации
+
+            'json_signatory_contractor' => '',  // private
+            'json_signatory' => '',             // private
         );
     }
 

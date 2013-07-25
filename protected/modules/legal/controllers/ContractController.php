@@ -21,6 +21,9 @@ class ContractController extends Controller{
             'edit' => 'application.modules.legal.controllers.Contract.UpdateAction',
             'add' => 'application.modules.legal.controllers.Contract.CreateAction',
             'delete' => 'application.modules.legal.controllers.Contract.DeleteAction',
+
+            '_html_modal_select_signatory' => 'application.modules.legal.controllers.Contract.HtmlModalSelectSignatoryAction',
+            '_html_row_signatory' => 'application.modules.legal.controllers.Contract.HtmlRowSignatoryAction',
         );
     }
 

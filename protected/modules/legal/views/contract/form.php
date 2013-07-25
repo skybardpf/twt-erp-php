@@ -4,31 +4,21 @@
  *
  * @author Skibardin A.A. <skybardpf@artektiv.ru>
  *
- * @var ContractController $this
+ * @var ContractController  $this
  * @var Contract            $model
  * @var Organizations       $organization
  */
 ?>
 
 <?php
-//    /**
-//     * @param array $persons Список физ. лиц.
-//     * @param array $signatory Список ID подписантов.
-//     * @param boolean $is_contractor Если TRUE, создаем таблицу для контрагента, иначе организации.
-//     * @return string Сгенерированный html таблицы с подписантами
-//     */
-//    function _getHtmlGridSignatory(array $persons, array $signatory, $is_contractor=false) {
-//
-//        return $div;
-//    }
-
-//var_dump($this->asset_static);die;
-//    Yii::app()->clientScript->registerScriptFile($this->asset_static.'/js/legal/contract/form.js');
     Yii::app()->clientScript->registerScriptFile($this->asset_static.'/js/legal/contract/form.js');
+    Yii::app()->clientScript->registerScriptFile($this->asset_static.'/js/jquery.json-2.4.min.js');
 
     echo '<h2>'.($model->primaryKey ? 'Редактирование' : 'Создание').' договора</h2>';
 
-    /* @var $form MTbActiveForm */
+    /**
+     * @var MTbActiveForm $form
+     */
     $form = $this->beginWidget('bootstrap.widgets.MTbActiveForm', array(
         'id' => 'form-contract',
         'type' => 'horizontal',
@@ -94,21 +84,23 @@
                         'attribute' => 'date'
                     ), $jui_date_options
                 ));
+                echo $form->error($model, 'date');
             ?>
-<!--            --><?//= $form->error($model, 'date'); ?>
-<!--            <span class="help-inline error" id="Contract_dogovor_summ_em_" style="">Сумма договора: должен быть числом.</span>-->
         </div>
     </div>
 
     <div class="control-group">
         <?= $form->labelEx($model, 'expire', array('class' => 'control-label')); ?>
         <div class="controls">
-            <?php $this->widget('zii.widgets.jui.CJuiDatePicker',array_merge(
+        <?php
+            $this->widget('zii.widgets.jui.CJuiDatePicker',array_merge(
                 array(
                     'model'     => $model,
                     'attribute' => 'expire'
                 ), $jui_date_options
-            )); ?>
+            ));
+            echo $form->error($model, 'expire');
+        ?>
         </div>
     </div>
 
@@ -157,6 +149,7 @@
      * Генерируем таблицу для отображения подписантов организации
      */
     $data = array();
+    $class_button = 'add-signatory ' . ((count($model->signatory) >= 2) ? 'hide' : '');
     foreach ($model->signatory as $id){
         $data[] = array(
             'id' => $id,
@@ -170,14 +163,16 @@
                 'label' => 'Удалить',
                 'htmlOptions' => array(
                     'class' => 'del-signatory',
-                    'data-id' => $id
+                    'data-id' => $id,
+                    'data-type' => 'signatory'
                 )
             ), true)
         );
     }
     $div_signatory = $this->widget('bootstrap.widgets.TbGridView',
         array(
-            'type' => 'striped condensed',
+            'id' => 'grid-signatory',
+            'type' => 'striped bordered condensed',
             'dataProvider' => new CArrayDataProvider($data),
             'template' => "{items}",
             'columns' => array(
@@ -203,7 +198,8 @@
         'type' => 'primary',
         'label' => 'Добавить',
         'htmlOptions' => array(
-            'class' => 'add-signatory',
+            'class' => $class_button,
+            'data-type' => 'signatory',
         )
     ), true);
 
@@ -211,6 +207,7 @@
      * Генерируем таблицу для отображения подписантов контрагента
      */
     $data = array();
+    $class_button = 'add-signatory-contractor ' . ((count($model->signatory_contr) >= 2) ? 'hide' : '');
     foreach ($model->signatory_contr as $id){
         $data[] = array(
             'id' => $id,
@@ -223,15 +220,17 @@
                 'type' => 'primary',
                 'label' => 'Удалить',
                 'htmlOptions' => array(
-                    'class' => 'del-signatory-contractor',
-                    'data-id' => $id
+                    'class' => 'del-signatory',
+                    'data-id' => $id,
+                    'data-type' => 'signatory_contractor'
                 )
             ), true)
         );
     }
     $div_signatory_contractor = $this->widget('bootstrap.widgets.TbGridView',
         array(
-            'type' => 'striped condensed',
+            'id' => 'grid-signatory-contractor',
+            'type' => 'striped bordered condensed',
             'dataProvider' => new CArrayDataProvider($data),
             'template' => "{items}",
             'columns' => array(
@@ -257,12 +256,13 @@
         'type' => 'primary',
         'label' => 'Добавить',
         'htmlOptions' => array(
-            'class' => 'add-signatory-contractor',
+            'class' => $class_button,
+            'data-type' => 'signatory_contractor',
         )
     ), true);
 
-//    echo $form->hiddenField($model, 'str_managing_persons');
-
+    echo $form->hiddenField($model, 'json_signatory');
+    echo $form->hiddenField($model, 'json_signatory_contractor');
 ?>
     <div class="control-group">
         <?= CHtml::label('Подписанты '.CHtml::encode($organization->name), get_class($model).'[signatory]', array('class' => 'control-label')); ?>
@@ -297,4 +297,30 @@
     </div>
 </fieldset>
 
+<?php $this->endWidget(); ?>
+
+<?php
+    // Модальное окошко для подписанта
+    $this->beginWidget('bootstrap.widgets.TbModal', array('id'=>'dataModalSignatory'));
+?>
+    <div class="modal-header">
+        <a class="close" data-dismiss="modal">×</a>
+        <h4><?=Yii::t("menu", "Выберите подписанта")?></h4>
+    </div>
+    <div class="modal-body"></div>
+    <div class="modal-footer">
+        <?php
+        $this->widget('bootstrap.widgets.TbButton', array(
+            'label' => Yii::t("menu", "Сохранить"),
+            'url'   => '#',
+            'htmlOptions' => array('class'=>'button_save', 'data-dismiss'=>'modal'),
+        ));
+
+        $this->widget('bootstrap.widgets.TbButton', array(
+            'label' => Yii::t("menu", "Отмена"),
+            'url'   => '#',
+            'htmlOptions' => array('data-dismiss'=>'modal'),
+        ));
+        ?>
+    </div>
 <?php $this->endWidget(); ?>

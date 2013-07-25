@@ -13,7 +13,7 @@
 ?>
 
 <?php
-    Yii::app()->clientScript->registerScriptFile('/static/js/jquery.json-2.4.min.js');
+    Yii::app()->clientScript->registerScriptFile($this->asset_static.'/js/jquery.json-2.4.min.js');
 
     echo '<h2>'.($model->primaryKey ? 'Редактирование ' : 'Создание ').'банковского счета</h2>';
 

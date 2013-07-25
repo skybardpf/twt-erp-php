@@ -29,7 +29,14 @@ class Controller extends CController
 
 	protected function beforeAction($action)
 	{
-		if (!$this->asset_static) $this->asset_static = CHtml::asset(Yii::app()->basePath.'/../static/');
+		if (!$this->asset_static) {
+            $this->asset_static = Yii::app()->assetManager->publish(
+                Yii::getPathOfAlias('application.assets'),
+                false,
+                -1,
+                YII_DEBUG
+            );
+        }
 		return parent::beforeAction($action);
 	}
 }
