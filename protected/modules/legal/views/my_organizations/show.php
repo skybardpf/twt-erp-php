@@ -46,8 +46,8 @@
             ),
             array(
                 'label' => 'Договоры',
-                'url'   => $this->createUrl('contracts/list', array('org_id' => $organization->primaryKey)),
-                'active'=> ($cur_tab == 'contracts')
+                'url'   => $this->createUrl('contract/list', array('org_id' => $organization->primaryKey)),
+                'active'=> ($cur_tab == 'contract')
             ),
         ),
     ));
