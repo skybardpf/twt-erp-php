@@ -195,9 +195,9 @@ class Contract extends SOAPModel
             array('responsible', 'in', 'range' => array_keys(Individuals::getValues())),
 
             array('dogovor_summ', 'required'),
-            array('dogovor_summ', 'numerical', 'integerOnly' => true, 'min' => 0),
-            array('everymonth_summ', 'numerical', 'integerOnly' => true, 'min' => 0),
-            array('date_infomation', 'numerical', 'integerOnly' => true, 'min' => 0),
+            array('dogovor_summ', 'numerical', 'integerOnly' => true, 'min' => 0, 'max'=>'9999999999999'),
+            array('everymonth_summ', 'numerical', 'integerOnly' => true, 'min' => 0, 'max'=>'9999999999999'),
+            array('date_infomation', 'numerical', 'integerOnly' => true, 'min' => 0, 'max'=>'9999999999999'),
 
             array('json_signatory_contractor, json_signatory', 'validJson'),
 
