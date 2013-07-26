@@ -19,8 +19,14 @@ class ContactPersonForContractors extends SOAPModel {
      * @return ContactPersonForContractors[]
      */
     public function findAll() {
-        $request = array('filters' => array(), 'sort' => array($this->order));
-        $ret = $this->SOAP->listContactPersonForContractors($request);
+        $filters = SoapComponent::getStructureElement($this->where);
+        if (!$filters) {
+            $filters = array(array());
+        }
+        $request = array('filters' => $filters, 'sort' => array($this->order));
+        $ret = $this->SOAP->listContactPersonsForContractors($request);
+
+//        var_dump($ret);die;
         $ret = SoapComponent::parseReturn($ret);
         return $this->publish_list($ret, __CLASS__);
     }

@@ -132,7 +132,7 @@
     $contractor = (isset($contractors[$model->le_id]) ? $contractors[$model->le_id] : '---');
 ?>
     <div class="control-group">
-        <?= CHtml::label('Роль '.CHtml::encode($organization->name).': <span class="required">*</span>', get_class($model).'[role_ur_face]', array('class' => 'control-label')); ?>
+        <?= CHtml::label('Роль '.CHtml::encode($organization->name).' <span class="required">*</span>', get_class($model).'[role_ur_face]', array('class' => 'control-label')); ?>
         <div class="controls">
         <?php
             echo CHtml::activeDropDownList($model, 'role_ur_face', Contract::getRoles());
@@ -265,18 +265,20 @@
     echo $form->hiddenField($model, 'json_signatory_contractor');
 ?>
     <div class="control-group">
-        <?= CHtml::label('Подписанты '.CHtml::encode($organization->name), get_class($model).'[signatory]', array('class' => 'control-label')); ?>
+        <?= CHtml::label('Подписанты '.CHtml::encode($organization->name).' <span class="required">*</span>', get_class($model).'[signatory]', array('class' => 'control-label')); ?>
         <div class="controls">
         <?php
             echo $div_signatory;
+            echo $form->error($model, 'signatory');
         ?>
         </div>
     </div>
     <div class="control-group">
-        <?= CHtml::label('Подписанты '.CHtml::encode($contractor), get_class($model).'[signatory_contr]', array('class' => 'control-label')); ?>
+        <?= CHtml::label('Подписанты '.CHtml::encode($contractor).' <span class="required">*</span>', get_class($model).'[signatory_contr]', array('class' => 'control-label')); ?>
         <div class="controls">
         <?php
             echo $div_signatory_contractor;
+            echo $form->error($model, 'signatory_contr');
         ?>
         </div>
     </div>

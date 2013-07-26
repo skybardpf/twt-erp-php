@@ -37,6 +37,9 @@ class UpdateAction extends CAction
         if (isset($_POST[get_class($model)])) {
             $model->setAttributes($_POST[get_class($model)]);
 
+            $model->signatory = CJSON::decode($model->json_signatory);
+            $model->signatory_contr = CJSON::decode($model->json_signatory_contractor);
+
             if ($model->validate()) {
                 try {
                     $model->save();

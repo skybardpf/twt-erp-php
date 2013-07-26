@@ -36,10 +36,16 @@ class ContractController extends Controller{
      */
     public function loadOrganization($org_id)
     {
-        $org = Organizations::model()->findByPk($org_id);
-        if ($org === null) {
-            throw new CHttpException(404, 'Не найдено юридическое лицо.');
+        $cache_id = get_class(Organizations::model()).'_'.$org_id;
+        $org = Yii::app()->cache->get($cache_id);
+        if ($org === false){
+            $org = Organizations::model()->findByPk($org_id);
+            if ($org === null) {
+                throw new CHttpException(404, 'Не найдено юридическое лицо.');
+            }
+            Yii::app()->cache->set($cache_id, $org, 0);
         }
+
         return $org;
     }
 
@@ -50,9 +56,14 @@ class ContractController extends Controller{
      */
     public function loadModel($id)
     {
-        $model = Contract::model()->findByPk($id);
-        if ($model === null) {
-            throw new CHttpException(404, 'Не найден договор.');
+        $cache_id = get_class(Contract::model()).'_'.$id;
+        $model = Yii::app()->cache->get($cache_id);
+        if ($model === false){
+            $model = Contract::model()->findByPk($id);
+            if ($model === null) {
+                throw new CHttpException(404, 'Не найден договор.');
+            }
+            Yii::app()->cache->set($cache_id, $model, 0);
         }
         return $model;
     }
@@ -76,9 +87,16 @@ class ContractController extends Controller{
      */
     public function getDataProvider(Organizations $org)
     {
-        return Contract::model()
-            ->where('id_yur', $org->primaryKey)
-            ->where('deleted', false)
-            ->findAll();
+        $cache_id = get_class(Contract::model()).'_list_org_id_'.$org->primaryKey;
+        $data = Yii::app()->cache->get($cache_id);
+        if ($data === false){
+            $data = Contract::model()
+                ->where('id_yur', $org->primaryKey)
+                ->where('deleted', false)
+                ->findAll();
+
+            Yii::app()->cache->set($cache_id, $data);
+        }
+        return $data;
     }
 }

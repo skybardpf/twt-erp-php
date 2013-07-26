@@ -143,30 +143,24 @@ class Individuals extends SOAPModel {
 	}
 
 	/**
-	 * Список доступных значений Физ.лиц
+	 * Список доступных значений Физ.лиц. [key => value]
 	 * @return array
 	 */
 	public static function getValues() {
-		$cacher = new CFileCache();
-		$cache = $cacher->get(__CLASS__.'_values');
-		if ($cache === false) {
-			if (!self::$values) {
-				$elements = self::model()->findAll();
-				$return   = array();
-				if ($elements) {
-                    foreach ($elements as $elem) {
-					    $return[$elem->getprimaryKey()] = $elem->family.' '.$elem->name.' '.$elem->parent_name;
-				    }
-                    ksort($return);
+        $cache_id = __CLASS__.'_list';
+        $data = Yii::app()->cache->get($cache_id);
+        if ($data === false) {
+            $elements = self::model()->findAll();
+            $data = array();
+            if ($elements) {
+                foreach ($elements as $elem) {
+                    $data[$elem->getprimaryKey()] = $elem->name;
                 }
-				self::$values = $return;
-
-			}
-			$cacher->add(__CLASS__.'_values', self::$values, 3000);
-		} elseif (!self::$values) {
-			self::$values = $cache;
-		}
-		return self::$values;
+                ksort($data);
+            }
+            Yii::app()->cache->set($cache_id, $data);
+        }
+        return $data;
 	}
 
     /**
@@ -174,30 +168,24 @@ class Individuals extends SOAPModel {
      * @return array
      */
     public static function getFullValues() {
-        $cacher = new CFileCache();
-        $cache = $cacher->get(__CLASS__.'_full_values');
-        if ($cache === false) {
-            if (!self::$values) {
-                $elements = self::model()->findAll();
-                $return   = array();
-                if ($elements) {
-                    foreach ($elements as $elem) {
-                        $return[$elem->family.'_'.$elem->primaryKey] = $elem;
-                    }
-                    ksort($return);
-                    $elements   = array();
-                    foreach ($return as $elem) {
-                        $elements[] = $elem;
-                    }
+        $cache_id = __CLASS__.'_full_list';
+        $data = Yii::app()->cache->get($cache_id);
+        if ($data === false) {
+            $elements = self::model()->findAll();
+            $data = array();
+            if ($elements) {
+                $tmp = array();
+                foreach ($elements as $elem) {
+                    $tmp[$elem->family.'_'.$elem->primaryKey] = $elem->name;
                 }
-                self::$values = $elements;
-
+                ksort($tmp);
+                foreach ($tmp as $elem) {
+                    $data[] = $elem;
+                }
             }
-            $cacher->add(__CLASS__.'_full_values', self::$values, 3000);
-        } elseif (!self::$values) {
-            self::$values = $cache;
+            Yii::app()->cache->set($cache_id, $data);
         }
-        return self::$values;
+        return $data;
     }
 
 	public function rules() {

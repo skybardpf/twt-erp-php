@@ -8,14 +8,9 @@
  * @property string $name
  */
 class Currencies extends SOAPModel {
-
-	static public $values = array();
-
 	/**
 	 * @static
-	 *
 	 * @param string $className
-	 *
 	 * @return Currencies
 	 */
 	public static function model($className = __CLASS__) {
@@ -55,26 +50,22 @@ class Currencies extends SOAPModel {
 	}
 
 	/**
-	 * Список доступных значений Валют
+	 * Список доступных значений Валют. Формат [key=>value]
 	 * @return array
 	 */
 	static function getValues() {
-		$cacher = new CFileCache();
-		$cache = $cacher->get('Currencies_values');
-		if ($cache === false) {
-			if (!self::$values) {
-				$elements = self::model()->findAll();
-				$return   = array();
-				if ($elements) { foreach ($elements as $elem) {
-					$return[$elem->getprimaryKey()] = $elem->name;
-				} }
-				self::$values = $return;
-
-			}
-			$cacher->add('Currencies_values', self::$values, 3000);
-		} elseif (!self::$values) {
-			self::$values = $cache;
+        $cache_id = __CLASS__.'_list';
+		$data = Yii::app()->cache->get($cache_id);
+		if ($data === false) {
+            $elements = self::model()->findAll();
+            $data = array();
+            if ($elements) {
+                foreach ($elements as $elem) {
+                    $data[$elem->getprimaryKey()] = $elem->name;
+                }
+            }
+            Yii::app()->cache->set($cache_id, $data);
 		}
-		return self::$values;
+		return $data;
 	}
 }

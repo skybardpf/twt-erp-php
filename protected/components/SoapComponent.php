@@ -68,7 +68,7 @@
  * @method mixed listCountries
  *
  * Контактные лица для контрагентов {@see ContactPersonForContractors}
- * @method mixed listContactPersonForContractors
+ * @method mixed listContactPersonsForContractors(array $data)
  *
  * Коды ОКОПФ {@see CodesOKOPF}
  * @method mixed listOKOPF

@@ -39,7 +39,9 @@ class Contract extends SOAPModel
     public function findAll()
     {
         $filters = SoapComponent::getStructureElement($this->where);
-        if (!$filters) $filters = array(array());
+        if (!$filters) {
+            $filters = array(array());
+        }
         $request = array('filters' => $filters, 'sort' => array($this->order));
         $ret = $this->SOAP->listContracts($request);
         $ret = SoapComponent::parseReturn($ret);
@@ -91,6 +93,8 @@ class Contract extends SOAPModel
         unset($data['scan']);
         unset($data['orig_doc']);
 
+        $data['invalid'] = $data['invalid'] == 1 ? true : false;
+
 //        var_dump($data);die;
 
         $ret = $this->SOAP->saveContract(array(
@@ -127,7 +131,7 @@ class Contract extends SOAPModel
 
             'role_ur_face'      => 'Роль юр. лица',
             'signatory'         => 'Подписант',
-            'signatory_contr'   => 'Подписант Контрагента', // Справочник Физ. Лица
+            'signatory_contr'   => 'Подписант контрагента', // Справочник Физ. Лица
 
             'orig_doc'          => 'Оригинальный документ',
             'scan'              => 'Сканы',
@@ -183,6 +187,12 @@ class Contract extends SOAPModel
 
             array('role_ur_face', 'required'),
             array('role_ur_face', 'in', 'range' => array_keys(self::getRoles())),
+
+            array('signatory_contr', 'required'),
+            array('signatory_contr', 'validSignatory'),
+
+            array('signatory', 'required'),
+            array('signatory', 'validSignatory'),
 
             array('place_contract, place_court, comment', 'safe')
         );
@@ -255,6 +265,20 @@ class Contract extends SOAPModel
     {
         if (CJSON::decode($this->$attribute) === null){
             $this->addError($attribute, 'Неправильная JSON строка.');
+        }
+    }
+
+    /**
+     * @param string $attribute
+     */
+    public function validSignatory($attribute)
+    {
+        if (!is_array($this->$attribute)){
+            $this->addError($attribute, 'Передан неправильный формат данных.');
+        } elseif (empty($this->$attribute)){
+            $this->addError($attribute, 'Должен быть выбран хотя бы один подписант.');
+        } elseif (count($this->$attribute) > 2){
+            $this->addError($attribute, 'Выберите не более 2-х подписантов.');
         }
     }
 }
