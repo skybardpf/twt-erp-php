@@ -22,6 +22,9 @@
  */
 class Contract extends SOAPModel
 {
+    const ROLE_BUYER = 'Продавец';
+    const ROLE_CONTRACTOR = 'Поставщик';
+
     /**
      * @static
      * @param string $className
@@ -94,13 +97,26 @@ class Contract extends SOAPModel
         unset($data['orig_doc']);
 
         $data['invalid'] = $data['invalid'] == 1 ? true : false;
-
+        $data['signatory_contr'] = '0000000001';
+        $data['signatory'] = '0000000001';
+        if ($data['role_ur_face'] == self::ROLE_CONTRACTOR){
+            $data['role_ur_face'] = 'Контрагент';
+        } else {
+            $data['role_ur_face'] = 'Организация';
+        }
 //        var_dump($data);die;
 
         $ret = $this->SOAP->saveContract(array(
             'data' => SoapComponent::getStructureElement($data)
         ));
-        return SoapComponent::parseReturn($ret, false);
+        $ret = SoapComponent::parseReturn($ret, false);
+        if (!ctype_digit($ret)){
+            throw new CHttpException(500, 'Ошибка при сохранении договора.');
+        }
+        if ($this->primaryKey){
+            Yii::app()->cache->delete(__CLASS__.'_'.$this->primaryKey);
+        }
+        return $ret;
     }
 
     /**
@@ -188,10 +204,7 @@ class Contract extends SOAPModel
             array('role_ur_face', 'required'),
             array('role_ur_face', 'in', 'range' => array_keys(self::getRoles())),
 
-            array('signatory_contr', 'required'),
             array('signatory_contr', 'validSignatory'),
-
-            array('signatory', 'required'),
             array('signatory', 'validSignatory'),
 
             array('place_contract, place_court, comment', 'safe')
@@ -253,8 +266,8 @@ class Contract extends SOAPModel
     public static function getRoles()
     {
         return array(
-            'Поставщик' => 'Поставщик',
-            'Покупатель' => 'Покупатель',
+            self::ROLE_CONTRACTOR => self::ROLE_CONTRACTOR,
+            self::ROLE_BUYER => self::ROLE_BUYER,
         );
     }
 

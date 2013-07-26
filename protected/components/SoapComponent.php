@@ -261,15 +261,20 @@ class SoapComponent extends CApplicationComponent
 	 * @return bool
 	 */
 	protected function soap_method_exists($name) {
-		if (method_exists($this->soap_client, $name)) return true;
-		else {
-			$methods = $this->soap_client->__getFunctions();
-			if ($methods) {
-				foreach ($methods as $m) {
-					if (strpos($m, $name) !== false) return true;
-				}
-			}
-		}
+        // init soap if needed
+        if (!is_resource($this->soap_client->sdl)){
+            $this->delay_init();
+        }
+
+		if (method_exists($this->soap_client, $name)) {
+            return true;
+        }
+        $methods = $this->soap_client->__getFunctions();
+        if ($methods) {
+            foreach ($methods as $m) {
+                if (strpos($m, $name) !== false) return true;
+            }
+        }
 		return false;
 	}
 

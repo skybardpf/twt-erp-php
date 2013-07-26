@@ -28,28 +28,6 @@ class ContractController extends Controller{
     }
 
     /**
-     *  Получаем модель организации.
-     *
-     *  @param string $org_id
-     *  @return Organizations
-     *  @throws CHttpException
-     */
-    public function loadOrganization($org_id)
-    {
-        $cache_id = get_class(Organizations::model()).'_'.$org_id;
-        $org = Yii::app()->cache->get($cache_id);
-        if ($org === false){
-            $org = Organizations::model()->findByPk($org_id);
-            if ($org === null) {
-                throw new CHttpException(404, 'Не найдено юридическое лицо.');
-            }
-            Yii::app()->cache->set($cache_id, $org, 0);
-        }
-
-        return $org;
-    }
-
-    /**
      * @param string $id Идентификатор договора.
      * @return Contract
      * @throws CHttpException
