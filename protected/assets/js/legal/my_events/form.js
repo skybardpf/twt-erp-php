@@ -15,38 +15,65 @@ $(document).ready(function(){
         div_countries.removeClass('hide');
     });
 
-    $('#for_yur .block .view_contractor').click(function(){
-        var div_block = $(this).parent('.block');
-        window.open('/legal/contractor/view/id/'+div_block.data('id'));
-        return false;
+    /**
+     * Добавить организацию
+     */
+    $('.add-organization').on('click', function(){
+        Loading.show();
+        $.ajax({
+            type: 'POST',
+            dataType: "html",
+            url: "/legal/my_events/_html_form_select_organization/",
+            cache: false,
+            data: {
+                ids: $('#Event_json_organizations').val()
+            }
+        }).done(function(data) {
+            $("#dataModalYur .modal-body").html(data);
+            $('#dataModalYur').modal().css({
+                width: 'auto',
+                'margin-left': function () {
+                    return -($(this).width() / 2);
+                }
+            });
+        }).fail(function(a, ret, message) {
+
+        }).always(function(){
+            Loading.hide();
+            $(button).button('reset');
+        });
+        return true;
     });
 
-    $('#for_yur .block .view_organization').click(function(){
-        var div_block = $(this).parent('.block');
-        window.open('/legal/my_organizations/view/id/'+div_block.data('id'));
-        return false;
+    $('.add-country').on('click', function(){
+        console.log($(this));
     });
 
-    $('#for_countries .block .view_country').click(function(){
-        var div_block = $(this).parent('.block');
-        window.open('/legal/country/view/id/'+div_block.data('id'));
-        return false;
-    });
+    $('.del-organization').on('click', delete_organization);
 
-    $('#for_yur .block .icon-remove').click(delete_organization);
-    $('#for_countries .block .icon-remove').click(delete_country);
+    $('.del-country').on('click', delete_country);
 
     /**
-     *  Добавляем юр. лицо
+     *  Сохраняем выбранную организацию
      */
     $('#dataModalYur .button_save').on('click', function(){
         var sel = $('#select_organizations option:selected');
         var pid = sel.val();
         var name = sel.html();
         if (pid == ''){
-            alert('Выберите юр. лицо');
+            alert('Выберите организацию из списка');
             return false;
-        } else {
+        }
+        $.ajax({
+            type: 'POST',
+            dataType: "html",
+            url: "/legal/contract/_html_row_organization/",
+            cache: false,
+            data: {
+                id: pid,
+                name: name
+            }
+        }).done(function(data) {
             var el = $('#Event_json_organizations');
             var org = eval(el.val());
 
@@ -56,18 +83,17 @@ $(document).ready(function(){
 
             }
             el.val($.toJSON(org));
+            var table = $('#grid-organizations');
 
-            var div_person = $(
-                '<div class="block" data-type-org="organization" data-id="'+pid+'"' +
-                    '<div class="view_organization">' +
-                    '<a href="/legal/my_organizations/view/id/'+pid+'">'+name+'</a>&nbsp;&nbsp;&nbsp;' +
-                    '<a class="icon-remove" href="#"></a></div>' +
-                '</div>'
-            );
-            $('#for_yur_list').append(div_person);
-            div_person.find('.icon-remove').on('click', delete_organization);
-//            $('#managing_person_message').addClass('hide');
-        }
+            var number = ((table.find('tr').size())%2 === 0) ? 'even' : 'odd';
+            var html = '<tr class="'+number+'">'+data+'</tr>';
+
+            table.find('tbody').append(html);
+            $('.del-organization').off('click').on('click', del_organization);
+
+        }).fail(function(a, ret, message) {
+
+        });
     });
 
     /**
@@ -174,11 +200,11 @@ $(document).ready(function(){
     });
 
     /**
-     *  Удаляем управляющего счетом.
+     *  Удаляем организацию из списка
      *  @returns {boolean}
      */
     function delete_organization(){
-        var target = $(this);
+        var local = $(this);
         $('<div>'+'Вы уверены, что хотите удалить из списка организацию?'+'</div>').dialog({
             modal: true,
             resizable: false,
@@ -191,9 +217,26 @@ $(document).ready(function(){
                         var dialog = $(this);
                         var button = $(event.target);
 
-                        var div_block = target.parent('.block');
-                        var id = div_block.data('id');
-                        var type = div_block.data('type-org');
+                        var id = local.data('id');
+//                        var json, button_add;
+//                        if (type == 'signatory'){
+//                            json = $('#Contract_json_signatory');
+//                            button_add = $('.add-signatory');
+//                        } else {
+//                            json = $('#Contract_json_signatory_contractor');
+//                            button_add = $('.add-signatory-contractor');
+//                        }
+//                        var persons = eval(json.val());
+//                        var ind = persons.indexOf(id);
+//                        if (ind != -1){
+//                            persons.splice(ind, 1);
+//                            json.val($.toJSON(persons));
+//                            local.parents('tr').remove();
+//                        }
+
+//                        var div_block = target.parent('.block');
+//                        var id = div_block.data('id');
+                        var type = local.data('type');
 
                         var el;
                         if (type == 'organization'){
@@ -214,7 +257,7 @@ $(document).ready(function(){
                         if (ind != -1){
                             persons.splice(ind, 1);
                             el.val($.toJSON(persons));
-                            div_block.remove();
+                            local.parents('tr').remove();
                         }
                         Loading.hide();
                         dialog.dialog('destroy');

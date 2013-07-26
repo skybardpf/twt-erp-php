@@ -115,6 +115,7 @@ class Contract extends SOAPModel
         }
         if ($this->primaryKey){
             Yii::app()->cache->delete(__CLASS__.'_'.$this->primaryKey);
+            Yii::app()->cache->delete(__CLASS__.'_list_org_id_'.$this->id_yur);
         }
         return $ret;
     }
@@ -132,6 +133,7 @@ class Contract extends SOAPModel
             'deleted'           => 'Удален',
             'invalid'           => 'Статус договора',
 
+            'character'         => 'Характер договора',
             'date'              => 'Дата заключения',
             'expire'            => 'Действителен до',
             'date_infomation'   => 'Уведомления об окончании действия договора за',

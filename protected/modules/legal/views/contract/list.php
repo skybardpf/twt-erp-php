@@ -29,7 +29,7 @@
         'template' => "{items} {pager}",
         'columns' => array(
             array(
-                'name' => 'xxx',
+                'name' => 'number',
                 'header' => 'Номер',
             ),
             array(
@@ -39,23 +39,23 @@
                 'value' => 'CHtml::link($data["name"], Yii::app()->getController()->createUrl("contract/view", array("id" => $data["id"])))'
             ),
             array(
-                'name' => 'xxx',
+                'name' => 'character',
                 'header' => 'Характер договора',
             ),
             array(
-                'name' => 'xxx',
+                'name' => 'le_id',
                 'header' => 'Контрагент',
             ),
             array(
-                'name' => 'xxx',
+                'name' => 'date',
                 'header' => 'Дата заключения',
             ),
             array(
-                'name' => 'xxx',
+                'name' => 'expire',
                 'header' => 'Дата окончания',
             ),
             array(
-                'name' => 'xxx',
+                'name' => 'dogovor_summ',
                 'header' => 'Сумма',
             ),
         ),

@@ -1,36 +1,35 @@
 <?php
 /**
- * Only Ajax. Возращает HTML форму с со списком стран.
+ * Only Ajax. Возращает HTML форму с со списком организаций.
  *
  * @author Skibardin A.A. <skybardpf@artektiv.ru>
  */
-class GetCountriesAction extends CAction
+class HtmlFormSelectOrganizationAction extends CAction
 {
     /**
-     * Только Ajax. Рендерим форму со списком стран. Показываются только страны,
+     * Только Ajax. Рендерим форму со списком организаций. Показываются только организации,
      * которые еще не привязанны к данному событию.
      */
-    public function run()
-    {
+    public function run() {
         if (Yii::app()->request->isAjaxRequest) {
             try {
-                $countries = Countries::getValues();
+                $data = Organizations::getValues();
                 if (isset($_POST['ids']) && !empty($_POST['ids'])){
                     $sel = CJSON::decode($_POST['ids']);
                     if ($sel !== null){
                         foreach ($sel as $k){
-                            if (isset($countries[$k])){
-                                unset($countries[$k]);
+                            if (isset($data[$k])){
+                                unset($data[$k]);
                             }
                         }
                     }
                 }
-                $countries = array_merge(array('' => 'Выберите'), $countries);
+                $data = array_merge(array('' => 'Выберите'), $data);
 
                 $this->controller->renderPartial(
-                    '/my_events/_get_form_countries',
+                    '/my_events/get_list_organizations',
                     array(
-                        'data' => $countries,
+                        'data' => $data,
                     ),
                     false
                 );

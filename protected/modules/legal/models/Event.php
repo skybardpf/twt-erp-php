@@ -13,8 +13,8 @@
  * @property bool   $deleted
  *
  * @property string $json_organizations  внутренняя переменая.
- * @property string $json_contractors   внутренняя переменая.
- * @property string $json_countries     внутренняя переменая.
+ * @property string $json_contractors    внутренняя переменая.
+ * @property string $json_countries      внутренняя переменая.
  */
 class Event extends SOAPModel {
     const FOR_ORGANIZATIONS = 1;
@@ -135,7 +135,10 @@ class Event extends SOAPModel {
                     $uf = new UploadFile();
                     $uf->move($id, $ret);
                 }
+                throw new CHttpException(500, 'Ошибка при сохранении события');
             }
+        } else {
+            Yii::app()->cache->delete(__CLASS__.'_'.$this->primaryKey);
         }
 
         return $ret;

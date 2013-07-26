@@ -4,8 +4,9 @@
  *
  * @author Skibardin A.A. <skybardpf@artektiv.ru>
  *
- * @var $this   My_eventsController
- * @var $model  Event
+ * @var My_eventsController | Calendar_eventsController $this
+ * @var Event           $model
+ * @var Organizations   $organization
  */
 ?>
 
@@ -18,16 +19,26 @@
 <?php
     Yii::app()->clientScript->registerScriptFile($this->asset_static.'/js/legal/show_manage_files.js');
 
+    if ($this instanceof Calendar_eventsController){
+        $url_redirect = $this->createUrl('list', array("org_id" => $organization->primaryKey, "id" => $model->primaryKey));
+        $url_delete = $this->createUrl('delete', array("org_id" => $organization->primaryKey, "id" => $model->primaryKey));
+        $url_edit = $this->createUrl('edit', array("org_id" => $organization->primaryKey, "id" => $model->primaryKey));
+    } else {
+        $url_redirect = $this->createUrl('index');
+        $url_delete = $this->createUrl('delete', array('id' => $model->primaryKey));
+        $url_edit = $this->createUrl('edit', array('id' => $model->primaryKey));
+    }
+
     if ($model->made_by_user){
         $this->widget('bootstrap.widgets.TbButton', array(
             'buttonType' => 'link',
             'type'       => 'success',
             'label'      => 'Редактировать',
-            'url'        => $this->createUrl("edit", array('id' => $model->primaryKey))
+            'url'        => $url_edit
         ));
 
-
         if (!$model->deleted) {
+
             echo "&nbsp;";
             Yii::app()->clientScript->registerScriptFile($this->asset_static.'/js/legal/delete_item.js');
 
@@ -38,8 +49,8 @@
                 'htmlOptions'   => array(
                     'data-question'     => 'Вы уверены, что хотите удалить данное событие?',
                     'data-title'        => 'Удаление события',
-                    'data-url'          => $this->createUrl('delete', array('id' => $model->primaryKey)),
-                    'data-redirect_url' => $this->createUrl('index'),
+                    'data-url'          => $url_delete,
+                    'data-redirect_url' => $url_redirect,
                     'data-delete_item_element' => '1'
                 )
             ));

@@ -10,7 +10,7 @@
 ?>
 
 Вы действительно хотите <?= $model->deleted ? '<b>восстановить мероприятие</b>': '<b>удалить мероприятие</b>'?> «<?=CHtml::encode($model->name)?>»?
-
+<br/><br/>
 <?php
     $form = $this->beginWidget('bootstrap.widgets.TbActiveForm', array(
         'id'=>'news-delete-form',
@@ -23,7 +23,7 @@
         'label'=>'Да',
         'htmlOptions' => array('name' => 'result', 'value' => 'yes')
     ));
-
+    echo '&nbsp;';
     $this->widget('bootstrap.widgets.TbButton', array(
         'buttonType'=>'submit',
         'type'=>'success',

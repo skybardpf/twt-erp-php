@@ -8,7 +8,7 @@ class Calendar_eventsController extends Controller{
     public $layout = 'inner';
     public $menu_current = 'legal';
     public $current_tab = 'calendar_events';
-    public $pageTitle = 'TWT Consult | Мои организации | ';
+    public $pageTitle = 'TWT Consult | Мои организации';
 
     /**
      * Распределение экшенов.
@@ -17,45 +17,50 @@ class Calendar_eventsController extends Controller{
     public function actions()
     {
         return array(
-            'list' => 'application.modules.legal.controllers.Calendar_events.ListAction'
+            'list' => 'application.modules.legal.controllers.Calendar_events.ListAction',
+            'view' => 'application.modules.legal.controllers.Calendar_events.ViewAction',
+            'edit' => 'application.modules.legal.controllers.Calendar_events.UpdateAction',
+            'delete' => 'application.modules.legal.controllers.Calendar_events.DeleteAction',
         );
     }
 
     /**
-     * Получаем модель Organizations (Организация)
-     * @param string $org_id
-     * @return Organizations
-     * @throws CHttpException
+     * Получаем список событий указанной организации.
+     * @param Organizations $org
+     * @return Event[]
      */
-    public function loadOrganization($org_id)
+    public function getDataProvider(Organizations $org)
     {
-        $org = Organizations::model()->findByPk($org_id);
-        if ($org === null) {
-            throw new CHttpException(404, 'Не найдено юридическое лицо.');
+        $cache_id = get_class(Event::model()).'_list_org_id_'.$org->primaryKey;
+        $data = Yii::app()->cache->get($cache_id);
+        if ($data === false){
+            $data = Event::model()
+                ->where('id_yur', $org->primaryKey)
+                ->where('deleted', false)
+                ->findAll();
+
+            Yii::app()->cache->set($cache_id, $data);
         }
-        return $org;
+        return $data;
     }
 
     /**
-     * Просмотр мероприятия.
-     *
-     * @param int $id
-     *
+     * @param string $id Идентификатор события.
+     * @return Event
      * @throws CHttpException
      */
-    public function actionView($id)
+    public function loadModel($id)
     {
-        $model = Event::model()->findByPk($id);
-        if (!$model) {
-            throw new CHttpException(404, 'Не найдено событие.');
+        $cache_id = get_class(Event::model()).'_'.$id;
+        $model = Yii::app()->cache->get($cache_id);
+        if ($model === false){
+            $model = Event::model()->findByPk($id);
+            if ($model === null) {
+                throw new CHttpException(404, 'Не найдено событие.');
+            }
+            Yii::app()->cache->set($cache_id, $model, 0);
         }
-
-        $this->render(
-            'show',
-            array(
-                'model' => $model,
-            )
-        );
+        return $model;
     }
 
     /**
@@ -89,131 +94,6 @@ class Calendar_eventsController extends Controller{
                 'model' => $model,
             )
         );
-    }
-
-    /**
-     *  Редактирование события с идентификатором $id.
-     *
-     *  @param  string $id
-     *
-     *  @throws CHttpException
-     */
-    public function actionEdit($id)
-    {
-        $model = Event::model()->findByPk($id);
-        if (!$model) {
-            throw new CHttpException(404, 'Не найдено событие.');
-        }
-        if (!$model->made_by_user){
-            throw new CHttpException(500, 'Нельзя редактировать событие, созданное администратором.');
-        }
-
-        if ($_POST && !empty($_POST['Event'])) {
-            $model->setAttributes($_POST['Event']);
-
-            $model->upload_files  = CUploadedFile::getInstancesByName('upload_files');
-            $model->list_yur = $model->getStructureOrg();
-
-            if ($model->validate()) {
-
-                try {
-                    $model->save();
-                    $this->redirect($this->createUrl('view', array('id' => $model->primaryKey)));
-                } catch (Exception $e) {
-                    $model->addError('id', $e->getMessage());
-                }
-            }
-        } else {
-            $list = array();
-            if (isset($model->list_yur[0]) && is_array($model->list_yur[0])){
-                for ($i = 0, $l=count($model->list_yur[0])/2; $i<$l; $i++){
-                    $type = 'type_yur'.$i;
-                    $id = 'id_yur'.$i;
-                    if ($model->list_yur[0][$type] == 'Организации'){
-                        $list[] = array(
-                            'id_yur' => $model->list_yur[0][$id],
-                            'type_yur' => 'Организации'
-                        );
-                    } elseif($model->list_yur[0][$type] == 'Контрагенты'){
-                        $list[] = array(
-                            'id_yur' => $model->list_yur[0][$id],
-                            'type_yur' => 'Контрагенты'
-                        );
-                    }
-                }
-            }
-            $model->list_yur = $list;
-
-            $organizations = array();
-            $contractors = array();
-            foreach ($model->list_yur as $v){
-                if ($v['type_yur'] == 'Организации'){
-                    $organizations[] = $v['id_yur'];
-                } elseif ($v['type_yur'] == 'Контрагенты'){
-                    $contractors[] = $v['id_yur'];
-                }
-            }
-
-            $model->json_organizations = CJSON::encode($organizations);
-            $model->json_contractors = CJSON::encode($contractors);
-        }
-
-        $this->render(
-            'form',
-            array(
-                'model' => $model,
-            )
-        );
-    }
-
-    /**
-     *  Удаление события с идентификатором $id.
-     *
-     *  @param  string $id
-     *
-     *  @throws CHttpException
-     */
-    public function actionDelete($id)
-    {
-        $model = Event::model()->findByPk($id);
-        if (!$model) {
-            throw new CHttpException(404, 'Не найдено событие.');
-        }
-
-        if (Yii::app()->request->isAjaxRequest) {
-            $ret = array();
-            try {
-                if (!$model->made_by_user){
-                    throw new CException('Нельзя удалить событие, созданное администратором.');
-                }
-                $model->delete();
-            } catch (Exception $e) {
-                $ret['error'] = $e->getMessage();
-            }
-            echo CJSON::encode($ret);
-            Yii::app()->end();
-        } else {
-            if (!$model->made_by_user){
-                throw new CHttpException(500, 'Нельзя удалить событие, созданное администратором.');
-            }
-            if (isset($_POST['result'])) {
-                switch ($_POST['result']) {
-                    case 'yes':
-                        if ($model->delete()) {
-                            $this->redirect($this->createUrl('index'));
-                        } else {
-                            throw new CHttpException(500, 'Не удалось удалить событие.');
-                        }
-                    break;
-                    default:
-                        $this->redirect($this->createUrl('index'));
-                    break;
-                }
-            }
-            $this->render('/my_events/delete', array(
-                'model' => $model
-            ));
-        }
     }
 
     /**

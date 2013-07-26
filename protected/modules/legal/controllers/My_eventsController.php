@@ -16,6 +16,8 @@ class My_eventsController extends Controller{
     {
         return array(
             'get_countries' => 'application.modules.legal.controllers.My_events.GetCountriesAction',
+            '_html_form_select_organization' => 'application.modules.legal.controllers.My_events.HtmlFormSelectOrganizationAction',
+
             'edit' => 'application.modules.legal.controllers.My_events.UpdateAction'
         );
     }
@@ -34,30 +36,6 @@ class My_eventsController extends Controller{
         );
     }
 
-//    /**
-//     *  Выводим календарь событий для юридического лица $org_id.
-//     *
-//     *  @param string $org_id
-//     *
-//     *  @throws CHttpException
-//     */
-//    public function actionList($org_id)
-//    {
-//        $org = Organizations::model()->findByPk($org_id);
-//        if (!$org) {
-//            throw new CHttpException(404, 'Не найдено юридическое лицо.');
-//        }
-//
-//        $this->render('/my_organizations/show', array(
-//            'content' => $this->renderPartial('/my_events/list',
-//                array(
-//                    'organization' => $org
-//                ), true),
-//            'organization' => $org,
-//            'cur_tab' => 'my_events',
-//        ));
-//    }
-
     /**
      * Просмотр мероприятия.
      *
@@ -73,7 +51,7 @@ class My_eventsController extends Controller{
         }
 
         $this->render(
-            'show',
+            'view',
             array(
                 'model' => $model,
             )
@@ -227,35 +205,5 @@ class My_eventsController extends Controller{
     {
         $uf = new UploadFile();
         $uf->download($id);
-    }
-
-    /**
-     * Только Ajax. Рендерим форму со списком организаций. Показываются только организации,
-     * которые еще не привязанны к данному событию.
-     */
-    public function actionGet_list_organizations($selected_ids) {
-        if (Yii::app()->request->isAjaxRequest) {
-            try {
-                $selected_ids = CJSON::decode($selected_ids);
-                $p = Organizations::getValues();
-                foreach ($selected_ids as $pid){
-                    if (isset($p[$pid])){
-                        unset($p[$pid]);
-                    }
-                }
-                $p = array_merge(array('' => 'Выберите'), $p);
-
-                $this->renderPartial(
-                    '/my_events/get_list_organizations',
-                    array(
-                        'data' => $p,
-                    ),
-                    false
-                );
-
-            } catch (CException $e){
-                echo $e->getMessage();
-            }
-        }
     }
 }
