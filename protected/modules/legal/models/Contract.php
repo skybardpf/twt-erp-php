@@ -72,6 +72,7 @@ class Contract extends SOAPModel
     {
         if ($pk = $this->getprimaryKey()) {
             $ret = $this->SOAP->deleteContract(array('id' => $pk));
+            Yii::app()->cache->delete(__CLASS__.'_list_org_id_'.$this->id_yur);
             return $ret->return;
         }
         return false;
@@ -104,7 +105,6 @@ class Contract extends SOAPModel
         } else {
             $data['role_ur_face'] = 'Организация';
         }
-//        var_dump($data);die;
 
         $ret = $this->SOAP->saveContract(array(
             'data' => SoapComponent::getStructureElement($data)
@@ -115,8 +115,8 @@ class Contract extends SOAPModel
         }
         if ($this->primaryKey){
             Yii::app()->cache->delete(__CLASS__.'_'.$this->primaryKey);
-            Yii::app()->cache->delete(__CLASS__.'_list_org_id_'.$this->id_yur);
         }
+        Yii::app()->cache->delete(__CLASS__.'_list_org_id_'.$this->id_yur);
         return $ret;
     }
 

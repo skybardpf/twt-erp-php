@@ -154,7 +154,7 @@ class Individuals extends SOAPModel {
             $data = array();
             if ($elements) {
                 foreach ($elements as $elem) {
-                    $data[$elem->getprimaryKey()] = $elem->name;
+                    $data[$elem->getprimaryKey()] = $elem->name.' '.$elem->family;
                 }
                 ksort($data);
             }
