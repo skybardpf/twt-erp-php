@@ -52,16 +52,9 @@ class Individuals extends SOAPModel {
 	 * @return bool|Individuals
 	 */
 	public function findByPk($id) {
-		$cacher = new CFileCache();
-		$data = $cacher->get(__CLASS__.'_objects_'.$id);
-		if (!$data) {
-			$data = $this->SOAP->getIndividual(array('id' => $id));
-			$data = SoapComponent::parseReturn($data);
-			$data = current($data);
-			$cacher->set(__CLASS__.'_objects_'.$id, $data, self::CACHE_TTL);
-		} else {
-			if (YII_DEBUG) Yii::log('model '.__CLASS__.' id:'.$id.' from cache', CLogger::LEVEL_INFO, 'soap');
-		}
+        $data = $this->SOAP->getIndividual(array('id' => $id));
+        $data = SoapComponent::parseReturn($data);
+        $data = current($data);
 		return $this->publish_elem($data, __CLASS__);
 	}
 
@@ -70,18 +63,20 @@ class Individuals extends SOAPModel {
      * @return array
      */
     public function save() {
-        $cacher = new CFileCache();
-        $cacher->set(__CLASS__.'_values', false, 1);
+        $attr = $this->getAttributes();
+        if (!$this->primaryKey) {
+            unset($attr['id']);
+        }
+        unset($attr['deleted']);
 
-        $attrs = $this->getAttributes();
-
-        if (!$this->primaryKey) unset($attrs['id']);
-        else $cacher->set(__CLASS__.'_objects_'.$this->primaryKey, false, 1);
-
-        unset($attrs['deleted']);
-
-        $ret = $this->SOAP->saveIndividual(array('data' => SoapComponent::getStructureElement($attrs, array('convert_boolean' => true))));
+        $ret = $this->SOAP->saveIndividual(array(
+            'data' => SoapComponent::getStructureElement($attr, array('convert_boolean' => true))
+        ));
         $ret = SoapComponent::parseReturn($ret, false);
+        if ($this->primaryKey){
+            Yii::app()->cache->delete(__CLASS__.'_'.$this->primaryKey);
+        }
+        Yii::app()->cache->delete(__CLASS__.'_full_list');
         return $ret;
     }
 
@@ -91,16 +86,15 @@ class Individuals extends SOAPModel {
 	 * @return array|bool
 	 */
 	public function delete() {
-		$cacher = new CFileCache();
-		$cacher->set(__CLASS__.'_values', false, 1);
-		$cacher->set(__CLASS__.'_objects_'.$this->primaryKey, false, 1);
-
 		if ($id = $this->getprimaryKey()) {
 			$ret = $this->SOAP->deleteIndividual(array('id' => $id));
+
+            Yii::app()->cache->delete(__CLASS__.'_'.$this->primaryKey);
+            Yii::app()->cache->delete(__CLASS__.'_full_list');
+
 			return SoapComponent::parseReturn($ret, false);
-		} else {
-			return false;
 		}
+        return false;
 	}
     
 	/**
@@ -164,19 +158,21 @@ class Individuals extends SOAPModel {
 	}
 
     /**
-     * Список доступных значений Физ.лиц
+     * Список доступных значений Физ.лиц. Формат [family + key] = element
      * @return array
      */
     public static function getFullValues() {
         $cache_id = __CLASS__.'_full_list';
         $data = Yii::app()->cache->get($cache_id);
         if ($data === false) {
-            $elements = self::model()->findAll();
+            $elements = self::model()
+                ->where('deleted', false)
+                ->findAll();
             $data = array();
             if ($elements) {
                 $tmp = array();
                 foreach ($elements as $elem) {
-                    $tmp[$elem->family.'_'.$elem->primaryKey] = $elem->name;
+                    $tmp[$elem->family.'_'.$elem->primaryKey] = $elem;
                 }
                 ksort($tmp);
                 foreach ($tmp as $elem) {

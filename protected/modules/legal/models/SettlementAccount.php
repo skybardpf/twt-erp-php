@@ -124,6 +124,8 @@ class SettlementAccount extends SOAPModel {
 		if ($pk = $this->getprimaryKey()) {
 			$ret = $this->SOAP->deleteSettlementAccount(array('id' => $pk));
             Yii::app()->cache->delete(__CLASS__.'_'.$this->primaryKey);
+            Yii::app()->cache->delete(__CLASS__.'_list_org_id_'.$this->id_yur);
+            Yii::app()->cache->delete(__CLASS__.'_list');
 			return $ret->return;
 		}
 		return false;
