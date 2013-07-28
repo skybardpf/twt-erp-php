@@ -16,7 +16,8 @@ class My_eventsController extends Controller{
     {
         return array(
             'get_countries' => 'application.modules.legal.controllers.My_events.GetCountriesAction',
-            '_html_form_select_organization' => 'application.modules.legal.controllers.My_events.HtmlFormSelectOrganizationAction',
+            '_html_form_select_element' => 'application.modules.legal.controllers.My_events.HtmlFormSelectElementAction',
+            '_html_row_element' => 'application.modules.legal.controllers.My_events.HtmlRowElementAction',
 
             'edit' => 'application.modules.legal.controllers.My_events.UpdateAction'
         );

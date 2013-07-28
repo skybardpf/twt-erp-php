@@ -89,7 +89,9 @@ class UpdateAction extends CAction
                 array(
                     'organization' => $org,
                     'model' => $model
-                ), true),
+                ),
+                true
+            ),
             'organization' => $org,
             'cur_tab' => $controller->current_tab,
         ));

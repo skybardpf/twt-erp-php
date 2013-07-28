@@ -13,10 +13,15 @@
 <script>
     window.controller_name = '<?= $this->getId(); ?>';
 </script>
+
 <?php
+//    Yii::app()->clientScript->registerScriptFile($this->asset_static.'/js/jquery.json-2.4.min.js');
+//    Yii::app()->clientScript->registerScriptFile('http://code.jquery.com/jquery-2.0.3.min.js');
+    Yii::app()->clientScript->registerScriptFile($this->asset_static.'/js/legal/my_events/form.js?_t='.time());
+//    Yii::app()->clientScript->registerScriptFile($this->asset_static.'/js/legal/form_manage_files.js');
+
+//    Yii::app()->clientScript->registerScriptFile($this->asset_static.'/js/json/json2.js');
     Yii::app()->clientScript->registerScriptFile($this->asset_static.'/js/jquery.json-2.4.min.js');
-    Yii::app()->clientScript->registerScriptFile($this->asset_static.'/js/legal/my_events/form.js');
-    Yii::app()->clientScript->registerScriptFile($this->asset_static.'/js/legal/form_manage_files.js');
 
     if ($this instanceof Calendar_eventsController){
         $url_list = $this->createUrl('list', array("org_id" => $organization->primaryKey, "id" => $model->primaryKey));
@@ -120,7 +125,7 @@
                             'type' => 'primary',
                             'label' => 'Удалить',
                             'htmlOptions' => array(
-                                'class' => 'del-organization',
+                                'class' => 'del-element',
                                 'data-id' => $v['id_yur'],
                                 'data-type' => 'organization'
                             )
@@ -137,7 +142,7 @@
                             'type' => 'primary',
                             'label' => 'Удалить',
                             'htmlOptions' => array(
-                                'class' => 'del-organization',
+                                'class' => 'del-element',
                                 'data-id' => $v['id_yur'],
                                 'data-type' => 'contractor'
                             )
@@ -177,6 +182,7 @@
         'label' => 'Добавить организацию',
         'htmlOptions' => array(
             'class' => 'add-organization',
+            'data-type' => 'organization'
         )
     ), true);
 
@@ -197,8 +203,9 @@
                         'type' => 'primary',
                         'label' => 'Удалить',
                         'htmlOptions' => array(
-                            'class' => 'del-country',
+                            'class' => 'del-element',
                             'data-id' => $v,
+                            'data-type' => 'country'
                         )
                     ), true)
                 );
@@ -235,6 +242,7 @@
         'label' => 'Добавить страну',
         'htmlOptions' => array(
             'class' => 'add-country',
+            'data-type' => 'country'
         )
     ), true);
 
@@ -327,24 +335,24 @@
 
 <?php
     // Модальное окошко для выбора физ. лица
-    $this->beginWidget('bootstrap.widgets.TbModal', array('id'=>'dataModalYur'));
+    $this->beginWidget('bootstrap.widgets.TbModal', array('id'=>'dataModal'));
 ?>
     <div class="modal-header">
         <a class="close" data-dismiss="modal">×</a>
-        <h4><?=Yii::t("menu", "Выберите юр. лицо")?></h4>
+        <h4><?=Yii::t("menu", "Выберите из списка")?></h4>
     </div>
     <div class="modal-body"></div>
     <div class="modal-footer">
         <?php
         $this->widget('bootstrap.widgets.TbButton', array(
             'label' => Yii::t("menu", "Сохранить"),
-            'url'   => '#',
+            'url' => '#',
             'htmlOptions' => array('class'=>'button_save', 'data-dismiss'=>'modal'),
         ));
 
         $this->widget('bootstrap.widgets.TbButton', array(
             'label' => Yii::t("menu", "Отмена"),
-            'url'   => '#',
+            'url' => '#',
             'htmlOptions' => array('data-dismiss'=>'modal'),
         ));
         ?>
@@ -353,26 +361,26 @@
 
 <?php
     // Модальное окошко для выбора страны
-    $this->beginWidget('bootstrap.widgets.TbModal', array('id'=>'dataModalCountries'));
+//    $this->beginWidget('bootstrap.widgets.TbModal', array('id'=>'dataModalCountries'));
 ?>
-    <div class="modal-header">
-        <a class="close" data-dismiss="modal">×</a>
-        <h4><?=Yii::t("menu", "Выберите страну")?></h4>
-    </div>
-    <div class="modal-body"></div>
-    <div class="modal-footer">
-        <?php
-        $this->widget('bootstrap.widgets.TbButton', array(
-            'label' => Yii::t("menu", "Сохранить"),
-            'url'   => '#',
-            'htmlOptions' => array('class'=>'button_save', 'data-dismiss'=>'modal'),
-        ));
-
-        $this->widget('bootstrap.widgets.TbButton', array(
-            'label' => Yii::t("menu", "Отмена"),
-            'url'   => '#',
-            'htmlOptions' => array('data-dismiss'=>'modal'),
-        ));
-        ?>
-    </div>
-<?php $this->endWidget(); ?>
+<!--    <div class="modal-header">-->
+<!--        <a class="close" data-dismiss="modal">×</a>-->
+<!--        <h4>--><?//=Yii::t("menu", "Выберите страну")?><!--</h4>-->
+<!--    </div>-->
+<!--    <div class="modal-body"></div>-->
+<!--    <div class="modal-footer">-->
+<!--        --><?php
+//        $this->widget('bootstrap.widgets.TbButton', array(
+//            'label' => Yii::t("menu", "Сохранить"),
+//            'url'   => '#',
+//            'htmlOptions' => array('class'=>'button_save', 'data-dismiss'=>'modal'),
+//        ));
+//
+//        $this->widget('bootstrap.widgets.TbButton', array(
+//            'label' => Yii::t("menu", "Отмена"),
+//            'url'   => '#',
+//            'htmlOptions' => array('data-dismiss'=>'modal'),
+//        ));
+//        ?>
+<!--    </div>-->
+<?php //$this->endWidget(); ?>
