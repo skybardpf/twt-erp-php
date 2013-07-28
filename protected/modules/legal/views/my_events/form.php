@@ -15,12 +15,8 @@
 </script>
 
 <?php
-//    Yii::app()->clientScript->registerScriptFile($this->asset_static.'/js/jquery.json-2.4.min.js');
-//    Yii::app()->clientScript->registerScriptFile('http://code.jquery.com/jquery-2.0.3.min.js');
-    Yii::app()->clientScript->registerScriptFile($this->asset_static.'/js/legal/my_events/form.js?_t='.time());
-//    Yii::app()->clientScript->registerScriptFile($this->asset_static.'/js/legal/form_manage_files.js');
-
-//    Yii::app()->clientScript->registerScriptFile($this->asset_static.'/js/json/json2.js');
+    Yii::app()->clientScript->registerScriptFile($this->asset_static.'/js/legal/form_manage_files.js');
+    Yii::app()->clientScript->registerScriptFile($this->asset_static.'/js/legal/my_events/form.js');
     Yii::app()->clientScript->registerScriptFile($this->asset_static.'/js/jquery.json-2.4.min.js');
 
     if ($this instanceof Calendar_eventsController){

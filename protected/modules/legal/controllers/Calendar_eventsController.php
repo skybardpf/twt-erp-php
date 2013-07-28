@@ -21,6 +21,14 @@ class Calendar_eventsController extends Controller{
             'view' => 'application.modules.legal.controllers.Calendar_events.ViewAction',
             'edit' => 'application.modules.legal.controllers.Calendar_events.UpdateAction',
             'delete' => 'application.modules.legal.controllers.Calendar_events.DeleteAction',
+
+            /**
+             * Редирект на My_eventsController
+             */
+            'delete_file' => 'application.modules.legal.controllers.My_events.Delete_fileAction',
+            'download_archive' => 'application.modules.legal.controllers.My_events.Download_archiveAction',
+            'download_file' => 'application.modules.legal.controllers.My_events.Download_fileAction',
+
         );
     }
 
@@ -61,134 +69,5 @@ class Calendar_eventsController extends Controller{
             Yii::app()->cache->set($cache_id, $model, 0);
         }
         return $model;
-    }
-
-    /**
-     *  Добавление нового события.
-     *
-     *  @throws CHttpException
-     */
-    public function actionAdd()
-    {
-        $model = new Event();
-
-        if ($_POST && !empty($_POST['Event'])) {
-            $model->setAttributes($_POST['Event']);
-
-            $model->upload_files = CUploadedFile::getInstancesByName('upload_files');
-            $model->list_yur = $model->getStructureOrg();
-
-            if ($model->validate()) {
-                try {
-                    $model->save();
-                    $this->redirect($this->createUrl('index'));
-                } catch (Exception $e) {
-                    $model->addError('id', $e->getMessage());
-                }
-            }
-        }
-
-        $this->render(
-            'form',
-            array(
-                'model' => $model,
-            )
-        );
-    }
-
-    /**
-     *  Удалить файл по его $id.
-     *
-     *  @param  int $id
-     *
-     *  @throws CHttpException
-     */
-    public function actionDelete_file($id)
-    {
-        try {
-            $uf = new UploadFile();
-            $uf->delete_file($id);
-
-            if (Yii::app()->request->isAjaxRequest) {
-                echo CJSON::encode(
-                    array(
-                        'success' => true,
-                    )
-                );
-                Yii::app()->end();
-            } else {
-                echo 'Файл успешно удален.';
-            }
-
-        } catch(UploadFileException $e) {
-            if (Yii::app()->request->isAjaxRequest) {
-                echo CJSON::encode(
-                    array(
-                        'success' => false,
-                        'message' => $e->getMessage()
-                    )
-                );
-                Yii::app()->end();
-            } else {
-                throw new CHttpException(500, $e->getMessage());
-            }
-        }
-    }
-
-    /**
-     *  Скачать архив с файлами для определенного файла.
-     *
-     *  @param  string $id
-     *  @param  string $type
-     *
-     *  @throws CHttpException
-     */
-    public function actionDownload_archive($id, $type)
-    {
-        $uf = new UploadFile();
-        $uf->download_archive(UploadFile::CLIENT_ID, get_class(Event::model()), $id, UploadFile::TYPE_FILE_FILES);
-    }
-
-    /**
-     *  Скачать файл по его $id.
-     *
-     *  @param  int $id
-     *
-     *  @throws CHttpException
-     */
-    public function actionDownload_file($id)
-    {
-        $uf = new UploadFile();
-        $uf->download($id);
-    }
-
-    /**
-     * Только Ajax. Рендерим форму со списком организаций. Показываются только организации,
-     * которые еще не привязанны к данному событию.
-     */
-    public function actionGet_list_organizations($selected_ids) {
-        if (Yii::app()->request->isAjaxRequest) {
-            try {
-                $selected_ids = CJSON::decode($selected_ids);
-                $p = Organizations::getValues();
-                foreach ($selected_ids as $pid){
-                    if (isset($p[$pid])){
-                        unset($p[$pid]);
-                    }
-                }
-                $p = array_merge(array('' => 'Выберите'), $p);
-
-                $this->renderPartial(
-                    '/my_events/get_list_organizations',
-                    array(
-                        'data' => $p,
-                    ),
-                    false
-                );
-
-            } catch (CException $e){
-                echo $e->getMessage();
-            }
-        }
     }
 }

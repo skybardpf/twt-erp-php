@@ -15,17 +15,19 @@ class UpdateAction extends CAction
      */
     public function run($id)
     {
-        $model = Event::model()->findByPk($id);
-        if (!$model) {
-            throw new CHttpException(404, 'Не найдено событие.');
-        }
+        /**
+         * @var $controller My_eventsController
+         */
+        $controller = $this->controller;
+        $controller->pageTitle .= ' | Редактирование события';
+
+        $model = $controller->loadModel($id);
         if (!$model->made_by_user){
             throw new CHttpException(500, 'Нельзя редактировать событие, созданное администратором.');
         }
 
         if ($_POST && !empty($_POST['Event'])) {
             $model->setAttributes($_POST['Event']);
-//            var_dump($model->json_countries);die;
 
             $model->upload_files  = CUploadedFile::getInstancesByName('upload_files');
             $model->list_yur = $model->getStructureOrg();
@@ -33,8 +35,6 @@ class UpdateAction extends CAction
 
             if ($model->validate()) {
                 try {
-
-
                     $model->save();
                     $this->controller->redirect($this->controller->createUrl('view', array('id' => $model->primaryKey)));
                 } catch (Exception $e) {

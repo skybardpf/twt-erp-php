@@ -81,9 +81,7 @@ $(document).ready(function(){
      * @returns {boolean}
      */
     function del_element(){
-        console.log($(this));
         var type = $(this).data('type');
-        console.log(type);
         if (type != 'organization' && type != 'country' && type != 'contractor'){
             return false;
         }

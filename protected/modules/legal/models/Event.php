@@ -124,21 +124,25 @@ class Event extends SOAPModel {
         $ret = $this->SOAP->saveEvent($send);
         $ret = SoapComponent::parseReturn($ret, false);
 
+
+//        die;
         if (!$this->primaryKey) {
             if (!ctype_digit($ret)){
                 foreach($upload_ids as $id){
                     $uf = new UploadFile();
                     $uf->delete_file($id);
                 }
+                throw new CHttpException(500, 'Ошибка при сохранении события');
             } else {
                 foreach($upload_ids as $id){
                     $uf = new UploadFile();
                     $uf->move($id, $ret);
                 }
-                throw new CHttpException(500, 'Ошибка при сохранении события');
+                Yii::app()->cache->delete(__CLASS__.'_list');
             }
         } else {
             Yii::app()->cache->delete(__CLASS__.'_'.$this->primaryKey);
+            Yii::app()->cache->delete(__CLASS__.'_list');
         }
 
         return $ret;
@@ -153,6 +157,9 @@ class Event extends SOAPModel {
     {
         if ($pk = $this->getprimaryKey()) {
             $ret = $this->SOAP->deleteEvent(array('id' => $pk));
+
+            Yii::app()->cache->delete(__CLASS__.'_list');
+
             return $ret->return;
         }
         return false;
