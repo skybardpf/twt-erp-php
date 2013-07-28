@@ -2,15 +2,15 @@
 /**
  *  Список Физ.Лиц
  *
- *  @var $this      IndividualsController
- *  @var $elements  array
+ *  @var IndividualsController  $this
+ *  @var array                  $data
  */
  ?>
 <div class="pull-right" style="margin-top: 15px;">
     <?php $this->widget('bootstrap.widgets.TbButton', array(
-        'label'=>'Новое физическое лицо',
-        'type'=>'success', // null, 'primary', 'info', 'success', 'warning', 'danger' or 'inverse'
-        'size'=>'normal', // null, 'large', 'small' or 'mini'
+        'label' => 'Новое физическое лицо',
+        'type' => 'success',
+        'size' => 'normal',
         'url' => $this->createUrl("add")
     )); ?>
 </div>
@@ -19,17 +19,17 @@
     // Инициализируем список стран
     $countries = Countries::getValues();
 
-	$data = new CArrayDataProvider($elements);
-    foreach($data->rawData as $k=>$v){
-        $data->rawData[$k]['citizenship'] = isset($countries[$v["citizenship"]]) ? $countries[$v["citizenship"]] : ($v["citizenship"] ? $v["citizenship"] : "&mdash;");
+	$provider = new CArrayDataProvider($data);
+    foreach($provider->rawData as $k=>$v){
+        $provider->rawData[$k]['citizenship'] = isset($countries[$v["citizenship"]]) ? $countries[$v["citizenship"]] : ($v["citizenship"] ? $v["citizenship"] : "&mdash;");
+        $provider->rawData[$k]['phone'] = $v["email"].($v["email"] && $v["phone"] ? ",<br/>" : "").$v["phone"];
     }
 
 	$this->widget('bootstrap.widgets.TbGridView', array(
-		'type'          => 'striped',
-		'dataProvider'  => $data,
-        'template'      => "{items} {pager}",
-		'columns'       => array(
-			array('name' => 'id', 'header' => '#'),
+		'type' => 'striped',
+		'dataProvider' => $provider,
+        'template' => "{items} {pager}",
+		'columns' => array(
             array(
                 'name'   => 'name',
                 'header' => 'ФИО',
@@ -45,8 +45,8 @@
 			array(
 				'header' => 'Контакты',
 				'type'   => 'raw',
-				'value'  => '$data["email"].($data["email"] && $data["phone"] ? ",<br/>" : "").$data["phone"]'
+                'name'   => 'phone',
 			),
-		),
+		)
 	));
 ?>

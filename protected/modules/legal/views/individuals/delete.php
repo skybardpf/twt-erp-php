@@ -6,7 +6,7 @@
 	$this->controller_title => array('/legal/entities/'),
 	'Удаление',
 );*/?>
-Вы действительно хотите <?=$model->deleted ? '<b>восстановить Физ.лицо</b>': '<b>удалить Физ.лицо</b>'?> «<?=CHtml::encode($model->fullname)?>»?
+Вы действительно хотите <?=$model->deleted ? '<b>восстановить Физ.лицо</b>': '<b>удалить Физ.лицо</b>'?> «<?=CHtml::encode($model->name.' '.$model->family)?>»?
 
 <?php $form = $this->beginWidget('bootstrap.widgets.TbActiveForm', array(
 	'id'=>'news-delete-form',
