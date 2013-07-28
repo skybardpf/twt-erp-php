@@ -12,30 +12,32 @@ class GetCountriesAction extends CAction
      */
     public function run()
     {
-        try {
-            $countries = Countries::getValues();
-            if (isset($_POST['selected_ids']) && !empty($_POST['selected_ids'])){
-                $sel = CJSON::decode($_POST['selected_ids']);
-                if ($sel !== null){
-                    foreach ($sel as $k){
-                        if (isset($countries[$k])){
-                            unset($countries[$k]);
+        if (Yii::app()->request->isAjaxRequest) {
+            try {
+                $countries = Countries::getValues();
+                if (isset($_POST['ids']) && !empty($_POST['ids'])){
+                    $sel = CJSON::decode($_POST['ids']);
+                    if ($sel !== null){
+                        foreach ($sel as $k){
+                            if (isset($countries[$k])){
+                                unset($countries[$k]);
+                            }
                         }
                     }
                 }
+                $countries = array_merge(array('' => 'Выберите'), $countries);
+
+                $this->controller->renderPartial(
+                    '/my_events/_get_form_countries',
+                    array(
+                        'data' => $countries,
+                    ),
+                    false
+                );
+
+            } catch (CException $e){
+                echo $e->getMessage();
             }
-            $countries = array_merge(array('' => 'Выберите'), $countries);
-
-            $this->controller->renderPartial(
-                '/my_events/_get_form_countries',
-                array(
-                    'data' => $countries,
-                ),
-                false
-            );
-
-        } catch (CException $e){
-            echo $e->getMessage();
         }
     }
 }

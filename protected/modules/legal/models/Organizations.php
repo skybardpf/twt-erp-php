@@ -34,7 +34,6 @@ class Organizations extends SOAPModel {
 	static protected $_nonResidentValues = array();
 	static protected $_groupNameValues = array();
 	static protected $_countryValues = array();
-	static public $values = array();
 
 	/**
 	 * @static
@@ -219,22 +218,18 @@ class Organizations extends SOAPModel {
      *  @return array
 	 */
 	static function getValues() {
-		$cacher = new CFileCache();
-		$cache = $cacher->get(__CLASS__.'_values');
-		if ($cache === false) {
-			if (!self::$values) {
-				$elements = self::model()->findAll();
-				$return   = array();
-				if ($elements) { foreach ($elements as $elem) {
-					$return[$elem->getprimaryKey()] = $elem->name;
-				} }
-				self::$values = $return;
-
-			}
-			$cacher->add(__CLASS__.'_values', self::$values, 3000);
-		} elseif (!self::$values) {
-			self::$values = $cache;
-		}
-		return self::$values;
+        $cache_id = __CLASS__.'_list';
+        $data = Yii::app()->cache->get($cache_id);
+        if ($data === false) {
+            $elements = self::model()->findAll();
+            $data = array();
+            if ($elements) {
+                foreach ($elements as $elem) {
+                    $data[$elem->getprimaryKey()] = $elem->name;
+                }
+            }
+            Yii::app()->cache->set($cache_id, $data);
+        }
+        return $data;
 	}
 }

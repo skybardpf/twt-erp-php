@@ -4,18 +4,28 @@
  *
  * @author Skibardin A.A. <skybardpf@artektiv.ru>
  *
- * @var $this   My_eventsController
- * @var $model  Event
+ * @var My_eventsController | Calendar_eventsController $this
+ * @var Event           $model
+ * @var Organizations   $organization
  */
 ?>
 
 <script>
     window.controller_name = '<?= $this->getId(); ?>';
 </script>
+
 <?php
-    Yii::app()->clientScript->registerScriptFile($this->asset_static.'/js/jquery.json-2.4.min.js');
-    Yii::app()->clientScript->registerScriptFile($this->asset_static.'/js/legal/my_events/form.js');
     Yii::app()->clientScript->registerScriptFile($this->asset_static.'/js/legal/form_manage_files.js');
+    Yii::app()->clientScript->registerScriptFile($this->asset_static.'/js/legal/my_events/form.js');
+    Yii::app()->clientScript->registerScriptFile($this->asset_static.'/js/jquery.json-2.4.min.js');
+
+    if ($this instanceof Calendar_eventsController){
+        $url_list = $this->createUrl('list', array("org_id" => $organization->primaryKey, "id" => $model->primaryKey));
+        $url_view = $this->createUrl('view', array("org_id" => $organization->primaryKey, "id" => $model->primaryKey));
+    } else {
+        $url_list = $this->createUrl('index');
+        $url_view = $this->createUrl('view', array('id' => $model->primaryKey));
+    }
 
     echo '<h2>'.($model->primaryKey ? 'Редактирование' : 'Создание').' события</h2>';
 
@@ -23,7 +33,12 @@
     $form = $this->beginWidget('bootstrap.widgets.MTbActiveForm', array(
         'id'    => 'form-my-events',
         'type'  => 'horizontal',
-        'enableAjaxValidation' => false,
+        'enableAjaxValidation' => true,
+        'enableClientValidation'=>true,
+        'clientOptions' => array(
+            'validateOnSubmit' => true,
+            'validateOnChange' => true,
+        ),
         'htmlOptions' => array(
             'enctype' => 'multipart/form-data'
         ),
@@ -38,10 +53,8 @@
     echo '&nbsp;';
     $this->widget('bootstrap.widgets.TbButton', array(
         'buttonType' => 'link',
-        'label'      => 'Отмена',
-        'url' => $model->primaryKey
-            ? $this->createUrl('view', array('id' => $model->primaryKey))
-            : $this->createUrl('index')
+        'label' => 'Отмена',
+        'url' => $model->primaryKey ? $url_view : $url_list
     ));
 
     if ($model->hasErrors()) {
@@ -53,9 +66,14 @@
 <?php
     // Опции для JUI селектора даты
     $jui_date_options = array(
+        'language' => 'ru',
         'options'=>array(
             'showAnim' => 'fold',
             'dateFormat' => 'yy-mm-dd',
+            'changeMonth' => true,
+            'changeYear' => true,
+            'showOn' => 'button',
+            'constrainInput' => 'true',
         ),
         'htmlOptions'=>array(
             'style' => 'height:20px;'
@@ -68,7 +86,7 @@
     if (is_bool($model->for_yur)){
         $model->for_yur = ($model->for_yur === true) ? Event::FOR_ORGANIZATIONS : (($model->for_yur === false) ? Event::FOR_JURISDICTION : '');
     }
-    echo $form->textFieldRow($model, 'name', array('class' => 'span6'));
+    echo $form->textFieldRow($model, 'name');
     echo $form->radioButtonListInlineRow($model, 'for_yur', Event::getTypes());
 
     $class_yur = 'control-group hide';
@@ -85,63 +103,144 @@
      * Заполняем блок, выбранных юр. лиц.
      */
     $div_yur = '';
+    $data = array();
     if (!empty($model->list_yur)){
         /**
-         * Список огранизаций
+         * Список огранизаций и контрагентов
          */
         $organizations = Organizations::getValues();
         $contractors = Contractor::getValues();
         foreach ($model->list_yur as $v){
             if ($v['type_yur'] == 'Организации'){
                 if (isset($organizations[$v['id_yur']])){
-                    $div_yur .= CHtml::tag('div',
-                        array(
-                            'class' => 'block',
-                            'data-type-org' => 'organization',
-                            'data-id' => $v['id_yur']
-                        ),
-                        CHtml::link($organizations[$v['id_yur']], '#', array('class' => 'view_organization')) .
-                        '&nbsp;&nbsp;&nbsp;' .
-                        CHtml::link('', '#', array('class' => 'icon-remove'))
+                    $data[] = array(
+                        'id' => 'o_'.$v['id_yur'],
+                        'name' => CHtml::link($organizations[$v['id_yur']], $this->createUrl('my_organizations/view', array('id' => $v['id_yur']))),
+                        'delete' => $this->widget('bootstrap.widgets.TbButton', array(
+                            'buttonType' => 'button',
+                            'type' => 'primary',
+                            'label' => 'Удалить',
+                            'htmlOptions' => array(
+                                'class' => 'del-element',
+                                'data-id' => $v['id_yur'],
+                                'data-type' => 'organization'
+                            )
+                        ), true)
                     );
                 }
             } elseif($v['type_yur'] == 'Контрагенты'){
                 if (isset($contractors[$v['id_yur']])){
-                    $div_yur .= CHtml::tag('div',
-                        array(
-                            'class' => 'block',
-                            'data-type-org' => 'contractor',
-                            'data-id' => $v['id_yur']
-                        ),
-                        CHtml::link($contractors[$v['id_yur']], '#', array('class' => 'view_contractor', 'data-contractor-id' => $v['id_yur'])) .
-                        '&nbsp;&nbsp;&nbsp;' .
-                        CHtml::link('', '#', array('class' => 'icon-remove', 'data-contractor-id' => $v['id_yur']))
+                    $data[] = array(
+                        'id' => 'c_'.$v['id_yur'],
+                        'name' => CHtml::link($contractors[$v['id_yur']], $this->createUrl('contractor/view', array('id' => $v['id_yur']))),
+                        'delete' => $this->widget('bootstrap.widgets.TbButton', array(
+                            'buttonType' => 'button',
+                            'type' => 'primary',
+                            'label' => 'Удалить',
+                            'htmlOptions' => array(
+                                'class' => 'del-element',
+                                'data-id' => $v['id_yur'],
+                                'data-type' => 'contractor'
+                            )
+                        ), true)
                     );
                 }
             }
         }
     }
+    $div_yur = $this->widget('bootstrap.widgets.TbGridView',
+        array(
+            'id' => 'grid-organizations',
+            'type' => 'striped bordered condensed',
+            'dataProvider' => new CArrayDataProvider($data),
+            'template' => "{items}",
+            'columns' => array(
+                array(
+                    'name' => 'name',
+                    'header' => 'Организация',
+                    'type' => 'raw',
+                    'htmlOptions' => array(
+                        'style' => 'width: 90%',
+                    )
+                ),
+                array(
+                    'name' => 'delete',
+                    'header' => '',
+                    'type' => 'raw'
+                ),
+            )
+        ),
+        true
+    );
+    $div_yur .= $this->widget('bootstrap.widgets.TbButton', array(
+        'buttonType'=> 'button',
+        'type' => 'primary',
+        'label' => 'Добавить организацию',
+        'htmlOptions' => array(
+            'class' => 'add-organization',
+            'data-type' => 'organization'
+        )
+    ), true);
 
     /**
      * Заполняем блок, выбранных стран.
      */
     $div_countries = '';
+    $data = array();
     if (!empty($model->countries)){
         $countries = Countries::getValues();
         foreach($model->countries as $v){
             if (isset($countries[$v])){
-                $div_countries .= CHtml::tag('div',
-                    array(
-                        'class' => 'block',
-                        'data-id' => $v
-                    ),
-//                    CHtml::link($countries[$v], '#', array('class' => 'view_country')) .
-                    $countries[$v].'&nbsp;&nbsp;&nbsp;' .
-                    CHtml::link('', '#', array('class' => 'icon-remove'))
+                $data[] = array(
+                    'id' => $v,
+                    'name' => $countries[$v],
+                    'delete' => $this->widget('bootstrap.widgets.TbButton', array(
+                        'buttonType' => 'button',
+                        'type' => 'primary',
+                        'label' => 'Удалить',
+                        'htmlOptions' => array(
+                            'class' => 'del-element',
+                            'data-id' => $v,
+                            'data-type' => 'country'
+                        )
+                    ), true)
                 );
             }
         }
     }
+    $div_countries = $this->widget('bootstrap.widgets.TbGridView',
+        array(
+            'id' => 'grid-countries',
+            'type' => 'striped bordered condensed',
+            'dataProvider' => new CArrayDataProvider($data),
+            'template' => "{items}",
+            'columns' => array(
+                array(
+                    'name' => 'name',
+                    'header' => 'Страна',
+                    'type' => 'raw',
+                    'htmlOptions' => array(
+                        'style' => 'width: 90%',
+                    )
+                ),
+                array(
+                    'name' => 'delete',
+                    'header' => '',
+                    'type' => 'raw'
+                ),
+            )
+        ),
+        true
+    );
+    $div_countries .= $this->widget('bootstrap.widgets.TbButton', array(
+        'buttonType'=> 'button',
+        'type' => 'primary',
+        'label' => 'Добавить страну',
+        'htmlOptions' => array(
+            'class' => 'add-country',
+            'data-type' => 'country'
+        )
+    ), true);
 
     echo $form->hiddenField($model, 'json_organizations');
     echo $form->hiddenField($model, 'json_contractors');
@@ -152,9 +251,6 @@
         <div class="controls" id='for_yur_list'>
             <?= $div_yur; ?>
         </div>
-        <div class="controls">
-            <button class="btn" id="data-add-yur" data-loading-text="..." type="button">Добавить юр. лицо</button>
-        </div>
     </div>
 
     <div class="<?= $class_countries; ?>" id="for_countries">
@@ -162,43 +258,35 @@
         <div class="controls" id='for_countries_list'>
             <?= $div_countries; ?>
         </div>
-        <div class="controls">
-            <button class="btn" id="data-add-country" data-loading-text="..." type="button">Добавить страну</button>
-        </div>
     </div>
-
-<!--    <div class="--><?//= $class_countries; ?><!--" id="for_countries">-->
-<!--        --><?//= CHtml::label('Страны <span class="required">*</span>', 'for_countries', array('class' => 'control-label required')); ?>
-<!--    <div class="controls">-->
-<!--    --><?php
-//        echo CHtml::dropDownList('Event[countries]', $model->countries, Countries::getValues(), array(
-//            'class' => 'span6'
-//        ));
-//    ?>
-<!--    </div>-->
-<!--    </div>-->
 
     <div class="control-group">
         <?= $form->labelEx($model, 'event_date', array('class' => 'control-label')); ?>
         <div class="controls">
-            <?php $this->widget('zii.widgets.jui.CJuiDatePicker',array_merge(
+        <?php
+            $this->widget('zii.widgets.jui.CJuiDatePicker',array_merge(
                 array(
                     'model'     => $model,
                     'attribute' => 'event_date'
                 ), $jui_date_options
-            )); ?>
+            ));
+            echo $form->error($model, 'event_date');
+        ?>
         </div>
     </div>
 
     <div class="control-group">
         <?= $form->labelEx($model, 'notification_date', array('class' => 'control-label')); ?>
         <div class="controls">
-            <?php $this->widget('zii.widgets.jui.CJuiDatePicker',array_merge(
+        <?php
+            $this->widget('zii.widgets.jui.CJuiDatePicker',array_merge(
                 array(
                     'model'     => $model,
                     'attribute' => 'notification_date'
                 ), $jui_date_options
-            )); ?>
+            ));
+            echo $form->error($model, 'notification_date');
+        ?>
         </div>
     </div>
 
@@ -243,24 +331,24 @@
 
 <?php
     // Модальное окошко для выбора физ. лица
-    $this->beginWidget('bootstrap.widgets.TbModal', array('id'=>'dataModalYur'));
+    $this->beginWidget('bootstrap.widgets.TbModal', array('id'=>'dataModal'));
 ?>
     <div class="modal-header">
         <a class="close" data-dismiss="modal">×</a>
-        <h4><?=Yii::t("menu", "Выберите юр. лицо")?></h4>
+        <h4><?=Yii::t("menu", "Выберите из списка")?></h4>
     </div>
     <div class="modal-body"></div>
     <div class="modal-footer">
         <?php
         $this->widget('bootstrap.widgets.TbButton', array(
             'label' => Yii::t("menu", "Сохранить"),
-            'url'   => '#',
+            'url' => '#',
             'htmlOptions' => array('class'=>'button_save', 'data-dismiss'=>'modal'),
         ));
 
         $this->widget('bootstrap.widgets.TbButton', array(
             'label' => Yii::t("menu", "Отмена"),
-            'url'   => '#',
+            'url' => '#',
             'htmlOptions' => array('data-dismiss'=>'modal'),
         ));
         ?>
@@ -269,26 +357,26 @@
 
 <?php
     // Модальное окошко для выбора страны
-    $this->beginWidget('bootstrap.widgets.TbModal', array('id'=>'dataModalCountries'));
+//    $this->beginWidget('bootstrap.widgets.TbModal', array('id'=>'dataModalCountries'));
 ?>
-    <div class="modal-header">
-        <a class="close" data-dismiss="modal">×</a>
-        <h4><?=Yii::t("menu", "Выберите страну")?></h4>
-    </div>
-    <div class="modal-body"></div>
-    <div class="modal-footer">
-        <?php
-        $this->widget('bootstrap.widgets.TbButton', array(
-            'label' => Yii::t("menu", "Сохранить"),
-            'url'   => '#',
-            'htmlOptions' => array('class'=>'button_save', 'data-dismiss'=>'modal'),
-        ));
-
-        $this->widget('bootstrap.widgets.TbButton', array(
-            'label' => Yii::t("menu", "Отмена"),
-            'url'   => '#',
-            'htmlOptions' => array('data-dismiss'=>'modal'),
-        ));
-        ?>
-    </div>
-<?php $this->endWidget(); ?>
+<!--    <div class="modal-header">-->
+<!--        <a class="close" data-dismiss="modal">×</a>-->
+<!--        <h4>--><?//=Yii::t("menu", "Выберите страну")?><!--</h4>-->
+<!--    </div>-->
+<!--    <div class="modal-body"></div>-->
+<!--    <div class="modal-footer">-->
+<!--        --><?php
+//        $this->widget('bootstrap.widgets.TbButton', array(
+//            'label' => Yii::t("menu", "Сохранить"),
+//            'url'   => '#',
+//            'htmlOptions' => array('class'=>'button_save', 'data-dismiss'=>'modal'),
+//        ));
+//
+//        $this->widget('bootstrap.widgets.TbButton', array(
+//            'label' => Yii::t("menu", "Отмена"),
+//            'url'   => '#',
+//            'htmlOptions' => array('data-dismiss'=>'modal'),
+//        ));
+//        ?>
+<!--    </div>-->
+<?php //$this->endWidget(); ?>

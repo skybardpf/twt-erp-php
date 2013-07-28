@@ -17,14 +17,16 @@ class ListAction extends CAction
          * @var $controller Calendar_eventsController
          */
         $controller = $this->controller;
-        $controller->pageTitle .= 'Текущие события';
+        $controller->pageTitle .= ' | Текущие события';
 
         $org = $controller->loadOrganization($org_id);
+        $data = $controller->getDataProvider($org);
 
         $controller->render('/my_organizations/show', array(
             'content' => $controller->renderPartial('/my_events/list',
                 array(
-                    'organization' => $org
+                    'organization' => $org,
+                    'data' => $data,
                 ),
                 true
             ),

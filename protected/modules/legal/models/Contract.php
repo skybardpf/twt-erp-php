@@ -115,6 +115,7 @@ class Contract extends SOAPModel
         }
         if ($this->primaryKey){
             Yii::app()->cache->delete(__CLASS__.'_'.$this->primaryKey);
+            Yii::app()->cache->delete(__CLASS__.'_list_org_id_'.$this->id_yur);
         }
         return $ret;
     }
@@ -132,6 +133,7 @@ class Contract extends SOAPModel
             'deleted'           => 'Удален',
             'invalid'           => 'Статус договора',
 
+            'character'         => 'Характер договора',
             'date'              => 'Дата заключения',
             'expire'            => 'Действителен до',
             'date_infomation'   => 'Уведомления об окончании действия договора за',
@@ -195,9 +197,9 @@ class Contract extends SOAPModel
             array('responsible', 'in', 'range' => array_keys(Individuals::getValues())),
 
             array('dogovor_summ', 'required'),
-            array('dogovor_summ', 'numerical', 'integerOnly' => true, 'min' => 0),
-            array('everymonth_summ', 'numerical', 'integerOnly' => true, 'min' => 0),
-            array('date_infomation', 'numerical', 'integerOnly' => true, 'min' => 0),
+            array('dogovor_summ', 'numerical', 'integerOnly' => true, 'min' => 0, 'max'=>'9999999999999'),
+            array('everymonth_summ', 'numerical', 'integerOnly' => true, 'min' => 0, 'max'=>'9999999999999'),
+            array('date_infomation', 'numerical', 'integerOnly' => true, 'min' => 0, 'max'=>'9999999999999'),
 
             array('json_signatory_contractor, json_signatory', 'validJson'),
 

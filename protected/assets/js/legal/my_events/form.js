@@ -15,267 +15,179 @@ $(document).ready(function(){
         div_countries.removeClass('hide');
     });
 
-    $('#for_yur .block .view_contractor').click(function(){
-        var div_block = $(this).parent('.block');
-        window.open('/legal/contractor/view/id/'+div_block.data('id'));
-        return false;
-    });
-
-    $('#for_yur .block .view_organization').click(function(){
-        var div_block = $(this).parent('.block');
-        window.open('/legal/my_organizations/view/id/'+div_block.data('id'));
-        return false;
-    });
-
-    $('#for_countries .block .view_country').click(function(){
-        var div_block = $(this).parent('.block');
-        window.open('/legal/country/view/id/'+div_block.data('id'));
-        return false;
-    });
-
-    $('#for_yur .block .icon-remove').click(delete_organization);
-    $('#for_countries .block .icon-remove').click(delete_country);
+    $('button.add-organization').on('click', showModal);
+    $('button.add-country').on('click', showModal);
+    $('button.del-element').on('click', del_element);
 
     /**
-     *  Добавляем юр. лицо
+     *  Сохранеям выбранного подписанта.
      */
-    $('#dataModalYur .button_save').on('click', function(){
-        var sel = $('#select_organizations option:selected');
+    $('#dataModal .button_save').on('click', function(){
+        var sel = $('#select-element option:selected');
         var pid = sel.val();
-        var name = sel.html();
         if (pid == ''){
-            alert('Выберите юр. лицо');
+            alert('Выберите элемент из списка');
             return false;
-        } else {
-            var el = $('#Event_json_organizations');
-            var org = eval(el.val());
-
-            var ind = org.indexOf(pid);
-            if (ind == -1){
-                org.push(pid);
-
-            }
-            el.val($.toJSON(org));
-
-            var div_person = $(
-                '<div class="block" data-type-org="organization" data-id="'+pid+'"' +
-                    '<div class="view_organization">' +
-                    '<a href="/legal/my_organizations/view/id/'+pid+'">'+name+'</a>&nbsp;&nbsp;&nbsp;' +
-                    '<a class="icon-remove" href="#"></a></div>' +
-                '</div>'
-            );
-            $('#for_yur_list').append(div_person);
-            div_person.find('.icon-remove').on('click', delete_organization);
-//            $('#managing_person_message').addClass('hide');
         }
-    });
-
-    /**
-     *  Добавляем юр. лицо
-     */
-    $('#dataModalCountries .button_save').on('click', function(){
-        var sel = $('#select_countries option:selected');
-        console.log(sel);
-        var pid = sel.val();
+        var type = $('#form-select-element').data('type');
+        if (type != 'organization' && type != 'country'){
+            return false;
+        }
         var name = sel.html();
-        if (pid == ''){
-            alert('Выберите страну');
-            return false;
-        } else {
-            var el = $('#Event_json_countries');
-            var org = eval(el.val());
-            var ind = org.indexOf(pid);
-                console.log(pid);
-            if (ind == -1){
-                org.push(pid);
-
-            }
-                console.log(org);
-            el.val($.toJSON(org));
-
-            var div = $(
-                '<div class="block" data-id="'+pid+'"' +
-                    '<div class="view_countries">' + name + '&nbsp;&nbsp;&nbsp;' +
-//                    '<a href="/legal/countries/view/id/'+pid+'">'+name+'</a>&nbsp;&nbsp;&nbsp;' +
-                    '<a class="icon-remove" href="#"></a></div>' +
-                    '</div>'
-            );
-            $('#for_countries_list').append(div);
-            div.find('.icon-remove').on('click', delete_country);
-        }
-    });
-
-    /**
-     *  Show modal for yur
-     */
-    $('#data-add-yur').click(function(){
-        var button = this;
-        $(button).button('loading');
-
-        Loading.show();
-
-        $.ajax({
-//                type: 'POST',
-//                dataType: "json",
-            url: "/legal/"+window.controller_name+'/get_list_organizations/',
-            cache: false,
-            data: {
-                'selected_ids': $('#Event_json_organizations').val()
-            }
-        }).done(function(data) {
-            $("#dataModalYur .modal-body").html(data);
-            $(button).button('reset');
-            $('#dataModalYur').modal().css({
-                width: 'auto',
-                'margin-left': function () {
-                    return -($(this).width() / 2);
-                }
-            });
-        }).fail(function(a, ret, message) {
-
-        }).always(function(){
-            Loading.hide();
-            $(button).button('reset');
-        })
-    });
-
-    /**
-     *  Show modal for countries
-     */
-    $('#data-add-country').click(function(){
-        var button = this;
-        $(button).button('loading');
-
-        Loading.show();
 
         $.ajax({
             type: 'POST',
-//            dataType: "json",
-            url: "/legal/"+window.controller_name+'/get_countries/',
+            dataType: "html",
+            url: "/legal/my_events/_html_row_element/",
             cache: false,
             data: {
-                'selected_ids': $('#Event_json_countries').val()
+                id: pid,
+                name: name,
+                type: type
             }
         }).done(function(data) {
-                $("#dataModalCountries .modal-body").html(data);
-                $(button).button('reset');
-                $('#dataModalCountries').modal().css({
+            var table, json;
+            if (type == 'organization'){
+                json = $('#Event_json_organizations');
+                table = $('#grid-organizations');
+            } else {
+                json = $('#Event_json_countries');
+                table = $('#grid-countries');
+            }
+            var persons = eval(json.val());
+            var ind = persons.indexOf(pid);
+            if (ind == -1){
+                persons.push(pid);
+            }
+            json.val($.toJSON(persons));
+
+            if (table.find('.empty')){
+                table.find('.empty').parents('tr').remove();
+            }
+            var number = ((table.find('tr').size())%2 === 0) ? 'even' : 'odd';
+            var html = '<tr class="'+number+'">'+data+'</tr>';
+
+            table.find('tbody').append(html);
+            $('.del-element').off('click').on('click', del_element);
+
+        }).fail(function(a, ret, message) {
+
+        });
+        return true;
+    });
+
+    /**
+     * Delete element
+     * @returns {boolean}
+     */
+    function del_element(){
+        var type = $(this).data('type');
+        if (type != 'organization' && type != 'country' && type != 'contractor'){
+            return false;
+        }
+        var local = $(this);
+        $('<div>Вы действительно хотите удалить элемент из списка?</div>').dialog({
+            modal: true,
+            resizable: false,
+            title: 'Удалить из списка?',
+            buttons: [{
+                text: "Удалить",
+                class: 'btn btn-danger',
+                click: function(event){
+                    var button = $(event.target);
+                    var dialog = $(this);
+                    button.attr('disabled', 'disabled');
+                    Loading.show();
+
+                    var id = local.data('id');
+                    var json, table;
+                    if (type == 'organization'){
+                        json = $('#Event_json_organizations');
+                        table = $('#grid-organizations');
+                    }else if (type == 'contractor'){
+                        json = $('#Event_json_contractors');
+                        table = $('#grid-organizations');
+                    } else {
+                        json = $('#Event_json_countries');
+                        table = $('#grid-countries');
+                    }
+                    var persons = eval(json.val());
+                    var ind = persons.indexOf(id);
+                    if (ind != -1){
+                        persons.splice(ind, 1);
+                        json.val($.toJSON(persons));
+                        local.parents('tr').remove();
+                    }
+
+                    if (table.find('tr').size() == 1){
+                        table.find('tbody').append(
+                            '<tr>' +
+                                '<td colspan="2" class="empty">' +
+                                '<span class="empty">Нет результатов.</span>' +
+                                '</td>' +
+                            '</tr>'
+                        );
+                    }
+
+                    Loading.hide();
+                    dialog.dialog('destroy');
+                }
+            },{
+                text: 'Отмена',
+                class: 'btn',
+                click: function(){ $(this).dialog('destroy'); }
+            }]
+        });
+        return false;
+    }
+
+    /**
+     *  Show modal
+     */
+    function showModal(){
+        var type = $(this).data('type');
+        if (type != 'organization' && type != 'country'){
+            return false;
+        }
+        var ids = [],
+            modal = $('#dataModal');
+        if (type == 'organization'){
+            ids = $('#Event_json_organizations').val();
+//            modal = $('#dataModalOrganization');
+        } else {
+            ids = $('#Event_json_countries').val();
+//            modal = $('#dataModalCountry');
+        }
+
+
+        Loading.show();
+        $.ajax({
+            type: 'POST',
+            dataType: "json",
+            url: "/legal/my_events/_html_form_select_element/",
+            cache: false,
+            data: {
+                ids: ids,
+                type: type
+            }
+        }).done(function(data) {
+            if (!data.success){
+                alert(data.message);
+            } else {
+                modal.find('.modal-body').html(data.html);
+                modal.modal().css({
                     width: 'auto',
                     'margin-left': function () {
                         return -($(this).width() / 2);
                     }
                 });
-            }).fail(function(a, ret, message) {
+            }
+        }).fail(function(a, ret, message) {
 
-            }).always(function(){
-                Loading.hide();
-                $(button).button('reset');
-            })
-    });
-
-    /**
-     *  Удаляем управляющего счетом.
-     *  @returns {boolean}
-     */
-    function delete_organization(){
-        var target = $(this);
-        $('<div>'+'Вы уверены, что хотите удалить из списка организацию?'+'</div>').dialog({
-            modal: true,
-            resizable: false,
-            title: 'Удаление организации из списка',
-            buttons: [
-                {
-                    text: "Удалить",
-                    class: 'btn btn-danger',
-                    click: function(event){
-                        var dialog = $(this);
-                        var button = $(event.target);
-
-                        var div_block = target.parent('.block');
-                        var id = div_block.data('id');
-                        var type = div_block.data('type-org');
-
-                        var el;
-                        if (type == 'organization'){
-                            el = $('#Event_json_organizations');
-                        } else if (type == 'contractor'){
-                            el = $('#Event_json_contractors');
-                        } else {
-                            dialog.dialog('destroy');
-                            throw new Error('Неизвестный тип организации.');
-                        }
-
-                        button.attr('disabled', 'disabled');
-                        Loading.show();
-
-                        var persons = eval(el.val());
-                        var ind = persons.indexOf(id);
-
-                        if (ind != -1){
-                            persons.splice(ind, 1);
-                            el.val($.toJSON(persons));
-                            div_block.remove();
-                        }
-                        Loading.hide();
-                        dialog.dialog('destroy');
-                    }
-                },{
-                    text: 'Отмена',
-                    class: 'btn',
-                    click: function(){
-                        $(this).dialog('destroy');
-                    }
-                }
-            ]
+        }).always(function(){
+            Loading.hide();
         });
-        return false;
-    }
-
-    /**
-     *  Удаляем страну из списка.
-     *  @returns {boolean}
-     */
-    function delete_country(){
-        var target = $(this);
-        $('<div>'+'Вы уверены, что хотите удалить страну из списка?'+'</div>').dialog({
-            modal: true,
-            resizable: false,
-            title: 'Удаление страны из списка',
-            buttons: [
-                {
-                    text: "Удалить",
-                    class: 'btn btn-danger',
-                    click: function(event){
-                        var dialog = $(this);
-                        var button = $(event.target);
-
-                        var div_block = target.parent('.block');
-                        var id = div_block.data('id');
-                        var el = $('#Event_json_countries');
-
-                        button.attr('disabled', 'disabled');
-                        Loading.show();
-
-                        var persons = eval(el.val());
-                        var ind = persons.indexOf(id);
-
-                        if (ind != -1){
-                            persons.splice(ind, 1);
-                            el.val($.toJSON(persons));
-                            div_block.remove();
-                        }
-                        Loading.hide();
-                        dialog.dialog('destroy');
-                    }
-                },{
-                    text: 'Отмена',
-                    class: 'btn',
-                    click: function(){
-                        $(this).dialog('destroy');
-                    }
-                }
-            ]
-        });
-        return false;
+        return true;
     }
 });
+
