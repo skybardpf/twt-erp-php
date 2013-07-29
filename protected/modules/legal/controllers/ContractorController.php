@@ -47,7 +47,6 @@ class ContractorController extends Controller{
 
     /**
      * @return Contractor Возвращаем созданную модель Контрагент.
-     * @throws CHttpException
      */
     public function createModel()
     {

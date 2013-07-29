@@ -2,18 +2,16 @@
 /**
  *  Добавление новой организации и редактирование старой
  *
- *  User: Skibardin A.A.
- *  Date: 27.06.13
+ *  @author Skibardin A.A. <skybardpf@artektiv.ru>
  *
- *  @var $this          My_organizationsController
- *  @var $model         Organization
- *  @var $form          MTbActiveForm
- *  @var $error         string
+ *  @var OrganizationController $this
+ *  @var Organization           $model
+ *  @var MTbActiveForm          $form
  */
 ?>
 
 <?php
-    Yii::app()->clientScript->registerScriptFile($this->asset_static.'/js/legal/Organization/one.js', CClientScript::POS_HEAD);
+    Yii::app()->clientScript->registerScriptFile($this->asset_static.'/js/legal/organization/one.js', CClientScript::POS_HEAD);
 
     echo '<h2>'.($model->primaryKey ? 'Редактирование ' : 'Создание ').'юридического лица</h2>';
 
@@ -38,15 +36,10 @@
 ?>
 
 <?php
-    if ($error) {
-        echo '<br/><br/>';
-        echo CHtml::openTag('div', array('class' => 'alert alert-error')).$error.CHtml::closeTag('div');
-    } elseif ($model->getErrors()) {
-        echo '<br/><br/>';
-        echo $form->errorSummary($model);
+    if ($model->hasErrors()) {
+        echo '<br/><br/>'. $form->errorSummary($model);
     }
 ?>
-
 
 <fieldset>
     <?php echo $form->dropDownListRow($model, 'country', Countries::getValues()); ?>

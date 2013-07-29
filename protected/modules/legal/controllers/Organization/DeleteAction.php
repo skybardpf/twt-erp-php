@@ -1,26 +1,25 @@
 <?php
 /**
- * Удаление контрагента.
+ * Удаление организации.
  *
  * @author Skibardin A.A. <skybardpf@artektiv.ru>
  */
 class DeleteAction extends CAction
 {
     /**
-     * Удаление контрагента.
-     * @param $id       Идентификатор контрагента
-     *
+     * Удаление организации.
+     * @param string $id
      * @throws CHttpException
      */
     public function run($id)
     {
         /**
-         * @var ContractorController    $controller
+         * @var OrganizationController    $controller
          */
         $controller = $this->controller;
-        $controller->pageTitle .= ' | Удаление контрагента';
+        $controller->pageTitle .= ' | Удаление организации';
 
-        $model = $controller->loadModel($id);
+        $model = $controller->loadOrganization($id);
 
         if (Yii::app()->request->isAjaxRequest) {
             $ret = array();
@@ -39,9 +38,9 @@ class DeleteAction extends CAction
                     if ($model->delete()) {
                         $controller->redirect($controller->createUrl('index'));
                     } else {
-                        throw new CHttpException(500, 'Не удалось удалить контрагента.');
+                        throw new CHttpException(500, 'Не удалось удалить организацию.');
                     }
-                break;
+                    break;
                 default:
                     $controller->redirect($controller->createUrl(
                         'view',
@@ -49,9 +48,16 @@ class DeleteAction extends CAction
                             'id' => $model->primaryKey,
                         )
                     ));
-                break;
+                    break;
             }
         }
-        $controller->render('delete', array('model' => $model));
+        $controller->render('/organization/show', array(
+            'content' => $controller->renderPartial('/organization/delete',
+                array(
+                    'model' => $model,
+                ), true),
+            'organization' => $model,
+            'cur_tab' => 'info',
+        ));
     }
 }
