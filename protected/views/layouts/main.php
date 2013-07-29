@@ -1,6 +1,6 @@
 <?php /* @var $this Controller */
 
-Yii::app()->clientScript->registerCssFile(CHtml::asset(Yii::app()->basePath.'/../static/css/main.css'));
+Yii::app()->clientScript->registerCssFile($this->asset_static.'/css/main.css');
 
 ?>
 <!DOCTYPE html>

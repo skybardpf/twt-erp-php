@@ -13,7 +13,7 @@
 ?>
 
 <?php
-    Yii::app()->clientScript->registerScriptFile('/static/js/jquery.json-2.4.min.js');
+    Yii::app()->clientScript->registerScriptFile($this->asset_static.'/js/jquery.json-2.4.min.js');
 
     echo '<h2>'.($model->primaryKey ? 'Редактирование ' : 'Создание ').'банковского счета</h2>';
 
@@ -49,12 +49,8 @@
 ?>
 
 <?php
-    if ($error) {
-        echo '<br/><br/>';
-        echo CHtml::openTag('div', array('class' => 'alert alert-error')).$error.CHtml::closeTag('div');
-    } elseif ($model->getErrors()) {
-        echo '<br/><br/>';
-        echo $form->errorSummary($model);
+    if ($model->hasErrors()) {
+        echo '<br/><br/>'. $form->errorSummary($model);
     }
 ?>
 

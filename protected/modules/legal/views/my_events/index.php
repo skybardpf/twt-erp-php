@@ -4,26 +4,26 @@
  *
  * @author Skibardin A.A. <skybardpf@artektiv.ru>
  *
- * @var $this   My_eventsController
- * @var $models Event[]
+ * @var My_eventsController $this
+ * @var Event[]             $data
  */
 ?>
 <div class="pull-right" style="margin-top: 15px;">
     <?php $this->widget('bootstrap.widgets.TbButton', array(
         'label' => 'Новое событие',
-        'type'  => 'success', // null, 'primary', 'info', 'success', 'warning', 'danger' or 'inverse'
-        'size'  => 'normal', // null, 'large', 'small' or 'mini'
-        'url'   => $this->createUrl("add")
+        'type' => 'success',
+        'size' => 'normal',
+        'url' => $this->createUrl("add")
     )); ?>
 </div>
 <h2>Мои события</h2>
 
 <?php
-    $data = new CArrayDataProvider($models);
     $organizations = Organizations::getValues();
     $contractors = Contractor::getValues();
 
-    foreach($data->rawData as $k=>$m){
+    $provider = new CArrayDataProvider($data);
+    foreach($provider->rawData as $k=>$m){
         $div = '';
 
         if ($m->for_yur){
@@ -49,13 +49,12 @@
                 }
             }
         }
-        $data->rawData[$k]['div_list_yur'] = $div;
+        $provider->rawData[$k]['div_list_yur'] = $div;
     }
-
 
     $this->widget('bootstrap.widgets.TbGridView', array(
         'type' => 'striped bordered condensed',
-        'dataProvider' => $data,
+        'dataProvider' => $provider,
         'template' => "{items} {pager}",
         'columns' => array(
             array(

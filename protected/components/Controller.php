@@ -29,8 +29,36 @@ class Controller extends CController
 
 	protected function beforeAction($action)
 	{
-		//if (!$this->asset_static) $this->asset_static = CHtml::asset(Yii::app()->basePath.'/../static/');
-		if (!$this->asset_static) $this->asset_static = Yii::app()->baseUrl.'/../static/';
+		if (!$this->asset_static) {
+            $this->asset_static = Yii::app()->assetManager->publish(
+                Yii::getPathOfAlias('application.assets'),
+                false,
+                -1,
+                YII_DEBUG
+            );
+        }
 		return parent::beforeAction($action);
 	}
+
+    /**
+     *  Получаем модель организации.
+     *
+     *  @param string $org_id
+     *  @return Organizations
+     *  @throws CHttpException
+     */
+    public function loadOrganization($org_id)
+    {
+        $cache_id = get_class(Organizations::model()).'_'.$org_id;
+        $org = Yii::app()->cache->get($cache_id);
+        if ($org === false){
+            $org = Organizations::model()->findByPk($org_id);
+            if ($org === null) {
+                throw new CHttpException(404, 'Не найдена организация.');
+            }
+            Yii::app()->cache->set($cache_id, $org, 0);
+        }
+
+        return $org;
+    }
 }

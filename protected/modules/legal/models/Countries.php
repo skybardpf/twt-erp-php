@@ -64,11 +64,9 @@ class Countries extends SOAPModel {
 	 * @return array
 	 */
 	public static function getValues() {
-		$cache = new CFileCache();
-        $cache_id = get_class(self::model()).'_data';
-		$data = $cache->get($cache_id);
+        $cache_id = __CLASS__.'_list';
+        $data = Yii::app()->cache->get($cache_id);
         if ($data === false) {
-//			if (!self::$values) {
             $elements = self::model()->findAll();
             $data = array();
             if ($elements) {
@@ -76,11 +74,8 @@ class Countries extends SOAPModel {
                     $data[$elem->getprimaryKey()] = $elem->name;
                 }
             }
-//				self::$values = $return;
+            Yii::app()->cache->set($cache_id, $data, 3000);
         }
-        $cache->add($cache_id, $data, 3000);
-//		} elseif (!self::$values) {
-//			self::$values = $data;
-		return $data;
+        return $data;
 	}
 }

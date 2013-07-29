@@ -40,9 +40,6 @@ return array(
 			// enable cookie-based authentication
 			'allowAutoLogin' => true,
 		),
-		'cache'=>array(
-			'class'=>'system.caching.CFileCache',
-		),
 		'soap' => array(
 			'class'     => 'SoapComponent',
 //			'wsdl'      => 'http://80.250.210.238/TWT_backend/ws/twt?wsdl',

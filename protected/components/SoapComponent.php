@@ -64,14 +64,20 @@
  * @method mixed saveBeneficiary            Сохранение
  * @method mixed deleteBeneficiary          Удаление
  *
- * Страны
- * @method mixed listCountries              Список
+ * Страны {@see Countries}
+ * @method mixed listCountries
  *
  * Контактные лица для контрагентов {@see ContactPersonForContractors}
- * @method mixed listContactPersonForContractors    Список
+ * @method mixed listContactPersonsForContractors(array $data)
  *
  * Коды ОКОПФ {@see CodesOKOPF}
- * @method mixed listOKOPF                  Список
+ * @method mixed listOKOPF
+ *
+ * Договоры организации {@see Contract}
+ * @method mixed listContracts(array $data)
+ * @method mixed getContract(array $data)
+ * @method mixed deleteContract(array $data)
+ * @method mixed saveContract(array $data)
  *
  * Виды деятельности контрагентов (@see ContractorTypesActivities)
  * @method mixed listTypeActContr           Список
@@ -255,15 +261,20 @@ class SoapComponent extends CApplicationComponent
 	 * @return bool
 	 */
 	protected function soap_method_exists($name) {
-		if (method_exists($this->soap_client, $name)) return true;
-		else {
-			$methods = $this->soap_client->__getFunctions();
-			if ($methods) {
-				foreach ($methods as $m) {
-					if (strpos($m, $name) !== false) return true;
-				}
-			}
-		}
+        // init soap if needed
+        if (!is_resource($this->soap_client->sdl)){
+            $this->delay_init();
+        }
+
+		if (method_exists($this->soap_client, $name)) {
+            return true;
+        }
+        $methods = $this->soap_client->__getFunctions();
+        if ($methods) {
+            foreach ($methods as $m) {
+                if (strpos($m, $name) !== false) return true;
+            }
+        }
 		return false;
 	}
 

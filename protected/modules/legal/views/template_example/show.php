@@ -31,5 +31,5 @@
 	<?=$tab_content?>
 
 </div>
-<script type="text/javascript" src="/static/js/common.js"></script>
+<script type="text/javascript" src="/protected/assets/js/common.js"></script>
 <!--$this->renderPartial('tabs_with_content', array('yur_content' => $this->renderPartial('info', array(''))))-->

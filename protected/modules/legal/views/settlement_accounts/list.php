@@ -1,12 +1,11 @@
 <?php
 /**
- *  Банковские счета -> Список.
- *  User: Skibardin A.A.
- *  Date: 27.06.13
+ * Банковские счета -> Список.
+ * @author Skibardin A.A. <skybardpf@artektiv.ru>
  *
- *  @var $this          Settlement_accountsController
- *  @var $accounts      SettlementAccount[]
- *  @var $organization  Organizations
+ * @var Settlement_accountsController  $this
+ * @var SettlementAccount[]            $data
+ * @var Organizations                  $organization
  */
 ?>
 
@@ -23,13 +22,13 @@
 
 <h3>Банковские счета</h3>
 <?php
-    $data = new CArrayDataProvider($accounts);
+    $provider = new CArrayDataProvider($data);
     $cur = Currencies::getValues();
     $p   = Individuals::getValues();
-    foreach ($data->rawData as $k=>$v){
+    foreach ($provider->rawData as $k=>$v){
         $person = '';
-        if (!empty($data->rawData[$k]->managing_persons)){
-            foreach ($data->rawData[$k]->managing_persons as $pid){
+        if (!empty($provider->rawData[$k]->managing_persons)){
+            foreach ($provider->rawData[$k]->managing_persons as $pid){
                 if (isset($p[$pid])){
                     $person .= CHtml::link($p[$pid], $this->createUrl('/legal/individuals/view/', array('id' => $pid)));
                 } else {
@@ -38,13 +37,13 @@
                 $person .= '<br/>';
             }
         }
-        $data->rawData[$k]['div_persons'] = $person;
-        $data->rawData[$k]['cur_name'] = (isset($cur[$v['cur']])) ? $cur[$v['cur']] : NULL;
+        $provider->rawData[$k]['div_persons'] = $person;
+        $provider->rawData[$k]['cur_name'] = (isset($cur[$v['cur']])) ? $cur[$v['cur']] : NULL;
     }
 
     $this->widget('bootstrap.widgets.TbGridView', array(
         'type'=>'striped bordered condensed',
-        'dataProvider' => $data,
+        'dataProvider' => $provider,
         'template'=>"{items}{pager}",
         'columns'=>array(
             array(

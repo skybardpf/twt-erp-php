@@ -157,27 +157,18 @@ class Contractor extends SOAPModel {
      *  @return array
 	 */
 	public static function getValues() {
-        /**
-         * @var $cache CFileCache
-         */
-        $cache = new CFileCache();
-		$data = $cache->get(__CLASS__.'_values');
-		if ($data === false) {
-			if (!self::$_values) {
-				$elements = self::model()->findAll();
-				$return   = array();
-				if ($elements) {
-                    foreach ($elements as $elem) {
-					    $return[$elem->getprimaryKey()] = $elem->name;
-				    }
+        $cache_id = __CLASS__.'_list';
+        $data = Yii::app()->cache->get($cache_id);
+        if ($data === false) {
+            $elements = self::model()->findAll();
+            $data = array();
+            if ($elements) {
+                foreach ($elements as $elem) {
+                    $data[$elem->getprimaryKey()] = $elem->name;
                 }
-				self::$_values = $return;
-
-			}
-			$cache->add(__CLASS__.'_values', self::$_values, 3000);
-		} elseif (!self::$_values) {
-			self::$_values = $data;
-		}
-		return self::$_values;
+            }
+            Yii::app()->cache->set($cache_id, $data);
+        }
+        return $data;
 	}
 }

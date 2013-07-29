@@ -19,11 +19,6 @@ class UpdateAction extends CAction
         $controller = $this->controller;
         $controller->pageTitle .= 'Редактирование контрагента';
 
-        $aa = GroupEntities::model()
-//            ->where('id', '000000106')
-            ->findAll();
-//        var_dump($aa);die;
-
         /**
          * @var $model Contractor
          */

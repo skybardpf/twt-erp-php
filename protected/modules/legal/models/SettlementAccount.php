@@ -90,9 +90,8 @@ class SettlementAccount extends SOAPModel {
     public static function getBankName($bank_id) {
         $bank_name = '';
         if (!empty($bank_id)){
-            $cache = new CFileCache();
             $cache_id = __CLASS__.'_bank_'.$bank_id;
-            $bank_name = $cache->get($cache_id);
+            $bank_name = Yii::app()->cache->get($cache_id);
             if ($bank_name === false) {
                 // BIK
                 if (strlen($bank_id) == 9 && ctype_digit($bank_id)){
@@ -108,7 +107,7 @@ class SettlementAccount extends SOAPModel {
                 }
                 if (!empty($banks) && isset($banks[0]) && !empty($banks[0]->name)){
                     $bank_name = $banks[0]->name;
-                    $cache->set($cache_id, $bank_name);
+                    Yii::app()->cache->set($cache_id, $bank_name);
                 } else {
                     $bank_name = '';
                 }
@@ -119,12 +118,14 @@ class SettlementAccount extends SOAPModel {
 
 	/**
 	 * Удаление Расчетного счета
-	 *
 	 * @return bool
 	 */
 	public function delete() {
 		if ($pk = $this->getprimaryKey()) {
 			$ret = $this->SOAP->deleteSettlementAccount(array('id' => $pk));
+            Yii::app()->cache->delete(__CLASS__.'_'.$this->primaryKey);
+            Yii::app()->cache->delete(__CLASS__.'_list_org_id_'.$this->id_yur);
+            Yii::app()->cache->delete(__CLASS__.'_list');
 			return $ret->return;
 		}
 		return false;
@@ -172,6 +173,11 @@ class SettlementAccount extends SOAPModel {
             )
         );
 		$ret = SoapComponent::parseReturn($ret, false);
+        if($this->primaryKey){
+            Yii::app()->cache->delete(__CLASS__.'_'.$this->primaryKey);
+        }
+        Yii::app()->cache->delete(__CLASS__.'_list_org_id_'.$this->id_yur);
+        Yii::app()->cache->delete(__CLASS__.'_list');
 		return $ret;
 	}
 
