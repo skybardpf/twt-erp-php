@@ -53,6 +53,8 @@ class UpdateAction extends CAction
                     $model->addError('id', $e->getMessage());
                 }
             }
+        } else {
+            $model->invalid = $model->invalid ? $model::STATUS_INVALID : $model::STATUS_VALID;
         }
 
         // TODO только для тестов. Потом убрать. Здесь должен быть массив. Сейчас строка.

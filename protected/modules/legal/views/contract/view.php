@@ -42,7 +42,10 @@
 <?php
     $currency = Currencies::getValues();
     $persons = Individuals::getValues();
+    $prolongation = Contract::getProlongationTypes();
     $contractors = Contractor::getValues();
+    $court_locations = CourtLocation::getValues();
+    $contract_place = ContractPlace::getValues();
     $contractor = (isset($contractors[$model->le_id]) ? $contractors[$model->le_id] : '---');
 
     $side_data = array();
@@ -130,11 +133,13 @@
                 ),
                 array(
                     'name' => 'place_contract',
-                    'label' => 'Место заключения'
+                    'label' => 'Место заключения',
+                    'value' => (isset($contract_place[$model->place_contract])) ? $contract_place[$model->place_contract] : '---'
                 ),
                 array(
                     'name' => 'prolongation_type',
-                    'label' => 'Тип пролонгации'
+                    'label' => 'Тип пролонгации',
+                    'value' => (isset($prolongation[$model->prolongation_type])) ? $prolongation[$model->prolongation_type] : '---'
                 ),
                 array(
                     'name' => 'dogovor_summ',
@@ -168,11 +173,13 @@
                 ),
                 array(
                     'name' => 'invalid',
-                    'label' => 'Статус договора'
+                    'label' => 'Статус договора',
+                    'value' => ($model->invalid) ? 'Недействителен' : 'Действителен'
                 ),
                 array(
                     'name' => 'place_court',
-                    'label' => 'Место судебной инстанции'
+                    'label' => 'Место судебной инстанции',
+                    'value' => (isset($court_locations[$model->place_court])) ? $court_locations[$model->place_court] : '---'
                 ),
             )
        )

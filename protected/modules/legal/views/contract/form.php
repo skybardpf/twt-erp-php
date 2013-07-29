@@ -103,12 +103,32 @@
     </div>
 
 <?php
-    $model->invalid = $model->invalid ? 1 : 0;
-    echo $form->radioButtonListInlineRow($model, 'invalid', array(
-        1 => 'Действителен',
-        0 => 'Не действителен',
-    ));
-    echo $form->textFieldRow($model, 'place_contract');
+    $checked_0 = '';
+    $checked_1 = '';
+    if ($model->invalid == Contract::STATUS_INVALID){
+        $checked_0 = 'checked';
+    } elseif ($model->invalid == Contract::STATUS_VALID){
+        $checked_1 = 'checked';
+    }
+?>
+    <div class="control-group">
+        <?= CHtml::label('Статус договора <span class="required">*</span>', 'Contract_invalid', array('class' => 'control-label')); ?>
+        <div class="controls">
+            <input id="ytContract_invalid" type="hidden" value="" name="Contract[invalid]">
+            <label class="radio inline">
+                <input id="Contract_invalid_0" value="<?= Contract::STATUS_INVALID; ?>" type="radio" name="Contract[invalid]" <?= $checked_0; ?>>
+                <label for="Contract_invalid_0">Недействителен</label>
+            </label>
+            <label class="radio inline">
+                <input id="Contract_invalid_1" value="<?= Contract::STATUS_VALID; ?>" type="radio" name="Contract[invalid]" <?= $checked_1; ?>>
+                <label for="Contract_invalid_1">Действителен</label>
+            </label>
+            <?= $form->error($model, 'invalid'); ?>
+        </div>
+    </div>
+
+<?php
+    echo $form->dropDownListRow($model, 'place_contract', ContractPlace::getValues());
     echo $form->dropDownListRow($model, 'prolongation_type', Contract::getProlongationTypes());
 ?>
     <div class="control-group">
@@ -282,7 +302,7 @@
     </div>
 
 <?php
-    echo $form->textFieldRow($model, 'place_court');
+    echo $form->dropDownListRow($model, 'place_court', CourtLocation::getValues());
     echo $form->textAreaRow($model, 'comment');
 
     $data_scans = array();

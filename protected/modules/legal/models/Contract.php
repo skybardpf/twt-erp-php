@@ -22,6 +22,9 @@
  */
 class Contract extends SOAPModel
 {
+    const STATUS_INVALID = 1;
+    const STATUS_VALID = 2;
+
     const ROLE_BUYER = 'Продавец';
     const ROLE_CONTRACTOR = 'Поставщик';
 
@@ -72,7 +75,12 @@ class Contract extends SOAPModel
     {
         if ($pk = $this->getprimaryKey()) {
             $ret = $this->SOAP->deleteContract(array('id' => $pk));
-            Yii::app()->cache->delete(__CLASS__.'_list_org_id_'.$this->id_yur);
+
+            /**
+             * Сбрасываем кеш.
+             */
+            $this->clearCache();
+
             return $ret->return;
         }
         return false;
@@ -91,6 +99,7 @@ class Contract extends SOAPModel
             unset($data['id']);
         }
         unset($data['deleted']);
+        unset($data['character']);
         unset($data['json_signatory']);
         unset($data['json_signatory_contractor']);
 
@@ -113,11 +122,24 @@ class Contract extends SOAPModel
         if (!ctype_digit($ret)){
             throw new CHttpException(500, 'Ошибка при сохранении договора.');
         }
+
+        /**
+         * Сбрасываем кеш.
+         */
+        $this->clearCache();
+
+        return $ret;
+    }
+
+    /**
+     * Сбрасываем кеш по данному договору и для списка договоров.
+     */
+    public function clearCache()
+    {
         if ($this->primaryKey){
             Yii::app()->cache->delete(__CLASS__.'_'.$this->primaryKey);
         }
         Yii::app()->cache->delete(__CLASS__.'_list_org_id_'.$this->id_yur);
-        return $ret;
     }
 
     /**
@@ -184,8 +206,8 @@ class Contract extends SOAPModel
             array('date, expire', 'required'),
             array('date, expire', 'date', 'format' => 'yyyy-MM-dd'),
 
-            array('invalid', 'required'),
-            array('invalid', 'in', 'range' => array(0,1)),
+//            array('invalid', 'required'),
+            array('invalid', 'in', 'range' => array(1,2)),
 
             array('prolongation_type', 'required'),
             array('prolongation_type', 'in', 'range' => array_keys(self::getProlongationTypes())),
@@ -199,7 +221,7 @@ class Contract extends SOAPModel
             array('dogovor_summ', 'required'),
             array('dogovor_summ', 'numerical', 'integerOnly' => true, 'min' => 0, 'max'=>'9999999999999'),
             array('everymonth_summ', 'numerical', 'integerOnly' => true, 'min' => 0, 'max'=>'9999999999999'),
-            array('date_infomation', 'numerical', 'integerOnly' => true, 'min' => 0, 'max'=>'9999999999999'),
+            array('date_infomation', 'numerical', 'integerOnly' => true, 'min' => 0, 'max'=>'999'),
 
             array('json_signatory_contractor, json_signatory', 'validJson'),
 
@@ -214,14 +236,14 @@ class Contract extends SOAPModel
     }
 
     /**
-     * Список договоров. Формат [key => name]. Результат сохранеятся в кеш.
+     * Список договоров. Формат [key => name].
+     * Результат сохранеятся в кеш.
      * @return array
      */
     public static function getValues()
     {
-        $cache = new CFileCache();
-        $cache_id = __CLASS__. 'values';
-        $data = $cache->get($cache_id);
+        $cache_id = __CLASS__. '_list';
+        $data = Yii::app()->cache->get($cache_id);
         if ($data === false) {
             $elements = self::model()->findAll();
             $data = array();
@@ -230,7 +252,7 @@ class Contract extends SOAPModel
                     $data[$elem->getprimaryKey()] = $elem->name;
                 }
             }
-            $cache->add($cache_id, $data, 3000);
+            Yii::app()->cache->set($cache_id, $data);
         }
         return $data;
     }
