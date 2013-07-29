@@ -14,14 +14,11 @@ class ViewAction extends CAction
     public function run($id)
     {
         /**
-         * @var $controller ContractorController
+         * @var ContractorController    $controller
          */
         $controller = $this->controller;
-        $controller->pageTitle .= 'Просмотр контрагента';
+        $controller->pageTitle .= ' | Просмотр контрагента';
 
-        /**
-         * @var $model Contractor
-         */
         $model = $controller->loadModel($id);
         $controller->render(
             'view',

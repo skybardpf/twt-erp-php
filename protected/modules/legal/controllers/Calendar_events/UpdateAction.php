@@ -84,7 +84,7 @@ class UpdateAction extends CAction
             $model->json_countries = CJSON::encode($model->countries);
         }
 
-        $controller->render('/my_organizations/show', array(
+        $controller->render('/organization/show', array(
             'content' => $controller->renderPartial('/my_events/form',
                 array(
                     'organization' => $org,

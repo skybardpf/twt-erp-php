@@ -7,7 +7,7 @@
  *
  *  @var $this          Founding_documentsController
  *  @var $model         FoundingDocument
- *  @var $organization  Organizations
+ *  @var $organization  Organization
  */
 ?>
 

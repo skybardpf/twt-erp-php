@@ -20,7 +20,7 @@ class CreateAction extends CAction
         $controller->pageTitle .= ' | Создание договора';
 
         /**
-         * @var Organizations $org
+         * @var Organization $org
          */
         $org = $controller->loadOrganization($org_id);
         /**
@@ -48,7 +48,7 @@ class CreateAction extends CAction
         $model->json_signatory = CJSON::encode($model->signatory);
         $model->json_signatory_contractor = CJSON::encode($model->signatory_contr);
 
-        $controller->render('/my_organizations/show', array(
+        $controller->render('/organization/show', array(
             'content' => $controller->renderPartial('/contract/form',
                 array(
                     'organization' => $org,

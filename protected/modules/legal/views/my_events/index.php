@@ -19,7 +19,7 @@
 <h2>Мои события</h2>
 
 <?php
-    $organizations = Organizations::getValues();
+    $organizations = Organization::getValues();
     $contractors = Contractor::getValues();
 
     $provider = new CArrayDataProvider($data);
@@ -35,7 +35,7 @@
                         if (isset($organizations[$list[$id]])){
                             $div .= CHtml::link(
                                     ' - ' . $organizations[$list[$id]],
-                                    $this->createUrl('my_organizations/view', array('id' => $list[$id]))
+                                    $this->createUrl('organization/view', array('id' => $list[$id]))
                                 ).'<br/>';
                         }
                     } elseif($list[$type] == 'Контрагенты'){

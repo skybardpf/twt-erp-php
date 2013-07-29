@@ -6,7 +6,7 @@
  *
  *  @var $this          DocumentsController
  *  @var $docs          FoundingDocument[]
- *  @var $organization  Organizations
+ *  @var $organization  Organization
  */
 ?>
 

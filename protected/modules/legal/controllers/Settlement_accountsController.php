@@ -50,10 +50,10 @@ class Settlement_accountsController extends Controller {
 
     /**
      * Список банковских счетов для организации.
-     * @param Organizations $org
+     * @param Organization $org
      * @return SettlementAccount[]
      */
-    public function getDataProviderForOrganization(Organizations $org)
+    public function getDataProviderForOrganization(Organization $org)
     {
         $cache_id = get_class(SettlementAccount::model()).'_list_org_id_'.$org->primaryKey;
         $data = Yii::app()->cache->get($cache_id);
@@ -88,10 +88,10 @@ class Settlement_accountsController extends Controller {
 
     /**
      * Создаем новый банковский счет.
-     * @param Organizations $org
+     * @param Organization $org
      * @return SettlementAccount
      */
-    public function createModel(Organizations $org)
+    public function createModel(Organization $org)
     {
         $model = new SettlementAccount();
         $model->id_yur = $org->primaryKey;

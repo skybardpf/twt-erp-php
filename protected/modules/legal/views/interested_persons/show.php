@@ -6,7 +6,7 @@
  *
  * @var $this           Interested_personsController
  * @var $model          InterestedPerson | Beneficiary
- * @var $organization   Organizations
+ * @var $organization   Organization
  */
 
 ?>

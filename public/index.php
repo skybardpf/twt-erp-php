@@ -2,7 +2,7 @@
 $yii = 'yii.php';
 
 /**
- * Продакш находиться здесь.
+ * Продакшн находится здесь.
  */
 if ($_SERVER['HTTP_HOST'] == 'twt-erp.twtconsult.ru') {
     defined('YII_DEBUG') or define('YII_DEBUG',false);

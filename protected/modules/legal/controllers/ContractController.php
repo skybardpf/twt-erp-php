@@ -48,10 +48,10 @@ class ContractController extends Controller{
 
     /**
      * Создаем новый договор.
-     * @param Organizations $org
+     * @param Organization $org
      * @return Contract
      */
-    public function createModel(Organizations $org)
+    public function createModel(Organization $org)
     {
         $model = new Contract();
         $model->id_yur = $org->primaryKey;
@@ -60,10 +60,10 @@ class ContractController extends Controller{
 
     /**
      * Получаем список договоров указанной организации.
-     * @param Organizations $org
+     * @param Organization $org
      * @return Contract[]
      */
-    public function getDataProvider(Organizations $org)
+    public function getDataProvider(Organization $org)
     {
         $cache_id = get_class(Contract::model()).'_list_org_id_'.$org->primaryKey;
         $data = Yii::app()->cache->get($cache_id);

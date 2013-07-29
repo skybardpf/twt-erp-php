@@ -18,8 +18,8 @@ class Founding_documentsController extends Controller {
      */
     public function actionAdd($org_id)
     {
-        /** @var $org Organizations */
-        $org = Organizations::model()->findByPk($org_id);
+        /** @var $org Organization */
+        $org = Organization::model()->findByPk($org_id);
         if (!$org) {
             throw new CHttpException(404, 'Не найдено юридическое лицо.');
         }
@@ -43,7 +43,7 @@ class Founding_documentsController extends Controller {
             }
         }
 
-        $this->render('/my_organizations/show', array(
+        $this->render('/organization/show', array(
             'content' => $this->renderPartial('/founding_documents/form',
                 array(
                     'model'         => $doc,
@@ -73,8 +73,8 @@ class Founding_documentsController extends Controller {
             throw new CHttpException(404, 'У документа неверный тип для данной страницы');
         }
 
-        /** @var $org Organizations */
-        $org = Organizations::model()->findByPk($doc->id_yur);
+        /** @var $org Organization */
+        $org = Organization::model()->findByPk($doc->id_yur);
         if (!$org) {
             throw new CHttpException(404, 'Юр.лицо данного документа не получено.');
         }
@@ -97,7 +97,7 @@ class Founding_documentsController extends Controller {
 //        Yii::import( "xupload.models.XUploadForm" );
 //        $photos = new XUploadForm;
 
-        $this->render('/my_organizations/show', array(
+        $this->render('/organization/show', array(
             'content' => $this->renderPartial('/founding_documents/form',
                 array(
                     'model'         => $doc,
@@ -127,13 +127,13 @@ class Founding_documentsController extends Controller {
             throw new CHttpException(404, 'У документа неверный тип для данной страницы');
         }
 
-        /** @var $org Organizations */
-        $org = Organizations::model()->findByPk($doc->id_yur);
+        /** @var $org Organization */
+        $org = Organization::model()->findByPk($doc->id_yur);
         if (!$org) {
             throw new CHttpException(404, 'Юр.лицо данного документа не получено.');
         }
 
-        $this->render('/my_organizations/show', array(
+        $this->render('/organization/show', array(
             'content' => $this->renderPartial('/founding_documents/show',
                 array(
                     'model'         => $doc,
@@ -162,8 +162,8 @@ class Founding_documentsController extends Controller {
             throw new CHttpException(404, 'У документа неверный тип для данной страницы');
         }
 
-        /** @var $org Organizations */
-        $org = Organizations::model()->findByPk($doc->id_yur);
+        /** @var $org Organization */
+        $org = Organization::model()->findByPk($doc->id_yur);
         if (!$org) {
             throw new CHttpException(404, 'Юр.лицо данного документа не получено.');
         }

@@ -5,7 +5,7 @@
  * @author Skibardin A.A. <skybardpf@artektiv.ru>
  *
  * @var Calendar_eventsController   $this
- * @var Organizations               $organization
+ * @var Organization               $organization
  * @var $data                       Event[]
  *
  */

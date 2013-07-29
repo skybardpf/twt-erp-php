@@ -6,7 +6,7 @@
  *
  * @var My_eventsController | Calendar_eventsController $this
  * @var Event           $model
- * @var Organizations   $organization
+ * @var Organization   $organization
  */
 ?>
 
@@ -108,14 +108,14 @@
         /**
          * Список огранизаций и контрагентов
          */
-        $organizations = Organizations::getValues();
+        $organizations = Organization::getValues();
         $contractors = Contractor::getValues();
         foreach ($model->list_yur as $v){
             if ($v['type_yur'] == 'Организации'){
                 if (isset($organizations[$v['id_yur']])){
                     $data[] = array(
                         'id' => 'o_'.$v['id_yur'],
-                        'name' => CHtml::link($organizations[$v['id_yur']], $this->createUrl('my_organizations/view', array('id' => $v['id_yur']))),
+                        'name' => CHtml::link($organizations[$v['id_yur']], $this->createUrl('organization/view', array('id' => $v['id_yur']))),
                         'delete' => $this->widget('bootstrap.widgets.TbButton', array(
                             'buttonType' => 'button',
                             'type' => 'primary',

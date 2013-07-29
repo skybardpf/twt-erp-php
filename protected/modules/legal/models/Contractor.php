@@ -59,6 +59,7 @@ class Contractor extends SOAPModel {
     {
         if ($pk = $this->getprimaryKey()) {
             $ret = $this->SOAP->deleteContragent(array('id' => $pk));
+            $this->clearCache();
             return $ret->return;
         }
         return false;
@@ -83,8 +84,22 @@ class Contractor extends SOAPModel {
         $ret = $this->SOAP->saveContragent(array(
             'data' => SoapComponent::getStructureElement($data),
         ));
+
+        $this->clearCache();
+
         return SoapComponent::parseReturn($ret, false);
 	}
+
+    /**
+     * Сбрасываем кеш по данному контарагенту и для списка контарагентов.
+     */
+    public function clearCache()
+    {
+        if ($this->primaryKey){
+            Yii::app()->cache->delete(__CLASS__.'_'.$this->primaryKey);
+        }
+        Yii::app()->cache->delete(__CLASS__.'_list');
+    }
 
 	/**
 	 * Returns the list of attribute names of the model.

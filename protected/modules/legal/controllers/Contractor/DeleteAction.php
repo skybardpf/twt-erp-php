@@ -15,14 +15,11 @@ class DeleteAction extends CAction
     public function run($id)
     {
         /**
-         * @var $controller ContractorController
+         * @var ContractorController    $controller
          */
         $controller = $this->controller;
-        $controller->pageTitle .= 'Удаление контрагента';
+        $controller->pageTitle .= ' | Удаление контрагента';
 
-        /**
-         * @var $model Contractor
-         */
         $model = $controller->loadModel($id);
 
         if (Yii::app()->request->isAjaxRequest) {
@@ -35,6 +32,7 @@ class DeleteAction extends CAction
             echo CJSON::encode($ret);
             Yii::app()->end();
         }
+
         if (isset($_POST['result'])) {
             switch ($_POST['result']) {
                 case 'yes':

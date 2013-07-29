@@ -30,9 +30,9 @@ class DeleteAction extends CAction
         }
 
         /**
-         * @var $org Organizations
+         * @var $org Organization
          */
-        $org = Organizations::model()->findByPk('000000001');
+        $org = Organization::model()->findByPk('000000001');
         if ($org === null) {
             throw new CHttpException(404, 'Не найдено юридическое лицо.');
         }
@@ -73,7 +73,7 @@ class DeleteAction extends CAction
                 break;
             }
         }
-        $controller->render('/my_organizations/show', array(
+        $controller->render('/organization/show', array(
             'content' => $controller->renderPartial('/interested_persons/delete',
                 array(
                     'model' => $model,

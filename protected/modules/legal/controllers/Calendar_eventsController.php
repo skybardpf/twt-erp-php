@@ -34,10 +34,10 @@ class Calendar_eventsController extends Controller{
 
     /**
      * Получаем список событий указанной организации.
-     * @param Organizations $org
+     * @param Organization $org
      * @return Event[]
      */
-    public function getDataProvider(Organizations $org)
+    public function getDataProvider(Organization $org)
     {
         $cache_id = get_class(Event::model()).'_list_org_id_'.$org->primaryKey;
         $data = Yii::app()->cache->get($cache_id);

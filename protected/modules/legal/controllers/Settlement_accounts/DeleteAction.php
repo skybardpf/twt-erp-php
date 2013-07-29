@@ -52,7 +52,7 @@ class DeleteAction extends CAction
             }
         }
 
-        $controller->render('/my_organizations/show', array(
+        $controller->render('/organization/show', array(
             'content' => $controller->renderPartial('/settlement_accounts/delete',
                 array(
                     'model' => $model,

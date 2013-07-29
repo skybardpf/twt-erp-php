@@ -44,15 +44,15 @@ class Controller extends CController
      *  Получаем модель организации.
      *
      *  @param string $org_id
-     *  @return Organizations
+     *  @return Organization
      *  @throws CHttpException
      */
     public function loadOrganization($org_id)
     {
-        $cache_id = get_class(Organizations::model()).'_'.$org_id;
+        $cache_id = get_class(Organization::model()).'_'.$org_id;
         $org = Yii::app()->cache->get($cache_id);
         if ($org === false){
-            $org = Organizations::model()->findByPk($org_id);
+            $org = Organization::model()->findByPk($org_id);
             if ($org === null) {
                 throw new CHttpException(404, 'Не найдена организация.');
             }

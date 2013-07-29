@@ -19,7 +19,7 @@
 
     $cur = Currencies::getValues();
     $p   = Individuals::getValues();
-    $org = Organizations::getValues();
+    $org = Organization::getValues();
     foreach ($provider->rawData as $k=>$v){
         $person = '';
         if (!empty($provider->rawData[$k]->managing_persons)){

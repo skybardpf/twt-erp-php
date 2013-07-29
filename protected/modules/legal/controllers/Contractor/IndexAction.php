@@ -8,15 +8,14 @@ class IndexAction extends CAction
 {
     /**
      * Список контрагентов (внешних организаций).
-     * @throws CHttpException
      */
     public function run()
     {
         /**
-         * @var $controller ContractorController
+         * @var ContractorController    $controller
          */
         $controller = $this->controller;
-        $controller->pageTitle .= 'Список контрагентов';
+        $controller->pageTitle .= ' | Список контрагентов';
 
         $data = $controller->getDataProvider();
         $controller->render(

@@ -14,7 +14,7 @@
 <td style="width: 90%">
 <?php
     if ($type == 'organization'){
-        echo CHtml::link($name, $this->createUrl('my_organizations/view', array('id' => $id)));
+        echo CHtml::link($name, $this->createUrl('organization/view', array('id' => $id)));
     } else {
         echo $name;
     }

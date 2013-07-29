@@ -6,7 +6,7 @@
  *
  *  @var $this          DocumentsController
  *  @var $docs          PowerAttorneysLE[]
- *  @var $organization  Organizations
+ *  @var $organization  Organization
  */
 ?>
 
