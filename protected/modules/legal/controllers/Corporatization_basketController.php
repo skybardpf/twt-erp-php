@@ -10,7 +10,7 @@ define('TYPE_INDIVIDUALS', 'ФизЛицо');
 class Corporatization_basketController extends Controller
 {
     public $layout = 'inner';
-    public $menu_current = 'legal';
+    public $menu_current = 'corporatization_basket';
     public $pageTitle = 'TWT Consult | Корзина акционирования';
 
     private $_titles = array(
