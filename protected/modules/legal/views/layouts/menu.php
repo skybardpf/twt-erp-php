@@ -39,6 +39,11 @@
                 'url'   => '/legal/settlement_accounts/',
                 'active'=> ($this->menu_current == 'settlements')
             ),
+            array(
+                'label' => 'Корзина акционирования',
+                'url'   => '/legal/corporatization_basket/',
+                'active'=> ($this->menu_current == 'corporatization_basket')
+            ),
         ),
     ));
 ?>

@@ -3,3 +3,5 @@ protected/modules/admin/*
 protected/runtime/*
 public/assets/*
 uploads/*
+assets/*
+index.php

@@ -49,6 +49,11 @@
                 'url'   => $this->createUrl('contracts/list', array('org_id' => $organization->primaryKey)),
                 'active'=> ($cur_tab == 'contracts')
             ),
+            array(
+                'label' => 'Корзина акционирования',
+                'url'   => $this->createUrl('corporatization_basket/index', array('org_id' => $organization->primaryKey)),
+                'active'=> ($cur_tab == 'corporatization_basket')
+            ),
         ),
     ));
     ?>
