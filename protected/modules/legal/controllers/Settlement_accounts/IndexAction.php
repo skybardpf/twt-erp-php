@@ -8,9 +8,8 @@ class IndexAction extends CAction
 {
     /**
      * Список банковских счетов.
-     * @param string $org_id
      */
-    public function run($org_id)
+    public function run()
     {
         /**
          * @var Settlement_accountsController $controller

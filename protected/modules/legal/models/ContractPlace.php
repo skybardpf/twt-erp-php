@@ -1,22 +1,22 @@
 <?php
 /**
- * Список контактных лиц для контрагентов.
+ * Список мест заключения контрактов.
  *
  * @author Skibardin A.A. <skybardpf@artektiv.ru>
  */
-class ContactPersonForContractors extends SOAPModel {
+class ContractPlace extends SOAPModel {
     /**
      * @static
      * @param string $className
-     * @return ContactPersonForContractors
+     * @return ContractPlace
      */
     public static function model($className = __CLASS__) {
         return parent::model($className);
     }
 
     /**
-     * Список контактных лиц для контрагентов.
-     * @return ContactPersonForContractors[]
+     * Список мест заключения контрактов.
+     * @return ContractPlace[]
      */
     public function findAll() {
         $filters = SoapComponent::getStructureElement($this->where);
@@ -24,8 +24,7 @@ class ContactPersonForContractors extends SOAPModel {
             $filters = array(array());
         }
         $request = array('filters' => $filters, 'sort' => array($this->order));
-        $ret = $this->SOAP->listContactPersonsForContractors($request);
-
+        $ret = $this->SOAP->listContractPlaces($request);
         $ret = SoapComponent::parseReturn($ret);
         return $this->publish_list($ret, __CLASS__);
     }
@@ -37,7 +36,7 @@ class ContactPersonForContractors extends SOAPModel {
     public function attributeLabels() {
         return array(
             'id' => '#',
-            'name' => 'ФИО',
+            'name' => 'Название',
         );
     }
 
@@ -51,14 +50,13 @@ class ContactPersonForContractors extends SOAPModel {
     }
 
     /**
-     * Список контактных лиц для контрагентов. Формат [key => name].
+     * Список мест заключения контрактов. Формат [key => name].
      * Результат сохранеятся в кеш.
      * @return array
      */
     public static function getValues() {
-        $cache = new CFileCache();
-        $cache_id = __CLASS__. 'values';
-        $data = $cache->get($cache_id);
+        $cache_id = __CLASS__. '_list';
+        $data = Yii::app()->cache->get($cache_id);
         if ($data === false) {
             $elements = self::model()->findAll();
             $data = array();
@@ -67,7 +65,7 @@ class ContactPersonForContractors extends SOAPModel {
                     $data[$elem->getprimaryKey()] = $elem->name;
                 }
             }
-            $cache->add($cache_id, $data, 3000);
+            Yii::app()->cache->set($cache_id, $data);
         }
         return $data;
     }

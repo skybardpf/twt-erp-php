@@ -81,6 +81,12 @@
  *
  * Виды деятельности контрагентов (@see ContractorTypesActivities)
  * @method mixed listTypeActContr           Список
+ *
+ * Место расположения суда. (@see CourtLocation)
+ * @method mixed listCourtLocations(array $data)
+ *
+ * Место заклоючения контрактов. (@see ContractPlace)
+ * @method mixed listContractPlaces(array $data)
  */
 class SoapComponent extends CApplicationComponent
 {
