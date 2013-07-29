@@ -40,17 +40,6 @@ return array(
 			// enable cookie-based authentication
 			'allowAutoLogin' => true,
 		),
-		'soap' => array(
-			'class'     => 'SoapComponent',
-//			'wsdl'      => 'http://80.250.210.238/TWT_backend/ws/twt?wsdl',
-			'wsdl'      => 'http://144.76.90.162/twt_erp/ws/erp?wsdl',
-			'connection_options' => array(
-//				'login'     => 'test',
-//                'password'  => '',
-                'login'     => 'Site',
-                'password'  => 'Site',
-			)
-		),
 		'calc' => array(
 			'class' => 'SoapComponent',
 			'wsdl'  => 'http://144.76.90.162/testmakarov/ws/CalcIns?wsdl',
@@ -59,10 +48,6 @@ return array(
 				'password'  => 'Site',
 			)
 		),
-//		'bootstrap' => array(
-//			'class' => 'ext.bootstrap.components.Bootstrap', // assuming you extracted bootstrap under extensions
-//		),
-
         'bootstrap'=>array(
             'class'=>'bootstrap.components.Bootstrap',
         ),
