@@ -1,3 +1,4 @@
+<<<<<<< HEAD:protected/modules/legal/views/my_organizations/show.php
 <?php
 /**
  * Просмотр Юр.Лица
@@ -6,7 +7,7 @@
  * Date: 23.04.2013 от рождества Христова
  *
  * @var $this           Controller
- * @var $organization   Organization
+ * @var $organization   Organizations
  * @var $cur_tab        string
  */
 ?>
@@ -19,7 +20,7 @@
         'items'=>array(
             array(
                 'label' => 'Информация',
-                'url'   => $this->createUrl('organization/view', array('id' => $organization->primaryKey)),
+                'url'   => $this->createUrl('my_organizations/view', array('id' => $organization->primaryKey)),
                 'active'=> ($cur_tab == 'info')
             ),
             array(
@@ -48,11 +49,6 @@
                 'label' => 'Договоры',
                 'url'   => $this->createUrl('contract/list', array('org_id' => $organization->primaryKey)),
                 'active'=> ($cur_tab == 'contract')
-            ),
-            array(
-                'label' => 'Корзина акционирования',
-                'url'   => $this->createUrl('corporatization_basket/index', array('org_id' => $organization->primaryKey)),
-                'active'=> ($cur_tab == 'corporatization_basket')
             ),
         ),
     ));
