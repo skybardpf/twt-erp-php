@@ -14,7 +14,7 @@
     $this->widget('bootstrap.widgets.TbMenu', array(
         'type'=>'list', // '', 'tabs', 'pills' (or 'list')
         'items'=>array(
-            array(
+/*            array(
                 'label' => 'Организации',
                 'url' => '/legal/organization/',
                 'active' => ($this->menu_current == 'legal')
@@ -28,13 +28,13 @@
                 'label' => 'Календарь событий',
                 'url'   => '/legal/my_events/',
                 'active'=> ($this->menu_current == 'my_events')
-            ),
+            ),*/
             array(
                 'label' => 'Физические лица',
                 'url'=>'/legal/individuals/',
                 'active'=> ($this->menu_current == 'individuals')
             ),
-
+/*
             array(
                 'label' => 'Банковские счета',
                 'url'   => '/legal/settlement_accounts/',
@@ -54,7 +54,7 @@
                 'label' => 'Библиотека шаблонов',
                 'url'   => '#',
                 'active'=> ($this->menu_current == 'template_library')
-            ),
+            ),*/
         ),
     ));
 ?>
