@@ -34,21 +34,6 @@ class OrganizationController extends Controller
     }
 
     /**
-     * Список организаций.
-     * @return Organization[]
-     */
-    public function getDataProvider()
-    {
-        $cache_id = get_class(Organization::model()).'_list';
-        $data = Yii::app()->cache->get($cache_id);
-        if ($data === false){
-            $data = Organization::model()->where('deleted', false)->findAll();
-            Yii::app()->cache->set($cache_id, $data);
-        }
-        return $data;
-    }
-
-    /**
      * @return Organization Возвращаем созданную модель Организации.
      */
     public function createModel()

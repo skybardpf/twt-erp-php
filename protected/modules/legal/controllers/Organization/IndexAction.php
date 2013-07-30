@@ -17,7 +17,7 @@ class IndexAction extends CAction
         $controller = $this->controller;
         $controller->pageTitle .= ' | Список организаций';
 
-        $data = $controller->getDataProvider();
+        $data = Organization::model()->getFullData();
         $controller->render(
             'index',
             array(

@@ -39,7 +39,7 @@ class CreateAction extends CAction
                 try {
                     $model->save();
                     $controller->redirect($controller->createUrl('index'));
-                } catch (Exception $e) {
+                } catch (CException $e) {
                     $model->addError('id', $e->getMessage());
                 }
             }

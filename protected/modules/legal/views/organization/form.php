@@ -15,7 +15,7 @@
     Yii::app()->clientScript->registerScriptFile($this->asset_static.'/select2/select2.js');
     Yii::app()->clientScript->registerScriptFile($this->asset_static.'/js/legal/organization/form.js');
 
-    echo '<h2>'.($model->primaryKey ? 'Редактирование ' : 'Создание ').'юридического лица</h2>';
+    echo '<h2>'.($model->primaryKey ? 'Редактирование ' : 'Создание ').'организации</h2>';
 
     $form = $this->beginWidget('bootstrap.widgets.MTbActiveForm', array(
         'id'=>'form-organization',
@@ -112,7 +112,7 @@
     <div class="control-group">
         <?= $form->labelEx($model, 'profile', array('class' => 'control-label')); ?>
         <div class="controls">
-            <input
+            <input class="input-profile"
                 id = '<?= get_class($model).'_profile'; ?>'
                 type="text"
                 name="<?= get_class($model).'[profile]'; ?>"

@@ -14,15 +14,27 @@ class UpdateAction extends CAction
     public function run($id)
     {
         /**
-         * @var $controller ContractorController
+         * @var ContractorController    $controller
          */
         $controller = $this->controller;
         $controller->pageTitle .= ' | Редактирование контрагента';
 
-        /**
-         * @var $model Contractor
-         */
         $model = $controller->loadModel($id);
+
+        $class = get_class($model);
+        $country_id = (isset($_POST[$class]) && isset($_POST[$class]['country']) ? $_POST[$class]['country'] : null);
+        if (!is_null($country_id)){
+            if ($country_id == $model::COUNTRY_RUSSIAN_ID){
+                $model->setScenario('russianCountry');
+            } else {
+                $model->setScenario('foreignCountry');
+            }
+        }
+
+        if(isset($_POST['ajax']) && $_POST['ajax']==='form-contractor') {
+            echo CActiveForm::validate($model);
+            Yii::app()->end();
+        }
 
         if (isset($_POST[get_class($model)])) {
             $model->setAttributes($_POST[get_class($model)]);
@@ -36,7 +48,7 @@ class UpdateAction extends CAction
                             'id' => $model->primaryKey,
                         )
                     ));
-                } catch (Exception $e) {
+                } catch (CException $e) {
                     $model->addError('id', $e->getMessage());
                 }
             }

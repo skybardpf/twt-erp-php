@@ -17,7 +17,7 @@ class IndexAction extends CAction
         $controller = $this->controller;
         $controller->pageTitle .= ' | Список контрагентов';
 
-        $data = $controller->getDataProvider();
+        $data = Contractor::model()->getFullData();
         $controller->render(
             'index',
             array(

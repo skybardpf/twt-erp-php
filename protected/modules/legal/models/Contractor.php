@@ -11,13 +11,11 @@
  * @property bool   $deleted
  * @property string $parent
  */
-class Contractor extends SOAPModel {
-    private static $_values;
-
+class Contractor extends AbstractOrganization {
 	/**
 	 * @static
 	 * @param string $className
-	 * @return LegalEntities
+	 * @return Contractor
 	 */
 	public static function model($className = __CLASS__) {
 		return parent::model($className);
@@ -59,8 +57,11 @@ class Contractor extends SOAPModel {
     {
         if ($pk = $this->getprimaryKey()) {
             $ret = $this->SOAP->deleteContragent(array('id' => $pk));
-            $this->clearCache();
-            return $ret->return;
+            $ret = SoapComponent::parseReturn($ret, false);
+            if ($ret){
+                $this->clearCache();
+            }
+            return $ret;
         }
         return false;
     }
@@ -81,6 +82,15 @@ class Contractor extends SOAPModel {
         }
         unset($data['deleted']);
 
+        if ($data['country'] == self::COUNTRY_RUSSIAN_ID){
+            $data['vat_nom'] = '';
+            $data['reg_nom'] = '';
+            $data['sert_nom'] = '';
+        } else {
+            $data['inn'] = '';
+            $data['kpp'] = '';
+        }
+
         $ret = $this->SOAP->saveContragent(array(
             'data' => SoapComponent::getStructureElement($data),
         ));
@@ -89,17 +99,6 @@ class Contractor extends SOAPModel {
 
         return SoapComponent::parseReturn($ret, false);
 	}
-
-    /**
-     * Сбрасываем кеш по данному контарагенту и для списка контарагентов.
-     */
-    public function clearCache()
-    {
-        if ($this->primaryKey){
-            Yii::app()->cache->delete(__CLASS__.'_'.$this->primaryKey);
-        }
-        Yii::app()->cache->delete(__CLASS__.'_list');
-    }
 
 	/**
 	 * Returns the list of attribute names of the model.
@@ -151,39 +150,33 @@ class Contractor extends SOAPModel {
 
             array('okopf', 'required'),
             array('okopf', 'in', 'range' => array_keys(CodesOKOPF::getValues())),
+
+            array('profile', 'required'),
+            array('profile', 'in', 'range' => array_keys(ContractorTypesActivities::getValues())),
 //
 			array('name, full_name', 'required'),
+            array('name', 'length', 'max' => 50),
+            array('full_name', 'length', 'max' => 100),
+
+            /**
+             * Russian country
+             */
+            array('inn, kpp', 'safe', 'on' => 'foreignCountry'),
+            array('inn', 'validateInn', 'on' => 'russianCountry'),
+            array('kpp', 'length', 'max' => 9, 'on' => 'russianCountry'),
+
+            /**
+             * Foreign country
+             */
+            array('reg_nom, sert_nom, vat_nom', 'safe', 'on' => 'russianCountry'),
+            array('vat_nom, reg_nom, sert_nom', 'length', 'max' => 50, 'on' => 'foreignCountry'),
 
             array('sert_date', 'date', 'format' => 'yyyy-MM-dd'),
 
-            array('comment, inn, kpp, yur_address, fact_address,
-                reg_nom, sert_nom, vat_nom, profile, info,
-                phone, fax',
-                'safe'
-            ),
+            array('info, comment', 'length', 'max' => 50),
+            array('yur_address, fact_address, fax, phone', 'length', 'max' => 150),
 
             array('email', 'email'),
 		);
-	}
-
-	/**
-	 *  Список доступных значений Собственных Юр.Лиц
-	 *
-     *  @return array
-	 */
-	public static function getValues() {
-        $cache_id = __CLASS__.'_list';
-        $data = Yii::app()->cache->get($cache_id);
-        if ($data === false) {
-            $elements = self::model()->findAll();
-            $data = array();
-            if ($elements) {
-                foreach ($elements as $elem) {
-                    $data[$elem->getprimaryKey()] = $elem->name;
-                }
-            }
-            Yii::app()->cache->set($cache_id, $data);
-        }
-        return $data;
 	}
 }

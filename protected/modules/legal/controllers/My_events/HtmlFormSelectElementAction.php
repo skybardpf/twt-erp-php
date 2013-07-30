@@ -17,7 +17,7 @@ class HtmlFormSelectElementAction extends CAction
                     throw new CException('Передан неизвестный тип.');
                 }
                 if ($_POST['type'] == 'organization'){
-                    $data = Organization::getValues();
+                    $data = Organization::model()->getListNames();
                     $str = 'Выберите организацию';
                 } else {
                     $data = Countries::getValues();

@@ -68,7 +68,7 @@
     );
 
     echo $form->dropDownListRow($model, 'typ_doc', Contract::getTypes());
-    echo $form->dropDownListRow($model, 'le_id', Contractor::getValues());
+    echo $form->dropDownListRow($model, 'le_id', Contractor::model()->getListNames());
     echo $form->textFieldRow($model, 'name');
     echo $form->textFieldRow($model, 'number');
 ?>
@@ -146,7 +146,7 @@
     echo $form->textFieldRow($model, 'everymonth_summ');
     echo $form->dropDownListRow($model, 'responsible', Individuals::getValues());
 
-    $contractors = Contractor::getValues();
+    $contractors = Contractor::model()->getListNames();
     $contractor = (isset($contractors[$model->le_id]) ? $contractors[$model->le_id] : '---');
 ?>
     <div class="control-group">

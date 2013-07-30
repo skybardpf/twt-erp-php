@@ -201,7 +201,7 @@ class Contract extends SOAPModel
             array('typ_doc', 'in', 'range' => array_keys(self::getTypes())),
 
             array('le_id', 'required'),
-            array('le_id', 'in', 'range' => array_keys(Contractor::getValues())),
+            array('le_id', 'in', 'range' => array_keys(Contractor::model()->getListNames())),
 
             array('date, expire', 'required'),
             array('date, expire', 'date', 'format' => 'yyyy-MM-dd'),
