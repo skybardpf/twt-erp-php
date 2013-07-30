@@ -1,4 +1,3 @@
-<<<<<<< HEAD:protected/modules/legal/views/my_organizations/show.php
 <?php
 /**
  * Просмотр Юр.Лица
@@ -6,12 +5,12 @@
  * User: Forgon
  * Date: 23.04.2013 от рождества Христова
  *
- * @var $this           Controller
- * @var $organization   Organizations
- * @var $cur_tab        string
+ * @var OrganizationController      $this
+ * @var Organization                $organization
+ * @var string                      $cur_tab
  */
 ?>
-<h1><?=$organization->name?></h1>
+<h1><?= Chtml::encode($organization->name); ?></h1>
 <div class="yur-tabs">
     <?php
     $this->widget('bootstrap.widgets.TbMenu', array(

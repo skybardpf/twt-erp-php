@@ -107,17 +107,16 @@ class Individuals extends SOAPModel {
             'name'            => 'Имя',
             'family'          => 'Фамилия',
             'parent_name'     => 'Отчество',
-            'fullname'        => 'ФИО',
+//            'fullname'        => 'ФИО',
             
             'citizenship'     => 'Гражданство',
             
             'birth_date'      => 'Дата рождения',
             'birth_place'     => 'Место рождения',
 
-            // контактных данных нет, вместо него пока раздельно телефон и емэйл
-            'phone'           => 'Номер телефона',
+            'phone'           => 'Контактные данные',
             'email'           => 'E-mail',
-            'adres'           => 'Адрес',            
+            'adres'           => 'Адрес прописки',
 
             'ser_nom_pass'    => 'Серия и номер удостоверения',
             'date_pass'       => 'Дата выдачи удостоверения',
@@ -125,19 +124,11 @@ class Individuals extends SOAPModel {
             'date_exp_pass'   => 'Срок действия удостоверения',
 
             'deleted'         => 'Помечен на удаление',
-
-	        // устаревшие поля
-            //'ser_nom_passrf'  => 'Серия-номер паспорта',
-            //'date_passrf'     => 'Дата выдачи паспорта',
-            //'organ_passrf'    => 'Орган, выдавший паспорт',
-            //'date_exp_passrf' => 'Срок действия паспорта',
-            //'resident'        => 'Резидент РФ',
-            //'group_code'      => 'Группа физ.лиц',
         );
 	}
 
 	/**
-	 * Список доступных значений Физ.лиц. [key => value]
+	 * Список доступных ФИО физ.лиц. [id => name]
 	 * @return array
 	 */
 	public static function getValues() {
@@ -158,7 +149,7 @@ class Individuals extends SOAPModel {
 	}
 
     /**
-     * Список доступных значений Физ.лиц. Формат [family + key] = element
+     * Список доступных физических лиц. Формат [family + key] = element
      * @return array
      */
     public static function getFullValues() {
@@ -189,11 +180,17 @@ class Individuals extends SOAPModel {
             array('citizenship', 'required'),
             array('citizenship', 'in', 'range'  => array_keys(Countries::getValues())),
 
-            array('name', 'required'),
-            array('family', 'required'),
+            array('name, family', 'required'),
+            array('name, family, parent_name', 'length', 'max' => 50),
 
-			array('name, parent_name, family, birth_date, birth_place, date_exp_pass',     'safe'),
-            array('phone, email, adres, ser_nom_pass, date_pass, organ_pass, citizenship', 'safe'),
+            array('phone', 'length', 'max' => 100),
+            array('birth_place, adres', 'length', 'max' => 150),
+            array('organ_pass', 'length', 'max' => 10),
+            array('ser_nom_pass', 'length', 'max' => 50),
+
+            array('birth_date, date_exp_pass, date_pass', 'date', 'format' => 'yyyy-MM-dd'),
+
+            array('email', 'email'),
 		);
 	}
 }

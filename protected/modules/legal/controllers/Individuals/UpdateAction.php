@@ -20,12 +20,11 @@ class UpdateAction extends CAction
 
         $model = $controller->loadModel($id);
 
-        if(isset($_POST['ajax']) && $_POST['ajax']==='model-form-form') {
+        if(isset($_POST['ajax']) && $_POST['ajax']==='form-individual') {
             echo CActiveForm::validate($model);
             Yii::app()->end();
         }
 
-        $error = '';
         if (isset($_POST[get_class($model)])) {
             $model->setAttributes($_POST[get_class($model)]);
             if ($model->validate()) {
@@ -33,11 +32,10 @@ class UpdateAction extends CAction
                     $model->save();
                     $controller->redirect($controller->createUrl('view', array('id' => $model->primaryKey)));
                 } catch (Exception $e) {
-                    $error = $e->getMessage();
+                    $model->addError('id', $e->getMessage());
                 }
             }
         }
-
-        $controller->render('update', array('model' => $model, 'error' => $error));
+        $controller->render('form', array('model' => $model));
     }
 }

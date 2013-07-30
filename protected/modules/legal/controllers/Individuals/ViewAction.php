@@ -13,24 +13,16 @@ class ViewAction extends CAction
     public function run($id)
     {
         /**
-         * @var Settlement_accountsController $controller
+         * @var IndividualsController $controller
          */
         $controller = $this->controller;
         $controller->pageTitle .= ' | Просмотр физического лица';
-        $controller->cur_tab = 'view';
 
         $model = $controller->loadModel($id);
         $controller->render(
-            'show',
+            'view',
             array(
                 'model' => $model,
-                'tab_content' => $controller->renderPartial(
-                    'tab_view',
-                    array(
-                        'model' => $model
-                    ),
-                    1
-                )
             )
         );
     }
