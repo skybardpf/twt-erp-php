@@ -101,9 +101,6 @@ abstract class AbstractOrganization extends SOAPModel {
                 $this->addError($attribute, 'Неправильный формат ИНН.');
             } else {
                 $list = $this->listInn();
-                var_dump($list);
-//                var_dump($list[$this->$attribute]);
-
                 if ($this->primaryKey){
                     if (isset($list[$this->$attribute]) && ($list[$this->$attribute] != $this->primaryKey)){
                         $this->addError($attribute, 'Такой ИНН уже используется другой организацией.');
