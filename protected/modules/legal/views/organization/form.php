@@ -66,7 +66,7 @@
         )
     );
 
-    echo $form->dropDownListRow($model, 'country', Countries::getValues());
+    echo $form->dropDownListRow($model, 'country', Countries::getValues(), array('class' => 'list-countries'));
     echo $form->dropDownListRow($model, 'okopf', CodesOKOPF::getValues());
     echo $form->textFieldRow($model, 'name');
     echo $form->textFieldRow($model, 'full_name');
