@@ -185,7 +185,7 @@ class Individuals extends SOAPModel {
 
             array('phone', 'length', 'max' => 100),
             array('birth_place, adres', 'length', 'max' => 150),
-            array('organ_pass', 'length', 'max' => 10),
+            array('organ_pass', 'length', 'max' => 100),
             array('ser_nom_pass', 'length', 'max' => 50),
 
             array('birth_date, date_exp_pass, date_pass', 'date', 'format' => 'yyyy-MM-dd'),
