@@ -46,9 +46,14 @@
 <?php
     // Опции для JUI селектора даты
     $jui_date_options = array(
+        'language' => 'ru',
         'options'=>array(
             'showAnim' => 'fold',
             'dateFormat' => 'yy-mm-dd',
+            'changeMonth' => true,
+            'changeYear' => true,
+            'showOn' => 'button',
+            'constrainInput' => 'true',
         ),
         'htmlOptions'=>array(
             'style' => 'height:20px;'
@@ -64,12 +69,14 @@
 <div class="control-group">
     <?= $form->labelEx($model, 'sert_date', array('class' => 'control-label')); ?>
     <div class="controls">
-        <?php $this->widget('zii.widgets.jui.CJuiDatePicker',array_merge(
+    <?php
+        $this->widget('zii.widgets.jui.CJuiDatePicker',array_merge(
             array(
                 'model'     => $model,
                 'attribute' => 'sert_date'
             ), $jui_date_options
-        )); ?>
+        ));
+    ?>
     </div>
 </div>
 

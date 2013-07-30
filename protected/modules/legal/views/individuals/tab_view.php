@@ -7,7 +7,6 @@
  * @var Individuals             $model
  */
 ?>
-<?php /*<a href="<?=$this->createUrl('index')?>">Назад к списку</a>*/?>
 <?php
     $this->widget(
 	    'bootstrap.widgets.TbButton',
@@ -44,15 +43,12 @@
 	$this->widget('bootstrap.widgets.TbDetailView', array(
 		'data' => $model,
 		'attributes'=>array(
-			/*array('name' => 'family',           'label' => 'Фамилия'),
-			array('name' => 'name',             'label' => 'Имя'),
-			array('name' => 'parent_name',      'label' => 'Отчество'),*/
-			array( /* citizenship */
+			array(
 				'label' => 'Гражданство',
 				'type'  => 'raw',
 				'value' => $model->citizenship ? $model->citizenship : '&mdash;',
 			),
-			array( /* citizenship */
+			array(
 				'label' => 'Место рождения',
 				'type'  => 'raw',
 				'value' => $model->birth_place ? $model->birth_place : '&mdash;',
@@ -64,11 +60,6 @@
 			array('name' => 'date_pass',        'label' => 'Дата выдачи удостоверения'),
 			array('name' => 'organ_pass',       'label' => 'Орган, выдавший удостоверение'),
 			array('name' => 'date_exp_pass',    'label' => 'Срок действия удостоверения'),
-			/*array('name' => 'ser_nom_passrf',   'label' => 'Серия-номер паспорта РФ'),
-			array('name' => 'date_passrf',      'label' => 'Дата выдачи паспорта РФ'),
-			array('name' => 'organ_passrf',     'label' => 'Орган, выдавший паспорт РФ'),
-			array('name' => 'date_exp_passrf',  'label' => 'Срок действия паспорта РФ'),*/
-			//array('name' => 'group_code',       'label' => 'Группа физ.лиц'),
 		)
 	));
 	?>

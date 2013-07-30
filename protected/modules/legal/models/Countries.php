@@ -43,8 +43,8 @@ class Countries extends SOAPModel {
 	 */
 	public function attributeLabels() {
 		return array(
-			'id'            => '#',
-			'name'          => 'Название',
+			'id' => '#',
+			'name' => 'Название',
 		);
 	}
 
@@ -73,6 +73,7 @@ class Countries extends SOAPModel {
                 foreach ($elements as $elem) {
                     $data[$elem->getprimaryKey()] = $elem->name;
                 }
+                asort($data);
             }
             Yii::app()->cache->set($cache_id, $data, 3000);
         }

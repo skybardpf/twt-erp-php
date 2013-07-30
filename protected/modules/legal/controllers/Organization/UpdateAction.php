@@ -20,8 +20,23 @@ class UpdateAction extends CAction
 
         $model = $controller->loadOrganization($id);
 
-        if ($_POST && !empty($_POST[get_class($model)])) {
-            $model->setAttributes($_POST[get_class($model)]);
+        $class = get_class($model);
+        $country_id = (isset($_POST[$class]) && isset($_POST[$class]['country']) ? $_POST[$class]['country'] : null);
+        if (!is_null($country_id)){
+            if ($country_id == $model::COUNTRY_RUSSIAN_ID){
+                $model->setScenario('russianCountry');
+            } else {
+                $model->setScenario('foreignCountry');
+            }
+        }
+
+        if(isset($_POST['ajax']) && $_POST['ajax']==='form-organization') {
+            echo CActiveForm::validate($model);
+            Yii::app()->end();
+        }
+
+        if ($_POST && !empty($_POST[$class])) {
+            $model->setAttributes($_POST[$class]);
             if ($model->validate()) {
                 try {
                     $model->save();

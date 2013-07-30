@@ -25,6 +25,11 @@ class OrganizationController extends Controller
             'edit' => 'application.modules.legal.controllers.Organization.UpdateAction',
             'add' => 'application.modules.legal.controllers.Organization.CreateAction',
             'delete' => 'application.modules.legal.controllers.Organization.DeleteAction',
+
+            /**
+             * Redirect ContractorController
+             */
+            'get_activities_types' => 'application.modules.legal.controllers.Contractor.GetActivitiesTypesAction',
         );
     }
 
