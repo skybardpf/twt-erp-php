@@ -8,6 +8,6 @@ class DefaultController extends Controller {
      * Перенаправляем на калькулятор.
      */
     public function actionIndex() {
-        $this->redirect($this->createUrl('/legal/my_organizations'));
+        $this->redirect($this->createUrl('/legal/organization'));
 	}
 }

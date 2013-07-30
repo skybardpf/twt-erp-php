@@ -6,7 +6,7 @@
  *
  * @var ContractController $this
  * @var Contract            $model
- * @var Organizations       $organization
+ * @var Organization       $organization
  */
 ?>
 
@@ -185,6 +185,6 @@
        )
     );
 
-    echo 'Скачать электронную версию: '.CHtml::link('сгенерированную системой').' или '.CHtml::link('пользовательскую');
-    echo '<br/>'.CHtml::link('Скачать скан');
+//    echo 'Скачать электронную версию: '.CHtml::link('сгенерированную системой').' или '.CHtml::link('пользовательскую');
+//    echo '<br/>'.CHtml::link('Скачать скан');
 ?>

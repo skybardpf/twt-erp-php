@@ -5,12 +5,12 @@
  * User: Forgon
  * Date: 23.04.2013 от рождества Христова
  *
- * @var $this           Controller
- * @var $organization   Organizations
- * @var $cur_tab        string
+ * @var OrganizationController      $this
+ * @var Organization                $organization
+ * @var string                      $cur_tab
  */
 ?>
-<h1><?=$organization->name?></h1>
+<h1><?= Chtml::encode($organization->name); ?></h1>
 <div class="yur-tabs">
     <?php
     $this->widget('bootstrap.widgets.TbMenu', array(
@@ -48,11 +48,6 @@
                 'label' => 'Договоры',
                 'url'   => $this->createUrl('contract/list', array('org_id' => $organization->primaryKey)),
                 'active'=> ($cur_tab == 'contract')
-            ),
-            array(
-                'label' => 'Корзина акционирования',
-                'url'   => $this->createUrl('corporatization_basket/index', array('org_id' => $organization->primaryKey)),
-                'active'=> ($cur_tab == 'corporatization_basket')
             ),
         ),
     ));

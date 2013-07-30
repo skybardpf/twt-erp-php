@@ -22,7 +22,7 @@ class ListAction extends CAction
         $org = $controller->loadOrganization($org_id);
         $data = $controller->getDataProvider($org);
 
-        $controller->render('/my_organizations/show', array(
+        $controller->render('/organization/show', array(
             'content' => $controller->renderPartial('/contract/list',
                 array(
                     'organization' => $org,

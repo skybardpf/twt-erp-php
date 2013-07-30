@@ -16,7 +16,7 @@ class CreateAction extends CAction
          * @var $controller ContractorController
          */
         $controller = $this->controller;
-        $controller->pageTitle .= 'Создание контрагента';
+        $controller->pageTitle .= ' | Создание контрагента';
 
         /**
          * @var $model Contractor

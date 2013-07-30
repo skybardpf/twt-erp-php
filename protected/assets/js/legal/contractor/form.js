@@ -7,40 +7,6 @@ $(document).ready(function(){
 
     select2_init($(document), false);
 
-//    $('input[type=radio][name=tnved]').on('change', function(e){
-//        $('[data-new_row="0"]').remove();
-//    });
-
-    var iteration = 1;
-    $('#calc-form-form').on('change', '[data-one_row=1]', function(event){
-        // Инпуты данной строки
-        var elements = $(this).find('input[name*=data]');
-        // Инпут
-        var $this = $(this);
-        if ($this.data('new_row')) {
-            // добавление строки при заполнении ее значений
-            if (elements.get(0).value || elements.get(1).value) {
-                $this.data('new_row', 0);
-                $this.attr('data-new_row', 0);
-                var clone = $('#calc_clone_row').clone();
-                clone.removeAttr('id');
-
-                clone.find('[name*=new]').each(function (k, l){
-                    $(l).attr('name', $(l).attr('name').replace('[new]', '[new_'+iteration+']'));
-                });
-                iteration++;
-                clone.appendTo(this.parentNode);
-                select2_init(clone, true);
-                clone.show();
-            }
-        } else {
-            // Удаление строки при очистке ее значений
-            if (!elements.get(0).value && !elements.get(1).value) {
-                $this.remove();
-            }
-        }
-    });
-
     /**
      * Инициализация select2-инпутов
      * @param elem

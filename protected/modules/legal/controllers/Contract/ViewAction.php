@@ -26,7 +26,7 @@ class ViewAction extends CAction
         $model->signatory = array('0000000033', '0000000044');
         $model->signatory_contr = array('0000000038', '0000000054');
 
-        $controller->render('/my_organizations/show', array(
+        $controller->render('/organization/show', array(
             'content' => $controller->renderPartial('/contract/view',
                 array(
                     'organization' => $org,

@@ -4,8 +4,8 @@
  *
  * @author Skibardin A.A. <skybardpf@artektiv.ru>
  *
- * @var $this   ContractorController
- * @var $model  Contractor
+ * @var ContractorController    $this
+ * @var Contractor              $model
  */
 ?>
 
@@ -46,9 +46,14 @@
 <?php
     // Опции для JUI селектора даты
     $jui_date_options = array(
+        'language' => 'ru',
         'options'=>array(
             'showAnim' => 'fold',
             'dateFormat' => 'yy-mm-dd',
+            'changeMonth' => true,
+            'changeYear' => true,
+            'showOn' => 'button',
+            'constrainInput' => 'true',
         ),
         'htmlOptions'=>array(
             'style' => 'height:20px;'
@@ -64,12 +69,14 @@
 <div class="control-group">
     <?= $form->labelEx($model, 'sert_date', array('class' => 'control-label')); ?>
     <div class="controls">
-        <?php $this->widget('zii.widgets.jui.CJuiDatePicker',array_merge(
+    <?php
+        $this->widget('zii.widgets.jui.CJuiDatePicker',array_merge(
             array(
                 'model'     => $model,
                 'attribute' => 'sert_date'
             ), $jui_date_options
-        )); ?>
+        ));
+    ?>
     </div>
 </div>
 
@@ -77,9 +84,6 @@
     echo $form->textFieldRow($model, 'inn');
     echo $form->textFieldRow($model, 'kpp');
     echo $form->textAreaRow($model, 'info');
-
-//    echo $form->textFieldRow($model, 'profile', array('disabled' => true));
-//var_dump($model->profile);die;
 ?>
 
 <div class="control-group">

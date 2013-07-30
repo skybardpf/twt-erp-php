@@ -6,7 +6,7 @@
  *  @var $founding_docs         FoundingDocument[]          Учредительные документы
  *  @var $power_attorneys_docs  PowerAttorneysLE[]          Доверенности
  *  @var $free_docs             FreeDocument[]              Свободные документы
- *  @var $organization          Organizations
+ *  @var $organization          Organization
  */
 
 /* Учредительные документы */

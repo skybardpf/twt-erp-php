@@ -22,12 +22,12 @@ class Power_attorney_leController extends Controller {
         if (!$doc){
             throw new CHttpException(404, 'Не найдена довереность.');
         }
-        $org = Organizations::model()->findByPk($doc->id_yur);
+        $org = Organization::model()->findByPk($doc->id_yur);
         if (!$org){
             throw new CHttpException(404, 'Не найдено юридическое лицо.');
         }
 
-        $this->render('/my_organizations/show', array(
+        $this->render('/organization/show', array(
             'content' => $this->renderPartial('/power_attorney_le/show',
                 array(
                     'model'         => $doc,
@@ -47,7 +47,7 @@ class Power_attorney_leController extends Controller {
      */
     public function actionAdd($org_id)
     {
-        $org = Organizations::model()->findByPk($org_id);
+        $org = Organization::model()->findByPk($org_id);
         if (!$org){
             throw new CHttpException(404, 'Не найдено юридическое лицо.');
         }
@@ -72,7 +72,7 @@ class Power_attorney_leController extends Controller {
             }
         }
 
-        $this->render('/my_organizations/show', array(
+        $this->render('/organization/show', array(
             'content' => $this->renderPartial(
                 '/power_attorney_le/form',
                 array(
@@ -100,7 +100,7 @@ class Power_attorney_leController extends Controller {
         if (!$doc){
             throw new CHttpException(404, 'Не найдена довереность.');
         }
-        $org = Organizations::model()->findByPk($doc->id_yur);
+        $org = Organization::model()->findByPk($doc->id_yur);
         if (!$org){
             throw new CHttpException(404, 'Не найдено юридическое лицо.');
         }
@@ -122,7 +122,7 @@ class Power_attorney_leController extends Controller {
             }
         }
 
-        $this->render('/my_organizations/show', array(
+        $this->render('/organization/show', array(
             'content' => $this->renderPartial(
                 '/power_attorney_le/form',
                 array(
@@ -152,7 +152,7 @@ class Power_attorney_leController extends Controller {
         if (!$doc){
             throw new CHttpException(404, 'Не найдена довереность.');
         }
-        $org = Organizations::model()->findByPk($doc->id_yur);
+        $org = Organization::model()->findByPk($doc->id_yur);
         if (!$org){
             throw new CHttpException(404, 'Не найдено юридическое лицо.');
         }

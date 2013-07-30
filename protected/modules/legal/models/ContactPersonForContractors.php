@@ -56,9 +56,8 @@ class ContactPersonForContractors extends SOAPModel {
      * @return array
      */
     public static function getValues() {
-        $cache = new CFileCache();
-        $cache_id = __CLASS__. 'values';
-        $data = $cache->get($cache_id);
+        $cache_id = __CLASS__.'_list';
+        $data = Yii::app()->cache->get($cache_id);
         if ($data === false) {
             $elements = self::model()->findAll();
             $data = array();
@@ -67,7 +66,7 @@ class ContactPersonForContractors extends SOAPModel {
                     $data[$elem->getprimaryKey()] = $elem->name;
                 }
             }
-            $cache->add($cache_id, $data, 3000);
+            Yii::app()->cache->set($cache_id, $data);
         }
         return $data;
     }

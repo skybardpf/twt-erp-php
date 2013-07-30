@@ -5,7 +5,7 @@
  *
  * @var Settlement_accountsController  $this
  * @var SettlementAccount              $model
- * @var Organizations                  $organization
+ * @var Organization                  $organization
  */
 ?>
 Вы действительно хотите <?= $model->deleted ? '<b>восстановить банковсйй счет</b>': '<b>удалить банковсйй счет</b>'?> «<?= CHtml::encode($model->name); ?>»?

@@ -8,7 +8,7 @@
  *  @var $this          Founding_documentsController
  *  @var $model         FoundingDocument
  *  @var $error         string
- *  @var $organization  Organizations
+ *  @var $organization  Organization
  *
  *  @var $photos        XUploadForm     XXX
  *  @var $scans         UploadScan      XXX

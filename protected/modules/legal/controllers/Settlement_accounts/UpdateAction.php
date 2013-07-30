@@ -41,7 +41,7 @@ class UpdateAction extends CAction
         }
         $model->bank_name = SettlementAccount::getBankName($model->bank);
 
-        $controller->render('/my_organizations/show', array(
+        $controller->render('/organization/show', array(
             'content' => $controller->renderPartial('/settlement_accounts/form',
                 array(
                     'model'         => $model,

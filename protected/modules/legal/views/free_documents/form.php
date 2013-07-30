@@ -5,7 +5,7 @@
  *
  *  @var $this          Free_documentsController
  *  @var $model         FreeDocument
- *  @var $organization  Organizations
+ *  @var $organization  Organization
  */
 ?>
 

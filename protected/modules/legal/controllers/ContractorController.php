@@ -7,7 +7,7 @@
 class ContractorController extends Controller{
     public $layout = 'inner';
     public $menu_current = 'contractors';
-    public $pageTitle = 'TWT Consult | Мои котрагенты | ';
+    public $pageTitle = 'TWT Consult | Мои котрагенты';
 
     /**
      * Распределение экшенов.
@@ -21,27 +21,32 @@ class ContractorController extends Controller{
             'edit' => 'application.modules.legal.controllers.Contractor.UpdateAction',
             'add' => 'application.modules.legal.controllers.Contractor.CreateAction',
             'delete' => 'application.modules.legal.controllers.Contractor.DeleteAction',
+
             'get_activities_types' => 'application.modules.legal.controllers.Contractor.GetActivitiesTypesAction',
         );
     }
 
     /**
-     * @param string $id Идентификатор контрагента.
-     * @return Contractor Получаем модель Контрагент.
+     * @param string $id    Идентификатор контрагента.
+     * @return Contractor   Получаем модель Контрагент.
      * @throws CHttpException
      */
     public function loadModel($id)
     {
-        $model = Contractor::model()->findByPk($id);
-        if ($model === null) {
-            throw new CHttpException(404, 'Не найден контрагент.');
+        $cache_id = get_class(Contractor::model()).'_'.$id;
+        $model = Yii::app()->cache->get($cache_id);
+        if ($model === false){
+            $model = Contractor::model()->findByPk($id);
+            if ($model === null) {
+                throw new CHttpException(404, 'Не найден контрагент.');
+            }
+            Yii::app()->cache->set($cache_id, $model);
         }
         return $model;
     }
 
     /**
      * @return Contractor Возвращаем созданную модель Контрагент.
-     * @throws CHttpException
      */
     public function createModel()
     {
@@ -51,10 +56,15 @@ class ContractorController extends Controller{
 
     /**
      * @return Contractor[] Получаем список контрагентов.
-     * @throws CHttpException
      */
     public function getDataProvider()
     {
-        return Contractor::model()->findAll();
+        $cache_id = get_class(Contractor::model()).'_list';
+        $data = Yii::app()->cache->get($cache_id);
+        if ($data === false){
+            $data = Contractor::model()->findAll();
+            Yii::app()->cache->set($cache_id, $data);
+        }
+        return $data;
     }
 }

@@ -4,6 +4,8 @@
         require(dirname(__FILE__).'/main.php'),
 
         array(
+            'defaultController' => 'legal/individuals',
+
             'components' => array(
                 'cache' => array('class'=>'system.caching.CFileCache'),
 
@@ -15,6 +17,6 @@
                         'password'  => 'Site',
                     )
                 ),
-            )
+            ),
         )
     );

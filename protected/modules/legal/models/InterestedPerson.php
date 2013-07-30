@@ -247,7 +247,7 @@ class InterestedPerson extends SOAPModel
 //			array('role', 'in', 'range' => array_keys(InterestedPerson::getRoles())),
 
 //			array('list_individuals', 'in', 'range' => array_keys(Individuals::getValues())),
-//			array('list_organizations', 'in', 'range' => array_keys(Organizations::getValues())),
+//			array('list_organizations', 'in', 'range' => array_keys(Organization::getValues())),
 
             array('job_title', 'length', 'max' => 100),
 

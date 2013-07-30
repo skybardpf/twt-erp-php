@@ -57,7 +57,7 @@ class DeleteAction extends CAction
                     break;
                 }
             }
-            $controller->render('/my_organizations/show', array(
+            $controller->render('/organization/show', array(
                 'content' => $controller->renderPartial('/my_events/delete',
                     array(
                         'organization' => $org,

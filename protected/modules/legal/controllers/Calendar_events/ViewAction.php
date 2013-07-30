@@ -23,7 +23,7 @@ class ViewAction extends CAction
         $model = $controller->loadModel($id);
         $org = $controller->loadOrganization($org_id);
 
-        $controller->render('/my_organizations/show', array(
+        $controller->render('/organization/show', array(
             'content' => $controller->renderPartial('/my_events/view',
                 array(
                     'organization' => $org,

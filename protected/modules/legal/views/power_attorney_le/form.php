@@ -6,7 +6,7 @@
  *
  *  @var $this          Power_attorney_leController
  *  @var $model         PowerAttorneysLE
- *  @var $organization  Organizations
+ *  @var $organization  Organization
  */
 ?>
 

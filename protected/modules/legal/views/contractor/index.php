@@ -4,8 +4,8 @@
  *
  * @author Skibardin A.A. <skybardpf@artektiv.ru>
  *
- * @var $this   ContractorController
- * @var $data   Contractor[]
+ * @var ContractorController    $this
+ * @var Contractor[]            $data
  */
 ?>
 <div class="pull-right" style="margin-top: 15px;">
@@ -22,17 +22,17 @@
     $countries = Countries::getValues();
 
     /**
-     * @var $data CArrayDataProvider
+     * @var $provider CArrayDataProvider
      */
-    $data = new CArrayDataProvider($data);
-    foreach($data->rawData as $k=>$m){
-        $data->rawData[$k]['country'] = (isset($countries[$m['country']]) ? $countries[$m['country']] : '');
-//        $data->rawData[$k]['parent'] = (isset($persons[$m['parent']]) ? $persons[$m['parent']] : '');
+    $provider = new CArrayDataProvider($data);
+    foreach($provider->rawData as $k=>$m){
+        $provider->rawData[$k]['country'] = (isset($countries[$m['country']]) ? $countries[$m['country']] : '');
+//        $provider->rawData[$k]['parent'] = (isset($persons[$m['parent']]) ? $persons[$m['parent']] : '');
     }
 
     $this->widget('bootstrap.widgets.TbGridView', array(
         'type' => 'striped bordered condensed',
-        'dataProvider' => $data,
+        'dataProvider' => $provider,
         'template' => "{items} {pager}",
         'columns' => array(
             array(

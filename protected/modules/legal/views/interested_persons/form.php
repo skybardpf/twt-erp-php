@@ -6,7 +6,7 @@
      *
      * @var $this           Interested_personsController
      * @var $model          InterestedPerson
-     * @var $organization   Organizations
+     * @var $organization   Organization
      * @var $form           TbActiveForm
      */
 
@@ -76,7 +76,7 @@
     <div class="controls">
         <?= CHtml::link('Создать новое физическое лицо', $this->createUrl('individuals/add')); ?>
             <?= '<br/>'; ?>
-            <?= CHtml::link('Создать новое юридическое лицо', $this->createUrl('my_organizations/add')); ?>
+            <?= CHtml::link('Создать новое юридическое лицо', $this->createUrl('organization/add')); ?>
     </div>
     </div>
     */
@@ -150,7 +150,7 @@
 <div class="control-group job-title <?= $class_hide; ?>">
     <?= $form->labelEx($model, 'job_title', array('class' => 'control-label')); ?>
     <div class="controls">
-        <?= CHtml::activeTextField($model, 'job_title', Organizations::getValues()); ?>
+        <?= CHtml::activeTextField($model, 'job_title', Organization::getValues()); ?>
     </div>
 </div>
 

@@ -7,7 +7,7 @@
  *  @var $this          Settlement_accountsController
  *  @var $model         SettlementAccount
  *  @var $form          MTbActiveForm
- *  @var $organization  Organizations
+ *  @var $organization  Organization
  *  @var $error         string
  */
 ?>

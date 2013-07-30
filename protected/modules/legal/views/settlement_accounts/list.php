@@ -5,7 +5,7 @@
  *
  * @var Settlement_accountsController  $this
  * @var SettlementAccount[]            $data
- * @var Organizations                  $organization
+ * @var Organization                  $organization
  */
 ?>
 
