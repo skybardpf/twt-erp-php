@@ -41,7 +41,7 @@ class UpdateAction extends CAction
                 try {
                     $model->save();
                     $controller->redirect($controller->createUrl('view', array('id' => $id)));
-                } catch (Exception $e) {
+                } catch (CException $e) {
                     $model->addError('id', $e->getMessage());
                 }
             }

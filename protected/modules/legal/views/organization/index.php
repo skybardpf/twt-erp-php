@@ -23,11 +23,12 @@
     foreach($data as $k=>$v){
         $data[$k]->country = (isset($countries[$v->country]) ? $countries[$v->country] : '---');
     }
-	$data = new CArrayDataProvider($data);
+	$provider = new CArrayDataProvider($data);
+
     $this->widget('bootstrap.widgets.TbGridView', array(
         'type' => 'striped bordered condensed',
-        'dataProvider' => $data,
-        'template' => "{items}{pager}",
+        'dataProvider' => $provider,
+        'template' => "{items} {pager}",
         'columns' => array(
             array(
                 'name' => 'name',

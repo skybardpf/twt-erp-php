@@ -20,7 +20,7 @@ class Corporatization_basketController extends Controller
 
     public function actionIndex()
     {
-        $this->_titles['organizations'] = Organization::getValues();
+        $this->_titles['organizations'] = Organization::model()->getFullData();
         $this->_titles['individuals'] = Individuals::getValues();
 
         /* --------- ДАННЫЕ*/

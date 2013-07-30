@@ -150,7 +150,7 @@
 <div class="control-group job-title <?= $class_hide; ?>">
     <?= $form->labelEx($model, 'job_title', array('class' => 'control-label')); ?>
     <div class="controls">
-        <?= CHtml::activeTextField($model, 'job_title', Organization::getValues()); ?>
+        <?= CHtml::activeTextField($model, 'job_title', Organization::model()->getListNames()); ?>
     </div>
 </div>
 

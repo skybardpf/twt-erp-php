@@ -43,7 +43,7 @@
     $currency = Currencies::getValues();
     $persons = Individuals::getValues();
     $prolongation = Contract::getProlongationTypes();
-    $contractors = Contractor::getValues();
+    $contractors = Contractor::model()->getListNames();
     $court_locations = CourtLocation::getValues();
     $contract_place = ContractPlace::getValues();
     $contractor = (isset($contractors[$model->le_id]) ? $contractors[$model->le_id] : '---');

@@ -108,8 +108,8 @@
         /**
          * Список огранизаций и контрагентов
          */
-        $organizations = Organization::getValues();
-        $contractors = Contractor::getValues();
+        $organizations = Organization::model()->getListNames();
+        $contractors = Contractor::model()->getListNames();
         foreach ($model->list_yur as $v){
             if ($v['type_yur'] == 'Организации'){
                 if (isset($organizations[$v['id_yur']])){
