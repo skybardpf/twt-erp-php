@@ -16,7 +16,7 @@
         'items'=>array(
             array(
                 'label'     => 'Мои юридические лица',
-                'url'       => '/legal/my_organizations/',
+                'url'       => '/legal/organization/',
                 'active'    => ($this->menu_current == 'legal')
             ),
             array(

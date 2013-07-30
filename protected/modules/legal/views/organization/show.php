@@ -1,3 +1,4 @@
+<<<<<<< HEAD:protected/modules/legal/views/my_organizations/show.php
 <?php
 /**
  * Просмотр Юр.Лица

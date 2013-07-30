@@ -40,8 +40,8 @@ class ContractorTypesActivities extends SOAPModel {
      */
     public function attributeLabels() {
         return array(
-            "id"            => '#',
-            "name"          => 'Наименование',
+            "id" => '#',
+            "name" => 'Наименование',
         );
     }
 
@@ -51,20 +51,17 @@ class ContractorTypesActivities extends SOAPModel {
      *  @return array
      */
     public static function getValues() {
-        /**
-         * @var $cache CFileCache
-         */
-        $cache = new CFileCache();
-        $data = $cache->get(__CLASS__.'_values');
+        $cache_id = __CLASS__.'_list';
+        $data = Yii::app()->cache->get($cache_id);
         if ($data === false) {
             $elements = self::model()->findAll();
-            $data   = array();
+            $data = array();
             if ($elements) {
                 foreach ($elements as $elem) {
                     $data[$elem->getprimaryKey()] = $elem->name;
                 }
             }
-            $cache->add(__CLASS__.'_values', $data, 3000);
+            Yii::app()->cache->set($cache_id, $data);
         }
         return $data;
     }

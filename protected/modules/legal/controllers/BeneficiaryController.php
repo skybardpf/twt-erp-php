@@ -28,12 +28,12 @@ class BeneficiaryController extends Controller {
      */
     public function actionList($org_id)
     {
-        $org = Organizations::model()->findByPk($org_id);
+        $org = Organization::model()->findByPk($org_id);
         if (!$org) {
             throw new CHttpException(404, 'Не найдено юридическое лицо.');
         }
 
-        $this->render('/my_organizations/show', array(
+        $this->render('/organization/show', array(
             'content' => $this->renderPartial('/beneficiary/list',
                 array(
                     'organization' => $org
@@ -52,7 +52,7 @@ class BeneficiaryController extends Controller {
     public function actionBenefit_add($id) {
         $this->menu_current = 'index';
         $this->cur_tab = 'benefits';
-        $model = Organizations::model()->findByPk($id);
+        $model = Organization::model()->findByPk($id);
         $this->render('show', array('tab_content' => $this->renderPartial('../template_example/benefits/add', array('id' => $id), true), 'model' => $model));
     }
 

@@ -6,7 +6,7 @@
  *
  * @var $this           Interested_personsController
  * @var $data           InterestedPerson[]
- * @var $organization   Organizations
+ * @var $organization   Organization
  */
 ?>
 

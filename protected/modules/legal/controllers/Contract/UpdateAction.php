@@ -30,7 +30,7 @@ class UpdateAction extends CAction
         }
 
         /**
-         * @var Organizations $org
+         * @var Organization $org
          */
         $org = $controller->loadOrganization($model->id_yur);
 
@@ -64,7 +64,7 @@ class UpdateAction extends CAction
         $model->json_signatory = CJSON::encode($model->signatory);
         $model->json_signatory_contractor = CJSON::encode($model->signatory_contr);
 
-        $controller->render('/my_organizations/show', array(
+        $controller->render('/organization/show', array(
             'content' => $controller->renderPartial('/contract/form',
                 array(
                     'organization' => $org,

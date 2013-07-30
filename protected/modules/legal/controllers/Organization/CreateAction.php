@@ -1,31 +1,26 @@
 <?php
 /**
- * Создание контрагента.
+ * Добавление организации.
  *
  * @author Skibardin A.A. <skybardpf@artektiv.ru>
  */
 class CreateAction extends CAction
 {
     /**
-     * Создание контрагента.
-     * @throws CHttpException
+     * Добавление организации.
      */
     public function run()
     {
         /**
-         * @var $controller ContractorController
+         * @var OrganizationController    $controller
          */
         $controller = $this->controller;
-        $controller->pageTitle .= ' | Создание контрагента';
+        $controller->pageTitle .= ' | Добавление организации';
 
-        /**
-         * @var $model Contractor
-         */
         $model = $controller->createModel();
 
-        if (isset($_POST[get_class($model)])) {
+        if ($_POST && !empty($_POST[get_class($model)])) {
             $model->setAttributes($_POST[get_class($model)]);
-
             if ($model->validate()) {
                 try {
                     $model->save();
@@ -36,11 +31,13 @@ class CreateAction extends CAction
             }
         }
 
-        $controller->render(
-            'form',
-            array(
-                'model' => $model
-            )
-        );
+        $controller->render('/organization/show', array(
+            'content' => $controller->renderPartial('/organization/form',
+                array(
+                    'model' => $model,
+                ), true),
+            'organization' => $model,
+            'cur_tab' => 'info',
+        ));
     }
 }

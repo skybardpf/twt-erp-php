@@ -17,7 +17,7 @@ class UpdateAction extends CAction
          * @var $controller ContractorController
          */
         $controller = $this->controller;
-        $controller->pageTitle .= 'Редактирование контрагента';
+        $controller->pageTitle .= ' | Редактирование контрагента';
 
         /**
          * @var $model Contractor

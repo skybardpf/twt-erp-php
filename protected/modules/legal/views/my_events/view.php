@@ -6,7 +6,7 @@
  *
  * @var My_eventsController | Calendar_eventsController $this
  * @var Event           $model
- * @var Organizations   $organization
+ * @var Organization   $organization
  */
 ?>
 
@@ -62,7 +62,7 @@
 <div>
 <?php
     $div = '';
-    $organizations = Organizations::getValues();
+    $organizations = Organization::getValues();
     $contractors = Contractor::getValues();
 
     if ($model->for_yur){
@@ -74,7 +74,7 @@
                     if (isset($organizations[$list[$id]])){
                         $div .= CHtml::link(
                                 $organizations[$list[$id]],
-                                $this->createUrl('my_organizations/view', array('id' => $list[$id]))
+                                $this->createUrl('organization/view', array('id' => $list[$id]))
                             ).'<br/>';
                     }
                 } elseif($list[$type] == 'Контрагенты'){

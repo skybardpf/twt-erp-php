@@ -28,7 +28,7 @@ class DocumentsController extends Controller{
      */
     public function actionList($org_id)
     {
-        $org = Organizations::model()->findByPk($org_id);
+        $org = Organization::model()->findByPk($org_id);
         if (!$org) {
             throw new CHttpException(404, 'Не найдено юридическое лицо.');
         }
@@ -52,7 +52,7 @@ class DocumentsController extends Controller{
             ->where('id_yur', $org->primaryKey)
             ->findAll();
 
-        $this->render('/my_organizations/show', array(
+        $this->render('/organization/show', array(
             'content' => $this->renderPartial('/documents/list',
                 array(
                     'free_docs'         => $free_docs,

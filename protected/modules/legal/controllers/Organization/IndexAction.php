@@ -1,21 +1,21 @@
 <?php
 /**
- * Список контрагентов (внешних организаций).
+ * Список организаций.
  *
  * @author Skibardin A.A. <skybardpf@artektiv.ru>
  */
 class IndexAction extends CAction
 {
     /**
-     * Список контрагентов (внешних организаций).
+     * Список организаций.
      */
     public function run()
     {
         /**
-         * @var ContractorController    $controller
+         * @var OrganizationController    $controller
          */
         $controller = $this->controller;
-        $controller->pageTitle .= ' | Список контрагентов';
+        $controller->pageTitle .= ' | Список организаций';
 
         $data = $controller->getDataProvider();
         $controller->render(

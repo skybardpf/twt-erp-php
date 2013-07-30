@@ -6,7 +6,7 @@
  *
  * @var ContractController  $this
  * @var Contract            $model
- * @var Organizations       $organization
+ * @var Organization       $organization
  */
 ?>
 

@@ -6,7 +6,7 @@
  *
  *  @var $this          DocumentsController
  *  @var $docs          FreeDocument[]
- *  @var $organization  Organizations
+ *  @var $organization  Organization
  */
 ?>
 

@@ -6,7 +6,7 @@
  *
  * @var ContractController $this
  * @var Contract[]          $data
- * @var Organizations       $organization
+ * @var Organization       $organization
  */
 ?>
 <div class="pull-right" style="margin-top: 15px;">

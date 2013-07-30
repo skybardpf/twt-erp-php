@@ -4,8 +4,8 @@
  *
  * @author Skibardin A.A. <skybardpf@artektiv.ru>
  *
- * @var $this   ContractorController
- * @var $model  Contractor
+ * @var ContractorController    $this
+ * @var Contractor              $model
  */
 ?>
 
@@ -77,9 +77,6 @@
     echo $form->textFieldRow($model, 'inn');
     echo $form->textFieldRow($model, 'kpp');
     echo $form->textAreaRow($model, 'info');
-
-//    echo $form->textFieldRow($model, 'profile', array('disabled' => true));
-//var_dump($model->profile);die;
 ?>
 
 <div class="control-group">

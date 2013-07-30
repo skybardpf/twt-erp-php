@@ -21,7 +21,7 @@ class ListAction extends CAction
         $org = $controller->loadOrganization($org_id);
         $data = $controller->getDataProviderForOrganization($org);
 
-        $controller->render('/my_organizations/show', array(
+        $controller->render('/organization/show', array(
             'content' => $controller->renderPartial('/settlement_accounts/list',
                 array(
                     'organization' => $org,

@@ -22,12 +22,12 @@ class Free_documentsController extends Controller {
         if (!$doc){
             throw new CHttpException(404, 'Не найден свободный документ.');
         }
-        $org = Organizations::model()->findByPk($doc->id_yur);
+        $org = Organization::model()->findByPk($doc->id_yur);
         if (!$org){
             throw new CHttpException(404, 'Не найдено юридическое лицо.');
         }
 
-        $this->render('/my_organizations/show', array(
+        $this->render('/organization/show', array(
             'content' => $this->renderPartial('/free_documents/show',
                 array(
                     'model'         => $doc,
@@ -47,7 +47,7 @@ class Free_documentsController extends Controller {
      */
     public function actionAdd($org_id)
     {
-        $org = Organizations::model()->findByPk($org_id);
+        $org = Organization::model()->findByPk($org_id);
         if (!$org){
             throw new CHttpException(404, 'Не найдено юридическое лицо.');
         }
@@ -68,7 +68,7 @@ class Free_documentsController extends Controller {
             }
         }
 
-        $this->render('/my_organizations/show', array(
+        $this->render('/organization/show', array(
             'content' => $this->renderPartial(
                 '/free_documents/form',
                 array(
@@ -95,7 +95,7 @@ class Free_documentsController extends Controller {
         if (!$doc){
             throw new CHttpException(404, 'Не найден свободный документ.');
         }
-        $org = Organizations::model()->findByPk($doc->id_yur);
+        $org = Organization::model()->findByPk($doc->id_yur);
         if (!$org){
             throw new CHttpException(404, 'Не найдено юридическое лицо.');
         }
@@ -112,7 +112,7 @@ class Free_documentsController extends Controller {
             }
         }
 
-        $this->render('/my_organizations/show', array(
+        $this->render('/organization/show', array(
             'content' => $this->renderPartial(
                 '/free_documents/form',
                 array(
@@ -139,7 +139,7 @@ class Free_documentsController extends Controller {
         if (!$doc){
             throw new CHttpException(404, 'Не найден свободный документ.');
         }
-        $org = Organizations::model()->findByPk($doc->id_yur);
+        $org = Organization::model()->findByPk($doc->id_yur);
         if (!$org){
             throw new CHttpException(404, 'Не найдено юридическое лицо.');
         }

@@ -51,10 +51,9 @@ class CodesOKOPF extends SOAPModel {
 	 * @return array
 	 */
 	public static function getValues($key_name = false) {
-		$cache = new CFileCache();
-        $cache_id = 'codes_okopf_values_' . ($key_name ? 'id' : 'name');
-		$data = $cache->get($cache_id);
-		if ($data === false) {
+        $cache_id = __CLASS__.'_list_'.($key_name ? 'name' : 'key');
+        $data = Yii::app()->cache->get($cache_id);
+        if ($data === false) {
             $elements = self::model()->findAll();
             $data = array();
             if ($elements) {
@@ -63,8 +62,8 @@ class CodesOKOPF extends SOAPModel {
                     $data[$key] = $elem->name;
                 }
             }
-			$cache->add($cache_id, $data, 3000);
-		}
-		return $data;
+            Yii::app()->cache->set($cache_id, $data);
+        }
+        return $data;
 	}
 }
