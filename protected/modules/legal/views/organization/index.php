@@ -1,34 +1,29 @@
 <?php
 /**
- * Вывод списка контрагентов.
+ * Список организаций.
  *
  * @author Skibardin A.A. <skybardpf@artektiv.ru>
  *
- * @var ContractorController    $this
- * @var Contractor[]            $data
+ * @var OrganizationController      $this
+ * @var Organization[]              $data
  */
 ?>
 <div class="pull-right" style="margin-top: 15px;">
     <?php $this->widget('bootstrap.widgets.TbButton', array(
-        'label' => 'Новый контрагент',
+        'label' => 'Новое юридическое лицо',
         'type'  => 'success',
         'size'  => 'normal',
         'url'   => $this->createUrl("add")
     )); ?>
 </div>
-<h2>Контрагенты</h2>
+<h2>Организации</h2>
 
 <?php
     $countries = Countries::getValues();
-
-    /**
-     * @var $provider CArrayDataProvider
-     */
-    $provider = new CArrayDataProvider($data);
-    foreach($provider->rawData as $k=>$m){
-        $provider->rawData[$k]['country'] = (isset($countries[$m['country']]) ? $countries[$m['country']] : '');
-//        $provider->rawData[$k]['parent'] = (isset($persons[$m['parent']]) ? $persons[$m['parent']] : '');
+    foreach($data as $k=>$v){
+        $data[$k]->country = (isset($countries[$v->country]) ? $countries[$v->country] : '---');
     }
+	$provider = new CArrayDataProvider($data);
 
     $this->widget('bootstrap.widgets.TbGridView', array(
         'type' => 'striped bordered condensed',
@@ -39,19 +34,19 @@
                 'name' => 'name',
                 'header' => 'Название',
                 'type' => 'raw',
-                'value' => 'CHtml::link($data["name"], Yii::app()->getController()->createUrl("contractor/view", array("id" => $data["id"])))'
+                'value' => 'CHtml::link($data["name"], Yii::app()->getController()->createUrl("organization/view", array("id" => $data["id"])))'
             ),
             array(
                 'name' => 'country',
-                'header' => 'Страна юрисдикции',
+                'header' => 'Страна'
             ),
             array(
                 'name' => 'creation_date',
-                'header' => 'Дата добавления',
+                'header' => 'Дата добавления'
             ),
             array(
                 'name' => 'creator',
-                'header' => 'Пользователь, добавивший в систему',
+                'header' => 'Пользователь, добавивший в систему'
             ),
         ),
     ));

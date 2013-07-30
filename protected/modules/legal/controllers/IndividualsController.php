@@ -26,8 +26,6 @@ class IndividualsController extends Controller
             'view' => 'application.modules.legal.controllers.Individuals.ViewAction',
             'edit' => 'application.modules.legal.controllers.Individuals.UpdateAction',
             'delete' => 'application.modules.legal.controllers.Individuals.DeleteAction',
-
-            'cart' => 'application.modules.legal.controllers.Individuals.CartAction',
         );
     }
 

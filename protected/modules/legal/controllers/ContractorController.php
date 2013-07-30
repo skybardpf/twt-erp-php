@@ -53,18 +53,4 @@ class ContractorController extends Controller{
         $model = new Contractor();
         return $model;
     }
-
-    /**
-     * @return Contractor[] Получаем список контрагентов.
-     */
-    public function getDataProvider()
-    {
-        $cache_id = get_class(Contractor::model()).'_list';
-        $data = Yii::app()->cache->get($cache_id);
-        if ($data === false){
-            $data = Contractor::model()->findAll();
-            Yii::app()->cache->set($cache_id, $data);
-        }
-        return $data;
-    }
 }

@@ -19,13 +19,27 @@ class CreateAction extends CAction
 
         $model = $controller->createModel();
 
+        if(isset($_POST['ajax']) && $_POST['ajax']==='form-organization') {
+            $class = get_class($model);
+            $country_id = (isset($_POST[$class]) && isset($_POST[$class]['country']) ? $_POST[$class]['country'] : null);
+            if (!is_null($country_id)){
+                if ($country_id == $model::COUNTRY_RUSSIAN_ID){
+                    $model->setScenario('russianCountry');
+                } else {
+                    $model->setScenario('foreignCountry');
+                }
+            }
+            echo CActiveForm::validate($model);
+            Yii::app()->end();
+        }
+
         if ($_POST && !empty($_POST[get_class($model)])) {
             $model->setAttributes($_POST[get_class($model)]);
             if ($model->validate()) {
                 try {
                     $model->save();
                     $controller->redirect($controller->createUrl('index'));
-                } catch (Exception $e) {
+                } catch (CException $e) {
                     $model->addError('id', $e->getMessage());
                 }
             }

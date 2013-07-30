@@ -15,27 +15,28 @@
         'type'=>'list', // '', 'tabs', 'pills' (or 'list')
         'items'=>array(
             array(
-                'label'     => 'Мои юридические лица',
-                'url'       => '/legal/organization/',
-                'active'    => ($this->menu_current == 'legal')
+                'label' => 'Организации',
+                'url' => '/legal/organization/',
+                'active' => ($this->menu_current == 'legal')
             ),
             array(
-                'label' => 'Мои контрагенты',
+                'label' => 'Контрагенты',
                 'url' => '/legal/contractor/',
                 'active' => ($this->menu_current == 'contractors')
             ),
             array(
-                'label'=>'Мои физические лица',
-                'url'=>'/legal/individuals/',
-                'active'=> ($this->menu_current == 'individuals')
-            ),
-            array(
-                'label' => 'Мои события',
+                'label' => 'Календарь событий',
                 'url'   => '/legal/my_events/',
                 'active'=> ($this->menu_current == 'my_events')
             ),
             array(
-                'label' => 'Мои счета',
+                'label' => 'Физические лица',
+                'url'=>'/legal/individuals/',
+                'active'=> ($this->menu_current == 'individuals')
+            ),
+
+            array(
+                'label' => 'Банковские счета',
                 'url'   => '/legal/settlement_accounts/',
                 'active'=> ($this->menu_current == 'settlements')
             ),
@@ -43,6 +44,16 @@
                 'label' => 'Корзина акционирования',
                 'url'   => '/legal/corporatization_basket/',
                 'active'=> ($this->menu_current == 'corporatization_basket')
+            ),
+            array(
+                'label' => 'Виды договоров',
+                'url'   => '#',
+                'active'=> ($this->menu_current == 'contract_types')
+            ),
+            array(
+                'label' => 'Библиотека шаблонов',
+                'url'   => '#',
+                'active'=> ($this->menu_current == 'template_library')
             ),
         ),
     ));

@@ -1,38 +1,54 @@
 <?php
 /**
- * User: Forgon
- * Date: 01.04.13
+ * Модель: Физические лица.
+ *
+ * @author Skibardin A.A. <skybardpf@artektiv.ru>
  *
  * @property string $id             Идентификатор
- * @property string $deleted        Удален? ("true" - да, "false" - нет)
+ * @property bool   $deleted        Удален? ("true" - да, "false" - нет)
  *
  * @property string $family         Фамилия
  * @property string $name           Имя
  * @property string $parent_name    Отчество
- * @property string $fullname       ФИО
- * @property string $citizenship    Гражданство !!! Не идентификатор страны, а строка
+ * @property string $citizenship    Гражданство
  * @property string $birth_place    Место рождения
  * @property string $birth_date     Дата рождения
+ *
+ * @property string $phone          Контактные данные
+ * @property string $email
+ * @property string $adres          Адрес прописки
+ * @property string $ser_nom_pass   Серия и номер удостоверения
+ * @property string $date_pass      Дата выдачи удостоверения
+ * @property string $organ_pass     Орган, выдавший удостоверение
+ * @property string $date_exp_pass  Срок действия удостоверения
  */
 class Individuals extends SOAPModel {
-
-	static public $values = array();
+    const PREFIX_CACHE_ID_LIST_FULL_DATA = '_list_full_data';
+    const PREFIX_CACHE_ID_LIST_FIO = '_list_fio';
 
 	/**
 	 * @static
-	 *
 	 * @param string $className
-	 *
 	 * @return Individuals
 	 */
 	public static function model($className = __CLASS__) {
 		return parent::model($className);
 	}
 
+    /**
+     * Сбрасываем кеш по данному физ. лицу и для списков физ. лиц.
+     */
+    public function clearCache()
+    {
+        if ($this->primaryKey){
+            Yii::app()->cache->delete(__CLASS__.'_'.$this->primaryKey);
+        }
+        Yii::app()->cache->delete(__CLASS__.self::PREFIX_CACHE_ID_LIST_FULL_DATA);
+        Yii::app()->cache->delete(__CLASS__.self::PREFIX_CACHE_ID_LIST_FIO);
+    }
+
 	/**
 	 * Список Физ.лиц
-	 *
-	 * @internal param array $filter
 	 * @return Individuals[]
 	 */
 	public function findAll() {
@@ -46,10 +62,10 @@ class Individuals extends SOAPModel {
 	}
 
 	/**
-	 * Физ.Лицо
+	 * Получаем модель "Физ. лицо" по его $id.
 	 *
-	 * @param $id
-	 * @return bool|Individuals
+	 * @param string $id
+	 * @return Individuals
 	 */
 	public function findByPk($id) {
         $data = $this->SOAP->getIndividual(array('id' => $id));
@@ -73,26 +89,22 @@ class Individuals extends SOAPModel {
             'data' => SoapComponent::getStructureElement($attr, array('convert_boolean' => true))
         ));
         $ret = SoapComponent::parseReturn($ret, false);
-        if ($this->primaryKey){
-            Yii::app()->cache->delete(__CLASS__.'_'.$this->primaryKey);
-        }
-        Yii::app()->cache->delete(__CLASS__.'_full_list');
+        $this->clearCache();
         return $ret;
     }
 
 	/**
 	 * Удаление Физ.лица
-	 *
-	 * @return array|bool
+	 * @return bool
 	 */
 	public function delete() {
 		if ($id = $this->getprimaryKey()) {
 			$ret = $this->SOAP->deleteIndividual(array('id' => $id));
-
-            Yii::app()->cache->delete(__CLASS__.'_'.$this->primaryKey);
-            Yii::app()->cache->delete(__CLASS__.'_full_list');
-
-			return SoapComponent::parseReturn($ret, false);
+            $ret = SoapComponent::parseReturn($ret, false);
+            if ($ret){
+                $this->clearCache();
+            }
+            return $ret;
 		}
         return false;
 	}
@@ -107,17 +119,15 @@ class Individuals extends SOAPModel {
             'name'            => 'Имя',
             'family'          => 'Фамилия',
             'parent_name'     => 'Отчество',
-            'fullname'        => 'ФИО',
-            
+
             'citizenship'     => 'Гражданство',
             
             'birth_date'      => 'Дата рождения',
             'birth_place'     => 'Место рождения',
 
-            // контактных данных нет, вместо него пока раздельно телефон и емэйл
-            'phone'           => 'Номер телефона',
+            'phone'           => 'Контактные данные',
             'email'           => 'E-mail',
-            'adres'           => 'Адрес',            
+            'adres'           => 'Адрес прописки',
 
             'ser_nom_pass'    => 'Серия и номер удостоверения',
             'date_pass'       => 'Дата выдачи удостоверения',
@@ -125,23 +135,15 @@ class Individuals extends SOAPModel {
             'date_exp_pass'   => 'Срок действия удостоверения',
 
             'deleted'         => 'Помечен на удаление',
-
-	        // устаревшие поля
-            //'ser_nom_passrf'  => 'Серия-номер паспорта',
-            //'date_passrf'     => 'Дата выдачи паспорта',
-            //'organ_passrf'    => 'Орган, выдавший паспорт',
-            //'date_exp_passrf' => 'Срок действия паспорта',
-            //'resident'        => 'Резидент РФ',
-            //'group_code'      => 'Группа физ.лиц',
         );
 	}
 
 	/**
-	 * Список доступных значений Физ.лиц. [key => value]
+	 * Список доступных ФИО физ.лиц. [id => name]
 	 * @return array
 	 */
 	public static function getValues() {
-        $cache_id = __CLASS__.'_list';
+        $cache_id = __CLASS__.self::PREFIX_CACHE_ID_LIST_FIO;
         $data = Yii::app()->cache->get($cache_id);
         if ($data === false) {
             $elements = self::model()->findAll();
@@ -150,7 +152,6 @@ class Individuals extends SOAPModel {
                 foreach ($elements as $elem) {
                     $data[$elem->getprimaryKey()] = $elem->name.' '.$elem->family;
                 }
-                ksort($data);
             }
             Yii::app()->cache->set($cache_id, $data);
         }
@@ -158,11 +159,11 @@ class Individuals extends SOAPModel {
 	}
 
     /**
-     * Список доступных значений Физ.лиц. Формат [family + key] = element
+     * Список доступных физических лиц. Формат [family + key] = element
      * @return array
      */
     public static function getFullValues() {
-        $cache_id = __CLASS__.'_full_list';
+        $cache_id = __CLASS__.self::PREFIX_CACHE_ID_LIST_FULL_DATA;
         $data = Yii::app()->cache->get($cache_id);
         if ($data === false) {
             $elements = self::model()
@@ -184,16 +185,26 @@ class Individuals extends SOAPModel {
         return $data;
     }
 
-	public function rules() {
+    /**
+     * Валидация полей при сохранении.
+     * @return array
+     */
+    public function rules() {
 		return array(
             array('citizenship', 'required'),
             array('citizenship', 'in', 'range'  => array_keys(Countries::getValues())),
 
-            array('name', 'required'),
-            array('family', 'required'),
+            array('name, family', 'required'),
+            array('name, family, parent_name', 'length', 'max' => 50),
 
-			array('name, parent_name, family, birth_date, birth_place, date_exp_pass',     'safe'),
-            array('phone, email, adres, ser_nom_pass, date_pass, organ_pass, citizenship', 'safe'),
+            array('phone', 'length', 'max' => 100),
+            array('birth_place, adres', 'length', 'max' => 150),
+            array('organ_pass', 'length', 'max' => 100),
+            array('ser_nom_pass', 'length', 'max' => 50),
+
+            array('birth_date, date_exp_pass, date_pass', 'date', 'format' => 'yyyy-MM-dd'),
+
+            array('email', 'email'),
 		);
 	}
 }

@@ -11,13 +11,21 @@
 ?>
 
 <?php
-    Yii::app()->clientScript->registerScriptFile($this->asset_static.'/js/legal/organization/one.js', CClientScript::POS_HEAD);
+    Yii::app()->clientScript->registerCssFile($this->asset_static.'/select2/select2.css');
+    Yii::app()->clientScript->registerScriptFile($this->asset_static.'/select2/select2.js');
+    Yii::app()->clientScript->registerScriptFile($this->asset_static.'/js/legal/organization/form.js');
 
-    echo '<h2>'.($model->primaryKey ? 'Редактирование ' : 'Создание ').'юридического лица</h2>';
+    echo '<h2>'.($model->primaryKey ? 'Редактирование ' : 'Создание ').'организации</h2>';
 
     $form = $this->beginWidget('bootstrap.widgets.MTbActiveForm', array(
-        'id'=>'addOrganization',
+        'id'=>'form-organization',
         'type'=>'horizontal',
+        'enableAjaxValidation' => true,
+        'enableClientValidation'=>true,
+        'clientOptions' => array(
+            'validateOnSubmit' => true,
+            'validateOnChange' => true,
+        ),
     ));
 
     $this->widget('bootstrap.widgets.TbButton', array(
@@ -42,62 +50,90 @@
 ?>
 
 <fieldset>
-    <?php echo $form->dropDownListRow($model, 'country', Countries::getValues()); ?>
-	<?php echo $form->dropDownListRow($model, 'okopf', CodesOKOPF::getValues()); ?>
-    <?php echo $form->textFieldRow($model, 'name'); ?>
-    <?php echo $form->textFieldRow($model, 'full_name'); // на удаление ?>
+<?php
+    $jui_date_options = array(
+        'language' => 'ru',
+        'options'=>array(
+            'showAnim' => 'fold',
+            'dateFormat' => 'yy-mm-dd',
+            'changeMonth' => true,
+            'changeYear' => true,
+            'showOn' => 'button',
+            'constrainInput' => 'true',
+        ),
+        'htmlOptions'=>array(
+            'style' => 'height:20px;'
+        )
+    );
 
+    echo $form->dropDownListRow($model, 'country', Countries::getValues(), array('class' => 'list-countries'));
+    echo $form->dropDownListRow($model, 'okopf', CodesOKOPF::getValues());
+    echo $form->textFieldRow($model, 'name');
+    echo $form->textFieldRow($model, 'full_name');
+?>
     <div class="control-group">
         <?= $form->labelEx($model, 'sert_date', array('class' => 'control-label')); ?>
         <div class="controls">
-            <?php $this->widget('zii.widgets.jui.CJuiDatePicker',array(
-                    'model' => $model,
-                    'attribute' => 'sert_date',
-                    // additional javascript options for the date picker plugin
-                    'options'=>array(
-                        'showAnim'=>'fold',
-                        'dateFormat' => 'yy-mm-dd'
-                    ),
-                    'htmlOptions' => array(
-                        'class' => 'some_class',
-                        'style'=>'height:20px;'
-                    ),
-                )); ?>
+        <?php
+            $this->widget('zii.widgets.jui.CJuiDatePicker',array_merge(
+                array(
+                    'model'     => $model,
+                    'attribute' => 'sert_date'
+                ), $jui_date_options
+            ));
+            echo $form->error($model, 'sert_date');
+        ?>
         </div>
     </div>
 
     <!-- НАЧАЛО поля для российских фирм -->
     <div id="rus_fields">
-    <?php echo $form->textFieldRow($model, 'inn'); ?>
-    <?php echo $form->textFieldRow($model, 'kpp'); ?>
-    <?php if(false): // проверка на то, является ли пользователь контрагентом, если да, то поле не выводится ?>
-        <?php echo $form->textFieldRow($model, 'ogrn'); ?>
-    <?php endif ?>
+    <?php
+        echo $form->textFieldRow($model, 'inn');
+        echo $form->textFieldRow($model, 'kpp');
+        echo $form->textFieldRow($model, 'ogrn');
+    ?>
     </div>
     <!-- КОНЕЦ поля для российских фирм -->
 
     <!-- НАЧАЛО поля для иностранных фирм -->
     <div id="foreign_fields">
-    <?php echo $form->textFieldRow($model, 'vat_nom'); ?>
-    <?php echo $form->textFieldRow($model, 'reg_nom'); ?>
-    <?php echo $form->textFieldRow($model, 'sert_nom'); ?>
+    <?php
+        echo $form->textFieldRow($model, 'vat_nom');
+        echo $form->textFieldRow($model, 'reg_nom');
+        echo $form->textFieldRow($model, 'sert_nom');
+    ?>
     </div>
     <!-- КОНЕЦ поля для иностранных фирм -->
 
-    <?php echo $form->textAreaRow($model, 'info'); ?>
-    <?php echo $form->textFieldRow($model, 'profile'); // основной вид деятельности ?>
-    <?php echo $form->textFieldRow($model, 'yur_address'); ?>
-    <?php echo $form->textFieldRow($model, 'fact_address'); ?>
-    <?php echo $form->textFieldRow($model, 'email'); ?>
-    <?php echo $form->textFieldRow($model, 'phone'); ?>
-    <?php echo $form->textFieldRow($model, 'fax'); ?>
-    <?php echo $form->textAreaRow($model, 'comment'); ?>
-
-    <!-- старые поля, но все еще используются, в теории потом их надо будет удалить -->
-    <?php //echo $form->textFieldRow($model, 'eng_name'); // на удаление ?>
-    <?php //echo $form->checkboxRow($model, 'resident'); // на удаление ?>
-    <?php //echo $form->textFieldRow($model, 'type_no_res'); // на удаление ?>
-    <?php //echo $form->checkboxRow($model, 'deleted'); // на удаление ?>
+<?php
+    echo $form->textAreaRow($model, 'info');
+?>
+    <div class="control-group">
+        <?= $form->labelEx($model, 'profile', array('class' => 'control-label')); ?>
+        <div class="controls">
+            <input class="input-profile"
+                id = '<?= get_class($model).'_profile'; ?>'
+                type="text"
+                name="<?= get_class($model).'[profile]'; ?>"
+                data-placeholder="Виды деятельности"
+                data-tnved="1"
+                data-minimum_input_length="4"
+                data-allow_clear="1"
+                data-ajax="1"
+                data-ajax_url="<?= $this->createUrl('get_activities_types'); ?>"
+                value="<?= $model->profile; ?>">
+            <?= $form->error($model, 'profile'); ?>
+        </div>
+    </div>
+<?php
+    echo $form->textFieldRow($model, 'yur_address');
+    echo $form->textFieldRow($model, 'fact_address');
+    echo $form->textFieldRow($model, 'email');
+    echo $form->textFieldRow($model, 'phone');
+    echo $form->textFieldRow($model, 'fax');
+    echo $form->textAreaRow($model, 'comment');
+?>
 </fieldset>
 
 <?php $this->endWidget(); ?>

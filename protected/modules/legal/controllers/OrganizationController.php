@@ -25,22 +25,12 @@ class OrganizationController extends Controller
             'edit' => 'application.modules.legal.controllers.Organization.UpdateAction',
             'add' => 'application.modules.legal.controllers.Organization.CreateAction',
             'delete' => 'application.modules.legal.controllers.Organization.DeleteAction',
-        );
-    }
 
-    /**
-     * Список организаций.
-     * @return Organization[]
-     */
-    public function getDataProvider()
-    {
-        $cache_id = get_class(Organization::model()).'_list';
-        $data = Yii::app()->cache->get($cache_id);
-        if ($data === false){
-            $data = Organization::model()->where('deleted', false)->findAll();
-            Yii::app()->cache->set($cache_id, $data);
-        }
-        return $data;
+            /**
+             * Redirect ContractorController
+             */
+            'get_activities_types' => 'application.modules.legal.controllers.Contractor.GetActivitiesTypesAction',
+        );
     }
 
     /**

@@ -19,8 +19,8 @@
 <h2>Мои события</h2>
 
 <?php
-    $organizations = Organization::getValues();
-    $contractors = Contractor::getValues();
+    $organizations = Organization::model()->getListNames();
+    $contractors = Contractor::model()->getListNames();
 
     $provider = new CArrayDataProvider($data);
     foreach($provider->rawData as $k=>$m){

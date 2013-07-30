@@ -24,7 +24,7 @@ class GetActivitiesTypesAction extends CAction
                 if (isset($arr[$_GET['id']])){
                     $values = array(
                         'id' => $_GET['id'],
-                        'text' => $_GET['id'].' - '.$arr[$_GET['id']]
+                        'text' => mb_substr($_GET['id'].' - '.$arr[$_GET['id']], 0, 50)
                     );
                 }
 

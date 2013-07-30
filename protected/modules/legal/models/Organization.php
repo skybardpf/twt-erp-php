@@ -2,18 +2,12 @@
 /**
  * Собственные Юр.Лица
  *
- * User: Forgon
- * Date: 23.04.2013 от рождества Христова
+ * @author Skibardin A.A. <skybardpf@artektiv.ru>
  *
  * @property int $id
  * @property string $name
- * @property string $eng_name
  * @property string $full_name
  * @property string $country
- * @property string $resident
- * @property string $type_no_res
- * @property string $contragent
- * @property string $parent
  * @property string $comment
  * @property string $inn
  * @property string $kpp
@@ -25,69 +19,72 @@
  * @property string $vat_nom
  * @property string $profile
  * @property string $deleted
- *
- * @property array NonResidentValues
- * @property array GroupNameValues
- * @property array CountryValues
  */
-class Organization extends SOAPModel {
-	static protected $_nonResidentValues = array();
-	static protected $_groupNameValues = array();
-	static protected $_countryValues = array();
-
+class Organization extends AbstractOrganization {
 	/**
 	 * @static
-	 *
 	 * @param string $className
-	 *
-	 * @return LegalEntities
+	 * @return Organization
 	 */
-	public static function model($className = __CLASS__) {
+	public static function model($className = __CLASS__)
+    {
 		return parent::model($className);
 	}
 
 	/**
-	 * Метод объекта - удаляет себя
+	 * Удаляем организацию.
 	 * @return bool
 	 */
-	public function delete() {
+	public function delete()
+    {
 		if ($pk = $this->primaryKey) {
             $ret = $this->SOAP->deleteOrganization(array('id' => $pk));
-            $this->clearCache();
-            return $ret->return;
+            $ret = SoapComponent::parseReturn($ret, false);
+            if ($ret){
+                $this->clearCache();
+            }
+            return $ret;
 		}
         return false;
 	}
 
 	/**
-	 * Сохранение Юр.Лица
+	 * Сохранение организации.
 	 * @return array
 	 */
-	public function save() {
-		$cacher = new CFileCache();
-		$cacher->set(__CLASS__.'_values', false, 1);
+	public function save()
+    {
+		$data = $this->getAttributes();
 
-		$attr = $this->getAttributes();
-
-        $attr['creation_date'] = date('Y-m-d');
-        if($attr['sert_date'] == ''){
-            $attr['sert_date'] = date('Y-m-d', 0);
+        if($data['sert_date'] == ''){
+            $data['sert_date'] = date('Y-m-d', 0);
         }
 
 		// New record
 		if (!$this->primaryKey) {
-            unset($attr['id']);
-            $attr['creator'] = 'Малхасян'; // TODO изменить, когда будет авторизация
-        } else {
-            $cacher->set(__CLASS__.'_objects_'.$this->primaryKey, false, 1);
+            unset($data['id']);
+            $data['creation_date'] = date('Y-m-d');
+            $data['creator'] = 'Малхасян'; // TODO изменить, когда будет авторизация
         }
-		unset($attr['deleted']);
+		unset($data['deleted']);
+
+        if ($data['country'] == self::COUNTRY_RUSSIAN_ID){
+            $data['vat_nom'] = '';
+            $data['reg_nom'] = '';
+            $data['sert_nom'] = '';
+        } else {
+            $data['inn'] = '';
+            $data['kpp'] = '';
+            $data['ogrn'] = '';
+        }
 
         $ret = $this->SOAP->saveOrganization(array(
-            'data' => SoapComponent::getStructureElement($attr, array('convert_boolean' => true)))
+            'data' => SoapComponent::getStructureElement($data, array('convert_boolean' => true)))
         );
         $ret = SoapComponent::parseReturn($ret, false);
-
+        /**
+         * Очищаем кеши связанные с организацией.
+         */
         $this->clearCache();
 
 		return $ret;
@@ -98,7 +95,8 @@ class Organization extends SOAPModel {
 	 *
 	 * @return Organization[]
 	 */
-	public function findAll() {
+	public function findAll()
+    {
 		$filters = SoapComponent::getStructureElement($this->where);
 		if (!$filters) $filters = array(array());
 		$request = array('filters' => $filters, 'sort' => array($this->order));
@@ -110,41 +108,23 @@ class Organization extends SOAPModel {
 
 	/**
 	 * Собственное Юр.Лицо
-	 *
-	 * @param $id
-	 * @return bool|Organization
-	 * @internal param array $filter
+	 * @param string $id
+	 * @return Organization
 	 */
-	public function findByPk($id) {
-		$cacher = new CFileCache();
-		$data = $cacher->get(__CLASS__.'_objects_'.$id);
-		if (!$data) {
-			$data = $this->SOAP->getOrganization(array('id' => $id));
-			$data = SoapComponent::parseReturn($data);
-			$data = current($data);
-			$cacher->set(__CLASS__.'_objects_'.$id, $data, self::CACHE_TTL);
-		} else {
-			if (YII_DEBUG) Yii::log('model '.__CLASS__.' id:'.$id.' from cache', CLogger::LEVEL_INFO, 'soap');
-		}
+	public function findByPk($id)
+    {
+        $data = $this->SOAP->getOrganization(array('id' => $id));
+        $data = SoapComponent::parseReturn($data);
+        $data = current($data);
 		return $this->publish_elem($data, __CLASS__);
 	}
-
-    /**
-     * Сбрасываем кеш по данной организации и для списка организаций.
-     */
-    public function clearCache()
-    {
-        if ($this->primaryKey){
-            Yii::app()->cache->delete(__CLASS__.'_'.$this->primaryKey);
-        }
-        Yii::app()->cache->delete(__CLASS__.'_list');
-    }
 
 	/**
 	 * Returns the list of attribute names of the model.
 	 * @return array list of attribute names.
 	 */
-	public function attributeLabels() {
+	public function attributeLabels()
+    {
         return array(
             "id"            => '#',
             "country"       => 'Страна',
@@ -178,7 +158,8 @@ class Organization extends SOAPModel {
 	/**
 	 * @return array validation rules for model attributes.
 	 */
-	public function rules() {
+	public function rules()
+    {
 		return array(
 			array('country', 'required'),
 			array('country', 'in', 'range' => array_keys(Countries::getValues())),
@@ -186,51 +167,32 @@ class Organization extends SOAPModel {
             array('okopf', 'required'),
             array('okopf', 'in', 'range' => array_keys(CodesOKOPF::getValues())),
 
-			array('name, full_name', 'required'),
+            array('profile', 'required'),
+            array('profile', 'in', 'range' => array_keys(ContractorTypesActivities::getValues())),
 
-            array('id, resident, type_no_res, contragent, parent,
-                comment, inn, kpp, ogrn, yur_address, fact_address,
-                reg_nom, sert_nom, sert_date, vat_nom, info,
-                phone, fax, profile, eng_name', 'safe'
-            ),
+			array('name, full_name', 'required'),
+            array('name', 'length', 'max' => 50),
+            array('full_name', 'length', 'max' => 100),
+
+            /**
+             * Russian country
+             */
+            array('inn, kpp, ogrn', 'safe', 'on' => 'foreignCountry'),
+            array('inn', 'validateInn', 'on' => 'russianCountry'),
+            array('ogrn', 'validateOgrn', 'on' => 'russianCountry'),
+            array('kpp', 'length', 'max' => 9, 'on' => 'russianCountry'),
+
+            /**
+             * Foreign country
+             */
+            array('reg_nom, sert_nom, vat_nom', 'safe', 'on' => 'russianCountry'),
+            array('vat_nom, reg_nom, sert_nom', 'length', 'max' => 50, 'on' => 'foreignCountry'),
+
+            array('info, comment', 'length', 'max' => 50),
+            array('yur_address, fact_address, fax, phone', 'length', 'max' => 150),
 
             array('email', 'email'),
-
-			array('id, title, show', 'safe', 'on'=>'search'),
+            array('sert_date', 'date', 'format' => 'yyyy-MM-dd'),
 		);
-	}
-
-	/**
-	 * Типы нерезидентов
-	 * @return array
-	 */
-	public function getNonResidentValues() {
-		if (!LegalEntities::$_nonResidentValues) {
-			$ret = $this->SOAP->listNonResidentsTypes();
-			$ret = SoapComponent::parseReturn($ret);
-			LegalEntities::$_nonResidentValues = $ret;
-		}
-		return LegalEntities::$_nonResidentValues;
-	}
-
-	/**
-	 *  Список доступных значений Собственных Юр.Лиц
-	 *
-     *  @return array
-	 */
-	static function getValues() {
-        $cache_id = __CLASS__.'_list';
-        $data = Yii::app()->cache->get($cache_id);
-        if ($data === false) {
-            $elements = self::model()->findAll();
-            $data = array();
-            if ($elements) {
-                foreach ($elements as $elem) {
-                    $data[$elem->getprimaryKey()] = $elem->name;
-                }
-            }
-            Yii::app()->cache->set($cache_id, $data);
-        }
-        return $data;
 	}
 }

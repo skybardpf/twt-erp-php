@@ -18,7 +18,12 @@ class CreateAction extends CAction
         $controller->pageTitle .= ' | Добавление физического лица';
 
         $model = $controller->createModel();
-        $error = '';
+
+        if(isset($_POST['ajax']) && $_POST['ajax']==='form-individual') {
+            echo CActiveForm::validate($model);
+            Yii::app()->end();
+        }
+
         if (isset($_POST[get_class($model)])) {
             $model->setAttributes($_POST[get_class($model)]);
             if ($model->validate()) {
@@ -26,16 +31,10 @@ class CreateAction extends CAction
                     $model->save();
                     $controller->redirect($controller->createUrl('index'));
                 } catch (Exception $e) {
-                    $error = $e->getMessage();
+                    $model->addError('id', $e->getMessage());
                 }
             }
         }
-        $controller->render(
-            'add',
-            array(
-                'model' => $model,
-                'error' => $error
-            )
-        );
+        $controller->render('form', array('model' => $model));
     }
 }

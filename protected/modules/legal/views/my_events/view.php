@@ -62,8 +62,8 @@
 <div>
 <?php
     $div = '';
-    $organizations = Organization::getValues();
-    $contractors = Contractor::getValues();
+    $organizations = Organization::model()->getListNames();
+    $contractors = Contractor::model()->getListNames();
 
     if ($model->for_yur){
         foreach ($model->list_yur as $list){
