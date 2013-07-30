@@ -14,7 +14,7 @@
         'url' => $this->createUrl("add")
     )); ?>
 </div>
-<h2>Мои физические лица</h2>
+<h2>Физические лица</h2>
 <?php
     // Инициализируем список стран
     $countries = Countries::getValues();

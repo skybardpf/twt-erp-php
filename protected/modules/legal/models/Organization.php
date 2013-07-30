@@ -46,11 +46,11 @@ class Organization extends SOAPModel {
     {
 		if ($pk = $this->primaryKey) {
             $ret = $this->SOAP->deleteOrganization(array('id' => $pk));
-
-            if ($ret->return){
+            $ret = SoapComponent::parseReturn($ret, false);
+            if ($ret){
                 $this->clearCache();
             }
-            return $ret->return;
+            return $ret;
 		}
         return false;
 	}

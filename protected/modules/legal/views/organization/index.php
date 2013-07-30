@@ -1,6 +1,6 @@
 <?php
 /**
- * Список Юр.Лиц
+ * Список организаций.
  *
  * @author Skibardin A.A. <skybardpf@artektiv.ru>
  *
@@ -16,7 +16,7 @@
         'url'   => $this->createUrl("add")
     )); ?>
 </div>
-<h2>Мои юридические лица</h2>
+<h2>Организации</h2>
 
 <?php
     $countries = Countries::getValues();

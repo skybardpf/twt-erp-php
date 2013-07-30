@@ -16,7 +16,7 @@
         'url'   => $this->createUrl("add")
     )); ?>
 </div>
-<h2>Мои контрагенты</h2>
+<h2>Контрагенты</h2>
 
 <?php
     $countries = Countries::getValues();
@@ -43,7 +43,7 @@
             ),
             array(
                 'name' => 'country',
-                'header' => 'Страна',
+                'header' => 'Страна юрисдикции',
             ),
             array(
                 'name' => 'creation_date',
