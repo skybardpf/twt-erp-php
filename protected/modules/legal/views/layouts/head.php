@@ -3,6 +3,6 @@
 
 $this->widget('bootstrap.widgets.TbNavbar', array(
     'brand'    => 'TWT — ERP',
-    'brandUrl' => '/legal/organization/',
+    'brandUrl' => '/legal/individuals/',
     'collapse' => true
 ));
