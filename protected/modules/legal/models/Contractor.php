@@ -125,6 +125,7 @@ class Contractor extends AbstractOrganization {
             'fax'           => 'Факс',
             'comment'       => 'Комментарий',
             'info'          => 'Дополнительная информация',
+            'signatories'   => 'Подписанты',
 
             // --- Для российских компаний
             'inn'           => 'ИНН',

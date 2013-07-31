@@ -85,8 +85,12 @@
  * Место расположения суда. (@see CourtLocation)
  * @method mixed listCourtLocations(array $data)
  *
- * Место заклоючения контрактов. (@see ContractPlace)
+ * Место заключения контрактов. (@see ContractPlace)
  * @method mixed listContractPlaces(array $data)
+ *
+ * Группы контрагентов. (@see ContractorGroup)
+ * @method mixed listGroupEntities(array $data)
+ *
  */
 class SoapComponent extends CApplicationComponent
 {

@@ -7,7 +7,7 @@
 class ContractorController extends Controller{
     public $layout = 'inner';
     public $menu_current = 'contractors';
-    public $pageTitle = 'TWT Consult | Мои котрагенты';
+    public $pageTitle = 'TWT Consult | Контрагенты';
 
     /**
      * Распределение экшенов.

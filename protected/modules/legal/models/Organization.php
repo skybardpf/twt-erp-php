@@ -150,6 +150,8 @@ class Organization extends AbstractOrganization {
             'creation_date' => 'Дата создания',
             'creator'       => 'Пользователь, добавивший в систему',
 
+            'signatories'   => 'Подписанты',
+
             'deleted'       => 'Помечен на удаление',                // +
 
         );
