@@ -17,6 +17,9 @@ class Contractor_groupController extends Controller{
     {
         return array(
             'index' => 'application.modules.legal.controllers.ContractorGroup.IndexAction',
+
+            '_json_contractor_groups' => 'application.modules.legal.controllers.ContractorGroup.JsonContractorGroupsAction',
+
 //            'view' => 'application.modules.legal.controllers.ContractorGroup.ViewAction',
 //            'edit' => 'application.modules.legal.controllers.ContractorGroup.UpdateAction',
 //            'add' => 'application.modules.legal.controllers.ContractorGroup.CreateAction',
@@ -43,12 +46,12 @@ class Contractor_groupController extends Controller{
 //        return $model;
 //    }
 
-    /**
-     * @return ContractorGroup Возвращаем созданную модель.
-     */
-    public function createModel()
-    {
-        $model = new ContractorGroup();
-        return $model;
-    }
+//    /**
+//     * @return ContractorGroup Возвращаем созданную модель.
+//     */
+//    public function createModel()
+//    {
+//        $model = new ContractorGroup();
+//        return $model;
+//    }
 }

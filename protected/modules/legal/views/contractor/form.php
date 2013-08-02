@@ -14,6 +14,16 @@
     Yii::app()->clientScript->registerScriptFile($this->asset_static.'/select2/select2.js');
     Yii::app()->clientScript->registerScriptFile($this->asset_static.'/js/jquery.json-2.4.min.js');
     Yii::app()->clientScript->registerScriptFile($this->asset_static.'/js/legal/organization/form.js');
+    Yii::app()->clientScript->registerScriptFile($this->asset_static.'/js/legal/contractor/form.js');
+
+
+    Yii::app()->clientScript->registerScriptFile($this->asset_static.'/js/dropdowntreeview/jquery.treeview.js');
+    Yii::app()->clientScript->registerScriptFile($this->asset_static.'/js/dropdowntreeview/jquery.treeview.dropdown.js');
+    Yii::app()->clientScript->registerScriptFile($this->asset_static.'/js/dropdowntreeview/jquery.treeview.edit.js');
+
+
+    Yii::app()->clientScript->registerCssFile($this->asset_static.'/js/dropdowntreeview/jquery.treeview.css');
+    Yii::app()->clientScript->registerCssFile($this->asset_static.'/js/dropdowntreeview/jquery.treeview.dropdown.css');
 
     echo '<h2>'.($model->primaryKey ? 'Редактирование' : 'Создание').' контрагента</h2>';
 
@@ -66,6 +76,8 @@
             'style' => 'height:20px;'
         )
     );
+
+    echo $form->textFieldRow($model, 'group_id');
 
     echo $form->dropDownListRow($model, 'country', Countries::getValues(), array('class' => 'list-countries'));
     echo $form->dropDownListRow($model, 'okopf', CodesOKOPF::getValues());

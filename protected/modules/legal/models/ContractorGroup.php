@@ -130,18 +130,51 @@ class ContractorGroup extends SOAPModel {
                 'leaf' => (empty($group->children))
             );
         }
-//        die;
         return $ret;
     }
 
     /**
-     * @param ContractorGroup $group
-     * @param array $contractors
+     * @param bool $dropdown
      * @return array
      */
-    private function _getChildren($group, array $contractors)
+    public function getTreeOnlyGroup($dropdown = false)
+    {
+        $groups = ContractorGroup::model()->getData();
+        $ret = array();
+        $label = ($dropdown) ? 'label' : 'text';
+//        var_dump($dropdown);
+//        var_dump($label);
+        foreach($groups as $group){
+            $ret[] = array(
+                $label => $group->name,
+                'children' => $this->_getChildren($group, $data=array(), $dropdown),
+                'leaf' => (empty($group->children))
+            );
+        }
+        return $ret;
+    }
+
+//    public function getListed() {
+//        $subitems = array();
+//        if($this->childs) foreach($this->childs as $child) {
+//            $subitems[] = $child->getListed();
+//        }
+//        $returnarray = array('label' => $this->title, 'url' => array('Hierarchy/view', 'id' => $this->id));
+//        if($subitems != array())
+//            $returnarray = array_merge($returnarray, array('items' => $subitems));
+//        return $returnarray;
+//    }
+
+    /**
+     * @param ContractorGroup $group
+     * @param array $contractors
+     * @param bool $dropdown
+     * @return array
+     */
+    private function _getChildren($group, array $contractors, $dropdown=false)
     {
         $ret = array();
+        $label = ($dropdown) ? 'label' : 'text';
         foreach($group->children as $child){
             if (isset($contractors[$child->primaryKey])){
                 $ret[] = array(
@@ -192,8 +225,8 @@ class ContractorGroup extends SOAPModel {
             }
 
             $ret[] = array(
-                'text' => $child->name,
-                'children' => $this->_getChildren($child, $contractors),
+                $label => $child->name,
+                'children' => $this->_getChildren($child, $contractors, $dropdown),
                 'leaf' => (empty($child->children))
             );
         }

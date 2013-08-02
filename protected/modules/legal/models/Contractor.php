@@ -175,7 +175,7 @@ class Contractor extends AbstractOrganization {
             array('profile', 'in', 'range' => array_keys(ContractorTypesActivities::getValues())),
 //
 			array('name, full_name', 'required'),
-            array('name', 'length', 'max' => 50),
+            array('name', 'length', 'max' => 150),
             array('full_name', 'length', 'max' => 100),
 
             /**
