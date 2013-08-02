@@ -23,28 +23,28 @@ class Contractor_groupController extends Controller{
 //            'view' => 'application.modules.legal.controllers.ContractorGroup.ViewAction',
 //            'edit' => 'application.modules.legal.controllers.ContractorGroup.UpdateAction',
 //            'add' => 'application.modules.legal.controllers.ContractorGroup.CreateAction',
-//            'delete' => 'application.modules.legal.controllers.ContractorGroup.DeleteAction',
+            'delete' => 'application.modules.legal.controllers.ContractorGroup.DeleteAction',
         );
     }
 
-//    /**
-//     * @param string $id    Идентификатор контрагента.
-//     * @return ContractorGroup   Получаем модель Контрагент.
-//     * @throws CHttpException
-//     */
-//    public function loadModel($id)
-//    {
-//        $cache_id = get_class(ContractorGroup::model()).'_'.$id;
-//        $model = Yii::app()->cache->get($cache_id);
-//        if ($model === false){
-//            $model = Contractor::model()->findByPk($id);
-//            if ($model === null) {
-//                throw new CHttpException(404, 'Не найден контрагент.');
-//            }
-//            Yii::app()->cache->set($cache_id, $model);
-//        }
-//        return $model;
-//    }
+    /**
+     * @param string $id    Идентификатор группы.
+     * @return ContractorGroup   Получаем модель.
+     * @throws CHttpException
+     */
+    public function loadModel($id)
+    {
+        $cache_id = get_class(ContractorGroup::model()).'_'.$id;
+        $model = Yii::app()->cache->get($cache_id);
+        if ($model === false){
+            $model = ContractorGroup::model()->findByPk($id);
+            if ($model === null) {
+                throw new CHttpException(404, 'Не найдена группа контрагента.');
+            }
+            Yii::app()->cache->set($cache_id, $model);
+        }
+        return $model;
+    }
 
 //    /**
 //     * @return ContractorGroup Возвращаем созданную модель.

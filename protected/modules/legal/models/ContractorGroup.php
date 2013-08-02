@@ -11,6 +11,9 @@
 class ContractorGroup extends SOAPModel {
     const GROUP_ID_UNCATEGORIZED = '--uncategorized--';
 
+    const PREFIX_CACHE_ID_LIST_DATA = '_list_data_';
+    const PREFIX_CACHE_ID_LIST_ROOT_DATA = '_list_root_data_';
+
     public $children = array();
 
     /**
@@ -45,7 +48,7 @@ class ContractorGroup extends SOAPModel {
         return array(
             'id' => '#',
             'name' => 'Название',
-            'group_id' => '',
+            'group_id' => '', // parent_id
             'level' => '',
             'country' => ''
         );
@@ -61,38 +64,56 @@ class ContractorGroup extends SOAPModel {
     }
 
     /**
-     * Список групп контрагентов. Формат [id => {ContractorGroup}].
-     * Результат сохранеятся в кеш.
-     * @return array
+     * Возращает список всех групп контрагентов.
+     * @return array Формат [id => {ContractorGroup}].
      */
     public function getData() {
+        $cache_id = get_class($this) . self::PREFIX_CACHE_ID_LIST_DATA;
+        $data = Yii::app()->cache->get($cache_id);
+        if ($data !== false) {
+            $elements = $this->where('deleted', false)->findAll();
+            $data = array();
+            if ($elements) {
+                foreach ($elements as $elem) {
+                    $data[$elem->primaryKey] = $elem;
+                }
+            }
+            Yii::app()->cache->set($cache_id, $data);
+        }
+        return $data;
+    }
+
+    /**
+     * Список групп контрагентов. Сгрупировано по корневым группам.
+     * @return array Формат [id => {ContractorGroup}].
+     */
+    protected function getRootData() {
         $cache_id = get_class($this). '_list_data';
+//        $cache_id = get_class($this) . self::PREFIX_CACHE_ID_LIST_ROOT_DATA;
         $data = Yii::app()->cache->get($cache_id);
         if ($data === false) {
-            $elements = $this->where('deleted', false)->findAll();
+            $elements = $this->getData();
 
             $res = array();
             $tmp = array();
-            if ($elements) {
-                foreach ($elements as $elem) {
-                    $res[$elem->primaryKey] = $elem;
-                    if (!empty($elem->group_id)){
-                        $group_id = $elem->group_id;
-                    } else {
-                        if ($elem->level == 0){
-                            if (!isset($tmp[$elem->id])){
-                                $tmp[$elem->id] = array();
-                            }
-                            continue;
+            foreach ($elements as $elem) {
+                $res[$elem->primaryKey] = $elem;
+                if (!empty($elem->group_id)){
+                    $group_id = $elem->group_id;
+                } else {
+                    if ($elem->level == 0){
+                        if (!isset($tmp[$elem->id])){
+                            $tmp[$elem->id] = array();
                         }
-                        $group_id = self::GROUP_ID_UNCATEGORIZED;
+                        continue;
                     }
+                    $group_id = self::GROUP_ID_UNCATEGORIZED;
+                }
 //                    $group_id = (empty($elem->group_id) && $elem->level > 0) ? self::GROUP_ID_UNCATEGORIZED : $elem->group_id;
-                    if(isset($tmp[$group_id])){
-                        $tmp[$group_id][] = $elem->primaryKey;
-                    } else {
-                        $tmp[$group_id] = array($elem->primaryKey);
-                    }
+                if(isset($tmp[$group_id])){
+                    $tmp[$group_id][] = $elem->primaryKey;
+                } else {
+                    $tmp[$group_id] = array($elem->primaryKey);
                 }
             }
 //            var_dump($tmp);die;
@@ -121,7 +142,7 @@ class ContractorGroup extends SOAPModel {
      */
     public function getTreeData(array $data)
     {
-        $groups = ContractorGroup::model()->getData();
+        $groups = ContractorGroup::model()->getRootData();
         $ret = array();
         foreach($groups as $group){
             $ret[] = array(
@@ -139,7 +160,7 @@ class ContractorGroup extends SOAPModel {
      */
     public function getTreeOnlyGroup($dropdown = false)
     {
-        $groups = ContractorGroup::model()->getData();
+        $groups = ContractorGroup::model()->getRootData();
         $ret = array();
         $label = ($dropdown) ? 'label' : 'text';
 //        var_dump($dropdown);
@@ -153,17 +174,6 @@ class ContractorGroup extends SOAPModel {
         }
         return $ret;
     }
-
-//    public function getListed() {
-//        $subitems = array();
-//        if($this->childs) foreach($this->childs as $child) {
-//            $subitems[] = $child->getListed();
-//        }
-//        $returnarray = array('label' => $this->title, 'url' => array('Hierarchy/view', 'id' => $this->id));
-//        if($subitems != array())
-//            $returnarray = array_merge($returnarray, array('items' => $subitems));
-//        return $returnarray;
-//    }
 
     /**
      * @param ContractorGroup $group

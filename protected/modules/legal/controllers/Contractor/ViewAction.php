@@ -20,10 +20,15 @@ class ViewAction extends CAction
         $controller->pageTitle .= ' | Просмотр контрагента';
 
         $model = $controller->loadModel($id);
+
+        $groups = ContractorGroup::model()->getIndexData();
+        var_dump($groups);die;
+
         $controller->render(
             'view',
             array(
-                'model' => $model
+                'model' => $model,
+                'groups' => $groups,
             )
         );
     }

@@ -4,8 +4,9 @@
  *
  * @author Skibardin A.A. <skybardpf@artektiv.ru>
  *
- * @var $this   ContractorController
- * @var $model  Contractor
+ * @var ContractorController    $this
+ * @var Contractor              $model
+ * @var ContractorGroup[]       $groups
  */
 ?>
 
@@ -42,10 +43,27 @@
     $countries = Countries::getValues();
     $types = ContractorTypesActivities::getValues();
 
+    var_dump(array_keys($groups));die;
+    $gg = array_reverse(_getParent($groups, $model->group_id));
+    $str_group = implode(' -> ', $gg);
+
+    function _getParent($groups, $parent_id){
+        $ret = array();
+        if (isset($groups[$parent_id])){
+            $group = $groups[$parent_id];
+            $ret[] = $group;
+            if (!empty($group->group_id)){
+                $ret[] = _getParent($groups, $group->group_id);
+            }
+        }
+        return $ret;
+    }
+
     $attributes = array(
         array(
-            'name' => 'XXX',
-            'label' => 'Группа'
+            'name' => 'group_id',
+            'label' => 'Группа',
+            'value' => $str_group
         ),
         array(
             'name' => 'country',
