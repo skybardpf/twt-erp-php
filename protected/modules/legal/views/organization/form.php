@@ -132,6 +132,44 @@
     echo $form->textFieldRow($model, 'email');
     echo $form->textFieldRow($model, 'phone');
     echo $form->textFieldRow($model, 'fax');
+
+    $data_signatories = array();
+?>
+    <div class="control-group">
+        <?= $form->labelEx($model, 'signatories', array('class' => 'control-label')); ?>
+        <div class="controls">
+            <?php
+            $this->widget('bootstrap.widgets.TbGridView',
+                array(
+                    'type' => 'striped bordered condensed',
+                    'dataProvider' => new CArrayDataProvider($data_signatories),
+                    'template' => "{items}",
+                    'columns' => array(
+                        array(
+                            'name' => 'fio',
+                            'header' => 'ФИО',
+                            'type' => 'raw',
+                        ),
+                        array(
+                            'name' => 'type',
+                            'header' => 'Тип',
+                            'type' => 'raw',
+//                            'htmlOptions' => array(
+//                                'style' => 'width: 90%',
+//                            )
+                        ),
+                        array(
+                            'name' => 'delete',
+                            'header' => '',
+                            'type' => 'raw'
+                        ),
+                    )
+                )
+            );
+            ?>
+        </div>
+    </div>
+<?php
     echo $form->textAreaRow($model, 'comment');
 ?>
 </fieldset>

@@ -12,6 +12,7 @@
 <?php
     Yii::app()->clientScript->registerCssFile($this->asset_static.'/select2/select2.css');
     Yii::app()->clientScript->registerScriptFile($this->asset_static.'/select2/select2.js');
+    Yii::app()->clientScript->registerScriptFile($this->asset_static.'/js/jquery.json-2.4.min.js');
     Yii::app()->clientScript->registerScriptFile($this->asset_static.'/js/legal/organization/form.js');
 
     echo '<h2>'.($model->primaryKey ? 'Редактирование' : 'Создание').' контрагента</h2>';
@@ -59,6 +60,7 @@
             'changeYear' => true,
             'showOn' => 'button',
             'constrainInput' => 'true',
+            'yearRange' => '1950:2100',
         ),
         'htmlOptions'=>array(
             'style' => 'height:20px;'
@@ -131,9 +133,115 @@
     echo $form->textFieldRow($model, 'email');
     echo $form->textFieldRow($model, 'phone');
     echo $form->textFieldRow($model, 'fax');
+
+    $persons = Individuals::getValues();
+    $docs   = PowerAttorneysLE::model()->getAllData();
+
+    $data_signatories = array();
+    foreach ($model->signatories as $v){
+        $data_signatories[] = array(
+            'id' => $v['id'].'_'.$v['doc_id'],
+            'fio' => (isset($persons[$v['id']])
+                ? CHtml::link($persons[$v['id']], $this->createUrl('individuals/view', array('id' => $v['id'])))
+                : '---'
+            ),
+            'doc' => (isset($docs[$v['doc_id']])
+                ? CHtml::link($docs[$v['doc_id']]->name, $this->createUrl('power_attorney_le/view', array('id' => $v['doc_id'])))
+                : '---'
+            ),
+            'delete' => $this->widget('bootstrap.widgets.TbButton', array(
+                'buttonType' => 'button',
+                'type' => 'primary',
+                'label' => 'Удалить',
+                'htmlOptions' => array(
+                    'class' => 'del-signatory',
+                    'data-id' => $v['id'].'_'.$v['doc_id'],
+                )
+            ), true)
+        );
+    }
+    echo $form->hiddenField($model, 'json_signatories');
+?>
+    <div class="control-group">
+        <?= $form->labelEx($model, 'signatories', array('class' => 'control-label')); ?>
+        <div class="controls">
+        <?php
+            $this->widget('bootstrap.widgets.TbGridView',
+                array(
+                    'id' => 'grid-signatories',
+                    'type' => 'striped bordered condensed',
+                    'dataProvider' => new CArrayDataProvider($data_signatories),
+                    'template' => "{items}",
+                    'columns' => array(
+                        array(
+                            'name' => 'fio',
+                            'header' => 'ФИО',
+                            'type' => 'raw',
+                            'htmlOptions' => array(
+                                'style' => 'width: 45%',
+                            )
+                        ),
+                        array(
+                            'name' => 'doc',
+                            'header' => 'Тип',
+                            'type' => 'raw',
+                            'htmlOptions' => array(
+                                'style' => 'width: 45%',
+                            )
+                        ),
+                        array(
+                            'name' => 'delete',
+                            'header' => '',
+                            'type' => 'raw'
+                        ),
+                    )
+                )
+            );
+
+            $this->widget('bootstrap.widgets.TbButton', array(
+                'buttonType'=> 'button',
+                'type' => 'primary',
+                'label' => 'Добавить',
+                'htmlOptions' => array(
+                    'class' => 'add-signatory',
+                    'data-type' => 'signatory',
+                )
+            ));
+        ?>
+        </div>
+    </div>
+<?php
     echo $form->textAreaRow($model, 'comment');
 ?>
 
 </fieldset>
 
+<?php $this->endWidget(); ?>
+
+<?php
+/**
+ * Модальное окошко для подписанта
+ */
+$this->beginWidget('bootstrap.widgets.TbModal', array('id'=>'dataModalSignatory'));
+?>
+    <div class="modal-header">
+        <a class="close" data-dismiss="modal">×</a>
+        <h4><?=Yii::t("menu", "Выберите подписанта и довереность")?></h4>
+    </div>
+    <div class="modal-body"></div>
+    <div class="modal-footer">
+        <?php
+        $this->widget('bootstrap.widgets.TbButton', array(
+            'label' => Yii::t("menu", "Сохранить"),
+            'url'   => '#',
+            'htmlOptions' => array('class'=>'button_save', 'data-dismiss'=>'modal'),
+        ));
+
+        $this->widget('bootstrap.widgets.TbButton', array(
+            'label' => Yii::t("menu", "Отмена"),
+            'url'   => '#',
+            'htmlOptions' => array('data-dismiss'=>'modal'),
+        ));
+        ?>
+    </div>
 <?php $this->endWidget(); ?>

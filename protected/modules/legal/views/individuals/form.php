@@ -46,6 +46,7 @@
             'changeYear' => true,
             'showOn' => 'button',
             'constrainInput' => 'true',
+            'yearRange' => '1950:2100',
         ),
         'htmlOptions'=>array(
             'style' => 'height:20px;'

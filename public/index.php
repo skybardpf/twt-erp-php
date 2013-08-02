@@ -19,6 +19,5 @@ if ($_SERVER['HTTP_HOST'] == 'twt-erp.twtconsult.ru') {
     defined('YII_TRACE_LEVEL') or define('YII_TRACE_LEVEL',3);
     $config = dirname(__FILE__).'/../protected/config/dev.php';
 }
-
 require_once($yii);
 Yii::createWebApplication($config)->run();

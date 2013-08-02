@@ -24,7 +24,12 @@ class UpdateAction extends CAction
          */
         $model = $controller->loadModel($id);
 
+        $class_name = get_class($model);
+
         if(isset($_POST['ajax']) && $_POST['ajax']==='form-contract') {
+            $model->signatory = CJSON::decode($_POST[$class_name]['json_signatory']);
+            $model->signatory_contr = CJSON::decode($_POST[$class_name]['json_signatory_contractor']);
+
             echo CActiveForm::validate($model);
             Yii::app()->end();
         }
@@ -57,9 +62,10 @@ class UpdateAction extends CAction
             $model->invalid = $model->invalid ? $model::STATUS_INVALID : $model::STATUS_VALID;
         }
 
+//        var_dump($model->signatory);die;
         // TODO только для тестов. Потом убрать. Здесь должен быть массив. Сейчас строка.
-        $model->signatory = array('0000000033', '0000000044');
-        $model->signatory_contr = array('0000000038', '0000000054');
+//        $model->signatory = array('0000000033', '0000000044');
+//        $model->signatory_contr = array('0000000038', '0000000054');
 
         $model->json_signatory = CJSON::encode($model->signatory);
         $model->json_signatory_contractor = CJSON::encode($model->signatory_contr);

@@ -20,10 +20,12 @@ abstract class AbstractOrganization extends SOAPModel {
         $cache_id = get_class($this).self::PREFIX_CACHE_ID_LIST_FULL_DATA;
         $data = Yii::app()->cache->get($cache_id);
         if ($data === false) {
+            $countries = Countries::getValues();
             $elements = $this->where('deleted', false)->findAll();
             $data = array();
             if ($elements) {
                 foreach ($elements as $elem) {
+                    $elem->country_name = (isset($countries[$elem->country])) ? $countries[$elem->country] : '---';
                     $data[] = $elem;
                 }
             }

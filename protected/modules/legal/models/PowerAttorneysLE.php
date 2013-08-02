@@ -30,6 +30,8 @@
 class PowerAttorneysLE extends SOAPModel
 {
     const PREFIX_CACHE_ID_LIST_DATA = '_list_org_id_';
+    const PREFIX_CACHE_ID_LIST_ALL_DATA = '_list_all_data';
+    const PREFIX_CACHE_ID_LIST_ALL_NAMES = '_list_all_names';
 
 	public $owner_name = '';
 
@@ -276,6 +278,46 @@ class PowerAttorneysLE extends SOAPModel
                 ->where('id_yur',  $org->primaryKey)
                 ->where('type_yur', 'Организации')
                 ->findAll();
+            Yii::app()->cache->set($cache_id, $data);
+        }
+        return $data;
+    }
+
+    /**
+     * Список довереностей.
+     * @return PowerAttorneysLE[]
+     */
+    public function getAllData(){
+        $cache_id = get_class($this).self::PREFIX_CACHE_ID_LIST_ALL_DATA;
+        $data = Yii::app()->cache->get($cache_id);
+        if ($data === false){
+            $tmp = $this->where('deleted', false)
+//                ->where('type_yur', 'Контрагенты')
+                ->findAll();
+            if ($tmp){
+                foreach($tmp as $v){
+                    $data[$v->primaryKey] = $v;
+                }
+            }
+            Yii::app()->cache->set($cache_id, $data);
+        }
+        return $data;
+    }
+
+    /**
+     * Список назавний довереностей.
+     * @return array Format [id => name]
+     */
+    public function getAllNames(){
+        $cache_id = get_class($this).self::PREFIX_CACHE_ID_LIST_ALL_NAMES;
+        $data = Yii::app()->cache->get($cache_id);
+        if ($data === false){
+            $tmp = $this->getAllData();
+            if ($tmp){
+                foreach($tmp as $v){
+                    $data[$v->primaryKey] = $v->name;
+                }
+            }
             Yii::app()->cache->set($cache_id, $data);
         }
         return $data;

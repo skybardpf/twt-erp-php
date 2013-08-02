@@ -39,27 +39,28 @@
     $countries = Countries::getValues();
     $types = ContractorTypesActivities::getValues();
 
-    $this->widget('bootstrap.widgets.TbDetailView', array(
-        'data' => $model,
-        'attributes' => array(
-            array(
-                'name' => 'country',
-                'label' => 'Страна',
-                'value' => (isset($countries[$model->country]) ? $countries[$model->country] : '---')
+    $attributes = array(
+        array(
+            'name' => 'country',
+            'label' => 'Страна',
+            'value' => (isset($countries[$model->country]) ? $countries[$model->country] : '---')
 
-            ),
-            array(
-                'name' => 'name',
-                'label' => 'Наименование'
-            ),
-            array(
-                'name' => 'full_name',
-                'label' => 'Полное наименование'
-            ),
-            array(
-                'name' => 'sert_date',
-                'label' => 'Дата государственной регистрации'
-            ),
+        ),
+        array(
+            'name' => 'name',
+            'label' => 'Наименование'
+        ),
+        array(
+            'name' => 'full_name',
+            'label' => 'Полное наименование'
+        ),
+        array(
+            'name' => 'sert_date',
+            'label' => 'Дата государственной регистрации'
+        ),
+    );
+    if ($model->country == Organization::COUNTRY_RUSSIAN_ID){
+        $attributes = array_merge($attributes, array(
             array(
                 'name' => 'inn',
                 'label' => 'ИНН'
@@ -72,32 +73,53 @@
                 'name' => 'ogrn',
                 'label' => 'ОГРН'
             ),
+        ));
+    } else {
+        $attributes = array_merge($attributes, array(
             array(
-                'name' => 'profile',
-                'label' => 'Основной вид деятельности',
-                'value' => (isset($types[$model->profile]) ? $types[$model->profile] : '')
+                'name' => 'vat_nom',
+                'label' => 'VAT'
             ),
             array(
-                'name' => 'yur_address',
-                'label' => 'Юридический адрес'
+                'name' => 'reg_nom',
+                'label' => 'Регистрационный номер'
             ),
             array(
-                'name' => 'fact_address',
-                'label' => 'Фактический адрес'
+                'name' => 'sert_nom',
+                'label' => 'Номер сертификата'
             ),
-            array(
-                'name' => 'email',
-                'label' => 'E-mail'
-            ),
-            array(
-                'name' => 'phone',
-                'label' => 'Телефон'
-            ),
-            array(
-                'name' => 'fax',
-                'label' => 'Факс'
-            ),
+        ));
+    }
+    $attributes = array_merge($attributes, array(
+        array(
+            'name' => 'profile',
+            'label' => 'Основной вид деятельности',
+            'value' => (isset($types[$model->profile]) ? $types[$model->profile] : '')
+        ),
+        array(
+            'name' => 'yur_address',
+            'label' => 'Юридический адрес'
+        ),
+        array(
+            'name' => 'fact_address',
+            'label' => 'Фактический адрес'
+        ),
+        array(
+            'name' => 'email',
+            'label' => 'E-mail'
+        ),
+        array(
+            'name' => 'phone',
+            'label' => 'Телефон'
+        ),
+        array(
+            'name' => 'fax',
+            'label' => 'Факс'
+        ),
+    ));
 
-        )
+    $this->widget('bootstrap.widgets.TbDetailView', array(
+        'data' => $model,
+        'attributes' => $attributes
     ));
 ?>

@@ -150,7 +150,7 @@ class Individuals extends SOAPModel {
             $data = array();
             if ($elements) {
                 foreach ($elements as $elem) {
-                    $data[$elem->getprimaryKey()] = $elem->name.' '.$elem->family;
+                    $data[$elem->primaryKey] = $elem->name.' '.$elem->family;
                 }
             }
             Yii::app()->cache->set($cache_id, $data);

@@ -3,8 +3,14 @@
  * Управление группами контрагентов.
  *
  * @author Skibardin A.A. <skybardpf@artektiv.ru>
+ *
+ * @property string     $id
+ * @property string     $name
+ * @property integer    $level
  */
 class ContractorGroup extends SOAPModel {
+    const GROUP_ID_UNCATEGORIZED = '--uncategorized--';
+
     public $children = array();
 
     /**
@@ -39,7 +45,7 @@ class ContractorGroup extends SOAPModel {
         return array(
             'id' => '#',
             'name' => 'Название',
-            'groups' => '',
+            'group_id' => '',
             'level' => '',
             'country' => ''
         );
@@ -64,23 +70,41 @@ class ContractorGroup extends SOAPModel {
         $data = Yii::app()->cache->get($cache_id);
         if ($data === false) {
             $elements = $this->where('deleted', false)->findAll();
+
             $res = array();
-            $menu = array();
+            $tmp = array();
             if ($elements) {
                 foreach ($elements as $elem) {
                     $res[$elem->primaryKey] = $elem;
-
-                    if (!empty($elem->groups)){
-                        if(isset($menu[$elem->groups])){
-                            $menu[$elem->groups][] = $elem->id;
-                        } else {
-                            $menu[$elem->groups] = array($elem->id);
+                    if (!empty($elem->group_id)){
+                        $group_id = $elem->group_id;
+                    } else {
+                        if ($elem->level == 0){
+                            if (!isset($tmp[$elem->id])){
+                                $tmp[$elem->id] = array();
+                            }
+                            continue;
                         }
+                        $group_id = self::GROUP_ID_UNCATEGORIZED;
+                    }
+//                    $group_id = (empty($elem->group_id) && $elem->level > 0) ? self::GROUP_ID_UNCATEGORIZED : $elem->group_id;
+                    if(isset($tmp[$group_id])){
+                        $tmp[$group_id][] = $elem->primaryKey;
+                    } else {
+                        $tmp[$group_id] = array($elem->primaryKey);
                     }
                 }
             }
+//            var_dump($tmp);die;
             $data = array();
-            foreach ($menu as $k=>$v) {
+            foreach ($tmp as $k=>$v) {
+                if ($k == self::GROUP_ID_UNCATEGORIZED){
+                    $group = new ContractorGroup();
+                    $group->id = self::GROUP_ID_UNCATEGORIZED;
+                    $group->name = 'Без категории';
+                    $group->level = 0;
+                    $res[$k] = $group;
+                }
                 foreach($v as $c){
                     $res[$k]->children[] = $res[$c];
                 }
@@ -92,9 +116,87 @@ class ContractorGroup extends SOAPModel {
     }
 
     /**
-     *
+     * @param array $data
+     * @return array
      */
-    private function _getChildren($data){
+    public function getTreeData(array $data)
+    {
+        $groups = ContractorGroup::model()->getData();
+        $ret = array();
+        foreach($groups as $group){
+            $ret[] = array(
+                'text' => $group->name,
+                'children' => $this->_getChildren($group, $data),
+                'leaf' => (empty($group->children))
+            );
+        }
+//        die;
+        return $ret;
+    }
 
+    /**
+     * @param ContractorGroup $group
+     * @param array $contractors
+     * @return array
+     */
+    private function _getChildren($group, array $contractors)
+    {
+        $ret = array();
+        foreach($group->children as $child){
+            if (isset($contractors[$child->primaryKey])){
+                $ret[] = array(
+                    'text' => $child->name,
+                    'children' => array(
+                        'text' => 'Список контрагентов' .
+                        Yii::app()->controller->widget(
+                            'bootstrap.widgets.TbGridView',
+                            array(
+                                'type' => 'striped bordered condensed',
+                                'dataProvider' => new CArrayDataProvider(
+                                    $contractors[$child->primaryKey],
+                                    array(
+                                        'pagination' => array(
+                                            'pageSize' => 10000,
+                                        ),
+                                    )
+                                ),
+                                'template' => "{items} {pager}",
+                                'columns' => array(
+                                    array(
+                                        'name' => 'name',
+                                        'header' => 'Название',
+                                        'type' => 'raw',
+                                        'value' => 'CHtml::link($data["name"], Yii::app()->getController()->createUrl("contractor/view", array("id" => $data["id"])))'
+                                    ),
+                                    array(
+                                        'name' => 'country_name',
+                                        'header' => 'Страна юрисдикции',
+                                    ),
+                                    array(
+                                        'name' => 'creation_date',
+                                        'header' => 'Дата добавления',
+                                    ),
+                                    array(
+                                        'name' => 'creator',
+                                        'header' => 'Пользователь, добавивший в систему',
+                                    ),
+                                ),
+                            ),
+                            true
+                        ),
+                        'expanded' => false,
+                        'leaf' => true
+                    ),
+                    'leaf' => false
+                );
+            }
+
+            $ret[] = array(
+                'text' => $child->name,
+                'children' => $this->_getChildren($child, $contractors),
+                'leaf' => (empty($child->children))
+            );
+        }
+        return $ret;
     }
 }

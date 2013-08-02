@@ -11,6 +11,7 @@ class IndexAction extends CAction
      */
     public function run()
     {
+//        var_dump('aaa');die;
         /**
          * @var ContractorController    $controller
          */
@@ -18,7 +19,8 @@ class IndexAction extends CAction
         $controller->pageTitle .= ' | Список контрагентов';
 
         $groups = ContractorGroup::model()->getData();
-        $data = Contractor::model()->getFullData();
+        $data = Contractor::model()->getDataGroupBy();
+
         $controller->render(
             'index',
             array(

@@ -11,8 +11,8 @@
 ?>
 
 <?php
-    Yii::app()->clientScript->registerScriptFile($this->asset_static.'/js/legal/contract/form.js');
     Yii::app()->clientScript->registerScriptFile($this->asset_static.'/js/jquery.json-2.4.min.js');
+    Yii::app()->clientScript->registerScriptFile($this->asset_static.'/js/legal/contract/form.js');
 
     echo '<h2>'.($model->primaryKey ? 'Редактирование' : 'Создание').' договора</h2>';
 
@@ -136,6 +136,7 @@
         <div class="controls">
         <?php
             echo $form->textField($model, 'date_infomation', array('style'=> 'width: 70%')).' дней';
+            echo $form->error($model, 'date_infomation');
         ?>
         </div>
     </div>
@@ -189,7 +190,7 @@
     }
     $div_signatory = $this->widget('bootstrap.widgets.TbGridView',
         array(
-            'id' => 'grid-signatory',
+            'id' => get_class($model).'_signatory',
             'type' => 'striped bordered condensed',
             'dataProvider' => new CArrayDataProvider($data),
             'template' => "{items}",
@@ -247,7 +248,7 @@
     }
     $div_signatory_contractor = $this->widget('bootstrap.widgets.TbGridView',
         array(
-            'id' => 'grid-signatory-contractor',
+            'id' => get_class($model).'_signatory_contr',
             'type' => 'striped bordered condensed',
             'dataProvider' => new CArrayDataProvider($data),
             'template' => "{items}",
@@ -283,20 +284,20 @@
     echo $form->hiddenField($model, 'json_signatory_contractor');
 ?>
     <div class="control-group">
-        <?= CHtml::label('Подписанты '.CHtml::encode($organization->name).' <span class="required">*</span>', get_class($model).'[signatory]', array('class' => 'control-label')); ?>
+        <?= CHtml::label('Подписанты ('.CHtml::encode($organization->name).') <span class="required">*</span>', get_class($model).'_signatory', array('class' => 'control-label')); ?>
         <div class="controls">
         <?php
             echo $div_signatory;
-            echo $form->error($model, 'signatory');
+            echo CHtml::tag('div', array(), $form->error($model, 'signatory'));
         ?>
         </div>
     </div>
     <div class="control-group">
-        <?= CHtml::label('Подписанты '.CHtml::encode($contractor).' <span class="required">*</span>', get_class($model).'[signatory_contr]', array('class' => 'control-label')); ?>
+        <?= CHtml::label('Подписанты ('.CHtml::encode($contractor).') <span class="required">*</span>', get_class($model).'_signatory_contr', array('class' => 'control-label')); ?>
         <div class="controls">
         <?php
             echo $div_signatory_contractor;
-            echo $form->error($model, 'signatory_contr');
+            echo CHtml::tag('div', array(), $form->error($model, 'signatory_contr'));
         ?>
         </div>
     </div>

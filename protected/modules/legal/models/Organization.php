@@ -8,6 +8,7 @@
  * @property string $name
  * @property string $full_name
  * @property string $country
+ * @property string $country_name
  * @property string $comment
  * @property string $inn
  * @property string $kpp
@@ -21,6 +22,8 @@
  * @property string $deleted
  */
 class Organization extends AbstractOrganization {
+    const TYPE = 'Контрагент';
+
 	/**
 	 * @static
 	 * @param string $className
@@ -127,7 +130,9 @@ class Organization extends AbstractOrganization {
     {
         return array(
             "id"            => '#',
-            "country"       => 'Страна',
+            "country"       => 'Страна',    // id
+            "country_name"  => '',
+
             "name"          => 'Наименование',
             "full_name"     => 'Полное наименование',
             'sert_date'     => 'Дата государственной регистрации',

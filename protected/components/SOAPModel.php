@@ -3,7 +3,7 @@
  * User: Forgon
  * Date: 09.01.13
  *
- * @property $primaryKey string
+ * @property string $primaryKey
  */
 abstract class SOAPModel extends CModel {
 	/** Кешируем Гет-ы на это время, кеширование возложено на подклассы */
