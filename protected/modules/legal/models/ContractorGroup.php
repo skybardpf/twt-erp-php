@@ -7,13 +7,20 @@
  * @property string     $id
  * @property string     $name
  * @property integer    $level
+ * @property integer    $group_id       // $parent_id
  */
-class ContractorGroup extends SOAPModel {
+class ContractorGroup extends SOAPModel
+{
     const GROUP_ID_UNCATEGORIZED = '--uncategorized--';
+    const GROUP_DEFAULT = '-- DEFAULT --';
 
     const PREFIX_CACHE_ID_LIST_DATA = '_list_data_';
+    const PREFIX_CACHE_ID_LIST_DROPDOWN_DATA = '_list_dropdown_data_';
     const PREFIX_CACHE_ID_LIST_ROOT_DATA = '_list_root_data_';
 
+    /**
+     * @var ContractorGroup[] $children
+     */
     public $children = array();
 
     /**
@@ -21,7 +28,8 @@ class ContractorGroup extends SOAPModel {
      * @param string $className
      * @return ContractorGroup
      */
-    public static function model($className = __CLASS__) {
+    public static function model($className = __CLASS__)
+    {
         return parent::model($className);
     }
 
@@ -29,7 +37,8 @@ class ContractorGroup extends SOAPModel {
      * Список групп контрагентов.
      * @return ContractorGroup[]
      */
-    public function findAll() {
+    public function findAll()
+    {
         $filters = SoapComponent::getStructureElement($this->where);
         if (!$filters) {
             $filters = array(array());
@@ -44,7 +53,8 @@ class ContractorGroup extends SOAPModel {
      * Returns the list of attribute names of the model.
      * @return array list of attribute names.
      */
-    public function attributeLabels() {
+    public function attributeLabels()
+    {
         return array(
             'id' => '#',
             'name' => 'Название',
@@ -57,7 +67,8 @@ class ContractorGroup extends SOAPModel {
     /**
      * @return array validation rules for model attributes.
      */
-    public function rules() {
+    public function rules()
+    {
         return array(
             array('name', 'required'),
         );
@@ -65,17 +76,35 @@ class ContractorGroup extends SOAPModel {
 
     /**
      * Возращает список всех групп контрагентов.
-     * @return array Формат [id => {ContractorGroup}].
+     * @param bool $force_cache Если TRUE, кеш сбрасывается принудительно.
+     * @return ContractorGroup[] Формат [id => {ContractorGroup}].
      */
-    public function getData() {
+    public function getData($force_cache = false)
+    {
         $cache_id = get_class($this) . self::PREFIX_CACHE_ID_LIST_DATA;
+//        Yii::app()->cache->delete($cache_id);
         $data = Yii::app()->cache->get($cache_id);
-        if ($data !== false) {
-            $elements = $this->where('deleted', false)->findAll();
+        if ($force_cache || $data === false) {
+//            $elements = $this->where('deleted', false)->findAll();
+            $elements = array(
+                array('id' => '001', 'name' => 'Name 001', 'parent_id' => ''),
+                array('id' => '002', 'name' => 'Name 002', 'parent_id' => ''),
+                array('id' => '003', 'name' => 'Name 003', 'parent_id' => ''),
+                array('id' => '004', 'name' => 'Name 004', 'parent_id' => '001'),
+                array('id' => '005', 'name' => 'Name 005', 'parent_id' => '001'),
+                array('id' => '006', 'name' => 'Name 006', 'parent_id' => '001'),
+                array('id' => '007', 'name' => 'Name 007', 'parent_id' => '002'),
+                array('id' => '008', 'name' => 'Name 008', 'parent_id' => '002'),
+                array('id' => '009', 'name' => 'Name 009', 'parent_id' => '002'),
+            );
             $data = array();
             if ($elements) {
                 foreach ($elements as $elem) {
-                    $data[$elem->primaryKey] = $elem;
+                    $g = new ContractorGroup();
+                    $g->id = $elem['id'];
+                    $g->name = $elem['name'];
+                    $g->group_id = $elem['parent_id'];
+                    $data[$g->id] = $g;
                 }
             }
             Yii::app()->cache->set($cache_id, $data);
@@ -84,12 +113,49 @@ class ContractorGroup extends SOAPModel {
     }
 
     /**
-     * Список групп контрагентов. Сгрупировано по корневым группам.
-     * @return array Формат [id => {ContractorGroup}].
+     * Возращает список всех групп контрагентов для вывода в выпадающем списке.
+     * @param bool $force_cache Если TRUE, кеш сбрасывается принудительно.
+     * @return array Формат [id => name].
      */
-    protected function getRootData() {
-        $cache_id = get_class($this). '_list_data';
-//        $cache_id = get_class($this) . self::PREFIX_CACHE_ID_LIST_ROOT_DATA;
+    public function getDropDownData($force_cache = false)
+    {
+        $cache_id = get_class($this) . self::PREFIX_CACHE_ID_LIST_DROPDOWN_DATA;
+        $data = Yii::app()->cache->get($cache_id);
+        if ($force_cache || $data === false) {
+            $groups = $this->_getRootData($force_cache);
+            $data[self::GROUP_DEFAULT] = 'Выберите группу';
+            foreach($groups as $parent) {
+                $data[$parent->id] = $parent->name;
+                $data = array_merge($this->_subDropDown($data, $parent));
+            }
+            Yii::app()->cache->set($cache_id, $data);
+        }
+        return $data;
+    }
+
+    /**
+     * @param array $data
+     * @param ContractorGroup $group
+     * @param string $space
+     * @return array
+     */
+    private function _subDropDown($data, $group, $space = '--- ')
+    {
+        foreach($group->children as $child)
+        {
+            $data[$child->id] = $space.$child->name;
+            $data = array_merge($this->_subDropDown($data, $child, $space.'--- '));
+        }
+        return $data;
+    }
+
+    /**
+     * Список групп контрагентов. Сгрупировано по корневым группам.
+     * @return ContractorGroup[] Формат [id => {ContractorGroup}].
+     */
+    private function _getRootData()
+    {
+        $cache_id = get_class($this) . self::PREFIX_CACHE_ID_LIST_ROOT_DATA;
         $data = Yii::app()->cache->get($cache_id);
         if ($data === false) {
             $elements = $this->getData();
@@ -142,7 +208,7 @@ class ContractorGroup extends SOAPModel {
      */
     public function getTreeData(array $data)
     {
-        $groups = ContractorGroup::model()->getRootData();
+        $groups = ContractorGroup::model()->_getRootData();
         $ret = array();
         foreach($groups as $group){
             $ret[] = array(
@@ -160,7 +226,7 @@ class ContractorGroup extends SOAPModel {
      */
     public function getTreeOnlyGroup($dropdown = false)
     {
-        $groups = ContractorGroup::model()->getRootData();
+        $groups = ContractorGroup::model()->_getRootData();
         $ret = array();
         $label = ($dropdown) ? 'label' : 'text';
 //        var_dump($dropdown);

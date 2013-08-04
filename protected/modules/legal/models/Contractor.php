@@ -25,7 +25,8 @@ class Contractor extends AbstractOrganization {
 	 * @param string $className
 	 * @return Contractor
 	 */
-	public static function model($className = __CLASS__) {
+	public static function model($className = __CLASS__)
+    {
 		return parent::model($className);
 	}
 
@@ -37,7 +38,6 @@ class Contractor extends AbstractOrganization {
     public function findAll()
     {
         $filters = SoapComponent::getStructureElement($this->where);
-
         $ret = $this->SOAP->listContragents(array(
             'filters' => (!$filters) ? array(array()) : $filters,
             'sort' => array($this->order)
@@ -79,7 +79,8 @@ class Contractor extends AbstractOrganization {
 	 * @return string Возвращает id созданой записи (при добавлении) или
      * id отредактированного контрагента.
 	 */
-	public function save() {
+	public function save()
+    {
         $data = $this->getAttributes();
 
         if (!$this->primaryKey){
@@ -118,7 +119,8 @@ class Contractor extends AbstractOrganization {
 	 * Returns the list of attribute names of the model.
 	 * @return array list of attribute names.
 	 */
-	public function attributeLabels() {
+	public function attributeLabels()
+    {
         return array(
             "id"            => '#',
             "country"       => 'Страна', // id
@@ -160,7 +162,8 @@ class Contractor extends AbstractOrganization {
 	/**
 	 * @return array validation rules for model attributes.
 	 */
-	public function rules() {
+	public function rules()
+    {
 		return array(
 			array('country', 'required'),
 			array('country', 'in', 'range' => array_keys(Countries::getValues())),
@@ -177,6 +180,9 @@ class Contractor extends AbstractOrganization {
 			array('name, full_name', 'required'),
             array('name', 'length', 'max' => 150),
             array('full_name', 'length', 'max' => 100),
+
+            array('group_id', 'required'),
+            array('group_id', 'in', 'range' => array_keys(ContractorGroup::getData())),
 
             /**
              * Russian country
@@ -205,7 +211,8 @@ class Contractor extends AbstractOrganization {
     /**
      * @return array
      */
-    public function getDataGroupBy(){
+    public function getDataGroupBy()
+    {
         $cache_id = get_class($this).self::PREFIX_CACHE_ID_LIST_FULL_DATA_GROUP_BY;
         $groups = Yii::app()->cache->get($cache_id);
         if ($groups !== false) {

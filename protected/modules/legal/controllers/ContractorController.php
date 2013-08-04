@@ -40,13 +40,13 @@ class ContractorController extends Controller{
     {
         $cache_id = get_class(Contractor::model()).'_'.$id;
         $model = Yii::app()->cache->get($cache_id);
-//        if ($model !== false){
+        if ($model == false){
             $model = Contractor::model()->findByPk($id);
             if ($model === null) {
                 throw new CHttpException(404, 'Не найден контрагент.');
             }
             Yii::app()->cache->set($cache_id, $model);
-//        }
+        }
         return $model;
     }
 
@@ -56,6 +56,7 @@ class ContractorController extends Controller{
     public function createModel()
     {
         $model = new Contractor();
+        $model->signatories = array();
         return $model;
     }
 }

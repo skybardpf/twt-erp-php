@@ -43,9 +43,27 @@
     $countries = Countries::getValues();
     $types = ContractorTypesActivities::getValues();
 
-    var_dump(array_keys($groups));die;
-    $gg = array_reverse(_getParent($groups, $model->group_id));
-    $str_group = implode(' -> ', $gg);
+    $groups = ContractorGroup::model()->getData();
+//    $groups = array_keys($groups);
+//    var_dump($groups);
+//die;
+
+
+    $model->group_id = '006';
+    $gg = _getParent($groups, $model->group_id);
+
+//
+    $res = array();
+    foreach($gg as $g){
+        var_dump($g['id']);die;
+//        var_dump($g->name);
+//        die;
+        $res[$g['id']] = $g['name'];
+    }
+
+//var_dump($res);die;
+//
+    $str_group = implode('->', $res);
 
     function _getParent($groups, $parent_id){
         $ret = array();
@@ -63,7 +81,8 @@
         array(
             'name' => 'group_id',
             'label' => 'Группа',
-            'value' => $str_group
+            'value' => $str_group,
+//            'value' => '',
         ),
         array(
             'name' => 'country',

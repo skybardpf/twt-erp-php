@@ -21,14 +21,14 @@ class ViewAction extends CAction
 
         $model = $controller->loadModel($id);
 
-        $groups = ContractorGroup::model()->getIndexData();
-        var_dump($groups);die;
+//        $groups = ContractorGroup::model()->getIndexData();
+//        var_dump($groups);die;
 
         $controller->render(
             'view',
             array(
                 'model' => $model,
-                'groups' => $groups,
+//                'groups' => $groups,
             )
         );
     }

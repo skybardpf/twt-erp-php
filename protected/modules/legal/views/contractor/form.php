@@ -13,17 +13,16 @@
     Yii::app()->clientScript->registerCssFile($this->asset_static.'/select2/select2.css');
     Yii::app()->clientScript->registerScriptFile($this->asset_static.'/select2/select2.js');
     Yii::app()->clientScript->registerScriptFile($this->asset_static.'/js/jquery.json-2.4.min.js');
-    Yii::app()->clientScript->registerScriptFile($this->asset_static.'/js/legal/organization/form.js');
-    Yii::app()->clientScript->registerScriptFile($this->asset_static.'/js/legal/contractor/form.js');
-
-
-    Yii::app()->clientScript->registerScriptFile($this->asset_static.'/js/dropdowntreeview/jquery.treeview.js');
-    Yii::app()->clientScript->registerScriptFile($this->asset_static.'/js/dropdowntreeview/jquery.treeview.dropdown.js');
-    Yii::app()->clientScript->registerScriptFile($this->asset_static.'/js/dropdowntreeview/jquery.treeview.edit.js');
-
 
     Yii::app()->clientScript->registerCssFile($this->asset_static.'/js/dropdowntreeview/jquery.treeview.css');
     Yii::app()->clientScript->registerCssFile($this->asset_static.'/js/dropdowntreeview/jquery.treeview.dropdown.css');
+
+    Yii::app()->clientScript->registerScriptFile($this->asset_static.'/js/dropdowntreeview/jquery.treeview.js');
+    Yii::app()->clientScript->registerScriptFile($this->asset_static.'/js/dropdowntreeview/jquery.treeview.edit.js');
+    Yii::app()->clientScript->registerScriptFile($this->asset_static.'/js/dropdowntreeview/jquery.treeview.dropdown.js');
+
+    Yii::app()->clientScript->registerScriptFile($this->asset_static.'/js/legal/organization/form.js');
+    Yii::app()->clientScript->registerScriptFile($this->asset_static.'/js/legal/contractor/form.js');
 
     echo '<h2>'.($model->primaryKey ? 'Редактирование' : 'Создание').' контрагента</h2>';
 
@@ -77,10 +76,32 @@
         )
     );
 
-    echo $form->textFieldRow($model, 'group_id');
+//var_dump(ContractorGroup::model()->getData());die;
 
-    echo $form->dropDownListRow($model, 'country', Countries::getValues(), array('class' => 'list-countries'));
-    echo $form->dropDownListRow($model, 'okopf', CodesOKOPF::getValues());
+//var_dump(ContractorGroup::model()->getDropDownData(true));die;
+//var_dump(ContractorGroup::model()->getDropDownData(true));die;
+
+//var_dump();die;
+
+//var_dump(CHtml::listData(ContractorGroup::model()->getDropDownData(true), 'id', 'name')
+//);die;
+//    echo $form->dropDownListRow($model, 'group_id', ContractorGroup::model()->getDropDownData(true));
+
+//    $this->widget('application.extensions.CDropDownMenu.CDropDownMenu',array(
+//        'items' => ContractorGroup::model()->getDropDownData(true),
+//    ));
+
+//$parents = CourseMaster::model()->findAll('parent_id = 0');
+//$cm = new CommonMethods();
+
+    $model->group_id = ContractorGroup::GROUP_DEFAULT;
+//var_dump($data);die;
+
+    echo $form->dropDownListRow($model,'group_id', ContractorGroup::model()->getDropDownData(true));
+
+
+//    echo $form->dropDownListRow($model, 'country', Countries::getValues(), array('class' => 'list-countries'));
+//    echo $form->dropDownListRow($model, 'okopf', CodesOKOPF::getValues());
     echo $form->textFieldRow($model, 'name');
     echo $form->textFieldRow($model, 'full_name');
 ?>
@@ -140,7 +161,7 @@
     echo $form->textFieldRow($model, 'yur_address');
     echo $form->textFieldRow($model, 'fact_address');
 
-    echo $form->dropDownListRow($model, 'gendirector', ContactPersonForContractors::getValues());
+//    echo $form->dropDownListRow($model, 'gendirector', ContactPersonForContractors::getValues());
 
     echo $form->textFieldRow($model, 'email');
     echo $form->textFieldRow($model, 'phone');
