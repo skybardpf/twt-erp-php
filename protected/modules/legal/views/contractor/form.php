@@ -76,7 +76,7 @@
         )
     );
 
-    echo $form->dropDownListRow($model, 'group_id', ContractorGroup::model()->getDropDownData(true));
+    echo $form->dropDownListRow($model, 'group_id', ContractorGroup::model()->getDropDownData());
     echo $form->dropDownListRow($model, 'country', Countries::getValues(), array('class' => 'list-countries'));
     echo $form->dropDownListRow($model, 'okopf', CodesOKOPF::getValues());
     echo $form->textFieldRow($model, 'name');

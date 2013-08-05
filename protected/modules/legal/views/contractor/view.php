@@ -43,8 +43,7 @@
     $countries = Countries::getValues();
     $types = ContractorTypesActivities::getValues();
 
-    $groups = ContractorGroup::model()->getInheritedGroupsData($model->group_id, true);
-    $groups = array_reverse($groups);
+    $groups = ContractorGroup::model()->getInheritedGroupsData($model->group_id);
 
     $attributes = array(
         array(

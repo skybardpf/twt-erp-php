@@ -158,6 +158,7 @@ class ContractorGroup extends SOAPModel
             foreach($gg as $g){
                 $data[$g->id] = $g->name;
             }
+            $data = array_reverse($data);
             Yii::app()->cache->set($cache_id, $data);
         }
         return $data;

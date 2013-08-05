@@ -88,8 +88,13 @@ class Contractor extends AbstractOrganization {
             $data['creation_date'] = date('Y-m-d');
             $data['parent'] = '000000129';  // TODO изменить, когда будет авторизация
             $data['creator'] = 'Малхасян';  // TODO изменить, когда будет авторизация
-        } elseif (is_null($data['parent'])) {
-            $data['parent'] = '000000129';
+        } else{
+            if (is_null($data['creation_date'])) {
+                unset($data['creation_date']);
+            }
+            if (is_null($data['parent'])) {
+                $data['parent'] = '000000129';
+            }
         }
         unset($data['deleted']);
         unset($data['signatories']);
@@ -147,7 +152,7 @@ class Contractor extends AbstractOrganization {
             'signatories'   => 'Подписанты',
             'json_signatories'   => '', // private
             'group_id'      => 'Группа',
-            'parent_id'      => 'Группа',
+//            'parent_id'      => 'Группа',
 
             // --- Для российских компаний
             'inn'           => 'ИНН',
