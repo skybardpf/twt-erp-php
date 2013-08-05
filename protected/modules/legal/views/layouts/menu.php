@@ -1,14 +1,3 @@
-<?php
-/**
- * Created by JetBrains PhpStorm.
- * User: Мишенько
- * Date: 08.04.13
- * Time: 10:58
- * To change this template use File | Settings | File Templates.
- */
-
-/* @var $this Template_exampleController */
-?>
 <div class="well" style="padding: 8px 0;">
 <?php
     if (in_array($_SERVER['HTTP_HOST'], array('twt-erp.twtconsult.ru', 'twt-erp.artektiv.ru'))) {
@@ -17,6 +6,11 @@
                 'label' => 'Физические лица',
                 'url' => $this->createUrl('individuals/'),
                 'active' => ($this->menu_current == 'individuals')
+            ),
+            array(
+                'label' => 'Контрагенты',
+                'url' => $this->createUrl('contractor/'),
+                'active' => ($this->menu_current == 'contractors')
             ),
         );
     } else {
