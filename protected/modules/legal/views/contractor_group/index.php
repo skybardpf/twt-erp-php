@@ -15,7 +15,6 @@
 <script>
     <?= 'window.global_data = ' . (empty($data) ? CJSON::encode(array()) : CJSON::encode($data)); ?>
 </script>
-<!--<div class="pull-right" style="margin-top: 15px;"></div>-->
 
 <h2>Группы контрагентов</h2>
 
