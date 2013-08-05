@@ -11,17 +11,12 @@ class IndexAction extends CAction
      */
     public function run()
     {
-//        var_dump('aaa');die;
         /**
          * @var ContractorController    $controller
          */
         $controller = $this->controller;
         $controller->pageTitle .= ' | Список контрагентов';
 
-        $controller->render(
-            'index',
-            array(
-            )
-        );
+        $controller->render('index');
     }
 }

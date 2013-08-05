@@ -12,8 +12,8 @@ class JsonContractorGroupsAction extends CAction
     public function run()
     {
         if (Yii::app()->request->isAjaxRequest){
-            $data = Contractor::model()->getDataGroupBy(true);
-            $groups = ContractorGroup::model()->getTreeData($data, true);
+            $data = Contractor::model()->getDataGroupBy();
+            $groups = ContractorGroup::model()->getTreeData($data);
             $ret = array(
                 array(
                     'text' => 'Все контрагенты',
