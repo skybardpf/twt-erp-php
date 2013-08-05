@@ -23,11 +23,23 @@ class DeleteAction extends CAction
         $model = $controller->loadModel($id);
 
         if (Yii::app()->request->isAjaxRequest) {
-            $ret = array();
             try {
-                $model->delete();
+//                $model->delete()
+                if (true){
+                    $ret = array(
+                        'success' => true
+                    );
+                } else {
+                    $ret = array(
+                        'success' => false,
+                        'error' => 'Не удалось удалить группу.',
+                    );
+                }
             } catch (Exception $e) {
-                $ret['error'] = $e->getMessage();
+                $ret = array(
+                    'success' => false,
+                    'error' => $e->getMessage(),
+                );
             }
             echo CJSON::encode($ret);
             Yii::app()->end();

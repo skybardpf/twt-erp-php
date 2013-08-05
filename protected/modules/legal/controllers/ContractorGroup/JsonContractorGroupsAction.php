@@ -12,17 +12,10 @@ class JsonContractorGroupsAction extends CAction
     public function run()
     {
         if (Yii::app()->request->isAjaxRequest){
-            $dropdown = (isset($_GET['type']) && $_GET['type'] == 'dropdown');
-
-//            var_dump($dropdown);
-//            var_dump($_GET['type']);die;
-
-//            $data = Contractor::model()->getDataGroupBy();
-            $children_groups = ContractorGroup::model()->getTreeOnlyGroup($dropdown);
-            $label = ($dropdown) ? 'label' : 'text';
+            $children_groups = ContractorGroup::model()->getTreeOnlyGroup(true);
             $ret = array(
                 array(
-                    $label => 'Все группы',
+                    'text' => 'Все группы',
                     'children' => $children_groups,
                     'expanded' => true
                 ),

@@ -13,13 +13,14 @@ abstract class AbstractOrganization extends SOAPModel {
     const PREFIX_CACHE_ID_LIST_NAMES = '_list_names';
 
     /**
-     *  Список организаций|контаргентов.
-     *  @return array [id => Model]
+     * Список организаций|контаргентов.
+     * @param bool $force_cache
+     * @return array [id => Model]
      */
-    public function getFullData() {
+    public function getFullData($force_cache = false) {
         $cache_id = get_class($this).self::PREFIX_CACHE_ID_LIST_FULL_DATA;
         $data = Yii::app()->cache->get($cache_id);
-        if ($data === false) {
+        if ($force_cache || $data === false) {
             $countries = Countries::getValues();
             $elements = $this->where('deleted', false)->findAll();
             $data = array();

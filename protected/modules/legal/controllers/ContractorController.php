@@ -57,6 +57,7 @@ class ContractorController extends Controller{
     {
         $model = new Contractor();
         $model->signatories = array();
+        $model->group_id = ContractorGroup::GROUP_DEFAULT;
         return $model;
     }
 }

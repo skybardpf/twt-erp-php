@@ -12,12 +12,12 @@ class JsonContractorGroupsAction extends CAction
     public function run()
     {
         if (Yii::app()->request->isAjaxRequest){
-            $data = Contractor::model()->getDataGroupBy();
-            $children_groups = ContractorGroup::model()->getTreeData($data);
+            $data = Contractor::model()->getDataGroupBy(true);
+            $groups = ContractorGroup::model()->getTreeData($data, true);
             $ret = array(
                 array(
                     'text' => 'Все контрагенты',
-                    'children' => $children_groups,
+                    'children' => $groups,
                     'expanded' => true
                 ),
             );

@@ -89,7 +89,9 @@
  * @method mixed listContractPlaces(array $data)
  *
  * Группы контрагентов. (@see ContractorGroup)
- * @method mixed listGroupEntities(array $data)
+ * @method mixed listContractorGroups(array $data)
+ * @method mixed getContractorGroup(array $data)
+ * @method mixed deleteContractorGroup(array $data)
  *
  */
 class SoapComponent extends CApplicationComponent

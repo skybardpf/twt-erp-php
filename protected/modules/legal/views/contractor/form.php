@@ -33,7 +33,7 @@
         'enableAjaxValidation' => true,
         'enableClientValidation'=>true,
         'clientOptions' => array(
-            'validateOnSubmit' => true,
+//            'validateOnSubmit' => true,
             'validateOnChange' => true,
         ),
     ));
@@ -76,32 +76,9 @@
         )
     );
 
-//var_dump(ContractorGroup::model()->getData());die;
-
-//var_dump(ContractorGroup::model()->getDropDownData(true));die;
-//var_dump(ContractorGroup::model()->getDropDownData(true));die;
-
-//var_dump();die;
-
-//var_dump(CHtml::listData(ContractorGroup::model()->getDropDownData(true), 'id', 'name')
-//);die;
-//    echo $form->dropDownListRow($model, 'group_id', ContractorGroup::model()->getDropDownData(true));
-
-//    $this->widget('application.extensions.CDropDownMenu.CDropDownMenu',array(
-//        'items' => ContractorGroup::model()->getDropDownData(true),
-//    ));
-
-//$parents = CourseMaster::model()->findAll('parent_id = 0');
-//$cm = new CommonMethods();
-
-    $model->group_id = ContractorGroup::GROUP_DEFAULT;
-//var_dump($data);die;
-
-    echo $form->dropDownListRow($model,'group_id', ContractorGroup::model()->getDropDownData(true));
-
-
-//    echo $form->dropDownListRow($model, 'country', Countries::getValues(), array('class' => 'list-countries'));
-//    echo $form->dropDownListRow($model, 'okopf', CodesOKOPF::getValues());
+    echo $form->dropDownListRow($model, 'group_id', ContractorGroup::model()->getDropDownData(true));
+    echo $form->dropDownListRow($model, 'country', Countries::getValues(), array('class' => 'list-countries'));
+    echo $form->dropDownListRow($model, 'okopf', CodesOKOPF::getValues());
     echo $form->textFieldRow($model, 'name');
     echo $form->textFieldRow($model, 'full_name');
 ?>
@@ -160,9 +137,7 @@
 <?php
     echo $form->textFieldRow($model, 'yur_address');
     echo $form->textFieldRow($model, 'fact_address');
-
-//    echo $form->dropDownListRow($model, 'gendirector', ContactPersonForContractors::getValues());
-
+    echo $form->dropDownListRow($model, 'gendirector', ContactPersonForContractors::getValues());
     echo $form->textFieldRow($model, 'email');
     echo $form->textFieldRow($model, 'phone');
     echo $form->textFieldRow($model, 'fax');
@@ -222,24 +197,24 @@
                                 'style' => 'width: 45%',
                             )
                         ),
-                        array(
-                            'name' => 'delete',
-                            'header' => '',
-                            'type' => 'raw'
-                        ),
+//                        array(
+//                            'name' => 'delete',
+//                            'header' => '',
+//                            'type' => 'raw'
+//                        ),
                     )
                 )
             );
 
-            $this->widget('bootstrap.widgets.TbButton', array(
-                'buttonType'=> 'button',
-                'type' => 'primary',
-                'label' => 'Добавить',
-                'htmlOptions' => array(
-                    'class' => 'add-signatory',
-                    'data-type' => 'signatory',
-                )
-            ));
+//            $this->widget('bootstrap.widgets.TbButton', array(
+//                'buttonType'=> 'button',
+//                'type' => 'primary',
+//                'label' => 'Добавить',
+//                'htmlOptions' => array(
+//                    'class' => 'add-signatory',
+//                    'data-type' => 'signatory',
+//                )
+//            ));
         ?>
         </div>
     </div>

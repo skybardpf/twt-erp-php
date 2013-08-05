@@ -147,6 +147,7 @@ class Contractor extends AbstractOrganization {
             'signatories'   => 'Подписанты',
             'json_signatories'   => '', // private
             'group_id'      => 'Группа',
+            'parent_id'      => 'Группа',
 
             // --- Для российских компаний
             'inn'           => 'ИНН',
@@ -182,7 +183,7 @@ class Contractor extends AbstractOrganization {
             array('full_name', 'length', 'max' => 100),
 
             array('group_id', 'required'),
-            array('group_id', 'in', 'range' => array_keys(ContractorGroup::getData())),
+            array('group_id', 'in', 'range' => array_keys(ContractorGroup::model()->getData()), 'message' => 'Выберите группу из списка'),
 
             /**
              * Russian country
@@ -209,18 +210,21 @@ class Contractor extends AbstractOrganization {
 	}
 
     /**
+     * @param bool $force_cache
      * @return array
      */
-    public function getDataGroupBy()
+    public function getDataGroupBy($force_cache = false)
     {
         $cache_id = get_class($this).self::PREFIX_CACHE_ID_LIST_FULL_DATA_GROUP_BY;
         $groups = Yii::app()->cache->get($cache_id);
-        if ($groups !== false) {
-            $data = $this->getFullData();
+        if ($force_cache || $groups === false) {
+            $data = $this->getFullData($force_cache);
 
+//            var_dump($data);die;
             $groups = array();
             foreach($data as $v){
                 if (!empty($v->group_id)){
+//                    var_dump($v->group_id);
                     if (isset($groups[$v->group_id])){
                         $groups[$v->group_id][] = $v;
                     } else {
