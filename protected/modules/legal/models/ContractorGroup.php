@@ -330,60 +330,58 @@ class ContractorGroup extends SOAPModel
     private function _getChildren($group, array $contractors)
     {
         $ret = array();
-        foreach($group->children as $child){
-            if (isset($contractors[$child->primaryKey])){
-                $ret[] = array(
-                    'text' => $child->name,
-                    'children' => array(
-                        'text' => 'Список контрагентов' .
-                        Yii::app()->controller->widget(
-                            'bootstrap.widgets.TbGridView',
+        if (isset($contractors[$group->primaryKey])){
+            $ret[] = array(
+                'text' => 'Список контрагентов' .
+                Yii::app()->controller->widget(
+                    'bootstrap.widgets.TbGridView',
+                    array(
+                        'type' => 'striped bordered condensed',
+                        'dataProvider' => new CArrayDataProvider(
+                            $contractors[$group->primaryKey],
                             array(
-                                'type' => 'striped bordered condensed',
-                                'dataProvider' => new CArrayDataProvider(
-                                    $contractors[$child->primaryKey],
-                                    array(
-                                        'pagination' => array(
-                                            'pageSize' => 10000,
-                                        ),
-                                    )
+                                'pagination' => array(
+                                    'pageSize' => 10000,
                                 ),
-                                'template' => "{items} {pager}",
-                                'columns' => array(
-                                    array(
-                                        'name' => 'name',
-                                        'header' => 'Название',
-                                        'type' => 'raw',
-                                        'value' => 'CHtml::link($data["name"], Yii::app()->getController()->createUrl("contractor/view", array("id" => $data["id"])))'
-                                    ),
-                                    array(
-                                        'name' => 'country_name',
-                                        'header' => 'Страна юрисдикции',
-                                    ),
-                                    array(
-                                        'name' => 'creation_date',
-                                        'header' => 'Дата добавления',
-                                    ),
-                                    array(
-                                        'name' => 'creator',
-                                        'header' => 'Пользователь, добавивший в систему',
-                                    ),
-                                ),
-                            ),
-                            true
+                            )
                         ),
-                        'expanded' => false,
-                        'leaf' => true
+                        'template' => "{items} {pager}",
+                        'columns' => array(
+                            array(
+                                'name' => 'name',
+                                'header' => 'Название',
+                                'type' => 'raw',
+                                'value' => 'CHtml::link($data["name"], Yii::app()->getController()->createUrl("contractor/view", array("id" => $data["id"])))'
+                            ),
+                            array(
+                                'name' => 'country_name',
+                                'header' => 'Страна юрисдикции',
+                            ),
+                            array(
+                                'name' => 'creation_date',
+                                'header' => 'Дата добавления',
+                            ),
+                            array(
+                                'name' => 'creator',
+                                'header' => 'Пользователь, добавивший в систему',
+                            ),
+                        ),
                     ),
-                    'leaf' => false
-                );
-            }
+                    true
+                ),
+                'expanded' => false,
+                'leaf' => true
+            );
+        }
+
+        foreach($group->children as $child){
+            $children = $this->_getChildren($child, $contractors);
 
             $ret[] = array(
                 'id' => $child->id,
                 'text' => $child->name,
-                'children' => $this->_getChildren($child, $contractors),
-                'leaf' => (empty($child->children))
+                'children' => $children,
+                'leaf' => (empty($children))
             );
         }
         return $ret;
