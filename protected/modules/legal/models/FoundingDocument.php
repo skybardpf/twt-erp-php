@@ -2,8 +2,8 @@
 /**
  * Учредительный документ
  *
- * User: Forgon
- * Date: 25.02.13
+ * @author Skibardin A.A. <skybardpf@artektiv.ru>
+ *
  * @property string $id         Идентификатор
  * @property string $id_yur     Юр.Лицо
  * @property string $type_yur   Тип юрлица ("Контрагенты", "Организации")
@@ -19,15 +19,16 @@
  *
  * @property string $deleted
  */
-class FoundingDocument extends SOAPModel {
+class FoundingDocument extends SOAPModel
+{
+    const PREFIX_CACHE_ID_LIST_DATA = '_list_org_id_';
+
 	public $from_user = true;
 
 	/**
 	 * @static
-	 *
 	 * @param string $className
-	 *
-	 * @return Banks
+	 * @return FoundingDocument
 	 */
 	public static function model($className = __CLASS__) {
 		return parent::model($className);
@@ -171,4 +172,22 @@ class FoundingDocument extends SOAPModel {
             array('comment', 'length', 'max' => 50),
 		);
 	}
+
+    /**
+     * Список учредительных документов
+     * @param Organization $org
+     * @return FoundingDocument[]
+     */
+    public function getData(Organization $org){
+        $cache_id = get_class($this).self::PREFIX_CACHE_ID_LIST_DATA.$org->primaryKey;
+        $data = Yii::app()->cache->get($cache_id);
+        if ($data === false){
+            $data = $this->where('deleted', false)
+                ->where('id_yur',  $org->primaryKey)
+                ->where('type_yur', 'Организации')
+                ->findAll();
+            Yii::app()->cache->set($cache_id, $data);
+        }
+        return $data;
+    }
 }

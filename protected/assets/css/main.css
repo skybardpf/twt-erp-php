@@ -82,3 +82,14 @@ h1 {
 .control-add {
 
 }
+.table thead th {
+	text-align: center;
+	vertical-align: top;
+	white-space: normal;
+}
+.x-grid-cell-inner-treecolumn {
+	padding-right: 0;
+}
+.x-tree-node-text table {
+	margin-top: 10px;
+}

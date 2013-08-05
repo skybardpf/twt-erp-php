@@ -5,3 +5,5 @@ public/assets/*
 uploads/*
 assets/*
 index.php
+public/ext4/*
+#protected/assets/js/*

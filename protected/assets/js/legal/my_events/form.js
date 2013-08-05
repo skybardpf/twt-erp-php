@@ -153,12 +153,9 @@ $(document).ready(function(){
             modal = $('#dataModal');
         if (type == 'organization'){
             ids = $('#Event_json_organizations').val();
-//            modal = $('#dataModalOrganization');
         } else {
             ids = $('#Event_json_countries').val();
-//            modal = $('#dataModalCountry');
         }
-
 
         Loading.show();
         $.ajax({

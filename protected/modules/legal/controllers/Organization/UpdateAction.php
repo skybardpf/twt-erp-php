@@ -47,6 +47,8 @@ class UpdateAction extends CAction
             }
         }
 
+        $model->signatories = array('0000000033', '0000000044');
+
         $controller->render('/organization/show', array(
             'content' => $controller->renderPartial('/organization/form',
                 array(

@@ -40,10 +40,10 @@
                 'name' => 'country',
                 'header' => 'Страна'
             ),
-            array(
-                'name' => 'creation_date',
-                'header' => 'Дата добавления'
-            ),
+//            array(
+//                'name' => 'creation_date',
+//                'header' => 'Дата добавления'
+//            ),
             array(
                 'name' => 'creator',
                 'header' => 'Пользователь, добавивший в систему'

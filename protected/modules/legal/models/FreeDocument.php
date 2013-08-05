@@ -2,8 +2,7 @@
 /**
  * Свободный документ
  *
- * User: Skibardin A.A.
- * Date: 24.06.13
+ * @author Skibardin A.A. <skybardpf@artektiv.ru>
  *
  * @property int    $id
  * @property int    $id_yur
@@ -18,11 +17,11 @@
  */
 class FreeDocument extends SOAPModel
 {
+    const PREFIX_CACHE_ID_LIST_DATA = '_list_org_id_';
+
 	/**
 	 * @static
-	 *
 	 * @param string $className
-	 *
 	 * @return FreeDocument
 	 */
 	public static function model($className = __CLASS__) {
@@ -159,5 +158,22 @@ class FreeDocument extends SOAPModel
 
     public function validDate($attribute)
     {
+    }
+
+    /**
+     * Список довереностей.
+     * @param Organization $org
+     * @return FreeDocument[]
+     */
+    public function getData(Organization $org){
+        $cache_id = get_class($this).self::PREFIX_CACHE_ID_LIST_DATA.$org->primaryKey;
+        $data = Yii::app()->cache->get($cache_id);
+        if ($data === false){
+            $data = $this->where('deleted', false)
+                ->where('id_yur',  $org->primaryKey)
+                ->findAll();
+            Yii::app()->cache->set($cache_id, $data);
+        }
+        return $data;
     }
 }

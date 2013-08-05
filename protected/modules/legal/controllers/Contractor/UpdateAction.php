@@ -36,8 +36,15 @@ class UpdateAction extends CAction
             Yii::app()->end();
         }
 
-        if (isset($_POST[get_class($model)])) {
-            $model->setAttributes($_POST[get_class($model)]);
+        if (isset($_POST[$class])) {
+            $model->setAttributes($_POST[$class]);
+
+            $signatory = array();
+            $tmp = CJSON::decode($model->json_signatories);
+            foreach ($tmp as $v){
+                $signatory[] = $v;
+            }
+            $model->signatories = $signatory;
 
             if ($model->validate()) {
                 try {
@@ -53,6 +60,12 @@ class UpdateAction extends CAction
                 }
             }
         }
+
+        $signatory = array();
+        foreach($model->signatories as $v){
+            $signatory[$v['id'].'_'.$v['doc_id']] = $v;
+        }
+        $model->json_signatories = (empty($signatory)) ? '{}' : CJSON::encode($signatory);
 
         $controller->render(
             'form',

@@ -23,7 +23,7 @@ class ViewAction extends CAction
         $controller->render(
             'view',
             array(
-                'model' => $model
+                'model' => $model,
             )
         );
     }

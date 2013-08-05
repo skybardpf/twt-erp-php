@@ -4,8 +4,9 @@
  *
  * @author Skibardin A.A. <skybardpf@artektiv.ru>
  *
- * @var $this   ContractorController
- * @var $model  Contractor
+ * @var ContractorController    $this
+ * @var Contractor              $model
+ * @var ContractorGroup[]       $groups
  */
 ?>
 
@@ -41,65 +42,92 @@
 <?php
     $countries = Countries::getValues();
     $types = ContractorTypesActivities::getValues();
+
+    $groups = ContractorGroup::model()->getInheritedGroupsData($model->group_id);
+
+    $attributes = array(
+        array(
+            'name' => 'group_id',
+            'label' => 'Группа',
+            'value' => implode(' -> ', $groups),
+        ),
+        array(
+            'name' => 'country',
+            'label' => 'Страна',
+            'value' => isset($countries[$model->country]) ? $countries[$model->country] : '—'
+        ),
+        array(
+            'name' => 'name',
+            'label' => 'Наименование'
+        ),
+        array(
+            'name' => 'full_name',
+            'label' => 'Полное наименование'
+        ),
+        array(
+            'name' => 'sert_date',
+            'label' => 'Дата гос. регистрации'
+        ),
+    );
+    if ($model->country == Organization::COUNTRY_RUSSIAN_ID){
+        $attributes = array_merge($attributes, array(
+            array(
+                'name' => 'inn',
+                'label' => 'ИНН'
+            ),
+            array(
+                'name' => 'kpp',
+                'label' => 'КПП'
+            ),
+        ));
+    } else {
+        $attributes = array_merge($attributes, array(
+            array(
+                'name' => 'vat_nom',
+                'label' => 'VAT'
+            ),
+            array(
+                'name' => 'reg_nom',
+                'label' => 'Регистрационный номер'
+            ),
+            array(
+                'name' => 'sert_nom',
+                'label' => 'Номер сертификата'
+            ),
+        ));
+    }
+    $attributes = array_merge($attributes, array(
+        array(
+            'name' => 'profile',
+            'label' => 'Основной вид деятельности',
+            'value' => (isset($types[$model->profile]) ? $types[$model->profile] : '')
+        ),
+        array(
+            'name' => 'yur_address',
+            'label' => 'Юридический адрес'
+        ),
+        array(
+            'name' => 'fact_address',
+            'label' => 'Фактический адрес'
+        ),
+        array(
+            'name' => 'email',
+            'label' => 'E-mail'
+        ),
+        array(
+            'name' => 'phone',
+            'label' => 'Телефон'
+        ),
+        array(
+            'name' => 'fax',
+            'label' => 'Факс'
+        ),
+    ));
+
     $this->widget('bootstrap.widgets.TbDetailView',
         array(
             'data'=> $model,
-            'attributes' => array(
-                array(
-                    'name' => 'XXX',
-                    'label' => 'Группа'
-                ),
-                array(
-                    'name' => 'country',
-                    'label' => 'Страна',
-                    'value' => isset($countries[$model->country]) ? $countries[$model->country] : '—'
-                ),
-                array(
-                    'name' => 'name',
-                    'label' => 'Наименование'
-                ),
-                array(
-                    'name' => 'full_name',
-                    'label' => 'Полное наименование'
-                ),
-                array(
-                    'name' => 'sert_date',
-                    'label' => 'Дата гос. регистрации'
-                ),
-                array(
-                    'name' => 'inn',
-                    'label' => 'ИНН'
-                ),
-                array(
-                    'name' => 'kpp',
-                    'label' => 'КПП'
-                ),
-                array(
-                    'name' => 'profile',
-                    'label' => 'Основной вид деятельности',
-                    'value' => (isset($types[$model->profile]) ? $types[$model->profile] : '')
-                ),
-                array(
-                    'name' => 'yur_address',
-                    'label' => 'Юридический адрес'
-                ),
-                array(
-                    'name' => 'fact_address',
-                    'label' => 'Фактический адрес'
-                ),
-                array(
-                    'name' => 'email',
-                    'label' => 'E-mail'
-                ),
-                array(
-                    'name' => 'phone',
-                    'label' => 'Телефон'
-                ),
-                array(
-                    'name' => 'fax',
-                    'label' => 'Факс'
-                ),
-            )
+            'attributes' => $attributes
        )
     );
 ?>

@@ -7,7 +7,7 @@
 class ContractorController extends Controller{
     public $layout = 'inner';
     public $menu_current = 'contractors';
-    public $pageTitle = 'TWT Consult | Мои котрагенты';
+    public $pageTitle = 'TWT Consult | Контрагенты';
 
     /**
      * Распределение экшенов.
@@ -23,6 +23,11 @@ class ContractorController extends Controller{
             'delete' => 'application.modules.legal.controllers.Contractor.DeleteAction',
 
             'get_activities_types' => 'application.modules.legal.controllers.Contractor.GetActivitiesTypesAction',
+            '_json_contractor_groups' => 'application.modules.legal.controllers.Contractor.JsonContractorGroupsAction',
+
+            '_html_form_select_element' => 'application.modules.legal.controllers.Contractor.HtmlFormSelectElementAction',
+            '_html_row_element' => 'application.modules.legal.controllers.Contractor.HtmlRowElementAction',
+
         );
     }
 
@@ -51,6 +56,8 @@ class ContractorController extends Controller{
     public function createModel()
     {
         $model = new Contractor();
+        $model->signatories = array();
+        $model->group_id = ContractorGroup::GROUP_DEFAULT;
         return $model;
     }
 }

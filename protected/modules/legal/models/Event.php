@@ -246,9 +246,7 @@ class Event extends SOAPModel {
      */
     public function validListCountries($attribute)
     {
-//        var_dump($this->json_countries);die;
         if ($this->for_yur == self::FOR_JURISDICTION){
-
             $c  = CJSON::decode($this->json_countries);
             if (empty($c)){
                 $this->addError($attribute, 'Укажите как минимум одну страну');
@@ -256,14 +254,12 @@ class Event extends SOAPModel {
         }
     }
 
-
     /**
      * @param string $attribute
      */
     public function validJson($attribute)
     {
         if ($this->for_yur == self::FOR_ORGANIZATIONS){
-//            var_dump($this->json_countries);
             if (null === CJSON::decode($this->$attribute)){
                 $this->addError($attribute, 'Не правильный формат строки JSON.');
             }

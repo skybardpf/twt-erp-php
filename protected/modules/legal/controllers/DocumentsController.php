@@ -2,66 +2,23 @@
 /**
  *  Документы юридического лица.
  *
- *  User: Skibardin A.A.
- *  Date: 03.07.13
+ *  @author Skibardin A.A. <skybardpf@artektiv.ru>
  */
 class DocumentsController extends Controller{
     public $layout = 'inner';
     public $menu_current = 'legal';
 
-    /**
-     *  Выводим список документов юридического лица $org_id.
-     *
-     *  @param string $org_id
-     */
-    public function actionIndex($org_id)
-    {
-        $this->redirect($this->createUrl('list', array('org_id' => $org_id)));
-    }
+    public $pageTitle = 'TWT Consult | Организации | Документы';
+    public $defaultAction = 'list';
 
     /**
-     *  Выводим список документов юридического лица $org_id.
-     *
-     *  @param string $org_id
-     *
-     *  @throws CHttpException
+     * Распределение экшенов.
+     * @return array
      */
-    public function actionList($org_id)
+    public function actions()
     {
-        $org = Organization::model()->findByPk($org_id);
-        if (!$org) {
-            throw new CHttpException(404, 'Не найдено юридическое лицо.');
-        }
-
-        // Учредительные документы
-        $founding_docs = FoundingDocument::model()
-            ->where('deleted', false)
-            ->where('id_yur',  $org->primaryKey)
-            ->where('type_yur', 'Организации')
-            ->findAll();
-
-        // получаем набор документов типа "Доверенность"
-        $power_attorneys_docs = PowerAttorneysLE::model()
-            ->where('deleted', false)
-            ->where('id_yur', $org->primaryKey)
-            ->where('type_yur', 'Организации')
-            ->findAll();
-
-        $free_docs = FreeDocument::model()
-            ->where('deleted', false)
-            ->where('id_yur', $org->primaryKey)
-            ->findAll();
-
-        $this->render('/organization/show', array(
-            'content' => $this->renderPartial('/documents/list',
-                array(
-                    'free_docs'         => $free_docs,
-                    'founding_docs'     => $founding_docs,
-                    'power_attorneys_docs' => $power_attorneys_docs,
-                    'organization'      => $org
-                ), true),
-            'organization' => $org,
-            'cur_tab' => 'documents',
-        ));
+        return array(
+            'list' => 'application.modules.legal.controllers.Documents.ListAction',
+        );
     }
 }

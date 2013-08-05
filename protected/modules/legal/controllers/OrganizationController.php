@@ -11,7 +11,7 @@ class OrganizationController extends Controller
 	/** @var string Вкладка верхнего меню одной организации */
 	public $cur_tab = '';
 
-    public $pageTitle = 'TWT Consult | Мои организации';
+    public $pageTitle = 'TWT Consult | Организации';
 
     /**
      * Распределение экшенов.

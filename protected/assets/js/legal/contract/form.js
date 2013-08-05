@@ -131,11 +131,11 @@ $(document).ready(function(){
             var table, json, button;
             if (type == 'signatory'){
                 json = $('#Contract_json_signatory');
-                table = $('#grid-signatory');
+                table = $('#Contract_signatory');
                 button = $('.add-signatory');
             } else {
                 json = $('#Contract_json_signatory_contractor');
-                table = $('#grid-signatory-contractor');
+                table = $('#Contract_signatory_contr');
                 button = $('.add-signatory-contractor');
             }
             var persons = eval(json.val());

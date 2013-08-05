@@ -1,10 +1,10 @@
 <?php
 /**
- *  User: Skibardin A.A.
- *  Date: 27.06.13
+ * Модель: Довереность.
+ *
+ * @author Skibardin A.A. <skybardpf@artektiv.ru>
  *
  * @property string $id             Идентификатор доверенности
- *
  * @property string $id_yur         Идентификатор юрлица
  * @property string $type_yur       Тип юрлица ("Контрагенты", "Организации")
  * @property string $nom            номер доверенности
@@ -27,7 +27,12 @@
  * @property string $from_user      признак того, что доверенность загружена пользователем
  * @property string $user           идентификатор пользователя
  */
-class PowerAttorneysLE extends SOAPModel {
+class PowerAttorneysLE extends SOAPModel
+{
+    const PREFIX_CACHE_ID_LIST_DATA = '_list_org_id_';
+    const PREFIX_CACHE_ID_LIST_ALL_DATA = '_list_all_data';
+    const PREFIX_CACHE_ID_LIST_ALL_NAMES = '_list_all_names';
+
 	public $owner_name = '';
 
 	/**
@@ -259,6 +264,64 @@ class PowerAttorneysLE extends SOAPModel {
             array('list_files', 'existsFiles'),
 		);
 	}
+
+    /**
+     * Список довереностей.
+     * @param Organization $org
+     * @return PowerAttorneysLE[]
+     */
+    public function getData(Organization $org){
+        $cache_id = get_class($this).self::PREFIX_CACHE_ID_LIST_DATA.$org->primaryKey;
+        $data = Yii::app()->cache->get($cache_id);
+        if ($data === false){
+            $data = $this->where('deleted', false)
+                ->where('id_yur',  $org->primaryKey)
+                ->where('type_yur', 'Организации')
+                ->findAll();
+            Yii::app()->cache->set($cache_id, $data);
+        }
+        return $data;
+    }
+
+    /**
+     * Список довереностей.
+     * @return PowerAttorneysLE[]
+     */
+    public function getAllData(){
+        $cache_id = get_class($this).self::PREFIX_CACHE_ID_LIST_ALL_DATA;
+        $data = Yii::app()->cache->get($cache_id);
+        if ($data === false){
+            $tmp = $this->where('deleted', false)
+//                ->where('type_yur', 'Контрагенты')
+                ->findAll();
+            if ($tmp){
+                foreach($tmp as $v){
+                    $data[$v->primaryKey] = $v;
+                }
+            }
+            Yii::app()->cache->set($cache_id, $data);
+        }
+        return $data;
+    }
+
+    /**
+     * Список назавний довереностей.
+     * @return array Format [id => name]
+     */
+    public function getAllNames(){
+        $cache_id = get_class($this).self::PREFIX_CACHE_ID_LIST_ALL_NAMES;
+        $data = Yii::app()->cache->get($cache_id);
+        if ($data === false){
+            $tmp = $this->getAllData();
+            if ($tmp){
+                foreach($tmp as $v){
+                    $data[$v->primaryKey] = $v->name;
+                }
+            }
+            Yii::app()->cache->set($cache_id, $data);
+        }
+        return $data;
+    }
 
     /**
      *  Валидатор. Проверяет, что имена файлов-сканов, которые хотят загрузить

@@ -46,7 +46,11 @@
             'changeYear' => true,
             'showOn' => 'button',
             'constrainInput' => 'true',
+<<<<<<< HEAD
             'yearRange' => '1953:2013',
+=======
+            'yearRange' => '1950:2100',
+>>>>>>> realease.1.3.2
         ),
         'htmlOptions'=>array(
             'style' => 'height:20px;'

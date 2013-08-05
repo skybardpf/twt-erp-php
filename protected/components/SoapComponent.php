@@ -85,8 +85,15 @@
  * Место расположения суда. (@see CourtLocation)
  * @method mixed listCourtLocations(array $data)
  *
- * Место заклоючения контрактов. (@see ContractPlace)
+ * Место заключения контрактов. (@see ContractPlace)
  * @method mixed listContractPlaces(array $data)
+ *
+ * Группы контрагентов. (@see ContractorGroup)
+ * @method mixed listContractorGroups(array $data)
+ * @method mixed getContractorGroup(array $data)
+ * @method mixed saveContractorGroup(array $data)
+ * @method mixed deleteContractorGroup(array $data)
+ *
  */
 class SoapComponent extends CApplicationComponent
 {
@@ -238,7 +245,7 @@ class SoapComponent extends CApplicationComponent
 				}
 				if (YII_DEBUG) {
 					$time = microtime(true) - $time;
-					Yii::log(
+                    Yii::log(
 						'function ' . $name . ' in '.$time.' seconds with data: ' .
 							(defined('JSON_UNESCAPED_UNICODE')
 								? json_encode($ret, JSON_UNESCAPED_UNICODE)

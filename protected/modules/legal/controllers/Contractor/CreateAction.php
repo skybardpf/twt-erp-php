@@ -47,7 +47,7 @@ class CreateAction extends CAction
             }
         }
 
-        $controller->render(
+       $controller->render(
             'form',
             array(
                 'model' => $model

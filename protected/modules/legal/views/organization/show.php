@@ -19,7 +19,7 @@
         'items'=>array(
             array(
                 'label' => 'Информация',
-                'url'   => $this->createUrl('my_organizations/view', array('id' => $organization->primaryKey)),
+                'url'   => $this->createUrl('organization/view', array('id' => $organization->primaryKey)),
                 'active'=> ($cur_tab == 'info')
             ),
             array(
