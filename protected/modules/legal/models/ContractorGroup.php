@@ -8,6 +8,7 @@
  * @property string     $name
  * @property integer    $level
  * @property integer    $group_id       // $parent_id
+ * @property integer    $parent_id
  */
 class ContractorGroup extends SOAPModel
 {
@@ -75,6 +76,28 @@ class ContractorGroup extends SOAPModel
             return $ret;
         }
         return false;
+    }
+
+    /**
+     * Сохранение группы контрагента
+     * @return string Возвращает id.
+     */
+    public function save()
+    {
+        $data = $this->getAttributes();
+        if (!$this->primaryKey){
+            unset($data['id']);
+        }
+        $data['group_id'] = $data['parent_id'];
+        unset($data['parent_id']);
+        unset($data['level']);
+        unset($data['country']);
+
+        $ret = $this->SOAP->saveContractorGroup(array(
+            'data' => SoapComponent::getStructureElement($data),
+        ));
+        $this->clearCache();
+        return SoapComponent::parseReturn($ret, false);
     }
 
     /**
@@ -229,44 +252,35 @@ class ContractorGroup extends SOAPModel
         if ($force_cache || $data === false) {
             $elements = $this->getData($force_cache);
 
-            $res = array();
             $tmp = array();
+            $tmp_index = array();
             foreach ($elements as $elem) {
-                $res[$elem->primaryKey] = $elem;
-                if (!empty($elem->parent_id)){
-                    $group_id = $elem->parent_id;
-                } else {
-                    if ($elem->level == 0){
-                        if (!isset($tmp[$elem->id])){
-                            $tmp[$elem->id] = array();
-                        }
-                        continue;
-                    }
-                    $group_id = self::GROUP_ID_UNCATEGORIZED;
-                }
-                if(isset($tmp[$group_id])){
-                    $tmp[$group_id][] = $elem->primaryKey;
-                } else {
-                    $tmp[$group_id] = array($elem->primaryKey);
-                }
+                $tmp[$elem->level][$elem->id] = $elem->parent_id;
+                $tmp_index[$elem->id] = $elem;
             }
+            // TODO все перписать. Делал на коленке. skybardpf.
             $data = array();
-            foreach ($tmp as $k=>$v) {
-                if ($k == self::GROUP_ID_UNCATEGORIZED){
-                    $group = new ContractorGroup();
-                    $group->id = self::GROUP_ID_UNCATEGORIZED;
-                    $group->name = 'Без категории';
-                    $group->level = 0;
-                    $res[$k] = $group;
+            for($i=0,$l=count($tmp)-1; $i<$l; $i++){
+                foreach($tmp[$i] as $k=>$name){
+                    $tmp_index[$k]->children = $this->_getChildren22222($tmp_index, $k, $tmp[$i+1]);
+                    if ($i == 0){
+                        $data[$k] = $tmp_index[$k];
+                    }
                 }
-                foreach($v as $c){
-                    $res[$k]->children[] = $res[$c];
-                }
-                $data[$k] = $res[$k];
             }
             Yii::app()->cache->set($cache_id, $data);
         }
         return $data;
+    }
+
+    function _getChildren22222($tmp_index, $parent_id, $data){
+        $ret = array();
+        foreach($data as $k=>$pid){
+            if ($pid == $parent_id){
+                $ret[] = $tmp_index[$k];
+            }
+        }
+        return $ret;
     }
 
     /**

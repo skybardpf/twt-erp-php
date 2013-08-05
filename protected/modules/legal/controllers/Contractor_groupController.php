@@ -17,13 +17,11 @@ class Contractor_groupController extends Controller{
     {
         return array(
             'index' => 'application.modules.legal.controllers.ContractorGroup.IndexAction',
+            'update' => 'application.modules.legal.controllers.ContractorGroup.UpdateAction',
+            'create' => 'application.modules.legal.controllers.ContractorGroup.CreateAction',
+            'delete' => 'application.modules.legal.controllers.ContractorGroup.DeleteAction',
 
             '_json_contractor_groups' => 'application.modules.legal.controllers.ContractorGroup.JsonContractorGroupsAction',
-
-//            'view' => 'application.modules.legal.controllers.ContractorGroup.ViewAction',
-//            'edit' => 'application.modules.legal.controllers.ContractorGroup.UpdateAction',
-//            'add' => 'application.modules.legal.controllers.ContractorGroup.CreateAction',
-            'delete' => 'application.modules.legal.controllers.ContractorGroup.DeleteAction',
         );
     }
 
@@ -46,12 +44,14 @@ class Contractor_groupController extends Controller{
         return $model;
     }
 
-//    /**
-//     * @return ContractorGroup Возвращаем созданную модель.
-//     */
-//    public function createModel()
-//    {
-//        $model = new ContractorGroup();
-//        return $model;
-//    }
+    /**
+     * @param ContractorGroup $parent
+     * @return ContractorGroup Возвращаем созданную модель.
+     */
+    public function createModel(ContractorGroup $parent)
+    {
+        $model = new ContractorGroup();
+        $model->parent_id = $parent->primaryKey;
+        return $model;
+    }
 }

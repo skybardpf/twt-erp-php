@@ -12,14 +12,7 @@ class JsonContractorGroupsAction extends CAction
     public function run()
     {
         if (Yii::app()->request->isAjaxRequest){
-            $children_groups = ContractorGroup::model()->getTreeOnlyGroup(true);
-            $ret = array(
-                array(
-                    'text' => 'Все группы',
-                    'children' => $children_groups,
-                    'expanded' => true
-                ),
-            );
+            $ret = ContractorGroup::model()->getTreeOnlyGroup(/*true*/);
             echo CJSON::encode($ret);
         }
     }

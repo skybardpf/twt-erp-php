@@ -11,7 +11,7 @@
 ?>
 <div class="well" style="padding: 8px 0;">
 <?php
-    if (in_array($_SERVER['HTTP_HOST'], array('twt-erp.twtconsult.ru', 'twt-erp.artektiv.ru', 'twt-erp.skybardpf.devel'))) {
+    if (in_array($_SERVER['HTTP_HOST'], array('twt-erp.twtconsult.ru', 'twt-erp.artektiv.ru'))) {
         $menus = array(
             array(
                 'label' => 'Физические лица',
