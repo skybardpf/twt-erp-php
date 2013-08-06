@@ -18,7 +18,7 @@ class IndexAction extends CAction
         $controller->pageTitle .= ' | Список контрагентов';
 
         $data = Contractor::model()->getDataGroupBy(/*true*/);
-        $groups = ContractorGroup::model()->getTreeData($data/*, true*/);
+        $groups = ContractorGroup::model()->getTreeData($data, true);
 
         $controller->render(
             'index',

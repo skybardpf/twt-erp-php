@@ -17,7 +17,7 @@ class IndexAction extends CAction
         $controller = $this->controller;
         $controller->pageTitle .= ' | Список групп';
 
-        $data = ContractorGroup::model()->getTreeOnlyGroup(/*true*/);
+        $data = ContractorGroup::model()->getTreeOnlyGroup(true);
         $controller->render(
             'index',
             array(
