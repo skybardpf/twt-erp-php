@@ -47,7 +47,13 @@ class CreateAction extends CAction
             }
         }
 
-       $controller->render(
+        $signatory = array();
+        foreach($model->signatories as $v){
+            $signatory[$v['id'].'_'.$v['doc_id']] = $v;
+        }
+        $model->json_signatories = (empty($signatory)) ? '{}' : CJSON::encode($signatory);
+
+        $controller->render(
             'form',
             array(
                 'model' => $model
