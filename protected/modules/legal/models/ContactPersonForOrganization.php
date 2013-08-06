@@ -62,7 +62,7 @@ class ContactPersonForOrganization extends SOAPModel {
         $cache_id = get_class($this).self::PREFIX_CACHE_ID_LIST_NAMES;
         $data = Yii::app()->cache->get($cache_id);
         if ($force_cache || $data === false) {
-            $elements = self::model()->where('deleted', false)->findAll();
+            $elements = self::model()->findAll();
             $data = array();
             if ($elements) {
                 foreach ($elements as $elem) {

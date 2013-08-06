@@ -78,7 +78,7 @@ class Organization extends AbstractOrganization {
         unset($data['json_signatories']);
 
         // TODO убрать, когда сделают функцию listContactPersonsForOrganization
-        $data['gendirector_id'] = '0000000038';
+//        $data['gendirector_id'] = '0000000038';
 
         if ($data['country'] == self::COUNTRY_RUSSIAN_ID){
             $data['vat_nom'] = '';
@@ -217,8 +217,8 @@ class Organization extends AbstractOrganization {
             array('email', 'email'),
             array('sert_date', 'date', 'format' => 'yyyy-MM-dd'),
 
-//            array('gendirector_id', 'required'),
-//            array('gendirector_id', 'in', 'range' => array_keys(ContactPersonForOrganization::model()->getDataNames())),
+            array('gendirector_id', 'required'),
+            array('gendirector_id', 'in', 'range' => array_keys(ContactPersonForOrganization::model()->getDataNames())),
 
             array('json_signatories', 'validJson'),
 		);

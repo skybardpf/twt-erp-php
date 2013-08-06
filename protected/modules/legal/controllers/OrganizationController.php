@@ -40,6 +40,7 @@ class OrganizationController extends Controller
     {
         $model = new Organization();
         $model->signatories = array();
+        $model->json_signatories = '{}';
         return $model;
     }
 }

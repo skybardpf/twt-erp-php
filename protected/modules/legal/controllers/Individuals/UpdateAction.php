@@ -18,7 +18,10 @@ class UpdateAction extends CAction
         $controller = $this->controller;
         $controller->pageTitle .= ' | Редактирование физического лица';
 
-        $model = Individuals::loadModel($id);
+        $force_cache = (isset($_GET['force_cache']) && $_GET['force_cache'] == 1) ? true : false;
+
+        $model = Individuals::loadModel($id, $force_cache);
+        $model->setForceCached($force_cache);
 
         if(isset($_POST['ajax']) && $_POST['ajax']==='form-individual') {
             echo CActiveForm::validate($model);
@@ -36,6 +39,12 @@ class UpdateAction extends CAction
                 }
             }
         }
-        $controller->render('form', array('model' => $model));
+        $controller->render(
+            'form',
+            array(
+                'model' => $model,
+                'force_cache' => $force_cache
+            )
+        );
     }
 }

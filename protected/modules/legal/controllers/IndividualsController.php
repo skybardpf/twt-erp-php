@@ -30,15 +30,6 @@ class IndividualsController extends Controller
     }
 
     /**
-     * Список физичекских лиц.
-     * @return Individuals[]
-     */
-    public function getDataProvider()
-    {
-        return Individuals::getFullValues();
-    }
-
-    /**
      * Создаем новое физичекское лицо.
      * @return Individuals
      */
