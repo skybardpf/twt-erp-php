@@ -18,7 +18,7 @@ class UpdateAction extends CAction
         $controller = $this->controller;
         $controller->pageTitle .= ' | Редактирование организации';
 
-        $model = $controller->loadOrganization($id);
+        $model = $controller->loadOrganization($id, true);
 
         $class = get_class($model);
         $country_id = (isset($_POST[$class]) && isset($_POST[$class]['country']) ? $_POST[$class]['country'] : null);
@@ -46,6 +46,12 @@ class UpdateAction extends CAction
                 }
             }
         }
+
+        $signatory = array();
+        foreach($model->signatories as $v){
+            $signatory[$v['id'].'_'.$v['doc_id']] = $v;
+        }
+        $model->json_signatories = (empty($signatory)) ? '{}' : CJSON::encode($signatory);
 
         $model->signatories = array('0000000033', '0000000044');
 
