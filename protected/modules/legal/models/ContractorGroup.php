@@ -259,11 +259,11 @@ class ContractorGroup extends SOAPModel
                 $tmp[$elem->level][$elem->id] = $elem->parent_id;
                 $tmp_index[$elem->id] = $elem;
             }
-            // TODO все перписать. Делал на коленке. skybardpf.
+            // TODO все перписать. Делал на коленке. Skibardin A.A.
             $data = array();
             for($i=0,$l=count($tmp)-1; $i<$l; $i++){
                 foreach($tmp[$i] as $k=>$name){
-                    $tmp_index[$k]->children = $this->_getChildren22222($tmp_index, $k, $tmp[$i+1]);
+                    $tmp_index[$k]->children = $this->_getChildrenByLevel($tmp_index, $k, $tmp[$i+1]);
                     if ($i == 0){
                         $data[$k] = $tmp_index[$k];
                     }
@@ -274,7 +274,13 @@ class ContractorGroup extends SOAPModel
         return $data;
     }
 
-    function _getChildren22222($tmp_index, $parent_id, $data){
+    /**
+     * @param array $tmp_index
+     * @param string $parent_id
+     * @param array $data
+     * @return array
+     */
+    function _getChildrenByLevel($tmp_index, $parent_id, $data){
         $ret = array();
         foreach($data as $k=>$pid){
             if ($pid == $parent_id){
@@ -297,7 +303,7 @@ class ContractorGroup extends SOAPModel
             $ret[] = array(
                 'text' => $group->name,
                 'children' => $this->_getChildren($group, $data),
-                'leaf' => (empty($group->children))
+                'leaf' => (empty($group->children) && !(isset($data[$group->primaryKey])))
             );
         }
         return $ret;
