@@ -9,18 +9,18 @@ Ext.onReady(function() {
 
 
     var store = Ext.create('Ext.data.TreeStore', {
-        proxy: {                        // указание типа и  источника данных
-            type: 'ajax',   //  тип данных - ajax
-            url: '/legal/contractor/_json_contractor_groups' //  урл источника данных
+        proxy: {
+            data : global_data, // instead it goes here
+            type: 'memory',
+            reader: {
+                type: 'json'
+            }
         }
     });
 
     var tree = Ext.create('Ext.tree.Panel', {
         store: store,
         rootVisible: false,
-//        root: {
-//            expanded: true
-//        },
         autoScroll: true
     });
 
@@ -34,10 +34,6 @@ Ext.onReady(function() {
             pack  : 'start'
         },
         title: 'Список контрагентов',
-//        width: 200,
-//        height: 150,
-        items: [
-            tree
-        ]
+        items: [tree]
     });
 });

@@ -30,6 +30,10 @@
     ));
 ?>
 </div>
+<script>
+    <?= 'window.global_data = ' . (empty($data) ? CJSON::encode(array()) : CJSON::encode($data)); ?>
+</script>
+
 <h2>Контрагенты</h2>
 
 <div id="tree-contractor"></div>

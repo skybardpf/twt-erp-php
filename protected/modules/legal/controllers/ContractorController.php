@@ -28,7 +28,6 @@ class ContractorController extends Controller{
             'delete' => 'application.modules.legal.controllers.Contractor.DeleteAction',
 
             'get_activities_types' => 'application.modules.legal.controllers.Contractor.GetActivitiesTypesAction',
-            '_json_contractor_groups' => 'application.modules.legal.controllers.Contractor.JsonContractorGroupsAction',
 
             '_html_form_select_element' => 'application.modules.legal.controllers.Contractor.HtmlFormSelectElementAction',
             '_html_row_element' => 'application.modules.legal.controllers.Contractor.HtmlRowElementAction',
