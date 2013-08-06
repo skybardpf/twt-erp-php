@@ -31,9 +31,31 @@ class Individuals extends SOAPModel {
 	 * @param string $className
 	 * @return Individuals
 	 */
-	public static function model($className = __CLASS__) {
+	public static function model($className = __CLASS__)
+    {
 		return parent::model($className);
 	}
+
+    /**
+     * @static
+     * @param string $id
+     * @param bool $force_cache
+     * @return Individuals
+     * @throws CHttpException
+     */
+    public static function loadModel($id, $force_cache = false)
+    {
+        $cache_id = __CLASS__.'_'.$id;
+        $model = Yii::app()->cache->get($cache_id);
+        if ($force_cache || $model === false){
+            $model = self::model()->findByPk($id);
+            if ($model === null) {
+                throw new CHttpException(404, 'Не найдено физическое лицо.');
+            }
+            Yii::app()->cache->set($cache_id, $model);
+        }
+        return $model;
+    }
 
     /**
      * Сбрасываем кеш по данному физ. лицу и для списков физ. лиц.
@@ -150,7 +172,7 @@ class Individuals extends SOAPModel {
             $data = array();
             if ($elements) {
                 foreach ($elements as $elem) {
-                    $data[$elem->primaryKey] = $elem->name.' '.$elem->family;
+                    $data[$elem->primaryKey] = $elem->family .' '.$elem->name.' '.$elem->parent_name;
                 }
             }
             Yii::app()->cache->set($cache_id, $data);

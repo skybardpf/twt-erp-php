@@ -37,6 +37,14 @@ class UpdateAction extends CAction
 
         if ($_POST && !empty($_POST[$class])) {
             $model->setAttributes($_POST[$class]);
+
+            $signatory = array();
+            $tmp = CJSON::decode($model->json_signatories);
+            foreach ($tmp as $v){
+                $signatory[] = $v;
+            }
+            $model->signatories = $signatory;
+
             if ($model->validate()) {
                 try {
                     $model->save();
@@ -52,8 +60,6 @@ class UpdateAction extends CAction
             $signatory[$v['id'].'_'.$v['doc_id']] = $v;
         }
         $model->json_signatories = (empty($signatory)) ? '{}' : CJSON::encode($signatory);
-
-        $model->signatories = array('0000000033', '0000000044');
 
         $controller->render('/organization/show', array(
             'content' => $controller->renderPartial('/organization/form',

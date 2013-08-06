@@ -18,7 +18,7 @@ class ViewAction extends CAction
         $controller = $this->controller;
         $controller->pageTitle .= ' | Просмотр физического лица';
 
-        $model = $controller->loadModel($id);
+        $model = Individuals::loadModel($id);
         $controller->render(
             'view',
             array(

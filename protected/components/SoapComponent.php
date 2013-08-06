@@ -70,6 +70,9 @@
  * Контактные лица для контрагентов {@see ContactPersonForContractors}
  * @method mixed listContactPersonsForContractors(array $data)
  *
+ * Контактные лица для организаций {@see ContactPersonForOrganization}
+ * @method mixed listContactPersonsForOrganization(array $data)
+ *
  * Коды ОКОПФ {@see CodesOKOPF}
  * @method mixed listOKOPF
  *
@@ -158,7 +161,7 @@ class SoapComponent extends CApplicationComponent
 	 */
 	static public function parseReturn($data, $json = true) {
 		if (is_string($data->return) && stripos($data->return, 'error') !== false) {
-			throw new Exception($data->return);
+			throw new CException($data->return);
 		} else {
 			if (is_string($data->return) && $json) {
                 $data = CJSON::decode($data->return);

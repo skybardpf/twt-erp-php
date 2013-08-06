@@ -1,8 +1,12 @@
 /**
+ * @global {Number | NULL} window.organization_id
+ *
  * @author Skibardin A.A. <skybardpf@artektiv.ru>
  */
 $(document).ready(function(){
     const COUNTRY_RUSSIAN_ID = 643;
+
+    var grid_signatories = $('#grid-signatories');
 
     list_country_fields();
     select2_init();
@@ -22,6 +26,16 @@ $(document).ready(function(){
 
     function del_signatory(){
         var local = $(this);
+        var type = grid_signatories.data('type');
+        var json;
+        if (type == 'organization'){
+            json = $('#Organization_json_signatories');
+        } else if (type == 'contractor') {
+            json = $('#Contractor_json_signatories');
+        } else {
+            return false;
+        }
+
         $('<div>Вы действительно хотите удалить подписанта из списка?</div>').dialog({
             modal: true,
             resizable: false,
@@ -36,8 +50,8 @@ $(document).ready(function(){
                     Loading.show();
 
                     var id = local.data('id');
-                    var json = $('#Contractor_json_signatories');
                     var persons = $.parseJSON(json.val());
+                    console.log(persons);
                     var ind = arrayObjectIndexOf(persons, id);
 
                     if (ind != -1){
@@ -45,8 +59,9 @@ $(document).ready(function(){
                         json.val($.toJSON(persons));
                         local.parents('tr').remove();
                     }
+                    console.log(json.val());
 
-                    var table = $('#grid-signatories table');
+                    var table = grid_signatories.find('table');
                     if (table.find('tr').size() == 1){
                         table.find('tbody').append(
                             '<tr>' +
@@ -73,17 +88,30 @@ $(document).ready(function(){
      *  Show modal
      */
     function showModal(){
-        var modal = $('#dataModalSignatory'),
+        var org_id = grid_signatories.data('id');
+        if (org_id == ''){
+            return false;
+        }
+        var modal = $('#dataModalSignatory');
+        var type = grid_signatories.data('type');
+        var ids;
+        if (type == 'organization'){
+            ids = $('#Organization_json_signatories').val();
+        } else if (type == 'contractor') {
             ids = $('#Contractor_json_signatories').val();
+        } else {
+            return false;
+        }
 
         Loading.show();
         $.ajax({
             type: 'POST',
             dataType: "json",
-            url: "/legal/contractor/_html_form_select_element/",
+            url: "/legal/contractor/_html_form_select_element/id/"+org_id,
             cache: false,
             data: {
-                ids: ids
+                ids: ids,
+                type: type
             }
         }).done(function(data) {
                 if (!data.success){
@@ -110,11 +138,11 @@ $(document).ready(function(){
      */
     $('#dataModalSignatory .button_save').on('click', function(){
         var sel_person = $('#select-person option:selected');
-        var person_id = sel_person.val();
-        if (person_id == ''){
-            alert('Выберите подписанта из списка');
-            return false;
-        }
+//        var person_id = sel_person.val();
+//        if (person_id == ''){
+//            alert('Выберите подписанта из списка');
+//            return false;
+//        }
 
         var sel_doc = $('#select-doc option:selected');
         var doc_id = sel_doc.val();
@@ -123,49 +151,56 @@ $(document).ready(function(){
             return false;
         }
 
+        var json;
+        var type = grid_signatories.data('type');
+        if (type == 'organization'){
+            json = $('#Organization_json_signatories');
+        } else if (type == 'contractor') {
+            json = $('#Contractor_json_signatories');
+        } else {
+            return false;
+        }
+
         Loading.show();
 
         $.ajax({
             type: 'POST',
-            dataType: "html",
+            dataType: "json",
             url: "/legal/contractor/_html_row_element/",
             cache: false,
             data: {
-                person_id: person_id,
-                doc_id: doc_id,
-                person_name: sel_person.html(),
-                doc_name: sel_doc.html()
+                doc_id: doc_id
             }
         }).done(function(data) {
-                var table = $('#grid-signatories'),
-                    json = $('#Contractor_json_signatories');
-
-                var id = person_id + '_' + doc_id;
+            if (data.success == false){
+                alert('Error', data.error);
+            } else {
+                var id = data.person_id + '_' + data.doc_id;
                 var persons = $.parseJSON(json.val());
                 var ind = arrayObjectIndexOf(persons, id);
-
                 if (ind == -1){
                     persons[id] = {
-                        id: person_id,
-                        doc_id: doc_id
+                        id: data.person_id,
+                        doc_id: data.doc_id
                     };
                 }
                 json.val($.toJSON(persons));
 
-                if (table.find('.empty')){
-                    table.find('.empty').parents('tr').remove();
+                if (grid_signatories.find('.empty')){
+                    grid_signatories.find('.empty').parents('tr').remove();
                 }
-                var number = ((table.find('tr').size())%2 === 0) ? 'even' : 'odd';
-                var html = '<tr class="'+number+'">'+data+'</tr>';
+                var number = ((grid_signatories.find('tr').size())%2 === 0) ? 'even' : 'odd';
+                var html = '<tr class="'+number+'">'+data.html+'</tr>';
 
-                table.find('tbody').append(html);
+                grid_signatories.find('tbody').append(html);
                 $('.del-signatory').off('click').on('click', del_signatory);
+            }
 
-            }).fail(function(a, ret, message) {
+        }).fail(function(a, ret, message) {
 
-            }).always(function(){
-                Loading.hide();
-            });
+        }).always(function(){
+            Loading.hide();
+        });
         return true;
     });
 

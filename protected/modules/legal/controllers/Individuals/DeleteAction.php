@@ -9,6 +9,7 @@ class DeleteAction extends CAction
     /**
      * Удаление Физ.лица
      * @param string $id Идентификатор Физ.лица
+     * @throws CHttpException
      */
     public function run($id)
     {
@@ -17,7 +18,7 @@ class DeleteAction extends CAction
          */
         $controller = $this->controller;
 
-        $model = $controller->loadModel($id);
+        $model = Individuals::loadModel($id);
 
         if (Yii::app()->request->isAjaxRequest) {
             $ret = array();

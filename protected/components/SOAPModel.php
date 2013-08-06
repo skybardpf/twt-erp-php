@@ -204,4 +204,14 @@ abstract class SOAPModel extends CModel {
 	}
 
 	public abstract function findAll();
+
+    /**
+     * @param string $attribute
+     */
+    public function validJson($attribute)
+    {
+        if (null === CJSON::decode($this->$attribute)){
+            $this->addError($attribute, 'Не правильный формат JSON строки.');
+        }
+    }
 }

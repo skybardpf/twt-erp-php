@@ -14,11 +14,8 @@
         'id'=>'form-select-element',
         'enableAjaxValidation' => false,
         'type' => 'horizontal',
-//        'htmlOptions' => array(
-//            'data-type' => $type
-//        )
     ));
-    echo CHtml::dropDownList('select-person', '', $persons);
+//    echo CHtml::dropDownList('select-person', '', $persons);
     echo CHtml::dropDownList('select-doc', '', $docs);
 
     $this->endWidget();

@@ -39,25 +39,6 @@ class IndividualsController extends Controller
     }
 
     /**
-     * @param string $id Идентификатор физичекского лица.
-     * @return Individuals
-     * @throws CHttpException
-     */
-    public function loadModel($id)
-    {
-        $cache_id = get_class(Individuals::model()).'_'.$id;
-        $model = Yii::app()->cache->get($cache_id);
-        if ($model === false){
-            $model = Individuals::model()->findByPk($id);
-            if ($model === null) {
-                throw new CHttpException(404, 'Не найдено физическое лицо.');
-            }
-            Yii::app()->cache->set($cache_id, $model, 0);
-        }
-        return $model;
-    }
-
-    /**
      * Создаем новое физичекское лицо.
      * @return Individuals
      */

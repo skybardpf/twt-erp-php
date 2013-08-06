@@ -18,7 +18,7 @@ class UpdateAction extends CAction
         $controller = $this->controller;
         $controller->pageTitle .= ' | Редактирование физического лица';
 
-        $model = $controller->loadModel($id);
+        $model = Individuals::loadModel($id);
 
         if(isset($_POST['ajax']) && $_POST['ajax']==='form-individual') {
             echo CActiveForm::validate($model);

@@ -39,6 +39,7 @@ class OrganizationController extends Controller
     public function createModel()
     {
         $model = new Organization();
+        $model->signatories = array();
         return $model;
     }
 }
