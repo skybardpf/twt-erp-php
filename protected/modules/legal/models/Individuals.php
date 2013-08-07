@@ -162,6 +162,7 @@ class Individuals extends SOAPModel {
 
 	/**
 	 * Список доступных ФИО физ.лиц. [id => name]
+     * @deprecated
 	 * @return array
 	 */
 	public static function getValues() {
@@ -179,6 +180,27 @@ class Individuals extends SOAPModel {
         }
         return $data;
 	}
+
+    /**
+     * Список доступных ФИО физ.лиц. [id => name]
+     * @param bool $force_cache
+     * @return array
+     */
+    public static function getDataNames($force_cache = false)
+    {
+        $cache_id = __CLASS__.self::PREFIX_CACHE_ID_LIST_FIO;
+        if ($force_cache || ($data = Yii::app()->cache->get($cache_id)) === false) {
+            $data = array();
+            $elements = self::model()->findAll();
+            if ($elements) {
+                foreach ($elements as $elem) {
+                    $data[$elem->primaryKey] = $elem->family .' '.$elem->name.' '.$elem->parent_name;
+                }
+            }
+            Yii::app()->cache->set($cache_id, $data);
+        }
+        return $data;
+    }
 
     /**
      * Список доступных физических лиц. Формат [family + key] = element
