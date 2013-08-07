@@ -15,9 +15,9 @@ class ContractorGroup extends SOAPModel
     const GROUP_ID_UNCATEGORIZED = '--uncategorized--';
     const GROUP_DEFAULT = '-- DEFAULT --';
 
-    const PREFIX_CACHE_ID_LIST_DATA = '_list_data_';
-    const PREFIX_CACHE_ID_LIST_DROPDOWN_DATA = '_list_dropdown_data_';
-    const PREFIX_CACHE_ID_LIST_ROOT_DATA = '_list_root_data_';
+    const PREFIX_CACHE_ID_LIST_DATA = '_list_data';
+    const PREFIX_CACHE_ID_LIST_DROPDOWN_DATA = '_list_dropdown_data';
+    const PREFIX_CACHE_ID_LIST_ROOT_DATA = '_list_root_data';
     const PREFIX_CACHE_ID_LIST_DATA_INHERITED_GROUP_ID = '_list_data_inherited_group_id_';
 
     /**
@@ -189,8 +189,7 @@ class ContractorGroup extends SOAPModel
     public function getData($force_cache = false)
     {
         $cache_id = get_class($this) . self::PREFIX_CACHE_ID_LIST_DATA;
-        $data = Yii::app()->cache->get($cache_id);
-        if ($force_cache || $data === false) {
+        if ($force_cache || ($data = Yii::app()->cache->get($cache_id)) === false) {
             $elements = $this->where('deleted', false)->findAll();
             $data = array();
             if ($elements) {
@@ -211,8 +210,7 @@ class ContractorGroup extends SOAPModel
     public function getDropDownData($force_cache = false)
     {
         $cache_id = get_class($this) . self::PREFIX_CACHE_ID_LIST_DROPDOWN_DATA;
-        $data = Yii::app()->cache->get($cache_id);
-        if ($force_cache || $data === false) {
+        if ($force_cache || ($data = Yii::app()->cache->get($cache_id)) === false) {
             $data = array();
             $groups = $this->_getRootData($force_cache);
             $data[self::GROUP_DEFAULT] = '--- Выберите группу ---';
@@ -249,8 +247,7 @@ class ContractorGroup extends SOAPModel
     private function _getRootData($force_cache = false)
     {
         $cache_id = get_class($this) . self::PREFIX_CACHE_ID_LIST_ROOT_DATA;
-        $data = Yii::app()->cache->get($cache_id);
-        if ($force_cache || $data === false) {
+        if ($force_cache || ($data = Yii::app()->cache->get($cache_id)) === false) {
             $elements = $this->getData($force_cache);
 
             $tmp = array();
@@ -291,11 +288,12 @@ class ContractorGroup extends SOAPModel
     }
 
     /**
+     * Возвращаем массив в виде дерева контрагентов, разбитых по группам.
      * @param array $data
      * @param bool $force_cache
      * @return array
      */
-    public function getTreeData(array $data, $force_cache = false)
+    public function getTreeContractors(array $data, $force_cache = false)
     {
         $groups = ContractorGroup::model()->_getRootData($force_cache);
         $ret = array();
@@ -305,6 +303,49 @@ class ContractorGroup extends SOAPModel
                 'children' => $this->_getChildren($group, $data),
 //                'leaf' => (empty($group->children) && !(isset($data[$group->primaryKey])))
                 'leaf' => false
+            );
+        }
+        if (isset($data[ContractorGroup::GROUP_ID_UNCATEGORIZED])){
+            $ret[] = array(
+                'text' => 'Список контрагентов' .
+                Yii::app()->controller->widget(
+                    'bootstrap.widgets.TbGridView',
+                    array(
+                        'type' => 'striped bordered condensed',
+                        'dataProvider' => new CArrayDataProvider(
+                            $data[ContractorGroup::GROUP_ID_UNCATEGORIZED],
+                            array(
+                                'pagination' => array(
+                                    'pageSize' => 10000,
+                                ),
+                            )
+                        ),
+                        'template' => "{items} {pager}",
+                        'columns' => array(
+                            array(
+                                'name' => 'name',
+                                'header' => 'Название',
+                                'type' => 'raw',
+                                'value' => 'CHtml::link($data["name"], Yii::app()->getController()->createUrl("contractor/view", array("id" => $data["id"])))'
+                            ),
+                            array(
+                                'name' => 'country_name',
+                                'header' => 'Страна юрисдикции',
+                            ),
+                            array(
+                                'name' => 'creation_date',
+                                'header' => 'Дата добавления',
+                            ),
+                            array(
+                                'name' => 'creator',
+                                'header' => 'Пользователь, добавивший в систему',
+                            ),
+                        ),
+                    ),
+                    true
+                ),
+                'expanded' => false,
+                'leaf' => true
             );
         }
         return $ret;

@@ -77,9 +77,6 @@ class Organization extends AbstractOrganization {
         unset($data['signatories']);
         unset($data['json_signatories']);
 
-        // TODO убрать, когда сделают функцию listContactPersonsForOrganization
-//        $data['gendirector_id'] = '0000000038';
-
         if ($data['country'] == self::COUNTRY_RUSSIAN_ID){
             $data['vat_nom'] = '';
             $data['reg_nom'] = '';
@@ -214,7 +211,7 @@ class Organization extends AbstractOrganization {
             array('info, comment', 'length', 'max' => 50),
             array('yur_address, fact_address, fax, phone', 'length', 'max' => 150),
 
-            array('email', 'email'),
+            array('email', 'ARuEmailValidator'),
             array('sert_date', 'date', 'format' => 'yyyy-MM-dd'),
 
             array('gendirector_id', 'required'),

@@ -76,9 +76,9 @@
         )
     );
 
-    echo $form->dropDownListRow($model, 'group_id', ContractorGroup::model()->getDropDownData());
-    echo $form->dropDownListRow($model, 'country', Countries::getValues(), array('class' => 'list-countries'));
-    echo $form->dropDownListRow($model, 'okopf', CodesOKOPF::getValues());
+    echo $form->dropDownListRow($model, 'group_id', ContractorGroup::model()->getDropDownData($model->getForceCached()));
+    echo $form->dropDownListRow($model, 'country', Countries::model()->getDataNames($model->getForceCached()), array('class' => 'list-countries'));
+    echo $form->dropDownListRow($model, 'okopf', CodesOKOPF::model()->getDataNames($model->getForceCached()));
     echo $form->textFieldRow($model, 'name');
     echo $form->textFieldRow($model, 'full_name');
 ?>
@@ -137,13 +137,13 @@
 <?php
     echo $form->textFieldRow($model, 'yur_address');
     echo $form->textFieldRow($model, 'fact_address');
-    echo $form->dropDownListRow($model, 'gendirector', ContactPersonForContractors::getValues());
+    echo $form->dropDownListRow($model, 'gendirector', ContactPersonForContractors::model()->getDataNames($model->getForceCached()));
     echo $form->textFieldRow($model, 'email');
     echo $form->textFieldRow($model, 'phone');
     echo $form->textFieldRow($model, 'fax');
 
-    $persons = Individuals::getValues();
-    $docs = PowerAttorneysLE::model()->getAllNames(Contractor::TYPE);
+    $persons = Individuals::model()->getDataNames($model->getForceCached());
+    $docs = PowerAttorneysLE::model()->getAllNames(Contractor::TYPE, $model->getForceCached());
 
     $data_signatories = array();
     foreach ($model->signatories as $v){

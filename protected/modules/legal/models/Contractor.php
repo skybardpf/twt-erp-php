@@ -16,7 +16,8 @@
  * @property array  $signatories
  * @property string $json_signatories
  */
-class Contractor extends AbstractOrganization {
+class Contractor extends AbstractOrganization
+{
     const TYPE = 'Контрагенты';
 
     const PREFIX_CACHE_ID_LIST_FULL_DATA_GROUP_BY = '_list_full_data_group_by';
@@ -172,23 +173,23 @@ class Contractor extends AbstractOrganization {
     {
 		return array(
 			array('country', 'required'),
-			array('country', 'in', 'range' => array_keys(Countries::getValues())),
+			array('country', 'in', 'range' => array_keys(Countries::model()->getDataNames($this->getForceCached()))),
 
             array('gendirector', 'required'),
-            array('gendirector', 'in', 'range' => array_keys(ContactPersonForContractors::getValues())),
+            array('gendirector', 'in', 'range' => array_keys(ContactPersonForContractors::model()->getDataNames($this->getForceCached()))),
 
             array('okopf', 'required'),
-            array('okopf', 'in', 'range' => array_keys(CodesOKOPF::getValues())),
+            array('okopf', 'in', 'range' => array_keys(CodesOKOPF::model()->getDataNames($this->getForceCached()))),
 
             array('profile', 'required'),
-            array('profile', 'in', 'range' => array_keys(ContractorTypesActivities::getValues())),
+            array('profile', 'in', 'range' => array_keys(ContractorTypesActivities::model()->getDataNames($this->getForceCached()))),
 //
 			array('name, full_name', 'required'),
             array('name', 'length', 'max' => 150),
             array('full_name', 'length', 'max' => 100),
 
             array('group_id', 'required'),
-            array('group_id', 'in', 'range' => array_keys(ContractorGroup::model()->getData()), 'message' => 'Выберите группу из списка'),
+            array('group_id', 'in', 'range' => array_keys(ContractorGroup::model()->getData($this->getForceCached())), 'message' => 'Выберите группу из списка'),
 
             /**
              * Russian country
@@ -208,7 +209,7 @@ class Contractor extends AbstractOrganization {
             array('info, comment', 'length', 'max' => 50),
             array('yur_address, fact_address, fax, phone', 'length', 'max' => 150),
 
-            array('email', 'email'),
+            array('email', 'ARuEmailValidator'),
 
             array('json_signatories', 'validJson'),
 		);
@@ -220,9 +221,8 @@ class Contractor extends AbstractOrganization {
      */
     public function getDataGroupBy($force_cache = false)
     {
-        $cache_id = get_class($this).self::PREFIX_CACHE_ID_LIST_FULL_DATA_GROUP_BY;
-        $groups = Yii::app()->cache->get($cache_id);
-        if ($force_cache || $groups === false) {
+        $cache_id = __CLASS__ . self::PREFIX_CACHE_ID_LIST_FULL_DATA_GROUP_BY;
+        if ($force_cache || ($groups = Yii::app()->cache->get($cache_id)) === false) {
             $data = $this->getFullData($force_cache);
             $groups = array();
             foreach($data as $v){
@@ -232,6 +232,8 @@ class Contractor extends AbstractOrganization {
                     } else {
                         $groups[$v->group_id] = array($v);
                     }
+                } else {
+                    $groups[ContractorGroup::GROUP_ID_UNCATEGORIZED][] = $v;
                 }
             }
             Yii::app()->cache->set($cache_id, $groups);

@@ -18,7 +18,10 @@ class CreateAction extends CAction
         $controller = $this->controller;
         $controller->pageTitle .= ' | Создание контрагента';
 
+        $force_cache = (isset($_GET['force_cache']) && $_GET['force_cache'] == 1) ? true : false;
+
         $model = $controller->createModel();
+        $model->setForceCached($force_cache);
 
         if(isset($_POST['ajax']) && $_POST['ajax']==='form-contractor') {
             $class = get_class($model);
@@ -36,7 +39,6 @@ class CreateAction extends CAction
 
         if (isset($_POST[get_class($model)])) {
             $model->setAttributes($_POST[get_class($model)]);
-
             if ($model->validate()) {
                 try {
                     $model->save();

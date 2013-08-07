@@ -4,7 +4,7 @@
         require(dirname(__FILE__).'/main.php'),
 
         array(
-            'defaultController' => 'legal/individuals',
+            'defaultController' => 'legal/organization',
 
             'components' => array(
                 'cache' => array('class'=>'system.caching.CFileCache'),
