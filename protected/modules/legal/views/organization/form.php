@@ -150,10 +150,11 @@
                     ? CHtml::link($persons[$v['id']], $this->createUrl('individuals/view', array('id' => $v['id'])))
                     : '---'
                 ),
-                'doc' => (isset($docs[$v['doc_id']])
-                    ? CHtml::link($docs[$v['doc_id']], $this->createUrl('power_attorney_le/view', array('id' => $v['doc_id'])))
-                    : '---'
-                ),
+                'doc' => (isset($docs[$v['doc_id']]) ? $docs[$v['doc_id']] : '---'),
+//                'doc' => (isset($docs[$v['doc_id']])
+//                    ? CHtml::link($docs[$v['doc_id']], $this->createUrl('power_attorney_le/view', array('id' => $v['doc_id'])))
+//                    : '---'
+//                ),
 //                'delete' => $this->widget('bootstrap.widgets.TbButton', array(
 //                    'buttonType' => 'button',
 //                    'type' => 'primary',

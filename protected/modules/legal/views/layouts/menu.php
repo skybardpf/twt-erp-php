@@ -14,6 +14,16 @@
     if (in_array($_SERVER['HTTP_HOST'], array('twt-erp.twtconsult.ru', 'twt-erp.artektiv.ru'))) {
         $menus = array(
             array(
+                'label' => 'Организации',
+                'url' => $this->createUrl('organization/'),
+                'active' => ($this->menu_current == 'legal')
+            ),
+            array(
+                'label' => 'Контрагенты',
+                'url' => $this->createUrl('contractor/'),
+                'active' => ($this->menu_current == 'contractors')
+            ),
+            array(
                 'label' => 'Физические лица',
                 'url' => $this->createUrl('individuals/'),
                 'active' => ($this->menu_current == 'individuals')
