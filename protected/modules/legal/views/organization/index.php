@@ -10,7 +10,7 @@
 ?>
 <div class="pull-right" style="margin-top: 15px;">
     <?php $this->widget('bootstrap.widgets.TbButton', array(
-        'label' => 'Новое юридическое лицо',
+        'label' => 'Новая организация',
         'type'  => 'success',
         'size'  => 'normal',
         'url'   => $this->createUrl("add")
@@ -19,7 +19,7 @@
 <h2>Организации</h2>
 
 <?php
-    $countries = Countries::getValues();
+    $countries = Countries::model()->getDataNames();
     foreach($data as $k=>$v){
         $data[$k]->country = (isset($countries[$v->country]) ? $countries[$v->country] : '---');
     }

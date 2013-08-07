@@ -150,8 +150,7 @@ class ContractorGroup extends SOAPModel
     public function getInheritedGroupsData($group_id, $force_cache = false)
     {
         $cache_id = get_class($this) . self::PREFIX_CACHE_ID_LIST_DATA_INHERITED_GROUP_ID . $group_id;
-        $data = Yii::app()->cache->get($cache_id);
-        if ($force_cache || $data === false) {
+        if ($force_cache || ($data = Yii::app()->cache->get($cache_id)) === false) {
             $groups = $this->getData($force_cache);
             $gg = $this->_getParentGroups($groups, $group_id);
             $data = array();
@@ -176,7 +175,6 @@ class ContractorGroup extends SOAPModel
             if (!empty($groups[$child_id]->parent_id)){
                 $ret = array_merge($ret, $this->_getParentGroups($groups, $groups[$child_id]->parent_id));
             }
-
         }
         return $ret;
     }

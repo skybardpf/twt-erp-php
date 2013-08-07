@@ -20,7 +20,9 @@ class ViewAction extends CAction
         $controller->pageTitle .= ' | Просмотр контрагента';
         $controller->current_tab_menu = $controller::TAB_MENU_INFO;
 
-        $model = $controller->loadModel($id);
+        $force_cache = (isset($_GET['force_cache']) && $_GET['force_cache'] == 1) ? true : false;
+        $model = Contractor::model()->loadModel($id, $force_cache);
+        $model->setForceCached($force_cache);
 
         $controller->render(
             '/contractor/menu_tabs',

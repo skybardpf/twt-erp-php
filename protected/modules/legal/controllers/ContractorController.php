@@ -34,34 +34,4 @@ class ContractorController extends Controller{
 
         );
     }
-
-    /**
-     * @param string $id    Идентификатор контрагента.
-     * @return Contractor   Получаем модель Контрагент.
-     * @throws CHttpException
-     */
-    public function loadModel($id)
-    {
-        $cache_id = get_class(Contractor::model()).'_'.$id;
-        $model = Yii::app()->cache->get($cache_id);
-        if ($model === false){
-            $model = Contractor::model()->findByPk($id);
-            if ($model === null) {
-                throw new CHttpException(404, 'Не найден контрагент.');
-            }
-            Yii::app()->cache->set($cache_id, $model);
-        }
-        return $model;
-    }
-
-    /**
-     * @return Contractor Возвращаем созданную модель Контрагент.
-     */
-    public function createModel()
-    {
-        $model = new Contractor();
-        $model->signatories = array();
-        $model->group_id = ContractorGroup::GROUP_DEFAULT;
-        return $model;
-    }
 }
