@@ -17,7 +17,9 @@ class CreateAction extends CAction
         $controller = $this->controller;
         $controller->pageTitle .= ' | Добавление организации';
 
-        $model = $controller->createModel();
+        $force_cache = (isset($_GET['force_cache']) && $_GET['force_cache'] == 1) ? true : false;
+        $model = Organization::createModel();
+        $model->setForceCached($force_cache);
 
         $class = get_class($model);
         $country_id = (isset($_POST[$class]) && isset($_POST[$class]['country']) ? $_POST[$class]['country'] : null);

@@ -51,8 +51,7 @@ class Controller extends CController
     public function loadOrganization($org_id, $force_cache = false)
     {
         $cache_id = get_class(Organization::model()).'_'.$org_id;
-        $org = Yii::app()->cache->get($cache_id);
-        if ($force_cache || $org === false){
+        if ($force_cache || ($org = Yii::app()->cache->get($cache_id)) === false){
             $org = Organization::model()->findByPk($org_id);
             if ($org === null) {
                 throw new CHttpException(404, 'Не найдена организация.');

@@ -67,8 +67,8 @@
         )
     );
 
-    echo $form->dropDownListRow($model, 'country', Countries::model()->getDataNames(), array('class' => 'list-countries'));
-    echo $form->dropDownListRow($model, 'okopf', CodesOKOPF::getValues());
+    echo $form->dropDownListRow($model, 'country', Countries::model()->getDataNames($model->getForceCached()), array('class' => 'list-countries'));
+    echo $form->dropDownListRow($model, 'okopf', CodesOKOPF::model()->getDataNames($model->getForceCached()));
     echo $form->textFieldRow($model, 'name');
     echo $form->textFieldRow($model, 'full_name');
 ?>
@@ -130,7 +130,7 @@
 <?php
     echo $form->textFieldRow($model, 'yur_address');
     echo $form->textFieldRow($model, 'fact_address');
-    echo $form->dropDownListRow($model, 'gendirector_id', ContactPersonForOrganization::model()->getDataNames());
+    echo $form->dropDownListRow($model, 'gendirector_id', ContactPersonForOrganization::model()->getDataNames($model->getForceCached()));
     echo $form->textFieldRow($model, 'email');
     echo $form->textFieldRow($model, 'phone');
     echo $form->textFieldRow($model, 'fax');
@@ -139,8 +139,8 @@
      * Только при редактировании.
      */
     if ($model->primaryKey){
-        $persons = Individuals::getValues();
-        $docs = PowerAttorneysLE::model()->getNamesByOrganizationId(Organization::TYPE, $model->primaryKey);
+        $persons = Individuals::model()->getDataNames($model->getForceCached());
+        $docs = PowerAttorneysLE::model()->getNamesByOrganizationId(Organization::TYPE, $model->primaryKey, $model->getForceCached());
 
         $data_signatories = array();
         foreach ($model->signatories as $v){

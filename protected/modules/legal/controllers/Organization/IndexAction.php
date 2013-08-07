@@ -17,11 +17,14 @@ class IndexAction extends CAction
         $controller = $this->controller;
         $controller->pageTitle .= ' | Список организаций';
 
-        $data = Organization::model()->getFullData();
+        $force_cache = (isset($_GET['force_cache']) && $_GET['force_cache'] == 1) ? true : false;
+
+        $data = Organization::model()->getFullData($force_cache);
         $controller->render(
             'index',
             array(
-                'data' => $data
+                'data' => $data,
+                'force_cache' => $force_cache,
             )
         );
     }

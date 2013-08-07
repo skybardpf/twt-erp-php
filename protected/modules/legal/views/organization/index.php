@@ -4,8 +4,9 @@
  *
  * @author Skibardin A.A. <skybardpf@artektiv.ru>
  *
- * @var OrganizationController      $this
- * @var Organization[]              $data
+ * @var OrganizationController  $this
+ * @var Organization[]          $data
+ * @var bool                    $force_cache
  */
 ?>
 <div class="pull-right" style="margin-top: 15px;">
@@ -19,7 +20,7 @@
 <h2>Организации</h2>
 
 <?php
-    $countries = Countries::model()->getDataNames();
+    $countries = Countries::model()->getDataNames($force_cache);
     foreach($data as $k=>$v){
         $data[$k]->country = (isset($countries[$v->country]) ? $countries[$v->country] : '---');
     }
