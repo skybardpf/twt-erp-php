@@ -17,11 +17,6 @@
                 'url' => $this->createUrl('individuals/'),
                 'active' => ($this->menu_current == 'individuals')
             ),
-            array(
-                'label' => 'Контрагенты',
-                'url' => $this->createUrl('contractor/'),
-                'active' => ($this->menu_current == 'contractors')
-            ),
         );
     } else {
         $menus = array(
