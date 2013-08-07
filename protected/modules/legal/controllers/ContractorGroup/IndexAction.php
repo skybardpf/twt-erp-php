@@ -17,7 +17,9 @@ class IndexAction extends CAction
         $controller = $this->controller;
         $controller->pageTitle .= ' | Список групп';
 
-        $data = ContractorGroup::model()->getTreeOnlyGroup(true);
+        $force_cache = (isset($_GET['force_cache']) && $_GET['force_cache'] == 1) ? true : false;
+        $data = ContractorGroup::model()->getTreeOnlyGroup($force_cache);
+
         $controller->render(
             'index',
             array(
