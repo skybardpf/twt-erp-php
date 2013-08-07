@@ -17,7 +17,8 @@
  * @property string $json_signatories
  */
 class Contractor extends AbstractOrganization {
-    const TYPE = 'Организация';
+    const TYPE = 'Контрагенты';
+
     const PREFIX_CACHE_ID_LIST_FULL_DATA_GROUP_BY = '_list_full_data_group_by';
 
 	/**
@@ -98,6 +99,7 @@ class Contractor extends AbstractOrganization {
         }
         unset($data['deleted']);
         unset($data['signatories']);
+        unset($data['json_signatories']);
 
         if ($data['country'] == self::COUNTRY_RUSSIAN_ID){
             $data['vat_nom'] = '';
@@ -107,8 +109,6 @@ class Contractor extends AbstractOrganization {
             $data['inn'] = '';
             $data['kpp'] = '';
         }
-
-//        var_dump($data);die;
 
         $ret = $this->SOAP->saveContragent(array(
             'data' => SoapComponent::getStructureElement($data),
@@ -224,12 +224,9 @@ class Contractor extends AbstractOrganization {
         $groups = Yii::app()->cache->get($cache_id);
         if ($force_cache || $groups === false) {
             $data = $this->getFullData($force_cache);
-
-//            var_dump($data);die;
             $groups = array();
             foreach($data as $v){
                 if (!empty($v->group_id)){
-//                    var_dump($v->group_id);
                     if (isset($groups[$v->group_id])){
                         $groups[$v->group_id][] = $v;
                     } else {
@@ -240,15 +237,5 @@ class Contractor extends AbstractOrganization {
             Yii::app()->cache->set($cache_id, $groups);
         }
         return $groups;
-    }
-
-    /**
-     * @param string $attribute
-     */
-    public function validJson($attribute)
-    {
-        if (null === CJSON::decode($this->$attribute)){
-            $this->addError($attribute, 'Не правильный формат JSON строки.');
-        }
     }
 }

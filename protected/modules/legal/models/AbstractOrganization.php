@@ -1,5 +1,10 @@
 <?php
 /**
+ * Class OrganizationException
+ */
+class OrganizationException extends CException{}
+
+/**
  * Общие методы и свойства для организаций и контрагентов.
  *
  * @author Skibardin A.A. <skybardpf@artektiv.ru>

@@ -2,29 +2,33 @@
 /**
  * @var IndividualsController   $this
  * @var Individuals             $model
- * @var TbActiveForm            $form
  */
 ?>
 
 <h2><?= ($model->primaryKey ? 'Редактирование' : 'Добавление') ?> физического лица</h2>
 
-	<?php $form = $this->beginWidget('bootstrap.widgets.MTbActiveForm', array(
+<?php
+    /**
+     * @var TbActiveForm $form
+     */
+    $form = $this->beginWidget('bootstrap.widgets.MTbActiveForm', array(
 		'id' => 'form-individual',
 		'type' => 'horizontal',
         'enableAjaxValidation' => true,
         'enableClientValidation'=>true,
         'clientOptions' => array(
-            'validateOnSubmit' => true,
+//            'validateOnSubmit' => true,
             'validateOnChange' => true,
         ),
-	))?>
+	));
+?>
 
     <?php $this->widget('bootstrap.widgets.TbButton', array('buttonType' => 'submit', 'type' => 'primary', 'label' => 'Сохранить')); ?>
     <?php $this->widget('bootstrap.widgets.TbButton', array(
 		'buttonType' => 'link',
 		'label' => 'Отмена',
-		'url' => ($model->getprimaryKey()
-		    ? $this->createUrl('view', array('id' => $model->getprimaryKey()))
+		'url' => ($model->primaryKey
+		    ? $this->createUrl('view', array('id' => $model->primaryKey))
 			: $this->createUrl('index')
         )
 	)); ?>
@@ -56,7 +60,7 @@
     echo $form->textFieldRow($model, 'family', array('class' => 'span6'));
     echo $form->textFieldRow($model, 'name', array('class' => 'span6'));
     echo $form->textFieldRow($model, 'parent_name', array('class' => 'span6'));
-    echo $form->dropDownListRow($model, 'citizenship', Countries::getValues());
+    echo $form->dropDownListRow($model, 'citizenship', Countries::model()->getDataNames($model->getForceCached()));
 ?>
     <div class="control-group">
         <?= $form->labelEx($model, 'birth_date', array('class' => 'control-label')); ?>

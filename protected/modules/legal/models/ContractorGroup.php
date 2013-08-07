@@ -303,7 +303,8 @@ class ContractorGroup extends SOAPModel
             $ret[] = array(
                 'text' => $group->name,
                 'children' => $this->_getChildren($group, $data),
-                'leaf' => (empty($group->children) && !(isset($data[$group->primaryKey])))
+//                'leaf' => (empty($group->children) && !(isset($data[$group->primaryKey])))
+                'leaf' => false
             );
         }
         return $ret;
@@ -322,7 +323,8 @@ class ContractorGroup extends SOAPModel
                 'id' => $group->id,
                 'text' => $group->name,
                 'children' => $this->_getChildren($group, $data=array()),
-                'leaf' => (empty($group->children))
+//                'leaf' => (empty($group->children))
+                'leaf' => false
             );
         }
         return $ret;
@@ -387,7 +389,8 @@ class ContractorGroup extends SOAPModel
                 'id' => $child->id,
                 'text' => $child->name,
                 'children' => $children,
-                'leaf' => (empty($children))
+//                'leaf' => (empty($children))
+                'leaf' => false
             );
         }
         return $ret;

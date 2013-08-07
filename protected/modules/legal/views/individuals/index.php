@@ -3,6 +3,7 @@
  *  Список Физ.Лиц
  *
  *  @var IndividualsController  $this
+ *  @var bool                   $force_cache
  *  @var array                  $data
  */
  ?>
@@ -16,8 +17,7 @@
 </div>
 <h2>Физические лица</h2>
 <?php
-    // Инициализируем список стран
-    $countries = Countries::getValues();
+    $countries = Countries::model()->getDataNames($force_cache);
 
 	$provider = new CArrayDataProvider($data);
     foreach($provider->rawData as $k=>$v){
