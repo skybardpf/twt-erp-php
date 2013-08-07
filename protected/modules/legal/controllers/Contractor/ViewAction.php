@@ -18,11 +18,19 @@ class ViewAction extends CAction
          */
         $controller = $this->controller;
         $controller->pageTitle .= ' | Просмотр контрагента';
+        $controller->current_tab_menu = $controller::TAB_MENU_INFO;
 
         $model = $controller->loadModel($id);
+
         $controller->render(
-            'view',
+            '/contractor/menu_tabs',
             array(
+                'content' => $controller->renderPartial('/contractor/tab_info',
+                    array(
+                        'model' => $model
+                    ),
+                    true
+                ),
                 'model' => $model,
             )
         );

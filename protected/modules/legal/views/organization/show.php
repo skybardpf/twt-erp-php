@@ -12,7 +12,7 @@
 ?>
 <h1><?= Chtml::encode($organization->name); ?></h1>
 <div class="yur-tabs">
-    <?php
+<?php
     $this->widget('bootstrap.widgets.TbMenu', array(
         'type'=>'tabs', // '', 'tabs', 'pills' (or 'list')
         'stacked'=>false, // whether this is a stacked menu
@@ -51,7 +51,7 @@
             ),
         ),
     ));
-    ?>
+?>
 </div>
 <div class="yur-content">
 	<?= $content; ?>

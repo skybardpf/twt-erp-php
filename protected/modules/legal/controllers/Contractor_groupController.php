@@ -20,8 +20,6 @@ class Contractor_groupController extends Controller{
             'update' => 'application.modules.legal.controllers.ContractorGroup.UpdateAction',
             'create' => 'application.modules.legal.controllers.ContractorGroup.CreateAction',
             'delete' => 'application.modules.legal.controllers.ContractorGroup.DeleteAction',
-
-            '_json_contractor_groups' => 'application.modules.legal.controllers.ContractorGroup.JsonContractorGroupsAction',
         );
     }
 
