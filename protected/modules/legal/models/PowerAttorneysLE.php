@@ -30,8 +30,8 @@
 class PowerAttorneysLE extends SOAPModel
 {
     const PREFIX_CACHE_ID_LIST_DATA = '_list_org_id_';
-    const PREFIX_CACHE_ID_LIST_ALL_DATA = '_list_all_data';
-    const PREFIX_CACHE_ID_LIST_ALL_NAMES = '_list_all_names';
+    const PREFIX_CACHE_ID_LIST_ALL_DATA = '_list_all_data_';
+    const PREFIX_CACHE_ID_LIST_ALL_NAMES = '_list_all_names_';
 
 	public $owner_name = '';
 
@@ -46,6 +46,27 @@ class PowerAttorneysLE extends SOAPModel
     {
 		return parent::model($className);
 	}
+
+    /**
+     * @static
+     * @param string $id
+     * @param bool $force_cache
+     * @return PowerAttorneysLE
+     * @throws CHttpException
+     */
+    public static function loadModel($id, $force_cache = false)
+    {
+        $cache_id = __CLASS__.'_'.$id;
+        $model = Yii::app()->cache->get($cache_id);
+        if ($force_cache || $model === false){
+            $model = self::model()->findByPk($id);
+            if ($model === null) {
+                throw new CHttpException(404, 'Не найдена довереность.');
+            }
+            Yii::app()->cache->set($cache_id, $model);
+        }
+        return $model;
+    }
 
 	/**
 	 * Список доверенностей
@@ -285,15 +306,23 @@ class PowerAttorneysLE extends SOAPModel
 
     /**
      * Список довереностей.
+     * @param string $type
+     * @param bool $force_cache
      * @return PowerAttorneysLE[]
+     * @throws CException
      */
-    public function getAllData(){
-        $cache_id = get_class($this).self::PREFIX_CACHE_ID_LIST_ALL_DATA;
+    public function getAllData($type, $force_cache = false){
+        if (!in_array($type, array(Contractor::TYPE, Organization::TYPE))){
+            throw new CException('Указан неизвестный тип организации.');
+        }
+
+        $cache_id = get_class($this).self::PREFIX_CACHE_ID_LIST_ALL_DATA.$type;
         $data = Yii::app()->cache->get($cache_id);
-        if ($data === false){
+        if ($force_cache || $data === false){
             $tmp = $this->where('deleted', false)
-//                ->where('type_yur', 'Контрагенты')
+                ->where('type_yur', $type)
                 ->findAll();
+            $data = array();
             if ($tmp){
                 foreach($tmp as $v){
                     $data[$v->primaryKey] = $v;
@@ -306,17 +335,52 @@ class PowerAttorneysLE extends SOAPModel
 
     /**
      * Список назавний довереностей.
+     * @param string $type
+     * @param string $org_id
+     * @param bool $force_cache
      * @return array Format [id => name]
+     * @throws CException
      */
-    public function getAllNames(){
-        $cache_id = get_class($this).self::PREFIX_CACHE_ID_LIST_ALL_NAMES;
-        $data = Yii::app()->cache->get($cache_id);
-        if ($data === false){
-            $tmp = $this->getAllData();
+    public function getNamesByOrganizationId($type, $org_id, $force_cache = false){
+        if (!in_array($type, array(Contractor::TYPE, Organization::TYPE))){
+            throw new CException('Указан неизвестный тип организации.');
+        }
+        $cache_id = get_class($this).self::PREFIX_CACHE_ID_LIST_ALL_NAMES.$type.'_'.$org_id;
+        if ($force_cache || ($data = Yii::app()->cache->get($cache_id)) === false){
+            $data = array();
+            $tmp = $this->where('deleted', false)
+                ->where('type_yur', $type)
+                ->where('id_yur', $org_id)
+                ->findAll();
             if ($tmp){
                 foreach($tmp as $v){
                     $data[$v->primaryKey] = $v->name;
                 }
+            }
+            Yii::app()->cache->set($cache_id, $data);
+        }
+        return $data;
+    }
+
+    /**
+     * Список назавний довереностей.
+     * @param string $type
+     * @param bool $force_cache
+     * @return array Format [id => name]
+     * @throws CException
+     */
+    public function getAllNames($type, $force_cache = false){
+        if (!in_array($type, array(Contractor::TYPE, Organization::TYPE))){
+            throw new CException('Указан неизвестный тип организации.');
+        }
+
+        $cache_id = get_class($this).self::PREFIX_CACHE_ID_LIST_ALL_NAMES.$type;
+        $data = Yii::app()->cache->get($cache_id);
+        if ($force_cache || $data === false){
+            $data = array();
+            $tmp = $this->getAllData($type, $force_cache);
+            foreach($tmp as $v){
+                $data[$v->primaryKey] = $v->name;
             }
             Yii::app()->cache->set($cache_id, $data);
         }

@@ -12,33 +12,38 @@ class HtmlRowElementAction extends CAction
     public function run() {
         if (Yii::app()->request->isAjaxRequest) {
             try {
-                if (!isset($_POST['person_id']) || empty($_POST['person_id'])){
-                    throw new CException('Не указан идентификатор подписанта');
-                }
-                if (!isset($_POST['doc_id']) || empty($_POST['doc_id'])){
+                if (!isset($_POST['doc_id']) || empty($_POST['doc_id']) || !ctype_digit($_POST['doc_id'])){
                     throw new CException('Не указан идентификатор доверености');
                 }
-                if (!isset($_POST['person_name']) || empty($_POST['person_name'])){
-                    throw new CException('Не указано ФИО подписанта');
-                }
-                if (!isset($_POST['doc_name']) || empty($_POST['doc_name'])){
-                    throw new CException('Не указано название доверености');
-                }
+                $doc = PowerAttorneysLE::loadModel($_POST['doc_id']);
+                $person = Individuals::loadModel($doc->id_lico);
 
-                $this->controller->renderPartial(
-                    '/contractor/_html_row_element',
+                echo CJSON::encode(
                     array(
-                        'person_id' => $_POST['person_id'],
-                        'doc_id' => $_POST['doc_id'],
-                        'person_name' => $_POST['person_name'],
-                        'doc_name' => $_POST['doc_name'],
-                    ),
-                    false
+                        'success' => true,
+                        'doc_id' => $doc->primaryKey,
+                        'person_id' => $person->primaryKey,
+                        'html' => $this->controller->renderPartial(
+                            '/contractor/_html_row_element',
+                            array(
+                                'person_id' => $person->primaryKey,
+                                'doc_id' => $doc->primaryKey,
+                                'person_name' => $person->family.' '.$person->name.' '.$person->parent_name,
+                                'doc_name' => $doc->name,
+                            ),
+                            true
+                        )
+                    )
                 );
                 Yii::app()->end();
 
             } catch (CException $e){
-                echo $e->getMessage();
+                echo CJSON::encode(
+                    array(
+                        'success' => false,
+                        'error' => $e->getMessage()
+                    )
+                );
                 Yii::app()->end();
             }
         }

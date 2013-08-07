@@ -6,6 +6,12 @@
  * @property string $primaryKey
  */
 abstract class SOAPModel extends CModel {
+    /**
+     * @var bool $_force_cache Сбрасывать кэши принудительно. Используется для всех
+     * функции, которые получают данные по SOAP.
+     */
+    private $_force_cached = false;
+
 	/** Кешируем Гет-ы на это время, кеширование возложено на подклассы */
 	const CACHE_TTL = 30;
 	/** Пока не реализована авторизация - для сохранения объектов надо передавать какого-то пользователя */
@@ -20,7 +26,24 @@ abstract class SOAPModel extends CModel {
 	protected $where = array();
 	protected $order = array();
 
-	public static function model($className=__CLASS__) {
+    /**
+     * @param bool $force
+     */
+    public function setForceCached($force = false)
+    {
+        $this->_force_cached = $force;
+    }
+
+    /**
+     * @return bool
+     */
+    public function getForceCached()
+    {
+        return $this->_force_cached;
+    }
+
+	public static function model($className=__CLASS__)
+    {
 		return new $className();
 	}
 
@@ -204,4 +227,14 @@ abstract class SOAPModel extends CModel {
 	}
 
 	public abstract function findAll();
+
+    /**
+     * @param string $attribute
+     */
+    public function validJson($attribute)
+    {
+        if (null === CJSON::decode($this->$attribute)){
+            $this->addError($attribute, 'Не правильный формат JSON строки.');
+        }
+    }
 }

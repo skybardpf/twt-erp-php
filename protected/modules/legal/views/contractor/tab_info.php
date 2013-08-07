@@ -6,13 +6,9 @@
  *
  * @var ContractorController    $this
  * @var Contractor              $model
- * @var ContractorGroup[]       $groups
  */
 ?>
-
 <?php
-    echo '<h2>'.$model->name.'</h2>';
-
     $this->widget('bootstrap.widgets.TbButton', array(
         'buttonType' => 'link',
         'type' => 'success',
@@ -43,8 +39,7 @@
     $countries = Countries::getValues();
     $types = ContractorTypesActivities::getValues();
 
-    $groups = ContractorGroup::model()->getInheritedGroupsData($model->group_id, true);
-    $groups = array_reverse($groups);
+    $groups = ContractorGroup::model()->getInheritedGroupsData($model->group_id);
 
     $attributes = array(
         array(

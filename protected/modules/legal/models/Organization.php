@@ -1,14 +1,15 @@
 <?php
 /**
- * Собственные Юр.Лица
+ * Модель для работы с организацией.
  *
  * @author Skibardin A.A. <skybardpf@artektiv.ru>
  *
- * @property int $id
+ * @property string $id
  * @property string $name
  * @property string $full_name
  * @property string $country
  * @property string $country_name
+ * @property string $gendirector_id
  * @property string $comment
  * @property string $inn
  * @property string $kpp
@@ -20,9 +21,12 @@
  * @property string $vat_nom
  * @property string $profile
  * @property string $deleted
+ *
+ * @property array  $signatories
+ * @property string $json_signatories   // private
  */
 class Organization extends AbstractOrganization {
-    const TYPE = 'Контрагент';
+    const TYPE = 'Организации';
 
 	/**
 	 * @static
@@ -59,9 +63,9 @@ class Organization extends AbstractOrganization {
     {
 		$data = $this->getAttributes();
 
-        if($data['sert_date'] == ''){
+        /*if($data['sert_date'] == ''){
             $data['sert_date'] = date('Y-m-d', 0);
-        }
+        }*/
 
 		// New record
 		if (!$this->primaryKey) {
@@ -70,6 +74,8 @@ class Organization extends AbstractOrganization {
             $data['creator'] = 'Малхасян'; // TODO изменить, когда будет авторизация
         }
 		unset($data['deleted']);
+        unset($data['signatories']);
+        unset($data['json_signatories']);
 
         if ($data['country'] == self::COUNTRY_RUSSIAN_ID){
             $data['vat_nom'] = '';
@@ -81,16 +87,20 @@ class Organization extends AbstractOrganization {
             $data['ogrn'] = '';
         }
 
-        $ret = $this->SOAP->saveOrganization(array(
-            'data' => SoapComponent::getStructureElement($data, array('convert_boolean' => true)))
+        $ret = $this->SOAP->saveOrganization(
+            array(
+                'data' => SoapComponent::getStructureElement($data, array('convert_boolean' => true)),
+                'signatories' => $this->signatories
+            )
         );
+
         $ret = SoapComponent::parseReturn($ret, false);
         /**
          * Очищаем кеши связанные с организацией.
          */
         $this->clearCache();
 
-		return $ret;
+        return $ret;
 	}
 
 	/**
@@ -156,6 +166,9 @@ class Organization extends AbstractOrganization {
             'creator'       => 'Пользователь, добавивший в систему',
 
             'signatories'   => 'Подписанты',
+            'gendirector_id' => 'Генеральный директор',
+
+            'json_signatories' => '', // private
 
             'deleted'       => 'Помечен на удаление',                // +
 
@@ -198,8 +211,13 @@ class Organization extends AbstractOrganization {
             array('info, comment', 'length', 'max' => 50),
             array('yur_address, fact_address, fax, phone', 'length', 'max' => 150),
 
-            array('email', 'email'),
+            array('email', 'ARuEmailValidator'),
             array('sert_date', 'date', 'format' => 'yyyy-MM-dd'),
+
+            array('gendirector_id', 'required'),
+            array('gendirector_id', 'in', 'range' => array_keys(ContactPersonForOrganization::model()->getDataNames())),
+
+            array('json_signatories', 'validJson'),
 		);
 	}
 }

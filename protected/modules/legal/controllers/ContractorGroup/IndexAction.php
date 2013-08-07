@@ -17,11 +17,11 @@ class IndexAction extends CAction
         $controller = $this->controller;
         $controller->pageTitle .= ' | Список групп';
 
-//        $data = ContractorGroup::model()->getTreeOnlyGroup();
+        $data = ContractorGroup::model()->getTreeOnlyGroup(true);
         $controller->render(
             'index',
             array(
-//                'data' => $data,
+                'data' => $data,
             )
         );
     }

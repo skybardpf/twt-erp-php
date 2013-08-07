@@ -17,7 +17,10 @@ class CreateAction extends CAction
         $controller = $this->controller;
         $controller->pageTitle .= ' | Добавление физического лица';
 
+        $force_cache = (isset($_GET['force_cache']) && $_GET['force_cache'] == 1) ? true : false;
+
         $model = $controller->createModel();
+        $model->setForceCached($force_cache);
 
         if(isset($_POST['ajax']) && $_POST['ajax']==='form-individual') {
             echo CActiveForm::validate($model);
@@ -35,6 +38,11 @@ class CreateAction extends CAction
                 }
             }
         }
-        $controller->render('form', array('model' => $model));
+        $controller->render(
+            'form',
+            array(
+                'model' => $model
+            )
+        );
     }
 }

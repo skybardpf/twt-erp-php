@@ -24,8 +24,7 @@ class DeleteAction extends CAction
 
         if (Yii::app()->request->isAjaxRequest) {
             try {
-//                $model->delete()
-                if (true){
+                if ($model->delete()){
                     $ret = array(
                         'success' => true
                     );

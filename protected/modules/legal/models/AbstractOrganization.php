@@ -1,5 +1,10 @@
 <?php
 /**
+ * Class OrganizationException
+ */
+class OrganizationException extends CException{}
+
+/**
  * Общие методы и свойства для организаций и контрагентов.
  *
  * @author Skibardin A.A. <skybardpf@artektiv.ru>
@@ -19,9 +24,8 @@ abstract class AbstractOrganization extends SOAPModel {
      */
     public function getFullData($force_cache = false) {
         $cache_id = get_class($this).self::PREFIX_CACHE_ID_LIST_FULL_DATA;
-        $data = Yii::app()->cache->get($cache_id);
-        if ($force_cache || $data === false) {
-            $countries = Countries::getValues();
+        if ($force_cache || ($data = Yii::app()->cache->get($cache_id)) === false) {
+            $countries = Countries::model()->getDataNames($force_cache);
             $elements = $this->where('deleted', false)->findAll();
             $data = array();
             if ($elements) {

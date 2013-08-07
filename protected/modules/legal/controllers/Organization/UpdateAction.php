@@ -18,7 +18,7 @@ class UpdateAction extends CAction
         $controller = $this->controller;
         $controller->pageTitle .= ' | Редактирование организации';
 
-        $model = $controller->loadOrganization($id);
+        $model = $controller->loadOrganization($id, true);
 
         $class = get_class($model);
         $country_id = (isset($_POST[$class]) && isset($_POST[$class]['country']) ? $_POST[$class]['country'] : null);
@@ -37,6 +37,14 @@ class UpdateAction extends CAction
 
         if ($_POST && !empty($_POST[$class])) {
             $model->setAttributes($_POST[$class]);
+
+            $signatory = array();
+            $tmp = CJSON::decode($model->json_signatories);
+            foreach ($tmp as $v){
+                $signatory[] = $v;
+            }
+            $model->signatories = $signatory;
+
             if ($model->validate()) {
                 try {
                     $model->save();
@@ -47,7 +55,11 @@ class UpdateAction extends CAction
             }
         }
 
-        $model->signatories = array('0000000033', '0000000044');
+        $signatory = array();
+        foreach($model->signatories as $v){
+            $signatory[$v['id'].'_'.$v['doc_id']] = $v;
+        }
+        $model->json_signatories = (empty($signatory)) ? '{}' : CJSON::encode($signatory);
 
         $controller->render('/organization/show', array(
             'content' => $controller->renderPartial('/organization/form',

@@ -36,7 +36,7 @@ class ContractController extends Controller{
     {
         $cache_id = get_class(Contract::model()).'_'.$id;
         $model = Yii::app()->cache->get($cache_id);
-        if ($model !== false){
+        if ($model === false){
             $model = Contract::model()->findByPk($id);
             if ($model === null) {
                 throw new CHttpException(404, 'Не найден договор.');
