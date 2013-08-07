@@ -31,7 +31,7 @@
         'id' => 'form-contractor',
         'type' => 'horizontal',
         'enableAjaxValidation' => true,
-        'enableClientValidation'=>true,
+//        'enableClientValidation'=>true,
         'clientOptions' => array(
 //            'validateOnSubmit' => true,
             'validateOnChange' => true,
