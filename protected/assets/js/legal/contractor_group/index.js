@@ -47,8 +47,6 @@ Ext.onReady(function() {
         ]
     });
 
-
-
     function toggleDisabledButtons(value){
         buttonAdd.setDisabled(value);
         buttonEdit.setDisabled(value);
@@ -122,8 +120,9 @@ Ext.onReady(function() {
                         root_node.appendChild({
                             id: data.id,
                             text: data.name,
-//                            iconCls: icon,
-                            leaf: true
+                            leaf: false,
+                            allowChildren: false,
+                            children: []
                         });
                         root_node.expand();
                     } else {
