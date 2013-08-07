@@ -247,14 +247,13 @@ class ContractorGroup extends SOAPModel
         $cache_id = get_class($this) . self::PREFIX_CACHE_ID_LIST_ROOT_DATA;
         if ($force_cache || ($data = Yii::app()->cache->get($cache_id)) === false) {
             $elements = $this->getData($force_cache);
-
             $tmp = array();
             $tmp_index = array();
             foreach ($elements as $elem) {
                 $tmp[$elem->level][$elem->id] = $elem->parent_id;
                 $tmp_index[$elem->id] = $elem;
             }
-            // TODO все перписать. Делал на коленке. Skibardin A.A.
+            // TODO все переписать. Делал на коленке. Skibardin A.A.
             $data = array();
             for($i=0,$l=count($tmp)-1; $i<$l; $i++){
                 foreach($tmp[$i] as $k=>$name){
