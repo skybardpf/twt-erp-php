@@ -93,3 +93,7 @@ h1 {
 .x-tree-node-text table {
 	margin-top: 10px;
 }
+.x-body {
+	font-size: 14px;
+	font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
+}
