@@ -143,7 +143,7 @@
     echo $form->textFieldRow($model, 'fax');
 
     $persons = Individuals::getValues();
-    $docs   = PowerAttorneysLE::model()->getAllData();
+    $docs = PowerAttorneysLE::model()->getAllNames(Contractor::TYPE);
 
     $data_signatories = array();
     foreach ($model->signatories as $v){
@@ -154,7 +154,7 @@
                 : '---'
             ),
             'doc' => (isset($docs[$v['doc_id']])
-                ? CHtml::link($docs[$v['doc_id']]->name, $this->createUrl('power_attorney_le/view', array('id' => $v['doc_id'])))
+                ? CHtml::link($docs[$v['doc_id']], $this->createUrl('power_attorney_le/view', array('id' => $v['doc_id'])))
                 : '---'
             ),
             'delete' => $this->widget('bootstrap.widgets.TbButton', array(
@@ -234,7 +234,7 @@ $this->beginWidget('bootstrap.widgets.TbModal', array('id'=>'dataModalSignatory'
 ?>
     <div class="modal-header">
         <a class="close" data-dismiss="modal">×</a>
-        <h4><?=Yii::t("menu", "Выберите подписанта и довереность")?></h4>
+        <h4><?=Yii::t("menu", "Выберите довереность")?></h4>
     </div>
     <div class="modal-body"></div>
     <div class="modal-footer">

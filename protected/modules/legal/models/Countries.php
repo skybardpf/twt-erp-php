@@ -1,17 +1,15 @@
 <?php
 /**
- * Страна
- * User: Forgon
- * Date: 11.01.13
+ * Модель: Страна.
  *
- * @property int $id
+ * @author Skibardin A.A. <skybardpf@artektiv.ru>
+ *
+ * @property string $id
  * @property string $name
- *
- * @property @static array $values
 */
 class Countries extends SOAPModel {
-
-//	static public $values = array();
+    const PREFIX_CACHE_ID_LIST_DATA_NAMES = '_list_data_names';
+    const CACHE_EXPIRE = 0;
 
 	/**
 	 * @static
@@ -61,6 +59,7 @@ class Countries extends SOAPModel {
 	/**
 	 * Список доступных значений Стран [id => name].
      * Результат сохраняем в кеш.
+     * @deprecated @see getNames()
 	 * @return array
 	 */
 	public static function getValues() {
@@ -79,4 +78,26 @@ class Countries extends SOAPModel {
         }
         return $data;
 	}
+
+    /**
+     * Список доступных значений Стран [id => name].
+     * Результат сохраняем в кеш.
+     * @param bool $force_cache
+     * @return array
+     */
+    public function getDataNames($force_cache = false) {
+        $cache_id = __CLASS__ . self::PREFIX_CACHE_ID_LIST_DATA_NAMES;
+        if ($force_cache || ($data = Yii::app()->cache->get($cache_id)) === false) {
+            $data = array();
+            $elements = $this->where('deleted', true)->findAll();
+            if ($elements) {
+                foreach ($elements as $elem) {
+                    $data[$elem->primaryKey] = $elem->name;
+                }
+                asort($data);
+            }
+            Yii::app()->cache->set($cache_id, $data, self::CACHE_EXPIRE);
+        }
+        return $data;
+    }
 }

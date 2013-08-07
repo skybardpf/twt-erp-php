@@ -35,6 +35,14 @@ class CreateAction extends CAction
 
         if ($_POST && !empty($_POST[get_class($model)])) {
             $model->setAttributes($_POST[get_class($model)]);
+
+            $signatory = array();
+            $tmp = CJSON::decode($model->json_signatories);
+            foreach ($tmp as $v){
+                $signatory[] = $v;
+            }
+            $model->signatories = $signatory;
+
             if ($model->validate()) {
                 try {
                     $model->save();

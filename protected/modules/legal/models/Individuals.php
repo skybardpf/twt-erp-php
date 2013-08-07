@@ -31,9 +31,31 @@ class Individuals extends SOAPModel {
 	 * @param string $className
 	 * @return Individuals
 	 */
-	public static function model($className = __CLASS__) {
+	public static function model($className = __CLASS__)
+    {
 		return parent::model($className);
 	}
+
+    /**
+     * @static
+     * @param string $id
+     * @param bool $force_cache
+     * @return Individuals
+     * @throws CHttpException
+     */
+    public static function loadModel($id, $force_cache = false)
+    {
+        $cache_id = __CLASS__.'_'.$id;
+//        $model = Yii::app()->cache->get($cache_id);
+        if ($force_cache || ($model = Yii::app()->cache->get($cache_id)) === false){
+            $model = self::model()->findByPk($id);
+            if ($model === null) {
+                throw new CHttpException(404, 'Не найдено физическое лицо.');
+            }
+            Yii::app()->cache->set($cache_id, $model);
+        }
+        return $model;
+    }
 
     /**
      * Сбрасываем кеш по данному физ. лицу и для списков физ. лиц.
@@ -150,7 +172,7 @@ class Individuals extends SOAPModel {
             $data = array();
             if ($elements) {
                 foreach ($elements as $elem) {
-                    $data[$elem->primaryKey] = $elem->name.' '.$elem->family;
+                    $data[$elem->primaryKey] = $elem->family .' '.$elem->name.' '.$elem->parent_name;
                 }
             }
             Yii::app()->cache->set($cache_id, $data);
@@ -160,6 +182,7 @@ class Individuals extends SOAPModel {
 
     /**
      * Список доступных физических лиц. Формат [family + key] = element
+     * @deprecated @see getData()
      * @return array
      */
     public static function getFullValues() {
@@ -186,13 +209,38 @@ class Individuals extends SOAPModel {
     }
 
     /**
+     * Список физических лиц.
+     * @param bool $force_cache
+     * @return Individuals[]
+     */
+    public function getData($force_cache = false) {
+        $cache_id = __CLASS__.self::PREFIX_CACHE_ID_LIST_FULL_DATA;
+        if ($force_cache || ($data = Yii::app()->cache->get($cache_id)) === false) {
+            $data = array();
+            $elements = self::model()->where('deleted', false)->findAll();
+            if ($elements) {
+                $tmp = array();
+                foreach ($elements as $elem) {
+                    $tmp[$elem->family.'_'.$elem->primaryKey] = $elem;
+                }
+                ksort($tmp);
+                foreach ($tmp as $elem) {
+                    $data[] = $elem;
+                }
+            }
+            Yii::app()->cache->set($cache_id, $data);
+        }
+        return $data;
+    }
+
+    /**
      * Валидация полей при сохранении.
      * @return array
      */
     public function rules() {
 		return array(
             array('citizenship', 'required'),
-            array('citizenship', 'in', 'range'  => array_keys(Countries::getValues())),
+            array('citizenship', 'in', 'range'  => array_keys(Countries::model()->getDataNames($this->getForceCached()))),
 
             array('name, family', 'required'),
             array('name, family, parent_name', 'length', 'max' => 50),
