@@ -11,8 +11,8 @@
 ?>
 
 <?php
-    Yii::app()->clientScript->registerCssFile($this->asset_static.'/select2/select2.css');
-    Yii::app()->clientScript->registerScriptFile($this->asset_static.'/select2/select2.js');
+//    Yii::app()->clientScript->registerCssFile($this->asset_static.'/select2/select2.css');
+//    Yii::app()->clientScript->registerScriptFile($this->asset_static.'/select2/select2.js');
     Yii::app()->clientScript->registerScriptFile($this->asset_static.'/js/jquery.json-2.4.min.js');
     Yii::app()->clientScript->registerScriptFile($this->asset_static.'/js/legal/organization/form.js');
 
@@ -109,24 +109,25 @@
 
 <?php
     echo $form->textAreaRow($model, 'info');
+    echo $form->dropDownListRow($model, 'profile', ContractorTypesActivities::model()->getDataNames($model->getForceCached()));
 ?>
-    <div class="control-group">
-        <?= $form->labelEx($model, 'profile', array('class' => 'control-label')); ?>
+    <!--<div class="control-group">
+        <?/*= $form->labelEx($model, 'profile', array('class' => 'control-label')); */?>
         <div class="controls">
             <input class="input-profile"
-                id = '<?= get_class($model).'_profile'; ?>'
+                id = '<?/*= get_class($model).'_profile'; */?>'
                 type="text"
-                name="<?= get_class($model).'[profile]'; ?>"
+                name="<?/*= get_class($model).'[profile]'; */?>"
                 data-placeholder="Виды деятельности"
                 data-tnved="1"
                 data-minimum_input_length="4"
                 data-allow_clear="1"
                 data-ajax="1"
-                data-ajax_url="<?= $this->createUrl('get_activities_types'); ?>"
-                value="<?= $model->profile; ?>">
-            <?= $form->error($model, 'profile'); ?>
+                data-ajax_url="<?/*= $this->createUrl('get_activities_types'); */?>"
+                value="<?/*= $model->profile; */?>">
+            <?/*= $form->error($model, 'profile'); */?>
         </div>
-    </div>
+    </div>-->
 <?php
     echo $form->textFieldRow($model, 'yur_address');
     echo $form->textFieldRow($model, 'fact_address');

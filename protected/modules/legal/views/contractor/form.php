@@ -116,25 +116,26 @@
     </div>
     <!-- КОНЕЦ поля для иностранных фирм -->
 
-<div class="control-group">
-    <?= $form->labelEx($model, 'profile', array('class' => 'control-label')); ?>
+<!--<div class="control-group">
+    <?/*= $form->labelEx($model, 'profile', array('class' => 'control-label')); */?>
     <div class="controls">
         <input class="input-profile"
-            id = '<?= get_class($model).'_profile'; ?>'
+            id = '<?/*= get_class($model).'_profile'; */?>'
             type="text"
-            name="<?= get_class($model).'[profile]'; ?>"
+            name="<?/*= get_class($model).'[profile]'; */?>"
             data-placeholder="Виды деятельности"
             data-tnved="1"
             data-minimum_input_length="4"
             data-allow_clear="1"
             data-ajax="1"
-            data-ajax_url="<?= $this->createUrl('get_activities_types'); ?>"
-            value="<?= $model->profile; ?>">
-        <?= $form->error($model, 'profile'); ?>
+            data-ajax_url="<?/*= $this->createUrl('get_activities_types'); */?>"
+            value="<?/*= $model->profile; */?>">
+        <?/*= $form->error($model, 'profile'); */?>
     </div>
-</div>
+</div>-->
 
 <?php
+    echo $form->dropDownListRow($model, 'profile', ContractorTypesActivities::model()->getDataNames($model->getForceCached()));
     echo $form->textFieldRow($model, 'yur_address');
     echo $form->textFieldRow($model, 'fact_address');
     echo $form->dropDownListRow($model, 'gendirector', ContactPersonForContractors::model()->getDataNames($model->getForceCached()));

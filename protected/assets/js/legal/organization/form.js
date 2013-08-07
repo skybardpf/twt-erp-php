@@ -9,7 +9,7 @@ $(document).ready(function(){
     var grid_signatories = $('#grid-signatories');
 
     list_country_fields();
-    select2_init();
+//    select2_init();
 
     $('.list-countries').on('change', list_country_fields);
     $('button.del-signatory').on('click', del_signatory);
@@ -220,7 +220,7 @@ $(document).ready(function(){
 
     /**
      * Инициализация select2-инпутов
-     */
+     *//*
     function select2_init() {
         var e = $('.input-profile')[0];
 
@@ -273,5 +273,5 @@ $(document).ready(function(){
             };
             $(e).select2(options);
         }
-    }
+    }*/
 });
