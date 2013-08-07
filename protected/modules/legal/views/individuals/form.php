@@ -1,4 +1,4 @@
-<?php
+4<?php
 /**
  * @var IndividualsController   $this
  * @var Individuals             $model
@@ -15,7 +15,7 @@
 		'id' => 'form-individual',
 		'type' => 'horizontal',
         'enableAjaxValidation' => true,
-        'enableClientValidation'=> true,
+//        'enableClientValidation'=> true,
         'clientOptions' => array(
 //            'validateOnSubmit' => true,
             'validateOnChange' => true,
