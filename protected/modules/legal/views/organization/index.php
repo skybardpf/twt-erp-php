@@ -4,13 +4,14 @@
  *
  * @author Skibardin A.A. <skybardpf@artektiv.ru>
  *
- * @var OrganizationController      $this
- * @var Organization[]              $data
+ * @var OrganizationController  $this
+ * @var Organization[]          $data
+ * @var bool                    $force_cache
  */
 ?>
 <div class="pull-right" style="margin-top: 15px;">
     <?php $this->widget('bootstrap.widgets.TbButton', array(
-        'label' => 'Новое юридическое лицо',
+        'label' => 'Новая организация',
         'type'  => 'success',
         'size'  => 'normal',
         'url'   => $this->createUrl("add")
@@ -19,7 +20,7 @@
 <h2>Организации</h2>
 
 <?php
-    $countries = Countries::getValues();
+    $countries = Countries::model()->getDataNames($force_cache);
     foreach($data as $k=>$v){
         $data[$k]->country = (isset($countries[$v->country]) ? $countries[$v->country] : '---');
     }

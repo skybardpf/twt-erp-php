@@ -10,7 +10,7 @@ class CodesOKOPF extends SOAPModel
 	/**
 	 * @static
 	 * @param string $className
-	 * @return Countries
+	 * @return CodesOKOPF
 	 */
 	public static function model($className = __CLASS__)
     {
@@ -78,14 +78,13 @@ class CodesOKOPF extends SOAPModel
 
     /**
      * Список доступных кодов ОКОПФ.
-     * @param bool $key_name. Если TRUE, то ключом будет название кода ОКОПФ.
      * @param bool $force_cache.
+     * @param bool $key_name. Если TRUE, то ключом будет название кода ОКОПФ.
      * @return array
      */
-    public function getDataNames($key_name = false, $force_cache = false)
+    public function getDataNames($force_cache = false, $key_name = false)
     {
         $cache_id = __CLASS__.self::PREFIX_CACHE_ID_LIST_NAMES_BY.($key_name ? 'name' : 'key');
-//        var_dump($force_cache);die;
         if ($force_cache || ($data = Yii::app()->cache->get($cache_id)) === false) {
             $data = array();
             $elements = self::model()->findAll();

@@ -36,10 +36,9 @@
 ?>
 <br/><br/>
 <?php
-    $countries = Countries::getValues();
-    $types = ContractorTypesActivities::getValues();
-
-    $groups = ContractorGroup::model()->getInheritedGroupsData($model->group_id);
+    $countries = Countries::model()->getDataNames($model->getForceCached());
+    $types = ContractorTypesActivities::model()->getDataNames($model->getForceCached());
+    $groups = ContractorGroup::model()->getInheritedGroupsData($model->group_id, $model->getForceCached());
 
     $attributes = array(
         array(

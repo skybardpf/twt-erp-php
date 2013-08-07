@@ -17,18 +17,21 @@ class CreateAction extends CAction
         $controller = $this->controller;
         $controller->pageTitle .= ' | Добавление организации';
 
-        $model = $controller->createModel();
+        $force_cache = (isset($_GET['force_cache']) && $_GET['force_cache'] == 1) ? true : false;
+        $model = Organization::createModel();
+        $model->setForceCached($force_cache);
+
+        $class = get_class($model);
+        $country_id = (isset($_POST[$class]) && isset($_POST[$class]['country']) ? $_POST[$class]['country'] : null);
+        if (!is_null($country_id)){
+            if ($country_id == $model::COUNTRY_RUSSIAN_ID){
+                $model->setScenario('russianCountry');
+            } else {
+                $model->setScenario('foreignCountry');
+            }
+        }
 
         if(isset($_POST['ajax']) && $_POST['ajax']==='form-organization') {
-            $class = get_class($model);
-            $country_id = (isset($_POST[$class]) && isset($_POST[$class]['country']) ? $_POST[$class]['country'] : null);
-            if (!is_null($country_id)){
-                if ($country_id == $model::COUNTRY_RUSSIAN_ID){
-                    $model->setScenario('russianCountry');
-                } else {
-                    $model->setScenario('foreignCountry');
-                }
-            }
             echo CActiveForm::validate($model);
             Yii::app()->end();
         }

@@ -36,8 +36,8 @@
 ?>
 <br/><br/>
 <?php
-    $countries = Countries::getValues();
-    $types = ContractorTypesActivities::getValues();
+    $countries = Countries::model()->getDataNames($model->getForceCached());
+    $types = ContractorTypesActivities::model()->getDataNames($model->getForceCached());
 
     $attributes = array(
         array(

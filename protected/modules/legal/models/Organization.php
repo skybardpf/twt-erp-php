@@ -25,7 +25,8 @@
  * @property array  $signatories
  * @property string $json_signatories   // private
  */
-class Organization extends AbstractOrganization {
+class Organization extends AbstractOrganization
+{
     const TYPE = 'Организации';
 
 	/**
@@ -37,6 +38,18 @@ class Organization extends AbstractOrganization {
     {
 		return parent::model($className);
 	}
+
+    /**
+     * @static
+     * @return Organization Возвращаем созданную модель Организации.
+     */
+    public static function createModel()
+    {
+        $model = new Organization();
+        $model->signatories = array();
+        $model->json_signatories = '{}';
+        return $model;
+    }
 
 	/**
 	 * Удаляем организацию.
@@ -182,13 +195,13 @@ class Organization extends AbstractOrganization {
     {
 		return array(
 			array('country', 'required'),
-			array('country', 'in', 'range' => array_keys(Countries::getValues())),
+			array('country', 'in', 'range' => array_keys(Countries::model()->getDataNames($this->getForceCached()))),
 
             array('okopf', 'required'),
-            array('okopf', 'in', 'range' => array_keys(CodesOKOPF::getValues())),
+            array('okopf', 'in', 'range' => array_keys(CodesOKOPF::model()->getDataNames($this->getForceCached()))),
 
             array('profile', 'required'),
-            array('profile', 'in', 'range' => array_keys(ContractorTypesActivities::getValues())),
+            array('profile', 'in', 'range' => array_keys(ContractorTypesActivities::model()->getDataNames($this->getForceCached()))),
 
 			array('name, full_name', 'required'),
             array('name', 'length', 'max' => 50),
@@ -215,7 +228,7 @@ class Organization extends AbstractOrganization {
             array('sert_date', 'date', 'format' => 'yyyy-MM-dd'),
 
             array('gendirector_id', 'required'),
-            array('gendirector_id', 'in', 'range' => array_keys(ContactPersonForOrganization::model()->getDataNames())),
+            array('gendirector_id', 'in', 'range' => array_keys(ContactPersonForOrganization::model()->getDataNames($this->getForceCached()))),
 
             array('json_signatories', 'validJson'),
 		);

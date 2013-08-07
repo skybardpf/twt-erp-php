@@ -32,15 +32,4 @@ class OrganizationController extends Controller
             'get_activities_types' => 'application.modules.legal.controllers.Contractor.GetActivitiesTypesAction',
         );
     }
-
-    /**
-     * @return Organization Возвращаем созданную модель Организации.
-     */
-    public function createModel()
-    {
-        $model = new Organization();
-        $model->signatories = array();
-        $model->json_signatories = '{}';
-        return $model;
-    }
 }

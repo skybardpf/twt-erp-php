@@ -317,8 +317,7 @@ class PowerAttorneysLE extends SOAPModel
         }
 
         $cache_id = get_class($this).self::PREFIX_CACHE_ID_LIST_ALL_DATA.$type;
-        $data = Yii::app()->cache->get($cache_id);
-        if ($force_cache || $data === false){
+        if ($force_cache || ($data = Yii::app()->cache->get($cache_id)) === false){
             $tmp = $this->where('deleted', false)
                 ->where('type_yur', $type)
                 ->findAll();
@@ -375,8 +374,7 @@ class PowerAttorneysLE extends SOAPModel
         }
 
         $cache_id = get_class($this).self::PREFIX_CACHE_ID_LIST_ALL_NAMES.$type;
-        $data = Yii::app()->cache->get($cache_id);
-        if ($force_cache || $data === false){
+        if ($force_cache || ($data = Yii::app()->cache->get($cache_id)) === false){
             $data = array();
             $tmp = $this->getAllData($type, $force_cache);
             foreach($tmp as $v){

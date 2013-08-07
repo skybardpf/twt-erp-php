@@ -44,19 +44,5 @@ class CreateAction extends CAction
             echo CJSON::encode($ret);
             Yii::app()->end();
         }
-
-//        $controller = $this->controller;
-//        $parent = $controller->loadModel($id);
-//        var_dump($parent);
-//
-//        $model = $controller->createModel($parent);
-//        $model->name = $_GET['name'];
-//        $id = $model->save();
-//
-//        var_dump($id);
-//
-//        $this->controller->render(
-//            'test'
-//        );
     }
 }

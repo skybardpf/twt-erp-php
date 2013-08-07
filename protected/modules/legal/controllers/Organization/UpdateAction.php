@@ -18,7 +18,9 @@ class UpdateAction extends CAction
         $controller = $this->controller;
         $controller->pageTitle .= ' | Редактирование организации';
 
-        $model = $controller->loadOrganization($id, true);
+        $force_cache = (isset($_GET['force_cache']) && $_GET['force_cache'] == 1) ? true : false;
+        $model = $controller->loadOrganization($id, $force_cache);
+        $model->setForceCached($force_cache);
 
         $class = get_class($model);
         $country_id = (isset($_POST[$class]) && isset($_POST[$class]['country']) ? $_POST[$class]['country'] : null);
