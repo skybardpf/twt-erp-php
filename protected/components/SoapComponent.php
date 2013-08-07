@@ -304,7 +304,7 @@ class SoapComponent extends CApplicationComponent
     public static function getStructureActions(SOAPModel $model)
     {
         $class = get_class($model);
-        if (!in_array($class, array('PowerAttorneysLE', 'FoundingDocument'))){
+        if (!in_array($class, array('OrganizationPowerAttorney', 'FoundingDocument'))){
             return false;
         }
 
@@ -328,7 +328,7 @@ class SoapComponent extends CApplicationComponent
     public static function getStructureScans(SOAPModel $model)
     {
         $class = get_class($model);
-        if (!in_array($class, array('PowerAttorneysLE', 'FoundingDocument'))){
+        if (!in_array($class, array('OrganizationPowerAttorney', 'FoundingDocument'))){
             return false;
         }
 
@@ -388,7 +388,7 @@ class SoapComponent extends CApplicationComponent
     public static function getStructureFiles(SOAPModel $model)
     {
         $class = get_class($model);
-        if (!in_array($class, array('PowerAttorneysLE', 'FoundingDocument'))){
+        if (!in_array($class, array('OrganizationPowerAttorney', 'FoundingDocument'))){
             return false;
         }
 

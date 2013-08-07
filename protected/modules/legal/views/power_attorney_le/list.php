@@ -5,7 +5,7 @@
  *  Date: 03.07.13
  *
  *  @var $this          DocumentsController
- *  @var $docs          PowerAttorneysLE[]
+ *  @var $docs          OrganizationPowerAttorney[]
  *  @var $organization  Organization
  */
 ?>

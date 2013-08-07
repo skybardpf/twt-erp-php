@@ -38,7 +38,7 @@
             <label class="control-label" for="345">Первая дата</label>
             <div class="controls">
                 <?php $this->widget('zii.widgets.jui.CJuiDatePicker',array(
-                    'name'=>'PowerAttorneysLE[expire]',
+                    'name'=>'OrganizationPowerAttorney[expire]',
                     // additional javascript options for the date picker plugin
                     'options'=>array(
                         'showAnim'=>'fold',

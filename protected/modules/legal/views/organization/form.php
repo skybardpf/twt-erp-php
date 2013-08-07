@@ -22,7 +22,7 @@
         'id'=>'form-organization',
         'type'=>'horizontal',
         'enableAjaxValidation' => true,
-        'enableClientValidation'=>true,
+//        'enableClientValidation'=>true,
         'clientOptions' => array(
 //            'validateOnSubmit' => true,
             'validateOnChange' => true,
@@ -140,7 +140,7 @@
      */
     if ($model->primaryKey){
         $persons = Individuals::model()->getDataNames($model->getForceCached());
-        $docs = PowerAttorneysLE::model()->getNamesByOrganizationId(Organization::TYPE, $model->primaryKey, $model->getForceCached());
+        $docs = OrganizationPowerAttorney::model()->getNamesByOrganizationId(Organization::TYPE, $model->primaryKey, $model->getForceCached());
 
         $data_signatories = array();
         foreach ($model->signatories as $v){

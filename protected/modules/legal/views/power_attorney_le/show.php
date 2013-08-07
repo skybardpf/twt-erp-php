@@ -6,7 +6,7 @@
  *  Date: 03.07.13
  *
  *  @var $this          Power_attorney_leController
- *  @var $model         PowerAttorneysLE
+ *  @var $model         OrganizationPowerAttorney
  *  @var $organization  Organization
  */
 ?>

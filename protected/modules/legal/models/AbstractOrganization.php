@@ -233,3 +233,12 @@ abstract class AbstractOrganization extends SOAPModel {
         return false;
     }
 }
+
+/**
+ * Class MTypeOrganization
+ * Типы организаций.
+ */
+class MTypeOrganization extends CEnumerable{
+    const ORGANIZATION = 'Организации';
+    const CONTRACTOR = 'Контрагенты';
+}

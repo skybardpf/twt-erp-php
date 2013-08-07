@@ -4,7 +4,7 @@
  *
  *  @var $this                  DocumentsController         Контролер
  *  @var $founding_docs         FoundingDocument[]          Учредительные документы
- *  @var $power_attorneys_docs  PowerAttorneysLE[]          Доверенности
+ *  @var $power_attorneys_docs  OrganizationPowerAttorney[]          Доверенности
  *  @var $free_docs             FreeDocument[]              Свободные документы
  *  @var $organization          Organization
  */

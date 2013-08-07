@@ -18,7 +18,7 @@ class Power_attorney_leController extends Controller {
      */
     public function actionView($id)
     {
-        $doc = PowerAttorneysLE::model()->findByPk($id);
+        $doc = OrganizationPowerAttorney::model()->findByPk($id);
         if (!$doc){
             throw new CHttpException(404, 'Не найдена довереность.');
         }
@@ -52,12 +52,12 @@ class Power_attorney_leController extends Controller {
             throw new CHttpException(404, 'Не найдено юридическое лицо.');
         }
 
-        $doc = new PowerAttorneysLE();
+        $doc = new OrganizationPowerAttorney();
         $doc->id_yur = $org->primaryKey;
 
         $error = '';
-        if ($_POST && !empty($_POST['PowerAttorneysLE'])) {
-            $doc->setAttributes($_POST['PowerAttorneysLE']);
+        if ($_POST && !empty($_POST['OrganizationPowerAttorney'])) {
+            $doc->setAttributes($_POST['OrganizationPowerAttorney']);
 
             $doc->upload_scans  = CUploadedFile::getInstancesByName('upload_scans');
             $doc->upload_files  = CUploadedFile::getInstancesByName('upload_files');
@@ -96,7 +96,7 @@ class Power_attorney_leController extends Controller {
      */
     public function actionEdit($id)
     {
-        $doc = PowerAttorneysLE::model()->findByPk($id);
+        $doc = OrganizationPowerAttorney::model()->findByPk($id);
         if (!$doc){
             throw new CHttpException(404, 'Не найдена довереность.');
         }
@@ -106,8 +106,8 @@ class Power_attorney_leController extends Controller {
         }
 
         $error = '';
-        if ($_POST && !empty($_POST['PowerAttorneysLE'])) {
-            $doc->setAttributes($_POST['PowerAttorneysLE']);
+        if ($_POST && !empty($_POST['OrganizationPowerAttorney'])) {
+            $doc->setAttributes($_POST['OrganizationPowerAttorney']);
 
             $doc->upload_scans  = CUploadedFile::getInstancesByName('upload_scans');
             $doc->upload_files  = CUploadedFile::getInstancesByName('upload_files');
@@ -148,7 +148,7 @@ class Power_attorney_leController extends Controller {
      */
     public function actionDelete($id)
     {
-        $doc = PowerAttorneysLE::model()->findByPk($id);
+        $doc = OrganizationPowerAttorney::model()->findByPk($id);
         if (!$doc){
             throw new CHttpException(404, 'Не найдена довереность.');
         }
@@ -196,7 +196,7 @@ class Power_attorney_leController extends Controller {
     public function actionDownload_archive($id, $type)
     {
         $uf = new UploadFile();
-        $uf->download_archive(UploadFile::CLIENT_ID, get_class(PowerAttorneysLE::model()), $id, $type);
+        $uf->download_archive(UploadFile::CLIENT_ID, get_class(OrganizationPowerAttorney::model()), $id, $type);
     }
 
     /**

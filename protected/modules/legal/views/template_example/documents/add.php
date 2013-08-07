@@ -3,7 +3,7 @@
  * @var $this Template_exampleController
  */
 
-$model = new PowerAttorneysLE();
+$model = new OrganizationPowerAttorney();
 ?>
 
     <h1>Редактирование документа</h1>
@@ -48,7 +48,7 @@ $form = $this->beginWidget('bootstrap.widgets.TbActiveForm', array(
             <label for="PowerAttorneysLE_expire" class="control-label">Срок действия</label>
             <div class="controls">
                 <?php $this->widget('zii.widgets.jui.CJuiDatePicker',array(
-                    'name'=>'PowerAttorneysLE[expire]',
+                    'name'=>'OrganizationPowerAttorney[expire]',
                     // additional javascript options for the date picker plugin
                     'options'=>array(
                         'showAnim'=>'fold',

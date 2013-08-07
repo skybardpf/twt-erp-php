@@ -5,7 +5,7 @@
  *  Date: 03.07.13
  *
  *  @var $this          Power_attorney_leController
- *  @var $model         PowerAttorneysLE
+ *  @var $model         OrganizationPowerAttorney
  *  @var $organization  Organization
  */
 ?>
@@ -69,9 +69,9 @@
     echo $form->textFieldRow($model, 'nom', array('class' => 'span6'));
     echo $form->textFieldRow($model, 'name', array('class' => 'span6'));
 //    if (!$model->getprimaryKey()){
-//        echo $form->dropDownListRow($model, 'type_yur', PowerAttorneysLE::getYurTypes(), array('class' => 'span6'));
+//        echo $form->dropDownListRow($model, 'type_yur', OrganizationPowerAttorney::getYurTypes(), array('class' => 'span6'));
 //    }
-    echo $form->dropDownListRow($model, 'typ_doc', PowerAttorneysLE::getDocTypes(), array('class' => 'span6'));
+    echo $form->dropDownListRow($model, 'typ_doc', OrganizationPowerAttorney::getDocTypes(), array('class' => 'span6'));
     //
     // Список видов договоров будет здесь.
     //
