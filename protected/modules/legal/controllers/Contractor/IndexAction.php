@@ -17,8 +17,10 @@ class IndexAction extends CAction
         $controller = $this->controller;
         $controller->pageTitle .= ' | Список контрагентов';
 
-        $data = Contractor::model()->getDataGroupBy(/*true*/);
-        $groups = ContractorGroup::model()->getTreeData($data, true);
+        $force_cache = (isset($_GET['force_cache']) && $_GET['force_cache'] == 1) ? true : false;
+
+        $data = Contractor::model()->getDataGroupBy($force_cache);
+        $groups = ContractorGroup::model()->getTreeContractors($data, $force_cache);
 
         $controller->render(
             'index',

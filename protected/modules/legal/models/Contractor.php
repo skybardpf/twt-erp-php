@@ -208,7 +208,7 @@ class Contractor extends AbstractOrganization {
             array('info, comment', 'length', 'max' => 50),
             array('yur_address, fact_address, fax, phone', 'length', 'max' => 150),
 
-            array('email', 'email'),
+            array('email', 'ARuEmailValidator'),
 
             array('json_signatories', 'validJson'),
 		);
@@ -220,9 +220,8 @@ class Contractor extends AbstractOrganization {
      */
     public function getDataGroupBy($force_cache = false)
     {
-        $cache_id = get_class($this).self::PREFIX_CACHE_ID_LIST_FULL_DATA_GROUP_BY;
-        $groups = Yii::app()->cache->get($cache_id);
-        if ($force_cache || $groups === false) {
+        $cache_id = __CLASS__ . self::PREFIX_CACHE_ID_LIST_FULL_DATA_GROUP_BY;
+        if ($force_cache || ($groups = Yii::app()->cache->get($cache_id)) === false) {
             $data = $this->getFullData($force_cache);
             $groups = array();
             foreach($data as $v){

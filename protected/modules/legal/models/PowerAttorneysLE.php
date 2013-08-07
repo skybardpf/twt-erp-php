@@ -346,8 +346,7 @@ class PowerAttorneysLE extends SOAPModel
             throw new CException('Указан неизвестный тип организации.');
         }
         $cache_id = get_class($this).self::PREFIX_CACHE_ID_LIST_ALL_NAMES.$type.'_'.$org_id;
-        $data = Yii::app()->cache->get($cache_id);
-        if ($force_cache || $data === false){
+        if ($force_cache || ($data = Yii::app()->cache->get($cache_id)) === false){
             $data = array();
             $tmp = $this->where('deleted', false)
                 ->where('type_yur', $type)

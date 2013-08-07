@@ -295,7 +295,7 @@ class ContractorGroup extends SOAPModel
      * @param bool $force_cache
      * @return array
      */
-    public function getTreeData(array $data, $force_cache = false)
+    public function getTreeContractors(array $data, $force_cache = false)
     {
         $groups = ContractorGroup::model()->_getRootData($force_cache);
         $ret = array();

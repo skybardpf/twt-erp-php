@@ -67,7 +67,7 @@
         )
     );
 
-    echo $form->dropDownListRow($model, 'country', Countries::getValues(), array('class' => 'list-countries'));
+    echo $form->dropDownListRow($model, 'country', Countries::model()->getDataNames(), array('class' => 'list-countries'));
     echo $form->dropDownListRow($model, 'okopf', CodesOKOPF::getValues());
     echo $form->textFieldRow($model, 'name');
     echo $form->textFieldRow($model, 'full_name');
@@ -154,15 +154,15 @@
                     ? CHtml::link($docs[$v['doc_id']], $this->createUrl('power_attorney_le/view', array('id' => $v['doc_id'])))
                     : '---'
                 ),
-                'delete' => $this->widget('bootstrap.widgets.TbButton', array(
-                    'buttonType' => 'button',
-                    'type' => 'primary',
-                    'label' => 'Удалить',
-                    'htmlOptions' => array(
-                        'class' => 'del-signatory',
-                        'data-id' => $v['id'].'_'.$v['doc_id'],
-                    )
-                ), true)
+//                'delete' => $this->widget('bootstrap.widgets.TbButton', array(
+//                    'buttonType' => 'button',
+//                    'type' => 'primary',
+//                    'label' => 'Удалить',
+//                    'htmlOptions' => array(
+//                        'class' => 'del-signatory',
+//                        'data-id' => $v['id'].'_'.$v['doc_id'],
+//                    )
+//                ), true)
             );
         }
         echo $form->hiddenField($model, 'json_signatories');
@@ -198,23 +198,23 @@
                                 'style' => 'width: 45%',
                             )
                         ),
-                        array(
-                            'name' => 'delete',
-                            'header' => '',
-                            'type' => 'raw'
-                        ),
+//                        array(
+//                            'name' => 'delete',
+//                            'header' => '',
+//                            'type' => 'raw'
+//                        ),
                     )
                 )
             );
 
-            $this->widget('bootstrap.widgets.TbButton', array(
-                'buttonType'=> 'button',
-                'type' => 'primary',
-                'label' => 'Добавить',
-                'htmlOptions' => array(
-                    'class' => 'add-signatory',
-                )
-            ));
+//            $this->widget('bootstrap.widgets.TbButton', array(
+//                'buttonType'=> 'button',
+//                'type' => 'primary',
+//                'label' => 'Добавить',
+//                'htmlOptions' => array(
+//                    'class' => 'add-signatory',
+//                )
+//            ));
         ?>
         </div>
     </div>

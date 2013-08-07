@@ -252,7 +252,7 @@ class Individuals extends SOAPModel {
 
             array('birth_date, date_exp_pass, date_pass', 'date', 'format' => 'yyyy-MM-dd'),
 
-            array('email', 'email'),
+            array('email', 'ARuEmailValidator'),
 		);
 	}
 }
