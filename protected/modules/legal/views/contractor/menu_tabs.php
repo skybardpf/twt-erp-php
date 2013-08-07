@@ -15,10 +15,16 @@
 ?>
 <div class="yur-tabs">
 <?php
-    $this->widget('bootstrap.widgets.TbMenu', array(
-        'type'=>'tabs', // '', 'tabs', 'pills' (or 'list')
-        'stacked'=>false, // whether this is a stacked menu
-        'items'=>array(
+    if (in_array($_SERVER['HTTP_HOST'], array('twt-erp.twtconsult.ru', 'twt-erp.artektiv.ru'))) {
+        $tabs = array(
+            array(
+                'label' => 'Информация',
+                'url'   => $this->createUrl('view', array('id' => $model->primaryKey)),
+                'active'=> ($this->current_tab_menu == $this::TAB_MENU_INFO)
+            ),
+        );
+    } else {
+        $tabs = array(
             array(
                 'label' => 'Информация',
                 'url'   => $this->createUrl('view', array('id' => $model->primaryKey)),
@@ -29,7 +35,12 @@
                 'url'   => $this->createUrl('contractor_power_attorney/index', array('cid' => $model->primaryKey)),
                 'active'=> ($this->current_tab_menu == $this::TAB_MENU_POWER_ATTORNEY)
             ),
-        ),
+        );
+    }
+    $this->widget('bootstrap.widgets.TbMenu', array(
+        'type' => 'tabs', // '', 'tabs', 'pills' (or 'list')
+        'stacked' => false, // whether this is a stacked menu
+        'items' => $tabs,
     ));
 ?>
 </div>

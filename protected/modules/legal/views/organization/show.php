@@ -13,10 +13,16 @@
 <h1><?= Chtml::encode($organization->name); ?></h1>
 <div class="yur-tabs">
 <?php
-    $this->widget('bootstrap.widgets.TbMenu', array(
-        'type'=>'tabs', // '', 'tabs', 'pills' (or 'list')
-        'stacked'=>false, // whether this is a stacked menu
-        'items'=>array(
+    if (in_array($_SERVER['HTTP_HOST'], array('twt-erp.twtconsult.ru', 'twt-erp.artektiv.ru'))) {
+        $tabs = array(
+            array(
+                'label' => 'Информация',
+                'url'   => $this->createUrl('organization/view', array('id' => $organization->primaryKey)),
+                'active'=> ($cur_tab == 'info')
+            ),
+        );
+    } else {
+        $tabs = array(
             array(
                 'label' => 'Информация',
                 'url'   => $this->createUrl('organization/view', array('id' => $organization->primaryKey)),
@@ -49,7 +55,12 @@
                 'url'   => $this->createUrl('contract/list', array('org_id' => $organization->primaryKey)),
                 'active'=> ($cur_tab == 'contract')
             ),
-        ),
+        );
+    }
+    $this->widget('bootstrap.widgets.TbMenu', array(
+        'type' => 'tabs', // '', 'tabs', 'pills' (or 'list')
+        'stacked'=> false, // whether this is a stacked menu
+        'items' => $tabs,
     ));
 ?>
 </div>
