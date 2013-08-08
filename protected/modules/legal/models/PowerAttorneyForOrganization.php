@@ -27,7 +27,7 @@
  * @property string $from_user      признак того, что доверенность загружена пользователем
  * @property string $user           идентификатор пользователя
  */
-class OrganizationPowerAttorney extends AbstractPowerAttorney
+class  PowerAttorneyForOrganization extends PowerAttorneyAbstract
 {
 	public $owner_name = '';
 
@@ -41,7 +41,7 @@ class OrganizationPowerAttorney extends AbstractPowerAttorney
 	/**
 	 * @static
 	 * @param string $className
-	 * @return OrganizationPowerAttorney
+	 * @return  PowerAttorneyForOrganization
 	 */
 	public static function model($className = __CLASS__)
     {
@@ -165,34 +165,14 @@ class OrganizationPowerAttorney extends AbstractPowerAttorney
 	 */
 	public function attributeLabels()
     {
-		return array(
-			'id'             => '#',
-			'id_yur'         => 'Юр.лицо',
-			'type_yur'       => 'Вид Юр.лица',
-
-			'id_lico'        => 'На кого оформлена',
-            'name'           => 'Название',
-            'nom'            => 'Номер документа',
-            'typ_doc'        => 'Вид',                  // см. getDocTypes()
-            'date'           => 'Дата начала действия',
-            'expire'         => 'Срок действия',
-            'break'          => 'Недействительна с',
-            'comment'        => 'Комментарий',
-
-            'list_scans'     => 'Сканы',
-            'list_files'     => 'Файлы',
-            'upload_scans'   => '',
-            'upload_files'   => '',
-
-            // не исполозованные поля
-            'e_ver'          => 'Файлы',
-            'contract_types' => 'Виды договоров',
-            'loaded'         => 'Дата загрузки документа',
-            'user'           => 'Пользователь',
-			'from_user'      => 'Загружен пользователем',
-
-			'deleted'        => 'Помечен на удаление',
-		);
+        $parentLabels = parent::attributeLabels();
+		return array_merge(
+            $parentLabels,
+            array(
+                'typ_doc'           => 'Вид',                  // см. getDocTypes()
+                'types_of_contract' => 'Виды договора',
+            )
+        );
 	}
 
     /**
@@ -207,7 +187,7 @@ class OrganizationPowerAttorney extends AbstractPowerAttorney
             array('id_lico', 'in', 'range'  => array_keys(Individuals::getValues())),
 
             array('typ_doc', 'required'),
-            array('typ_doc', 'in', 'range'  => array_keys(OrganizationPowerAttorney::getDocTypes())),
+            array('typ_doc', 'in', 'range'  => array_keys( PowerAttorneyForOrganization::getDocTypes())),
 
             array('name', 'required'),
             array('name', 'length', 'max' => 25),
@@ -226,7 +206,7 @@ class OrganizationPowerAttorney extends AbstractPowerAttorney
      * Список довереностей.
      * @deprecated
      * @param Organization $org
-     * @return OrganizationPowerAttorney[]
+     * @return  PowerAttorneyForOrganization[]
      */
     public function getData(Organization $org){
         $cache_id = get_class($this).self::PREFIX_CACHE_ID_LIST_DATA.$org->primaryKey;
@@ -246,7 +226,7 @@ class OrganizationPowerAttorney extends AbstractPowerAttorney
      * @deprecated
      * @param string $type
      * @param bool $force_cache
-     * @return OrganizationPowerAttorney[]
+     * @return  PowerAttorneyForOrganization[]
      * @throws CException
      */
     public function getAllData($type, $force_cache = false){

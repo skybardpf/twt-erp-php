@@ -186,8 +186,7 @@ abstract class SOAPModel extends CModel {
 	 * Create array of objects with data
 	 * @param $data
 	 * @param $class
-	 *
-	 * @return array
+	 * @return SOAPModel[]
 	 */
 	public function publish_list($data, $class) {
 		$return = array();

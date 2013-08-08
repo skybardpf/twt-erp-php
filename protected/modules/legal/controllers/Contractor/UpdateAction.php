@@ -69,8 +69,7 @@ class UpdateAction extends CAction
         }
         $model->json_signatories = (empty($signatory)) ? '{}' : CJSON::encode($signatory);
 
-        $controller->render(
-            'form',
+        $controller->render('/contractor/form',
             array(
                 'model' => $model
             )

@@ -33,16 +33,17 @@ class Contractor extends AbstractOrganization
 	}
 
     /**
+     * @static
      * @param string $id    Идентификатор контрагента.
      * @param bool $force_cache
-     * @return Contractor   Получаем модель Контрагент.
+     * @return Contractor
      * @throws CHttpException
      */
-    public function loadModel($id, $force_cache)
+    public static function loadModel($id, $force_cache = false)
     {
-        $cache_id = get_class(Contractor::model()).'_'.$id;
+        $cache_id = __CLASS__ . '_' . $id;
         if ($force_cache || ($model = Yii::app()->cache->get($cache_id)) === false){
-            $model = Contractor::model()->findByPk($id);
+            $model = self::model()->findByPk($id);
             if ($model === null) {
                 throw new CHttpException(404, 'Не найден контрагент.');
             }
@@ -52,7 +53,8 @@ class Contractor extends AbstractOrganization
     }
 
     /**
-     * @return Contractor Возвращаем созданную модель Контрагент.
+     * @static
+     * @return Contractor
      */
     public static function createModel()
     {

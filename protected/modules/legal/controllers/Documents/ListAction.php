@@ -23,7 +23,7 @@ class ListAction extends CAction
         // Учредительные документы
         $founding_docs = FoundingDocument::model()->getData($org);
         // Доверенности
-        $power_attorneys_docs = OrganizationPowerAttorney::model()->listModels($org->primaryKey);
+        $power_attorneys_docs =  PowerAttorneyForOrganization::model()->listModels($org->primaryKey);
         // Свободные документы.
         $free_docs = FreeDocument::model()->getData($org);
 
