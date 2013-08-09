@@ -143,8 +143,10 @@
     echo $form->textFieldRow($model, 'phone');
     echo $form->textFieldRow($model, 'fax');
 
+    if (false) {
+
     $persons = Individuals::model()->getDataNames($model->getForceCached());
-    $docs = PowerAttorneysLE::model()->getAllNames(Contractor::TYPE, $model->getForceCached());
+    $docs = OrganizationPowerAttorney::model()->getAllNames(Contractor::TYPE, $model->getForceCached());
 
     $data_signatories = array();
     foreach ($model->signatories as $v){
@@ -220,6 +222,7 @@
         </div>
     </div>
 <?php
+    }
     echo $form->textAreaRow($model, 'comment');
 ?>
 

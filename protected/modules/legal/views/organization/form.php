@@ -141,7 +141,7 @@
      */
     if ($model->primaryKey){
         $persons = Individuals::model()->getDataNames($model->getForceCached());
-        $docs = PowerAttorneysLE::model()->getNamesByOrganizationId(Organization::TYPE, $model->primaryKey, $model->getForceCached());
+        $docs =  PowerAttorneyForOrganization::model()->listNames($model->primaryKey, $model->getForceCached());
 
         $data_signatories = array();
         foreach ($model->signatories as $v){

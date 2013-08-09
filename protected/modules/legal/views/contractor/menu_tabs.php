@@ -4,9 +4,10 @@
  *
  * @author Skibardin A.A. <skybardpf@artektiv.ru>
  *
- * @var ContractorController    $this
- * @var Contractor              $model
- * @var string                  $content
+ * @var Controller    $this
+ * @var Contractor    $model
+ * @var string        $content
+ * @var string        $current_tab_menu
  */
 ?>
 
@@ -19,27 +20,27 @@
         $tabs = array(
             array(
                 'label' => 'Информация',
-                'url'   => $this->createUrl('view', array('id' => $model->primaryKey)),
-                'active'=> ($this->current_tab_menu == $this::TAB_MENU_INFO)
+                'url'   => $this->createUrl('contractor/view', array('id' => $model->primaryKey)),
+                'active'=> ($current_tab_menu == 'info')
             ),
         );
     } else {
         $tabs = array(
             array(
                 'label' => 'Информация',
-                'url'   => $this->createUrl('view', array('id' => $model->primaryKey)),
-                'active'=> ($this->current_tab_menu == $this::TAB_MENU_INFO)
+                'url'   => $this->createUrl('contractor/view', array('id' => $model->primaryKey)),
+                'active'=> ($current_tab_menu == 'info')
             ),
             array(
-                'label' => 'Документы',
-                'url'   => $this->createUrl('contractor_power_attorney/index', array('cid' => $model->primaryKey)),
-                'active'=> ($this->current_tab_menu == $this::TAB_MENU_POWER_ATTORNEY)
+                'label' => 'Доверенности',
+                'url'   => $this->createUrl('power_attorney_contractor/list', array('cid' => $model->primaryKey)),
+                'active'=> ($current_tab_menu == 'power_attorney')
             ),
         );
     }
     $this->widget('bootstrap.widgets.TbMenu', array(
-        'type' => 'tabs', // '', 'tabs', 'pills' (or 'list')
-        'stacked' => false, // whether this is a stacked menu
+        'type' => 'tabs',
+        'stacked' => false,
         'items' => $tabs,
     ));
 ?>
