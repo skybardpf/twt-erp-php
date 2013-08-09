@@ -35,7 +35,7 @@ class CreateAction extends CAction
             if ($model->validate()) {
                 try {
                     $model->save();
-                    $controller->redirect($controller->createUrl('index'));
+                    $controller->redirect($controller->createUrl('list', array('cid' => $model->id_yur)));
                 } catch (CException $e) {
                     $model->addError('id', $e->getMessage());
                 }
