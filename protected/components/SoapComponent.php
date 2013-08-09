@@ -13,7 +13,7 @@
  * Доверенности
  * @method mixed listPowerAttorneyLE    Список
  * @method mixed getPowerAttorneyLE     Просмотр
- * @method mixed savePowerAttorneyLE    Сохранение
+ * @method mixed savePowerAttorney      Сохранение
  * @method mixed deletePowerAttorneyLE  Удаление
  *
  * Физ.Лица

@@ -83,6 +83,11 @@ abstract class PowerAttorneyAbstract extends SOAPModel
 	}
 
     /**
+     * @return string Идентификатор доверености.
+     */
+    abstract public function save();
+
+    /**
      * Сбрасываем кэши.
      */
     public function clearCache()
@@ -131,6 +136,9 @@ abstract class PowerAttorneyAbstract extends SOAPModel
     public function createModel($org_id)
     {
         $this->id_yur = $org_id;
+        $this->type_yur = $this->getTypeOrganization();
+//        $this->user = SOAPModel::USER_NAME;
+        $this->from_user = true;
         return $this;
     }
 
