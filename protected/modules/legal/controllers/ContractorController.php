@@ -5,14 +5,9 @@
  * @author Skibardin A.A. <skybardpf@artektiv.ru>
  */
 class ContractorController extends Controller{
-    const TAB_MENU_INFO = 'info';
-    const TAB_MENU_POWER_ATTORNEY = 'power_attorney';
-
     public $layout = 'inner';
     public $menu_current = 'contractors';
     public $pageTitle = 'TWT Consult | Контрагенты';
-
-    public $current_tab_menu = self::TAB_MENU_INFO;
 
     /**
      * Распределение экшенов.

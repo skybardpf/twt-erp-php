@@ -1,6 +1,6 @@
 <div class="well" style="padding: 8px 0;">
 <?php
-    if (in_array($_SERVER['HTTP_HOST'], array('twt-erp.twtconsult.ru', 'twt-erp.artektiv.ru'))) {
+    if (in_array($_SERVER['HTTP_HOST'], array('twt-erp.twtconsult.ru', 'twt-erp.artektiv.ru', 'twt-erp.skybardpf.devel'))) {
         $menus = array(
             array(
                 'label' => 'Организации',
