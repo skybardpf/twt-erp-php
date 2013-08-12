@@ -92,23 +92,15 @@ abstract class PowerAttorneyAbstract extends SOAPModel
      */
     public function clearCache()
     {
+        $class = get_class($this);
         if ($this->primaryKey){
-            $class = get_class($this);
             Yii::app()->cache->delete($class . self::PREFIX_CACHE_ID_FOR_MODEL_ID . $this->primaryKey);
+        }
+        if ($this->id_yur){
             Yii::app()->cache->delete($class . self::PREFIX_CACHE_ID_LIST_NAMES_FOR_ORG_ID . $this->id_yur);
             Yii::app()->cache->delete($class . self::PREFIX_CACHE_ID_LIST_MODELS_FOR_ORG_ID . $this->id_yur);
         }
     }
-
-    /**
-     * Сбрасываем кэши для указанной организации.
-     */
-//    public function clearCacheForOrgId($org_id)
-//    {
-//        $class = get_class($this);
-//        Yii::app()->cache->delete($class . self::PREFIX_CACHE_ID_LIST_NAMES_FOR_ORG_ID . $org_id);
-//        Yii::app()->cache->delete($class . self::PREFIX_CACHE_ID_LIST_MODELS_FOR_ORG_ID . $org_id);
-//    }
 
     /**
      * @param string $id
