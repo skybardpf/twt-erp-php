@@ -12,16 +12,9 @@
 <div class="pull-right" style="margin-top: 15px;">
 <?php
     Yii::app()->clientScript->registerCssFile($this->asset_static.'/js/ext4/resources/css/ext-all.css');
-    Yii::app()->clientScript->registerScriptFile($this->asset_static.'/js/ext4/ext-debug.js');
+    Yii::app()->clientScript->registerScriptFile($this->asset_static.'/js/ext4/ext-all.js');
     Yii::app()->clientScript->registerScriptFile($this->asset_static.'/js/legal/contractor/index.js');
 
-    $this->widget('bootstrap.widgets.TbButton', array(
-        'label' => 'Группы',
-        'type'  => 'success',
-        'size'  => 'normal',
-        'url'   => $this->createUrl("contractor_group/")
-    ));
-    echo '&nbsp;';
     $this->widget('bootstrap.widgets.TbButton', array(
         'label' => 'Новый контрагент',
         'type'  => 'success',

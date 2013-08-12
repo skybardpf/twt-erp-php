@@ -211,7 +211,7 @@ class Event extends SOAPModel {
             array('list_yur', 'validListYur'),
             array('list_countries', 'validListCountries'),
 
-//            array('typ_doc', 'in', 'range'  => array_keys(PowerAttorneysLE::getDocTypes())),
+//            array('typ_doc', 'in', 'range'  => array_keys(OrganizationPowerAttorney::getDocTypes())),
 
             array('name', 'required'),
 

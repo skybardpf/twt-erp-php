@@ -13,7 +13,7 @@
  * Доверенности
  * @method mixed listPowerAttorneyLE    Список
  * @method mixed getPowerAttorneyLE     Просмотр
- * @method mixed savePowerAttorneyLE    Сохранение
+ * @method mixed savePowerAttorney      Сохранение
  * @method mixed deletePowerAttorneyLE  Удаление
  *
  * Физ.Лица
@@ -79,8 +79,8 @@
  * Договоры организации {@see Contract}
  * @method mixed listContracts(array $data)
  * @method mixed getContract(array $data)
- * @method mixed deleteContract(array $data)
  * @method mixed saveContract(array $data)
+ * @method mixed deleteContract(array $data)
  *
  * Виды деятельности контрагентов (@see ContractorTypesActivities)
  * @method mixed listTypeActContr           Список
@@ -304,7 +304,7 @@ class SoapComponent extends CApplicationComponent
     public static function getStructureActions(SOAPModel $model)
     {
         $class = get_class($model);
-        if (!in_array($class, array('PowerAttorneysLE', 'FoundingDocument'))){
+        if (!in_array($class, array(' PowerAttorneyForOrganization', 'FoundingDocument'))){
             return false;
         }
 
@@ -328,7 +328,7 @@ class SoapComponent extends CApplicationComponent
     public static function getStructureScans(SOAPModel $model)
     {
         $class = get_class($model);
-        if (!in_array($class, array('PowerAttorneysLE', 'FoundingDocument'))){
+        if (!in_array($class, array(' PowerAttorneyForOrganization', 'FoundingDocument'))){
             return false;
         }
 
@@ -388,7 +388,7 @@ class SoapComponent extends CApplicationComponent
     public static function getStructureFiles(SOAPModel $model)
     {
         $class = get_class($model);
-        if (!in_array($class, array('PowerAttorneysLE', 'FoundingDocument'))){
+        if (!in_array($class, array(' PowerAttorneyForOrganization', 'FoundingDocument'))){
             return false;
         }
 
