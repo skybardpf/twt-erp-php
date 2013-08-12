@@ -23,9 +23,16 @@ class IndexAction extends CAction
         $groups = ContractorGroup::model()->getTreeContractors($data, $force_cache);
 
         $controller->render(
-            'index',
+            'index_menu_tabs',
             array(
-                'data' => $groups
+                'content' => $controller->renderPartial(
+                    'tab_index',
+                    array(
+                        'data' => $groups
+                    ),
+                    true
+                ),
+                'current_tab_menu' => 'contractor'
             )
         );
     }
