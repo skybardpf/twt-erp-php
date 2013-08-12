@@ -10,16 +10,16 @@
 ?>
 
 <?php
-    Yii::app()->clientScript->registerCssFile($this->asset_static.'/select2/select2.css');
-    Yii::app()->clientScript->registerScriptFile($this->asset_static.'/select2/select2.js');
+//    Yii::app()->clientScript->registerCssFile($this->asset_static.'/select2/select2.css');
+//    Yii::app()->clientScript->registerScriptFile($this->asset_static.'/select2/select2.js');
     Yii::app()->clientScript->registerScriptFile($this->asset_static.'/js/jquery.json-2.4.min.js');
 
-    Yii::app()->clientScript->registerCssFile($this->asset_static.'/js/dropdowntreeview/jquery.treeview.css');
-    Yii::app()->clientScript->registerCssFile($this->asset_static.'/js/dropdowntreeview/jquery.treeview.dropdown.css');
+//    Yii::app()->clientScript->registerCssFile($this->asset_static.'/js/dropdowntreeview/jquery.treeview.css');
+//    Yii::app()->clientScript->registerCssFile($this->asset_static.'/js/dropdowntreeview/jquery.treeview.dropdown.css');
 
-    Yii::app()->clientScript->registerScriptFile($this->asset_static.'/js/dropdowntreeview/jquery.treeview.js');
-    Yii::app()->clientScript->registerScriptFile($this->asset_static.'/js/dropdowntreeview/jquery.treeview.edit.js');
-    Yii::app()->clientScript->registerScriptFile($this->asset_static.'/js/dropdowntreeview/jquery.treeview.dropdown.js');
+//    Yii::app()->clientScript->registerScriptFile($this->asset_static.'/js/dropdowntreeview/jquery.treeview.js');
+//    Yii::app()->clientScript->registerScriptFile($this->asset_static.'/js/dropdowntreeview/jquery.treeview.edit.js');
+//    Yii::app()->clientScript->registerScriptFile($this->asset_static.'/js/dropdowntreeview/jquery.treeview.dropdown.js');
 
     Yii::app()->clientScript->registerScriptFile($this->asset_static.'/js/legal/organization/form.js');
     Yii::app()->clientScript->registerScriptFile($this->asset_static.'/js/legal/contractor/form.js');
@@ -144,7 +144,7 @@
     echo $form->textFieldRow($model, 'fax');
 
     $persons = Individuals::model()->getDataNames($model->getForceCached());
-    $docs = PowerAttorneyForOrganization::model()->listNames($model->primaryKey, $model->getForceCached());
+    $docs = PowerAttorneyForContractor::model()->listNames($model->primaryKey, $model->getForceCached());
 
     $data_signatories = array();
     foreach ($model->signatories as $v){
@@ -155,7 +155,7 @@
                 : '---'
             ),
             'doc' => (isset($docs[$v['doc_id']])
-                ? CHtml::link($docs[$v['doc_id']], $this->createUrl('power_attorney_le/view', array('id' => $v['doc_id'])))
+                ? CHtml::link($docs[$v['doc_id']], $this->createUrl('power_attorney_contractor/view', array('id' => $v['doc_id'])))
                 : '---'
             ),
             'delete' => $this->widget('bootstrap.widgets.TbButton', array(
@@ -180,7 +180,7 @@
                     'id' => 'grid-signatories',
                     'type' => 'striped bordered condensed',
                     'dataProvider' => new CArrayDataProvider($data_signatories),
-                    'template' => "{items}",
+                    'template' => "{items}{pager}",
                     'columns' => array(
                         array(
                             'name' => 'fio',

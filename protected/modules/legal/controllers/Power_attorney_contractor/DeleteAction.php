@@ -23,11 +23,13 @@ class DeleteAction extends CAction
 
         $model = PowerAttorneyForContractor::model()->loadModel($id, $force_cache);
         $model->setForceCached($force_cache);
+        $org = Contractor::loadModel($model->id_yur, $force_cache);
 
         if (Yii::app()->request->isAjaxRequest) {
             $ret = array();
             try {
                 $model->delete();
+                $org->clearCache();
             } catch (Exception $e) {
                 $ret['error'] = $e->getMessage();
             }
@@ -35,11 +37,11 @@ class DeleteAction extends CAction
             Yii::app()->end();
         }
 
-        $org = Contractor::loadModel($model->id_yur, $force_cache);
         if (isset($_POST['result'])) {
             switch ($_POST['result']) {
                 case 'yes':
                     if ($model->delete()) {
+                        $org->clearCache();
                         $controller->redirect($controller->createUrl('list', array('cid' => $org->primaryKey)));
                     } else {
                         throw new CHttpException(500, 'Не удалось удалить доверенность.');
