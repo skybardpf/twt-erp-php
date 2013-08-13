@@ -51,7 +51,6 @@ $(document).ready(function(){
 
                     var id = local.data('id');
                     var persons = $.parseJSON(json.val());
-                    console.log(persons);
                     var ind = arrayObjectIndexOf(persons, id);
 
                     if (ind != -1){
@@ -59,7 +58,6 @@ $(document).ready(function(){
                         json.val($.toJSON(persons));
                         local.parents('tr').remove();
                     }
-                    console.log(json.val());
 
                     var table = grid_signatories.find('table');
                     if (table.find('tr').size() == 1){

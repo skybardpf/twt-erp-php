@@ -38,36 +38,37 @@ class PowerAttorneyForContractor extends PowerAttorneyAbstract
         $data['from_user'] = true;
         $data['typ_doc'] = '';
 
-//        $upload_ids = array();
-//        if (!empty($this->upload_scans)) {
-//            foreach ($this->upload_scans as $f) {
-//                $uf = new UploadFile();
-//                $id = ($this->primaryKey) ? $this->primaryKey : 0;
-//                $id = $uf->upload($f, UploadFile::CLIENT_ID, __CLASS__, $id, UploadFile::TYPE_FILE_SCANS);
-//                if (!is_null($id)){
-//                    $upload_ids[] = $id;
-//                }
-//            }
-//        }
-//        if (!empty($this->upload_files)) {
-//            foreach ($this->upload_files as $f) {
-//                $uf = new UploadFile();
-//                $id = ($this->primaryKey) ? $this->primaryKey : 0;
-//                $id = $uf->upload($f, UploadFile::CLIENT_ID, __CLASS__, $id, UploadFile::TYPE_FILE_FILES);
-//                if (!is_null($id)){
-//                    $upload_ids[] = $id;
-//                }
-//            }
-//        }
+        $list_scans = array();
+        $list_files = array();
+
+        // TODO как быть с не созданым документом
+        $id = ($this->primaryKey) ? $this->primaryKey : 0;
+
+        $path = Yii::app()->user->getId(). DIRECTORY_SEPARATOR . __CLASS__ . DIRECTORY_SEPARATOR . $id;
+        $path_scans = $path . DIRECTORY_SEPARATOR . MDocumentCategory::SCAN;
+        $path_files = $path . DIRECTORY_SEPARATOR . MDocumentCategory::FILE;
+
+        foreach ($this->upload_scans as $f) {
+            if ($this->upload($path_scans, $f)){
+                $list_scans[] = $f->name;
+            }
+        }
+        foreach ($this->upload_files as $f) {
+            if ($this->upload($path_files, $f)){
+                $list_files[] = $f->name;
+            }
+        }
+        $list_files = array_merge($list_files, $this->list_files);
+        $list_scans = array_merge($list_scans, $this->list_scans);
+
+        $list_files = (empty($list_files)) ? array('Null') : $list_files;
+        $list_scans = (empty($list_scans)) ? array('Null') : $list_scans;
 
         unset($data['deleted']);
         unset($data['list_scans']);
         unset($data['list_files']);
         unset($data['upload_scans']);
         unset($data['upload_files']);
-
-        $list_files = array('Null');
-        $list_scans = array('Null');
 
         $ret = $this->SOAP->savePowerAttorney(array(
             'data' => SoapComponent::getStructureElement($data),

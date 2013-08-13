@@ -18,5 +18,13 @@
                     )
                 ),
             ),
+
+            'params' => array(
+                /**
+                 * Директория для загрузки документов.
+                 */
+                'uploadDocumentDir' => '../uploads',
+                'uploadTmpDir' => '/tmp',
+            ),
         )
     );

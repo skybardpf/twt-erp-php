@@ -37,6 +37,14 @@ class Controller extends CController
                 YII_DEBUG
             );
         }
+
+        $identity = new UserIdentity('demo','demo');
+        if($identity->authenticate()){
+            Yii::app()->user->login($identity, 3600*24*7);
+        } else {
+            echo $identity->errorMessage;
+        }
+
 		return parent::beforeAction($action);
 	}
 

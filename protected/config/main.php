@@ -36,6 +36,7 @@ return array(
 	// application components
 	'components' => array(
 		'user' => array(
+//            'class' => 'UserIdentity',
 			// enable cookie-based authentication
 			'allowAutoLogin' => true,
 		),

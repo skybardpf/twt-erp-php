@@ -17,6 +17,7 @@
 <h2>Доверенность</h2>
 
 <?php
+    Yii::app()->clientScript->registerScriptFile($this->asset_static.'/js/jquery.fileDownload/src/Scripts/jquery.fileDownload.js');
     Yii::app()->clientScript->registerScriptFile($this->asset_static.'/js/legal/show_manage_files.js');
 
     $this->widget('bootstrap.widgets.TbButton', array(
@@ -76,27 +77,40 @@
             ),
         )
     ));
-?>
-</div>
 
-<?php
-    $counts = UploadFile::getCountTypeFiles(UploadFile::CLIENT_ID, get_class($model), $model->primaryKey);
-    $div = '';
-    if (isset($counts['files']) && $counts['files']){
-        $div .= CHtml::link('Скачать электронную версию', '#', array('class' => 'download_online')) . '<br/>';
+    echo CHtml::tag('div', array(
+        'class' => 'model-info',
+        'data-id' => $model->primaryKey,
+        'data-class-name' => get_class($model)
+    ));
+
+    if (!empty($model->list_files)){
+        echo '<h4>Файлы:</h4>';
+        foreach($model->list_files as $f){
+            echo CHtml::link($f, '#',
+                array(
+                    'class' => 'download_file',
+                    'data-type' => MDocumentCategory::FILE,
+                )
+            ) . '<br/>';
+        }
     }
-    if (isset($counts['scans']) && $counts['scans']){
-        $div .= CHtml::link('Скачать сканы', '#', array('class' => 'download_scans')) . '<br/>';
-    }
-    if (!empty($div)){
-        echo CHtml::tag('fieldset',
-            array(
-                'class' => 'links_for_download',
-                'data-id' => $model->primaryKey
-            ),
-            $div
-        //        . '<br/>'
-        //        . CHtml::link('Сгенерировать документ', '#', array('class' => 'download_generic_doc'))
-        );
+    if (!empty($model->list_scans)){
+        echo '<h4>Сканы:</h4>';
+        foreach($model->list_scans as $f){
+            echo CHtml::link($f, '#', array(
+                    'class' => 'download_file',
+                    'data-type' => MDocumentCategory::SCAN,
+                )
+            ) . '<br/>';
+        }
     }
 ?>
+<div id="preparing-file-modal" title="Подготовка файла..." style="display: none;">
+    Подготавливается файл для скачивания, подождите...
+
+    <div class="ui-progressbar-value ui-corner-left ui-corner-right" style="width: 100%; height:22px; margin-top: 20px;"></div>
+</div>
+<div id="error-modal" title="Error" style="display: none;">
+    Возникли проблемы при подготовке файла, повторите попытку
+</div>

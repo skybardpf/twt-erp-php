@@ -7,7 +7,9 @@
  */
 class UserIdentity extends CUserIdentity
 {
-	/**
+	const CLIENT_ID = 1;
+
+    /**
 	 * Authenticates a user.
 	 * The example implementation makes sure if the username and password
 	 * are both 'demo'.
@@ -17,7 +19,7 @@ class UserIdentity extends CUserIdentity
 	 */
 	public function authenticate()
 	{
-		$users=array(
+		$users = array(
 			// username => password
 			'demo'=>'demo',
 			'admin'=>'admin',
@@ -30,4 +32,10 @@ class UserIdentity extends CUserIdentity
 			$this->errorCode=self::ERROR_NONE;
 		return !$this->errorCode;
 	}
+
+    public function getId()
+    {
+        // TODO после реализации авторизации будет возвращаться идентификатор юзера.
+        return $this->username;
+    }
 }
