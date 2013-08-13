@@ -1,9 +1,9 @@
 .idea/*
-protected/modules/admin/*
+#protected/modules/admin/*
 protected/runtime/*
 public/assets/*
 uploads/*
-assets/*
-index.php
+#assets/*
+#index.php
 public/ext4/*
 #protected/assets/js/*

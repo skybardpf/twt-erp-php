@@ -15,7 +15,7 @@
 </script>
 <?php
     Yii::app()->clientScript->registerScriptFile($this->asset_static.'/js/jquery.json-2.4.min.js');
-    Yii::app()->clientScript->registerScriptFile($this->asset_static.'/js/jquery.fileDownload/src/Scripts/jquery.fileDownload.js');
+    Yii::app()->clientScript->registerScriptFile($this->asset_static.'/js/jquery.fileDownload.js');
     Yii::app()->clientScript->registerScriptFile($this->asset_static.'/js/legal/show_manage_files.js');
 
 //    Yii::app()->clientScript->registerScriptFile($this->asset_static.'/js/legal/form_manage_files.js');
