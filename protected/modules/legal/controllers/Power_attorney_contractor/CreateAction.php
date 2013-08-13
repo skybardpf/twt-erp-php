@@ -32,6 +32,17 @@ class CreateAction extends CAction
         $class = get_class($model);
         if (isset($_POST[$class])) {
             $model->setAttributes($_POST[$class]);
+
+            if ($model->validate('json_exists_files')){
+                $model->list_files = CJSON::decode($model->json_exists_files);
+            }
+            if ($model->validate('json_exists_scans')){
+                $model->list_scans = CJSON::decode($model->json_exists_scans);
+            }
+
+            $model->upload_scans  = CUploadedFile::getInstancesByName('upload_scans');
+            $model->upload_files  = CUploadedFile::getInstancesByName('upload_files');
+
             if ($model->validate()) {
                 try {
                     $model->save();
@@ -42,6 +53,9 @@ class CreateAction extends CAction
                 }
             }
         }
+
+        $model->json_exists_files = CJSON::encode(array());
+        $model->json_exists_scans = CJSON::encode(array());
 
         $controller->render('/power_attorney_contractor/form',
             array(

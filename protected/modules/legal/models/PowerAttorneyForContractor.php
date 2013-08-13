@@ -42,7 +42,7 @@ class PowerAttorneyForContractor extends PowerAttorneyAbstract
         $list_files = array();
 
         // TODO как быть с не созданым документом
-        $id = ($this->primaryKey) ? $this->primaryKey : 0;
+        $id = ($this->primaryKey) ? $this->primaryKey : 'tmp_id';
 
         $path = Yii::app()->user->getId(). DIRECTORY_SEPARATOR . __CLASS__ . DIRECTORY_SEPARATOR . $id;
         $path_scans = $path . DIRECTORY_SEPARATOR . MDocumentCategory::SCAN;
@@ -78,19 +78,33 @@ class PowerAttorneyForContractor extends PowerAttorneyAbstract
         ));
         $ret = SoapComponent::parseReturn($ret, false);
 
-//        if (!$this->primaryKey) {
-//            if (!ctype_digit($ret)){
-//                foreach($upload_ids as $id){
-//                    $uf = new UploadFile();
-//                    $uf->delete_file($id);
-//                }
-//            } else {
-//                foreach($upload_ids as $id){
-//                    $uf = new UploadFile();
-//                    $uf->move($id, $ret);
-//                }
-//            }
-//        }
+        if (!$this->primaryKey) {
+            $upload_dir = Yii::app()->params->uploadDocumentDir;
+            if (!ctype_digit($ret)){
+                foreach($list_files as $f){
+                    unlink($upload_dir.DIRECTORY_SEPARATOR.$path_files. DIRECTORY_SEPARATOR . $f);
+                }
+                foreach($list_scans as $f){
+                    unlink($upload_dir.DIRECTORY_SEPARATOR.$path_scans. DIRECTORY_SEPARATOR . $f);
+                }
+            } else {
+                $path = $upload_dir.DIRECTORY_SEPARATOR.Yii::app()->user->getId().DIRECTORY_SEPARATOR . __CLASS__ . DIRECTORY_SEPARATOR . $ret;
+                $dest_scans = $path.DIRECTORY_SEPARATOR.MDocumentCategory::SCAN;
+                $dest_files = $path.DIRECTORY_SEPARATOR.MDocumentCategory::FILE;
+                if (!is_dir($path)){
+                    mkdir($path, 0777, true);
+                    mkdir($dest_scans, 0777);
+                    mkdir($dest_files, 0777);
+                }
+
+                foreach($list_files as $f){
+                    rename($upload_dir.DIRECTORY_SEPARATOR.$path_files.DIRECTORY_SEPARATOR.$f, $dest_files. DIRECTORY_SEPARATOR.$f);
+                }
+                foreach($list_scans as $f){
+                    rename($upload_dir.DIRECTORY_SEPARATOR.$path_scans.DIRECTORY_SEPARATOR.$f, $dest_scans.DIRECTORY_SEPARATOR.$f);
+                }
+            }
+        }
         $this->clearCache();
 
         return $ret;

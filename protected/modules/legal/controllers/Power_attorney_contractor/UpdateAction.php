@@ -35,7 +35,6 @@ class UpdateAction extends CAction
             $model->setAttributes($_POST[$class]);
 
             if ($model->validate('json_exists_files')){
-
                 $model->list_files = CJSON::decode($model->json_exists_files);
             }
             if ($model->validate('json_exists_scans')){
