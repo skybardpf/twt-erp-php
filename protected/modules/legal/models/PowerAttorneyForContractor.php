@@ -78,35 +78,33 @@ class PowerAttorneyForContractor extends PowerAttorneyAbstract
         ));
         $ret = SoapComponent::parseReturn($ret, false);
 
+        /**
+         * Если создается новая довереность:
+         * 1. Возникли ошибки - удаляем все документы из временной диретории.
+         * 2. Все нормально - переносим документы из временной папки в папку
+         * созданного документа ($this->primaryKey).
+         */
         if (!$this->primaryKey) {
-            $upload_dir = Yii::app()->params->uploadDocumentDir;
-            if (!ctype_digit($ret)){
-                foreach($list_files as $f){
-                    unlink($upload_dir.DIRECTORY_SEPARATOR.$path_files. DIRECTORY_SEPARATOR . $f);
-                }
-                foreach($list_scans as $f){
-                    unlink($upload_dir.DIRECTORY_SEPARATOR.$path_scans. DIRECTORY_SEPARATOR . $f);
-                }
-            } else {
-                $path = $upload_dir.DIRECTORY_SEPARATOR.Yii::app()->user->getId().DIRECTORY_SEPARATOR . __CLASS__ . DIRECTORY_SEPARATOR . $ret;
-                $dest_scans = $path.DIRECTORY_SEPARATOR.MDocumentCategory::SCAN;
-                $dest_files = $path.DIRECTORY_SEPARATOR.MDocumentCategory::FILE;
-                if (!is_dir($path)){
-                    mkdir($path, 0777, true);
-                    mkdir($dest_scans, 0777);
-                    mkdir($dest_files, 0777);
-                }
+            try {
+                if (!ctype_digit($ret)){
+                    $this->removeFiles($path_files, $list_files);
+                    $this->removeFiles($path_scans, $list_scans);
+                } else {
+                    $path = Yii::app()->user->getId()
+                        .DIRECTORY_SEPARATOR . __CLASS__
+                        .DIRECTORY_SEPARATOR . $ret;
+                    $dest_scans = $path.DIRECTORY_SEPARATOR.MDocumentCategory::SCAN;
+                    $dest_files = $path.DIRECTORY_SEPARATOR.MDocumentCategory::FILE;
 
-                foreach($list_files as $f){
-                    rename($upload_dir.DIRECTORY_SEPARATOR.$path_files.DIRECTORY_SEPARATOR.$f, $dest_files. DIRECTORY_SEPARATOR.$f);
+                    $this->moveFiles($path_files, $dest_files, $list_files);
+                    $this->moveFiles($path_scans, $dest_scans, $list_scans);
                 }
-                foreach($list_scans as $f){
-                    rename($upload_dir.DIRECTORY_SEPARATOR.$path_scans.DIRECTORY_SEPARATOR.$f, $dest_scans.DIRECTORY_SEPARATOR.$f);
-                }
+            } catch (UploadDocumentException $e){
+                Yii::log($e->getMessage(), cLogger::LEVEL_ERROR);
+                $this->addError('id', $e->getMessage());
             }
         }
         $this->clearCache();
-
         return $ret;
     }
 }

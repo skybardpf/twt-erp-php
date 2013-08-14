@@ -31,13 +31,13 @@ class UploadDocument extends CModelBehavior
     }
 
     /**
-     *  Загрузить указанный документ.
+     * Загрузить указанный документ.
      *
-     *  @param string $path
-     *  @param CUploadedFile $file
-     *  @return bool
+     * @param string $path
+     * @param CUploadedFile $file
+     * @return bool
      *
-     *  @throws UploadDocumentException
+     * @throws UploadDocumentException
      */
     public function upload($path, CUploadedFile $file)
     {
@@ -60,6 +60,57 @@ class UploadDocument extends CModelBehavior
             return false;
         }
         return true;
+    }
+
+    /**
+     * Удаляет указанные в $files документы по пути $path.
+     *
+     * @param string $path
+     * @param array $files
+     * @throws UploadDocumentException
+     */
+    public function removeFiles($path, $files)
+    {
+        $dir = $this->uploadDir . DIRECTORY_SEPARATOR . $path;
+        if (!is_dir($dir) || (!is_writable($dir))){
+            throw new UploadDocumentException('Директория не существует.');
+        }
+        foreach($files as $file){
+            if (file_exists($dir . DIRECTORY_SEPARATOR . $file)){
+                unlink($dir . DIRECTORY_SEPARATOR . $file);
+            }
+        }
+    }
+
+    /**
+     * Перемещаем указанные в $files документы, находящиеся по пути $path в
+     * папку приемник $destination.
+     *
+     * @param string $source
+     * @param string $destination
+     * @param array $files
+     * @throws UploadDocumentException
+     */
+    public function moveFiles($source, $destination, $files)
+    {
+        $source = $this->uploadDir . DIRECTORY_SEPARATOR . $source;
+        if (!is_dir($source) || (!is_readable($source))){
+            throw new UploadDocumentException('Директория-источник не существует или не доступна для чтения.');
+        }
+        $destination = $this->uploadDir . DIRECTORY_SEPARATOR . $destination;
+        if (is_dir($destination)){
+            if (!is_writable($destination)){
+                throw new UploadDocumentException('Директория-приемник не доступна для записи.');
+            }
+        } elseif (!mkdir($destination, 0777, true)) {
+            throw new UploadDocumentException('Не удалось создать директория-приемник.');
+        }
+
+        foreach($files as $file){
+            if (file_exists($source . DIRECTORY_SEPARATOR . $file)){
+                rename($source.DIRECTORY_SEPARATOR.$file, $destination. DIRECTORY_SEPARATOR.$file);
+            }
+        }
     }
 }
 

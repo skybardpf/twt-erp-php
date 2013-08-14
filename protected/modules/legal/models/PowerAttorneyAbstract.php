@@ -23,7 +23,10 @@
  * @property array  $list_scans     массив строк-ссылок на сканы доверенности
  * @property array  $list_files     массив строк-ссылок на файлы доверенности
  *
+ * @property UploadDocument $uploadDocument
  * @method  bool upload(string $path, CUploadedFile $file)
+ * @method  void removeFiles(string $path, array $files)
+ * @method  void moveFiles(string $source, string $destination, array $files)
  */
 abstract class PowerAttorneyAbstract extends SOAPModel
 {
