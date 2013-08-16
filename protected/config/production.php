@@ -23,8 +23,8 @@
                 /**
                  * Директория для загрузки документов.
                  */
-                'uploadDocumentDir' => '../uploads',
-                'uploadTmpDir' => '/tmp',
+                'uploadDocumentDir' => dirname(__FILE__).'/../filestorage',
+//                'uploadTmpDir' => '/tmp',
             ),
         )
     );
