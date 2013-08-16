@@ -10,17 +10,7 @@
 ?>
 
 <?php
-//    Yii::app()->clientScript->registerCssFile($this->asset_static.'/select2/select2.css');
-//    Yii::app()->clientScript->registerScriptFile($this->asset_static.'/select2/select2.js');
     Yii::app()->clientScript->registerScriptFile($this->asset_static.'/js/jquery.json-2.4.min.js');
-
-//    Yii::app()->clientScript->registerCssFile($this->asset_static.'/js/dropdowntreeview/jquery.treeview.css');
-//    Yii::app()->clientScript->registerCssFile($this->asset_static.'/js/dropdowntreeview/jquery.treeview.dropdown.css');
-
-//    Yii::app()->clientScript->registerScriptFile($this->asset_static.'/js/dropdowntreeview/jquery.treeview.js');
-//    Yii::app()->clientScript->registerScriptFile($this->asset_static.'/js/dropdowntreeview/jquery.treeview.edit.js');
-//    Yii::app()->clientScript->registerScriptFile($this->asset_static.'/js/dropdowntreeview/jquery.treeview.dropdown.js');
-
     Yii::app()->clientScript->registerScriptFile($this->asset_static.'/js/legal/organization/form.js');
     Yii::app()->clientScript->registerScriptFile($this->asset_static.'/js/legal/contractor/form.js');
 

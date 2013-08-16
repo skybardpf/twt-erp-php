@@ -14,7 +14,11 @@
     window.controller_name = '<?= $this->getId(); ?>';
 </script>
 <?php
-    Yii::app()->clientScript->registerScriptFile($this->asset_static.'/js/legal/form_manage_files.js');
+    Yii::app()->clientScript->registerScriptFile($this->asset_static.'/js/jquery.json-2.4.min.js');
+    Yii::app()->clientScript->registerScriptFile($this->asset_static.'/js/jquery.fileDownload.js');
+    Yii::app()->clientScript->registerScriptFile($this->asset_static.'/js/legal/show_manage_files.js');
+
+//    Yii::app()->clientScript->registerScriptFile($this->asset_static.'/js/legal/form_manage_files.js');
 
     echo '<h2>'.($model->primaryKey ? 'Редактирование ' : 'Создание ').'доверенности</h2>';
 
@@ -122,38 +126,61 @@
 
 <?php
     echo $form->textAreaRow($model, 'comment', array('class' => 'span6'));
-?>
-
-<?php
-    $div_scans  = '';
-    $div_files  = '';
-    if ($model->primaryKey){
-        $files = UploadFile::getListFiles(UploadFile::CLIENT_ID, get_class($model), $model->primaryKey);
-        foreach ($files as $f){
-            if ($f['type'] == UploadFile::TYPE_FILE_SCANS){
-                $div_scans .= CHtml::tag('div',
-                    array(
-                        'class' => 'block'
-                    ),
-                    CHtml::link($f['filename'], '#', array('class' => 'download_scan', 'data-file_id' => $f['id'])) .
-                    '&nbsp;&nbsp;&nbsp;' .
-                    CHtml::link('', '#', array('class' => 'icon-remove', 'data-file_id' => $f['id']))
-                );
-            } elseif ($f['type'] == UploadFile::TYPE_FILE_FILES){
-                $div_files .= CHtml::tag('div',
-                    array(
-                        'class' => 'block'
-                    ),
-                    CHtml::link($f['filename'], '#', array('class' => 'download_file', 'data-file_id' => $f['id'])) .
-                    '&nbsp;&nbsp;&nbsp;' .
-                    CHtml::link('', '#', array('class' => 'icon-remove', 'data-file_id' => $f['id']))
-                );
-            }
-        }
-    }
 
     $data_files = array();
     $data_scans = array();
+    if ($model->primaryKey){
+        $path = Yii::app()->user->getId(). DIRECTORY_SEPARATOR . __CLASS__ . DIRECTORY_SEPARATOR . $model->primaryKey;
+        $path_scans = $path . DIRECTORY_SEPARATOR . MDocumentCategory::SCAN;
+        $path_files = $path . DIRECTORY_SEPARATOR . MDocumentCategory::FILE;
+
+        foreach ($model->list_files as $f){
+            $data_files[] = array(
+                'id' => $f.'_id',
+                'filename' => CHtml::link($f, '#', array(
+                    'class' => 'download_file',
+                    'data-type' => MDocumentCategory::FILE
+                )),
+                'delete' => $this->widget('bootstrap.widgets.TbButton', array(
+                    'buttonType' => 'button',
+                    'type' => 'primary',
+                    'label' => 'Удалить',
+                    'htmlOptions' => array(
+                        'class' => 'delete_file',
+                        'data-type' => MDocumentCategory::FILE,
+                        'data-filename' => $f
+                    )
+                ), true)
+            );
+        }
+        foreach ($model->list_scans as $f){
+            $data_scans[] = array(
+                'id' => $f.'_id',
+                'filename' => CHtml::link($f, '#', array(
+                    'class' => 'download_file',
+                    'data-type' => MDocumentCategory::SCAN
+                )),
+                'delete' => $this->widget('bootstrap.widgets.TbButton', array(
+                    'buttonType' => 'button',
+                    'type' => 'primary',
+                    'label' => 'Удалить',
+                    'htmlOptions' => array(
+                        'class' => 'delete_file',
+                        'data-type' => MDocumentCategory::SCAN,
+                        'data-filename' => $f
+                    )
+                ), true)
+            );
+        }
+    }
+    echo CHtml::tag('div', array(
+        'class' => 'model-info',
+        'data-id' => $model->primaryKey,
+        'data-class-name' => get_class($model)
+    ));
+
+    echo $form->hiddenField($model, 'json_exists_files');
+    echo $form->hiddenField($model, 'json_exists_scans');
 ?>
     <div class="control-group">
         <?= $form->labelEx($model, 'list_files', array('class' => 'control-label')); ?>
@@ -165,12 +192,9 @@
                     'type' => 'striped bordered condensed',
                     'dataProvider' => new CArrayDataProvider($data_files),
                     'template' => "{items}",
-    //                    'htmlOptions' => array(
-    //                        'data-id' => ($model->primaryKey) ? $model->primaryKey : ''
-    //                    ),
                     'columns' => array(
                         array(
-                            'name' => 'fio',
+                            'name' => 'filename',
                             'header' => 'Название',
                             'type' => 'raw',
                             'htmlOptions' => array(
@@ -214,7 +238,7 @@
 //                    ),
                     'columns' => array(
                         array(
-                            'name' => 'fio',
+                            'name' => 'filename',
                             'header' => 'Название',
                             'type' => 'raw',
                             'htmlOptions' => array(
@@ -246,3 +270,12 @@
 </fieldset>
 
 <?php $this->endWidget(); ?>
+
+<div id="preparing-file-modal" title="Подготовка файла..." style="display: none;">
+    Подготавливается файл для скачивания, подождите...
+
+    <div class="ui-progressbar-value ui-corner-left ui-corner-right" style="width: 100%; height:22px; margin-top: 20px;"></div>
+</div>
+<div id="error-modal" title="Error" style="display: none;">
+    Возникли проблемы при подготовке файла, повторите попытку
+</div>

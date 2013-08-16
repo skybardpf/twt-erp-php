@@ -16,12 +16,17 @@
  * @property string $expire         дата окончания действия доверенности (дата)
  * @property string $break          дата досрочного окончания действия доверенности (дата)
  * @property string $comment        комментрий
-
+ *
  * @property bool   $deleted        флаг, удален ли данный документ
  * @property string $from_user      признак того, что доверенность загружена пользователем
-
+ *
  * @property array  $list_scans     массив строк-ссылок на сканы доверенности
  * @property array  $list_files     массив строк-ссылок на файлы доверенности
+ *
+ * @property UploadDocument $uploadDocument
+ * @method  bool upload(string $path, CUploadedFile $file)
+ * @method  void removeFiles(string $path, array $files)
+ * @method  void moveFiles(string $source, string $destination, array $files)
  */
 abstract class PowerAttorneyAbstract extends SOAPModel
 {
@@ -30,7 +35,11 @@ abstract class PowerAttorneyAbstract extends SOAPModel
     const PREFIX_CACHE_ID_LIST_NAMES_FOR_ORG_ID = '_list_names_for_org_id_';
 
     public $upload_scans = array();
-    public $upload_files = array();
+    public $upload_files = array(); //
+
+    public $json_exists_scans;
+    public $json_exists_files;
+
     public $owner_name = '';
 
     /**
@@ -38,6 +47,54 @@ abstract class PowerAttorneyAbstract extends SOAPModel
      * @return string @see MTypeOrganization
      */
     abstract public function getTypeOrganization();
+
+    /**
+     *
+     */
+    protected function afterConstruct()
+    {
+        $this->attachBehaviors($this->behaviors());
+        parent::afterConstruct();
+    }
+
+    /**
+     * Подключаем поведение для загрузки файлов.
+     * @return array
+     */
+    public function behaviors()
+    {
+        return array(
+            'uploadDocument' => array(
+                'class' => 'application.components.Behavior.UploadDocument',
+                'uploadDir' => Yii::app()->params->uploadDocumentDir,
+            ),
+        );
+    }
+
+    /**
+     * @return bool
+     */
+    protected function beforeSave(){
+//        if ($file = CUploadedFile::getInstance($this, 'file')){
+//            $this->deleteFile();
+//            $file->saveAs($this->filePath . '/' . $file->name);
+//            $this->file = $file->name;
+//        }
+        return true;
+    }
+
+    /**
+     * @return bool
+     */
+    protected function beforeDelete()
+    {
+        return true;
+    }
+
+//    public function deleteFile(){
+//        unlink($this->filePpath . '/' . $this->file);
+//        $this->file = '';
+//    }
 
 	/**
 	 * Список доверенностей
@@ -71,6 +128,8 @@ abstract class PowerAttorneyAbstract extends SOAPModel
 	 */
 	public function delete()
     {
+        $this->beforeDelete();
+
 		if ($this->primaryKey) {
 			$ret = $this->SOAP->deletePowerAttorneyLE(array('id' => $this->primaryKey));
             $ret = SoapComponent::parseReturn($ret, false);
@@ -224,8 +283,51 @@ abstract class PowerAttorneyAbstract extends SOAPModel
             array('date, expire', 'required'),
             array('date, expire, break', 'date', 'format' => 'yyyy-MM-dd'),
 
-//            array('list_scans', 'existsScans'),
-//            array('list_files', 'existsFiles'),
+            array('list_scans', 'existsScans'),
+            array('list_files', 'existsFiles'),
+
+            array('json_exists_files', 'validJson'),
+            array('json_exists_scans', 'validJson'),
         );
+    }
+
+    /**
+     *  Валидатор. Проверяет, что имена файлов-сканов, которые хотят загрузить
+     *  не совпадают с именами файлов, которые были загружены прежде.
+     */
+    public function existsScans(){
+        if ($this->primaryKey) {
+            $err = array();
+            foreach ($this->upload_scans as $f) {
+                if (in_array($f->name, $this->list_scans)){
+                    $err[] = $f->name;
+                }
+            }
+            if (!empty($err)){
+                foreach($err as $e){
+                    $this->addError('list_files', 'Скан с таким именем уже существует: '.$e);
+                }
+            }
+        }
+    }
+
+    /**
+     *  Валидатор. Проверяет, что имена файлов, которые хотят загрузить
+     *  не совпадают с именами файлов, которые были загружены прежде.
+     */
+    public function existsFiles(){
+        if ($this->primaryKey) {
+            $err = array();
+            foreach ($this->upload_files as $f) {
+                if (in_array($f->name, $this->list_files)){
+                    $err[] = $f->name;
+                }
+            }
+            if (!empty($err)){
+                foreach($err as $e){
+                    $this->addError('list_files', 'Файл с таким именем уже существует: '.$e);
+                }
+            }
+        }
     }
 }

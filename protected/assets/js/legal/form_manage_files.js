@@ -6,23 +6,23 @@ $(document).ready(function(){
         throw new Error("Не определен контроллер.");
     }
 
-    $('#list_uploaded_scans .block .download_scan').each(function(){
-        $(this).on('click', {file_id: $(this).data('file_id')}, download_file);
-    });
-    $('#list_uploaded_files .block .download_file').each(function(){
-        $(this).on('click', {file_id: $(this).data('file_id')}, download_file);
-    });
-    $('#list_uploaded_scans .block .icon-remove').each(function(){
-        $(this).on('click', {file_id: $(this).data('file_id')}, delete_file);
-    });
-    $('#list_uploaded_files .block .icon-remove').each(function(){
-        $(this).on('click', {file_id: $(this).data('file_id')}, delete_file);
-    });
+//    $('#list_uploaded_scans .block .download_scan').each(function(){
+//        $(this).on('click', {file_id: $(this).data('file_id')}, download_file);
+//    });
+//    $('#list_uploaded_files .block .download_file').each(function(){
+//        $(this).on('click', {file_id: $(this).data('file_id')}, download_file);
+//    });
+//    $('#list_uploaded_scans .block .icon-remove').each(function(){
+//        $(this).on('click', {file_id: $(this).data('file_id')}, delete_file);
+//    });
+//    $('#list_uploaded_files .block .icon-remove').each(function(){
+//        $(this).on('click', {file_id: $(this).data('file_id')}, delete_file);
+//    });
 
-    function download_file(p){
-        window.open('/legal/'+controller_name+'/download_file/id/'+p.data.file_id);
-        return false;
-    }
+//    function download_file(p){
+//        window.open('/legal/'+controller_name+'/download_file/id/'+p.data.file_id);
+//        return false;
+//    }
 
     function delete_file(p){
         $('<div>Вы действительно хотите удалить файл?</div>').dialog({
