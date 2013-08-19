@@ -103,7 +103,7 @@ if ($model->hasErrors()) {
         </div>
     </div>
 <?php
-    $form->textAreaRow($model, 'comment', array('class' => 'span6'));
+    echo $form->textAreaRow($model, 'comment', array('class' => 'span6'));
 
     $data_files = array();
     $data_scans = array();
