@@ -51,6 +51,26 @@ class Organization extends AbstractOrganization
         return $model;
     }
 
+    /**
+     * @static
+     * @param string $id    Идентификатор организации.
+     * @param bool $force_cache
+     * @return Organization
+     * @throws CHttpException
+     */
+    public static function loadModel($id, $force_cache = false)
+    {
+        $cache_id = __CLASS__ . '_' . $id;
+        if ($force_cache || ($model = Yii::app()->cache->get($cache_id)) === false){
+            $model = self::model()->findByPk($id);
+            if ($model === null) {
+                throw new CHttpException(404, 'Не найдена организация.');
+            }
+            Yii::app()->cache->set($cache_id, $model);
+        }
+        return $model;
+    }
+
 	/**
 	 * Удаляем организацию.
 	 * @return bool

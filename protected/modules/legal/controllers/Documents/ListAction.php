@@ -18,21 +18,23 @@ class ListAction extends CAction
         $controller = $this->controller;
         $controller->pageTitle .= ' | Список документов';
 
-        $org = $controller->loadOrganization($org_id);
+        $force_cache = (isset($_GET['force_cache']) && $_GET['force_cache'] == 1) ? true : false;
 
-        // Учредительные документы
-        $founding_docs = FoundingDocument::model()->getData($org);
+        $org = Organization::loadModel($org_id, $force_cache);
+
+        $founding_docs = FoundingDocument::model()->listModels($org, $force_cache);
+
         // Доверенности
-        $power_attorneys_docs =  PowerAttorneyForOrganization::model()->listModels($org->primaryKey);
+//        $power_attorneys_docs =  PowerAttorneyForOrganization::model()->listModels($org->primaryKey);
         // Свободные документы.
-        $free_docs = FreeDocument::model()->getData($org);
+//        $free_docs = FreeDocument::model()->getData($org);
 
         $controller->render('/organization/show', array(
             'content' => $controller->renderPartial('/documents/list',
                 array(
-                    'free_docs'         => $free_docs,
+//                    'free_docs'         => $free_docs,
                     'founding_docs'     => $founding_docs,
-                    'power_attorneys_docs' => $power_attorneys_docs,
+//                    'power_attorneys_docs' => $power_attorneys_docs,
                     'organization'      => $org
                 ), true),
             'organization' => $org,

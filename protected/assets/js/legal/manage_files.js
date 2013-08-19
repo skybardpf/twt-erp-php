@@ -1,12 +1,6 @@
-/**
- *  @global {String} controller_name
- */
 $(document).ready(function(){
-    if (window.controller_name === undefined || window.controller_name == ''){
-        throw new Error("Не определен котроллер.");
-    }
-
     var info = $('.model-info');
+    var model_name = info.data('class-name');
     $('.download_file').on('click', function(){
         var type = $(this).data('type');
         var url = '/legal/download/download/?';
@@ -37,10 +31,10 @@ $(document).ready(function(){
         var type = $(this).data('type');
         var json, grid;
         if (type == 'file'){
-            json = $('#PowerAttorneyForContractor_json_exists_files');
+            json = $('#'+model_name+'_json_exists_files');
             grid = $('#grid-files');
         } else if (type == 'scan') {
-            json = $('#PowerAttorneyForContractor_json_exists_scans');
+            json = $('#'+model_name+'_json_exists_scans');
             grid = $('#grid-scans');
         } else {
             return false;
@@ -78,7 +72,7 @@ $(document).ready(function(){
                                     alert(data.message);
                                 } else {
                                     var files = $.parseJSON(json.val());
-                                    var ind = files.indexOf(filename);
+                                    var ind = files.indexOf(''+filename);
                                     if (ind != -1){
                                         files.splice(ind, 1);
                                         json.val($.toJSON(files));

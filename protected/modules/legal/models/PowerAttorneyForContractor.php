@@ -47,8 +47,6 @@ class PowerAttorneyForContractor extends PowerAttorneyAbstract
         $path_scans = $path . DIRECTORY_SEPARATOR . MDocumentCategory::SCAN;
         $path_files = $path . DIRECTORY_SEPARATOR . MDocumentCategory::FILE;
 
-
-
         foreach ($this->upload_scans as $f) {
             if ($this->upload($path_scans, $f)){
                 $list_scans[] = $f->name;

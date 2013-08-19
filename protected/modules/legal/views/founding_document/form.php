@@ -1,89 +1,90 @@
 <?php
 /**
- * Редактирование/Добавление доверенности для контрагента.
+ * Редактирование учредительного документа.
  *
  * @author Skibardin A.A. <skybardpf@artektiv.ru>
  *
- * @var Power_attorney_contractorController $this
- * @var PowerAttorneyForContractor          $model
- * @var Contractor                          $organization
+ * @var Founding_documentController $this
+ * @var FoundingDocument $model
+ * @var Organization $organization
  */
+
+Yii::app()->clientScript->registerScriptFile($this->asset_static.'/js/jquery.json-2.4.min.js');
+Yii::app()->clientScript->registerScriptFile($this->asset_static.'/js/jquery.fileDownload.js');
+Yii::app()->clientScript->registerScriptFile($this->asset_static.'/js/legal/manage_files.js');
+
+/** @var $form TbActiveForm */
+$form = $this->beginWidget('bootstrap.widgets.MTbActiveForm', array(
+    'id' => 'horizontalForm',
+    'type' => 'horizontal',
+    'enableAjaxValidation' => false,
+    'clientOptions' => array(
+        'validateOnChange' => true,
+    ),
+    'htmlOptions' => array(
+        'enctype' => 'multipart/form-data'
+    ),
+));
+
+// Опции для JUI селектора даты
+$jui_date_options = array(
+    'language' => 'ru',
+    'options' => array(
+        'showAnim' => 'fold',
+        'dateFormat' => 'yy-mm-dd',
+        'changeMonth' => true,
+        'changeYear' => true,
+        'showOn' => 'button',
+        'constrainInput' => 'true',
+    ),
+    'htmlOptions' => array(
+        'style' => 'height:20px;'
+    )
+);
 ?>
-
+    <h2><?= ($model->primaryKey ? 'Редактирование ' : 'Создание ') . 'учредительного документа' ?></h2>
 <?php
-    Yii::app()->clientScript->registerScriptFile($this->asset_static.'/js/jquery.json-2.4.min.js');
-    Yii::app()->clientScript->registerScriptFile($this->asset_static.'/js/jquery.fileDownload.js');
-    Yii::app()->clientScript->registerScriptFile($this->asset_static.'/js/legal/manage_files.js');
-
-    echo '<h2>'.($model->primaryKey ? 'Редактирование ' : 'Создание ').'доверенности</h2>';
-
-    /* @var $form MTbActiveForm */
-    $form = $this->beginWidget('bootstrap.widgets.MTbActiveForm', array(
-        'id' => 'form-power-attorney',
-        'type' => 'horizontal',
-        'enableAjaxValidation' => false,
-        'clientOptions' => array(
-            'validateOnChange' => true,
-        ),
-        'htmlOptions' => array(
-            'enctype' => 'multipart/form-data'
-        ),
-    ));
-    $this->widget('bootstrap.widgets.TbButton', array(
+$this->widget('bootstrap.widgets.TbButton', array(
         'buttonType' => 'submit',
         'type' => 'primary',
         'label' => 'Сохранить'
-    ));
-    echo '&nbsp;';
-    $this->widget('bootstrap.widgets.TbButton', array(
-        'buttonType' => 'link',
-        'label' => 'Отмена',
-        'url'  => $model->primaryKey
-            ? $this->createUrl('view', array('id' => $model->primaryKey))
-            : $this->createUrl('power_attorney_contractor/list', array('cid' => $organization->primaryKey))
-    ));
+    )
+);
+?>
+    &nbsp;
+<?php
+$this->widget('bootstrap.widgets.TbButton', array(
+    'buttonType' => 'link',
+    'label' => 'Отмена',
+    'url' => $model->primaryKey
+        ? $this->createUrl('view', array('id' => $model->primaryKey))
+        : $this->createUrl('documents/list', array('org_id' => $organization->primaryKey))
+));
 ?>
 
 <?php
-    if ($model->hasErrors()) {
-        echo '<br/><br/>'. $form->errorSummary($model);
-    }
+if ($model->hasErrors()) {
+    echo '<br/><br/>' . $form->errorSummary($model);
+}
 ?>
 
 <fieldset>
-<?php
-    $jui_date_options = array(
-        'language' => 'ru',
-        'options'=>array(
-            'showAnim' => 'fold',
-            'dateFormat' => 'yy-mm-dd',
-            'changeMonth' => true,
-            'changeYear' => true,
-            'showOn' => 'button',
-            'constrainInput' => 'true',
-        ),
-        'htmlOptions'=>array(
-            'style' => 'height:20px;'
-        )
-    );
+<?= $form->dropDownListRow($model, 'typ_doc', LEDocumentType::model()->listNames($model->getForceCached())); ?>
+<?= $form->textFieldRow($model, 'num', array('class' => 'span6')); ?>
+<?= $form->textFieldRow($model, 'name', array('class' => 'span6')); ?>
 
-    echo $form->dropDownListRow($model, 'id_lico', Individuals::model()->getDataNames($model->getForceCached()), array('class' => 'span6'));
-    echo $form->textFieldRow($model, 'nom', array('class' => 'span6'));
-    echo $form->textFieldRow($model, 'name', array('class' => 'span6'));
-?>
-<?php /** date */ ?>
+<?php /* date */ ?>
     <div class="control-group">
         <?= $form->labelEx($model, 'date', array('class' => 'control-label')); ?>
         <div class="controls">
-        <?php
-            $this->widget('zii.widgets.jui.CJuiDatePicker',array_merge(
+            <?php
+            $this->widget('zii.widgets.jui.CJuiDatePicker', array_merge(
                 array(
                     'model' => $model,
                     'attribute' => 'date'
                 ), $jui_date_options
             ));
-            echo $form->error($model, 'date');
-        ?>
+            ?>
         </div>
     </div>
 
@@ -91,36 +92,18 @@
     <div class="control-group">
         <?= $form->labelEx($model, 'expire', array('class' => 'control-label')); ?>
         <div class="controls">
-        <?php
-            $this->widget('zii.widgets.jui.CJuiDatePicker',array_merge(
+            <?php
+            $this->widget('zii.widgets.jui.CJuiDatePicker', array_merge(
                 array(
                     'model' => $model,
                     'attribute' => 'expire'
                 ), $jui_date_options
             ));
-            echo $form->error($model, 'expire');
-        ?>
+            ?>
         </div>
     </div>
-
-<?php /* break */?>
-    <div class="control-group">
-        <?= $form->labelEx($model, 'break', array('class' => 'control-label')); ?>
-        <div class="controls">
-        <?php
-            $this->widget('zii.widgets.jui.CJuiDatePicker',array_merge(
-                array(
-                    'model' => $model,
-                    'attribute' => 'break'
-                ), $jui_date_options
-            ));
-            echo $form->error($model, 'break');
-        ?>
-        </div>
-    </div>
-
 <?php
-    echo $form->textAreaRow($model, 'comment', array('class' => 'span6'));
+    $form->textAreaRow($model, 'comment', array('class' => 'span6'));
 
     $data_files = array();
     $data_scans = array();
@@ -180,7 +163,7 @@
     <div class="control-group">
         <?= $form->labelEx($model, 'list_files', array('class' => 'control-label')); ?>
         <div class="controls">
-        <?php
+            <?php
             $this->widget('bootstrap.widgets.TbGridView',
                 array(
                     'id' => 'grid-files',
@@ -214,7 +197,7 @@
                 ),
             ));
             echo $form->error($model, 'list_files');
-        ?>
+            ?>
         </div>
     </div>
 
@@ -262,15 +245,13 @@
         </div>
     </div>
 
-</fieldset>
-
 <?php $this->endWidget(); ?>
 
-<div id="preparing-file-modal" title="Подготовка файла..." style="display: none;">
-    Подготавливается файл для скачивания, подождите...
+    <div id="preparing-file-modal" title="Подготовка файла..." style="display: none;">
+        Подготавливается файл для скачивания, подождите...
 
-    <div class="ui-progressbar-value ui-corner-left ui-corner-right" style="width: 100%; height:22px; margin-top: 20px;"></div>
-</div>
-<div id="error-modal" title="Error" style="display: none;">
-    Возникли проблемы при подготовке файла, повторите попытку
-</div>
+        <div class="ui-progressbar-value ui-corner-left ui-corner-right" style="width: 100%; height:22px; margin-top: 20px;"></div>
+    </div>
+    <div id="error-modal" title="Error" style="display: none;">
+        Возникли проблемы при подготовке файла, повторите попытку
+    </div>

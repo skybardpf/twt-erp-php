@@ -27,11 +27,14 @@
             'dataProvider' => new CArrayDataProvider($docs),
             'template'     => "{items}{pager}",
             'columns'      => array(
-                array('name' => 'id', 'header' => 'Номер'),
+                array(
+                    'name' => 'num',
+                    'header' => 'Номер'
+                ),
                 array(
                     'header' => 'Название',
                     'type'   => 'raw',
-                    'value'  => 'CHtml::link($data["name"], Yii::app()->getController()->createUrl("founding_documents/view", array("id" => $data["id"])))'
+                    'value'  => 'CHtml::link($data["name"], Yii::app()->getController()->createUrl("founding_document/view", array("id" => $data["id"])))'
                 ),
                 array('name' => 'expire', 'header' => 'Срок действия'),
             ),
