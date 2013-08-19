@@ -24,7 +24,7 @@ class UploadDocument extends CModelBehavior
 
 
         if (!file_exists($this->uploadDir)){
-            if (!mkdir($this->uploadDir, 0777)){
+            if (!mkdir($this->uploadDir, 0777, true)){
                 throw new CHttpException(500, 'Не удалось создать директорию для загрузки документов.');
             }
         }

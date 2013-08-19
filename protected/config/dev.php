@@ -25,7 +25,6 @@
                  * Директория для загрузки документов.
                  */
                 'uploadDocumentDir' => dirname(__FILE__).DIRECTORY_SEPARATOR.'..'.DIRECTORY_SEPARATOR.'filestorage'.DIRECTORY_SEPARATOR.'uploads',
-                'uploadTmpDir' => '/tmp',
             ),
         )
     );
