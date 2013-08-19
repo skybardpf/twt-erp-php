@@ -1,33 +1,35 @@
 <?php
 /**
- * Редактирование данных об учредительном документе.
+ * Создание нового учредительного документа.
  *
  * @author Skibardin A.A. <skybardpf@artektiv.ru>
  */
-class UpdateAction extends CAction
+class CreateAction extends CAction
 {
     /**
-     * Редактирование данных об учредительном документе.
+     * Создание нового учредительного документа.
      * @param string $id
      * @throws CHttpException
      */
-    public function run($id)
+    public function run($org_id)
     {
         /**
          * @var Founding_documentController $controller
          */
         $controller = $this->controller;
-        $controller->pageTitle .= ' | Редактирование учредительного документа';
+        $controller->pageTitle .= ' | Создание учредительного документа';
 
         $force_cache = (isset($_GET['force_cache']) && $_GET['force_cache'] == 1) ? true : false;
 
-        $model = FoundingDocument::model()->loadModel($id, $force_cache);
-        if ($model->type_yur != 'Организации') {
-            throw new CHttpException(404, 'У документа неверный тип для данной страницы');
-        }
-        $model->user = SOAPModel::USER_NAME;
-        $model->setForceCached($force_cache);
-        $org = Organization::loadModel($model->id_yur, $force_cache);
+        $org = Organization::loadModel($org_id, $force_cache);
+
+        $model = new FoundingDocument();
+        $model->id_yur    = $org->primaryKey;
+        $model->type_yur  = "Организации";
+        $model->from_user = true;
+        $model->user      = SOAPModel::USER_NAME;
+        $model->list_files = array();
+        $model->list_scans = array();
 
         $class = get_class($model);
         if ($_POST && !empty($_POST[$class])) {
@@ -46,7 +48,7 @@ class UpdateAction extends CAction
             if ($model->validate()) {
                 try {
                     $model->save();
-                    $controller->redirect($controller->createUrl('view', array('id' => $id)));
+                    $controller->redirect($controller->createUrl('documents/list', array('org_id' => $org_id)));
                 } catch (Exception $e) {
                     $model->addError('id', $e->getMessage());
                 }

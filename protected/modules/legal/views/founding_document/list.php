@@ -17,7 +17,7 @@
                 'label' => 'Новый учредительный документ',
                 'type'  => 'success', // null, 'primary', 'info', 'success', 'warning', 'danger' or 'inverse'
                 'size'  => 'normal', // null, 'large', 'small' or 'mini'
-                'url'   => $this->createUrl("founding_documents/add", array('org_id' => $organization->primaryKey))
+                'url'   => $this->createUrl("founding_document/add", array('org_id' => $organization->primaryKey))
             )); ?>
         </div>
         <h3>Учредительные документы</h3>

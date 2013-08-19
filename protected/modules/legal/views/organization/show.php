@@ -20,6 +20,11 @@
                 'url'   => $this->createUrl('organization/view', array('id' => $organization->primaryKey)),
                 'active'=> ($cur_tab == 'info')
             ),
+            array(
+                'label' => 'Документы',
+                'url'   => $this->createUrl('documents/list', array('org_id' => $organization->primaryKey)),
+                'active'=> ($cur_tab == 'documents')
+            ),
         );
     } else {
         $tabs = array(

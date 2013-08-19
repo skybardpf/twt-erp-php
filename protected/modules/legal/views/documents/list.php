@@ -10,7 +10,7 @@
  */
 
 /* Учредительные документы */
-$this->renderPartial('/founding_documents/list', array(
+$this->renderPartial('/founding_document/list', array(
     'docs' => $founding_docs,
     'organization' => $organization
 ));

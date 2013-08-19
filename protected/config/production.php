@@ -18,12 +18,8 @@
                     )
                 ),
             ),
-//            'params' => array(
-//                /**
-//                 * Директория для загрузки документов.
-//                 */
-//                'uploadDocumentDir' => dirname(__FILE__).'/../filestorage',
-////                'uploadTmpDir' => '/tmp',
-//            ),
+            'params' => array(
+                'uploadDocumentDir' => dirname(__FILE__).DIRECTORY_SEPARATOR.'..'.DIRECTORY_SEPARATOR.'filestorage'.DIRECTORY_SEPARATOR.'twt-erp'.DIRECTORY_SEPARATOR.'uploads',
+            ),
         )
     );

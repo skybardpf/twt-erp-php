@@ -228,6 +228,8 @@ class FoundingDocument extends SOAPModel
         $class = get_class($this);
         if ($this->primaryKey){
             Yii::app()->cache->delete($class . self::PREFIX_CACHE_ID_FOR_MODEL_ID . $this->primaryKey);
+        }
+        if ($this->id_yur){
             Yii::app()->cache->delete($class . self::PREFIX_CACHE_ID_LIST_DATA . $this->id_yur);
         }
     }

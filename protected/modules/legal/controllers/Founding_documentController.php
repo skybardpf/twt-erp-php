@@ -16,53 +16,8 @@ class Founding_documentController extends Controller {
         return array(
             'view' => 'application.modules.legal.controllers.FoundingDocument.ViewAction',
             'edit' => 'application.modules.legal.controllers.FoundingDocument.UpdateAction',
+            'add' => 'application.modules.legal.controllers.FoundingDocument.CreateAction',
         );
-    }
-
-    /**
-     * Создание учредительного документа
-     *
-     * @param  string $org_id
-     *
-     * @throws CHttpException
-     */
-    public function actionAdd($org_id)
-    {
-        /** @var $org Organization */
-        $org = Organization::model()->findByPk($org_id);
-        if (!$org) {
-            throw new CHttpException(404, 'Не найдено юридическое лицо.');
-        }
-
-        $doc = new FoundingDocument();
-        $doc->id_yur    = $org->primaryKey;
-        $doc->type_yur  = "Организации";
-        $doc->from_user = true;
-        $doc->user      = SOAPModel::USER_NAME;
-
-        $error = '';
-        if ($_POST && !empty($_POST['FoundingDocument'])) {
-            $doc->setAttributes($_POST['FoundingDocument']);
-            if ($doc->validate()) {
-                try {
-                    $doc->save();
-                    $this->redirect($this->createUrl('documents/list', array('org_id' => $org->primaryKey)));
-                } catch (Exception $e) {
-                    $error = $e->getMessage();
-                }
-            }
-        }
-
-        $this->render('/organization/show', array(
-            'content' => $this->renderPartial('/founding_documents/form',
-                array(
-                    'model'         => $doc,
-                    'error'         => $error,
-                    'organization'  => $org
-                ), true),
-            'organization' => $org,
-            'cur_tab' => 'documents',
-        ));
     }
 
     /**
