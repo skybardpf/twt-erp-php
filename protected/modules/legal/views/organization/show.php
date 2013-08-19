@@ -13,7 +13,7 @@
 <h1><?= Chtml::encode($organization->name); ?></h1>
 <div class="yur-tabs">
 <?php
-    if (in_array($_SERVER['HTTP_HOST'], array('twt-erp.twtconsult.ru', 'twt-erp.artektiv.ru'))) {
+    if (in_array($_SERVER['HTTP_HOST'], array('twt-erp.twtconsult.ru', 'twt-erp.artektiv.ru', 'twt-erp.skybardpf.devel'))) {
         $tabs = array(
             array(
                 'label' => 'Информация',
