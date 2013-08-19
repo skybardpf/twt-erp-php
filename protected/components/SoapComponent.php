@@ -127,7 +127,8 @@ class SoapComponent extends CApplicationComponent
 	 * @param array $options
 	 * @return array
 	 */
-	static public function getStructureElement(array $properties = array(), $options = array()) {
+	static public function getStructureElement(array $properties = array(), $options = array())
+    {
 		if (isset($options['lang']) && $options['lang'] == 'eng'){
             $keyName = 'Field';
             $valName = 'Value';
@@ -159,8 +160,9 @@ class SoapComponent extends CApplicationComponent
 	 *
 	 * @return array
 	 */
-	static public function parseReturn($data, $json = true) {
-		if (is_string($data->return) && stripos($data->return, 'error') !== false) {
+	static public function parseReturn($data, $json = true)
+    {
+		if (is_string($data->return) && stripos($data->return, 'error') === 0) {
 			throw new CException($data->return);
 		} else {
 			if (is_string($data->return) && $json) {
@@ -174,7 +176,11 @@ class SoapComponent extends CApplicationComponent
 		return $data;
 	}
 
-	protected function delay_init() {
+    /**
+     * @throws CHttpException
+     */
+    protected function delay_init()
+    {
 		/** Setting wsdl cache */
 		if (ini_get('soap.wsdl_cache_enabled') != $this->cache_enabled) ini_set('soap.wsdl_cache_enabled', $this->cache_enabled);
 		if (ini_get('default_socket_timeout') != $this->socket_timeout) ini_set('default_socket_timeout', $this->socket_timeout);
@@ -194,14 +200,16 @@ class SoapComponent extends CApplicationComponent
 		}
     }
 
-	public function cache($duration, $dependency = NULL) {
+	public function cache($duration, $dependency = NULL)
+    {
 		$this->requestCachingDuration   = $duration;
 		$this->requestCachingDependency = $dependency;
 		$this->requestCache             = true;
 		return $this;
 	}
 
-	public function __call($name, $parameters) {
+	public function __call($name, $parameters)
+    {
 		if ($this->requestCache) {
 			$data = Yii::app()->cache->get('soap_'.md5($this->wsdl.'_'.$name.'_'.var_export($parameters, true)));
 			if ($data === false) {
@@ -276,7 +284,8 @@ class SoapComponent extends CApplicationComponent
 	 *
 	 * @return bool
 	 */
-	protected function soap_method_exists($name) {
+	protected function soap_method_exists($name)
+    {
         // init soap if needed
         if (!is_resource($this->soap_client->sdl)){
             $this->delay_init();
@@ -293,148 +302,4 @@ class SoapComponent extends CApplicationComponent
         }
 		return false;
 	}
-
-    /**
-     *  Возвращает формат структуры для дейстий в документах.
-     *
-     *  @static
-     *  @param  SOAPModel $model
-     *  @return array
-     */
-    public static function getStructureActions(SOAPModel $model)
-    {
-        $class = get_class($model);
-        if (!in_array($class, array(' PowerAttorneyForOrganization', 'FoundingDocument'))){
-            return false;
-        }
-
-        return array(
-            "Name" => "СписокДействий",
-            "Value" => array(
-                'column' => array(),
-                'index' => array(),
-                'row'   => array(),
-            )
-        );
-    }
-
-    /**
-     *  Возвращает формат структуры для сканов документов.
-     *
-     *  @static
-     *  @param  SOAPModel $model
-     *  @return array
-     */
-    public static function getStructureScans(SOAPModel $model)
-    {
-        $class = get_class($model);
-        if (!in_array($class, array(' PowerAttorneyForOrganization', 'FoundingDocument'))){
-            return false;
-        }
-
-        $cmd = Yii::app()->db->createCommand(
-            'SELECT id, load_date
-            FROM '.UploadFile::model()->tableName().'
-            WHERE client_id = :client_id AND model_name=:model_name AND model_id=:model_id AND type=:type'
-        );
-        $files = $cmd->queryAll(true, array(
-            ':client_id'    => UploadFile::CLIENT_ID,
-            ':model_name'   => $class,
-            ':model_id'     => $model->primaryKey,
-            ':type'         => UploadFile::TYPE_FILE_SCANS,
-        ));
-
-        if (empty($files)) {
-            $res = array(
-                "Name" => "Сканы",
-                "Value" => array(
-                    'column' => array(),
-                    'index' => array(),
-                    'row' => array(),
-                )
-            );
-        } else {
-            $rows = array();
-            foreach($files as $f){
-                $rows[] = array(
-                    'Value' => array(
-                        $f['id'],
-                        date('Y-m-d', $f['load_date'])
-                    )
-                );
-            }
-            $res = array(
-                "Name" => "Сканы",
-                "Value" => array(
-                    'column' => array(
-                        array("Name" => "Скан"),
-                        array("Name" => "ДатаЗагрузки")
-                    ),
-                    'index' => array(),
-                    'row'   => $rows,
-                )
-            );
-        }
-        return $res;
-    }
-
-    /**
-     *  Возвращает правильный формат структуры для файлов, которая отдается на сохранение.
-     *
-     *  @static
-     *  @param  SOAPModel $model
-     *  @return array
-     */
-    public static function getStructureFiles(SOAPModel $model)
-    {
-        $class = get_class($model);
-        if (!in_array($class, array(' PowerAttorneyForOrganization', 'FoundingDocument'))){
-            return false;
-        }
-
-        $cmd = Yii::app()->db->createCommand(
-            'SELECT id, load_date
-            FROM '.UploadFile::model()->tableName().'
-            WHERE client_id=:client_id AND model_name=:model_name AND model_id=:model_id AND type=:type'
-        );
-        $files = $cmd->queryAll(true, array(
-            ':client_id'    => UploadFile::CLIENT_ID,
-            ':model_name'   => $class,
-            ':model_id'     => $model->primaryKey,
-            ':type'         => UploadFile::TYPE_FILE_FILES,
-        ));
-
-        if (empty($files)) {
-            $res = array(
-                "Name" => "Файлы",
-                "Value" => array(
-                    'column' => array(),
-                    'index' => array(),
-                    'row' => array(),
-                )
-            );
-        } else {
-            $rows = array();
-            foreach($files as $f){
-                $rows[] = array(
-                    'Value' => array(
-                        $f['id'],
-                        date('Y-m-d', $f['load_date'])
-                    )
-                );
-            }
-            $res = array(
-                "Name" => "Файлы",
-                "Value" => array(
-                    'column' => array(
-                        array("Name" => "Файл"),
-                        array("Name" => "ДатаЗагрузки")
-                    ),
-                    'index' => array(),
-                    'row'   => $rows,
-                )
-            );
-        }
-        return $res;
-    }
 }
