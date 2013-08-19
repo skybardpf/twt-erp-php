@@ -290,44 +290,4 @@ abstract class PowerAttorneyAbstract extends SOAPModel
             array('json_exists_scans', 'validJson'),
         );
     }
-
-    /**
-     *  Валидатор. Проверяет, что имена файлов-сканов, которые хотят загрузить
-     *  не совпадают с именами файлов, которые были загружены прежде.
-     */
-    public function existsScans(){
-        if ($this->primaryKey) {
-            $err = array();
-            foreach ($this->upload_scans as $f) {
-                if (in_array($f->name, $this->list_scans)){
-                    $err[] = $f->name;
-                }
-            }
-            if (!empty($err)){
-                foreach($err as $e){
-                    $this->addError('list_files', 'Скан с таким именем уже существует: '.$e);
-                }
-            }
-        }
-    }
-
-    /**
-     *  Валидатор. Проверяет, что имена файлов, которые хотят загрузить
-     *  не совпадают с именами файлов, которые были загружены прежде.
-     */
-    public function existsFiles(){
-        if ($this->primaryKey) {
-            $err = array();
-            foreach ($this->upload_files as $f) {
-                if (in_array($f->name, $this->list_files)){
-                    $err[] = $f->name;
-                }
-            }
-            if (!empty($err)){
-                foreach($err as $e){
-                    $this->addError('list_files', 'Файл с таким именем уже существует: '.$e);
-                }
-            }
-        }
-    }
 }

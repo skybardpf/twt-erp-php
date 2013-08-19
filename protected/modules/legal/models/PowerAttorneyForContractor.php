@@ -41,7 +41,6 @@ class PowerAttorneyForContractor extends PowerAttorneyAbstract
         $list_scans = array();
         $list_files = array();
 
-        // TODO как быть с не созданым документом
         $id = ($this->primaryKey) ? $this->primaryKey : 'tmp_id';
 
         $path = Yii::app()->user->getId(). DIRECTORY_SEPARATOR . __CLASS__ . DIRECTORY_SEPARATOR . $id;

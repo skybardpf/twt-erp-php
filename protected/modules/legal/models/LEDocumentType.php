@@ -5,15 +5,14 @@
  * User: Forgon
  * Date: 25.02.13
  *
- * @property int $id
+ * @property int    $id
  * @property string $name_of_doc
- * @property array $list_of_countries
- *
+ * @property array  $list_of_countries
  * @property string $deleted
  */
-
-
 class LEDocumentType extends SOAPModel {
+    const PREFIX_CACHE_ID_LIST_NAMES = '_list_names';
+
 	static public $values = array();
 	public $new_countries = array();
 
@@ -21,10 +20,8 @@ class LEDocumentType extends SOAPModel {
 
 	/**
 	 * @static
-	 *
 	 * @param string $className
-	 *
-	 * @return Banks
+	 * @return LEDocumentType
 	 */
 	public static function model($className = __CLASS__) {
 		return parent::model($className);
@@ -32,7 +29,6 @@ class LEDocumentType extends SOAPModel {
 
 	/**
 	 * Типы документов
-	 *
 	 * @return LEDocumentType[]
 	 */
 	public function findAll() {
@@ -131,6 +127,7 @@ class LEDocumentType extends SOAPModel {
 	}
 
 	/**
+     * @deprecated
 	 * Список доступных значений Типов документов
 	 * @return array
 	 */
@@ -154,7 +151,28 @@ class LEDocumentType extends SOAPModel {
 		return self::$values;
 	}
 
-	public function validateCountriesList($attribute, $params) {
+    /**
+     * Список доступных значений Типов документов
+     * @param bool $force_cache
+     * @return array
+     */
+    public function listNames($force_cache = false)
+    {
+        $cache_id = __CLASS__ . self::PREFIX_CACHE_ID_LIST_NAMES;
+        if ($force_cache || ($data = Yii::app()->cache->get($cache_id)) === false){
+            $elements = $this->where('deleted', false)->findAll();
+            $data = array();
+            if ($elements) {
+                foreach ($elements as $elem) {
+                    $data[$elem->primaryKey] = $elem->name_of_doc;
+                }
+            }
+            Yii::app()->cache->set($cache_id, $data);
+        }
+        return $data;
+    }
+
+	/*public function validateCountriesList($attribute, $params) {
 		if ($attribute != 'new_countries') throw new Exception('Данный метод только для валидации новых стран');
 		$countries = array();
 
@@ -187,5 +205,5 @@ class LEDocumentType extends SOAPModel {
 			$this->addError($attribute, 'Укажите хоть 1 страну юрисдикции.');
 		}
 		$this->list_of_countries = array_values($countries);
-	}
+	}*/
 }

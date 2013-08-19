@@ -25,7 +25,7 @@
  * Учредительные документы
  * @method mixed listFoundingDocuments  Список
  * @method mixed getFoundingDocument    Просмотр
- * @method mixed saveFoundingDocument   Сохранение
+ * @method mixed saveFoundingDocuments   Сохранение
  * @method mixed deleteFoundingDocument Удаление
  *
  * Свободные документы

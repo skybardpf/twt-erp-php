@@ -13,39 +13,97 @@
  * @property string $date       Дата
  * @property string $expire     Дата окончания
  * @property string $typ_doc    Тип документа (LEDocumentType)
+ * @property string $deleted
  *
  * @property string $from_user  Создан пользователем
  * @property string $user       Пользователь
  *
- * @property string $deleted
+ * @property array  $list_files
+ * @property array  $list_scans
+ *
+ * @property UploadDocument $uploadDocument
+ * @method  bool upload(string $path, CUploadedFile $file)
+ * @method  void removeFiles(string $path, array $files)
+ * @method  void moveFiles(string $source, string $destination, array $files)
  */
 class FoundingDocument extends SOAPModel
 {
     const PREFIX_CACHE_ID_LIST_DATA = '_list_org_id_';
+    const PREFIX_CACHE_ID_FOR_MODEL_ID = '_model_id_';
+
+    public $upload_scans = array();
+    public $upload_files = array();
+
+    public $json_exists_scans;
+    public $json_exists_files;
 
 	public $from_user = true;
+
+    /**
+     *
+     */
+    protected function afterConstruct()
+    {
+        $this->attachBehaviors($this->behaviors());
+        parent::afterConstruct();
+    }
+
+    /**
+     * Подключаем поведение для загрузки файлов.
+     * @return array
+     */
+    public function behaviors()
+    {
+        return array(
+            'uploadDocument' => array(
+                'class' => 'application.components.Behavior.UploadDocument',
+                'uploadDir' => Yii::app()->params->uploadDocumentDir,
+            ),
+        );
+    }
 
 	/**
 	 * @static
 	 * @param string $className
 	 * @return FoundingDocument
 	 */
-	public static function model($className = __CLASS__) {
+	public static function model($className = __CLASS__)
+    {
 		return parent::model($className);
 	}
 
+    /**
+     * @static
+     * @param string $id
+     * @param bool $force_cache
+     * @return FoundingDocument
+     * @throws CHttpException
+     */
+    public static function loadModel($id, $force_cache = false)
+    {
+        $class = self::model();
+        $cache_id = get_class($class) . self::PREFIX_CACHE_ID_FOR_MODEL_ID . $id;
+        if ($force_cache || ($model = Yii::app()->cache->get($cache_id)) === false){
+            $model = $class->findByPk($id);
+            if ($model === null) {
+                throw new CHttpException(404, 'Не найден учредительный документ.');
+            }
+            Yii::app()->cache->set($cache_id, $model);
+        }
+        return $model;
+    }
+
 	/**
 	 * Список учредительных документов
-	 *
 	 * @return FoundingDocument[]
 	 */
-	public function findAll() {
+	public function findAll()
+    {
 		$filters = SoapComponent::getStructureElement($this->where);
 		if (!$filters) $filters = array(array());
 		$request = array('filters' => $filters, 'sort' => array($this->order));
 
 		$ret = $this->SOAP->listFoundingDocuments($request);
-
 		$ret = SoapComponent::parseReturn($ret);
 		return $this->publish_list($ret, __CLASS__);
 	}
@@ -53,35 +111,29 @@ class FoundingDocument extends SOAPModel
 	/**
 	 * Учредительный документ
 	 * @param $id
-	 *
 	 * @return FoundingDocument
 	 */
-	public function findByPk($id) {
-		$cacher = new CFileCache();
-		$data = $cacher->get(__CLASS__.'_objects_'.$id);
-		if (!$data) {
-			$data = $this->SOAP->getFoundingDocument(array('id' => $id));
-			$data = SoapComponent::parseReturn($data);
-			$data = current($data);
-			$cacher->set(__CLASS__.'_objects_'.$id, $data, self::CACHE_TTL);
-		} else {
-			if (YII_DEBUG) Yii::log('model '.__CLASS__.' id:'.$id.' from cache', CLogger::LEVEL_INFO, 'soap');
-		}
-
+	public function findByPk($id)
+    {
+        $data = $this->SOAP->getFoundingDocument(array('id' => $id));
+        $data = SoapComponent::parseReturn($data);
+        $data = current($data);
 		return $this->publish_elem($data, __CLASS__);
 	}
 
 	/**
 	 * Удаление учредительного документа
-	 *
 	 * @return bool
 	 */
-	public function delete() {
+	public function delete()
+    {
 		if ($pk = $this->primaryKey) {
-			$cacher = new CFileCache();
-			$cacher->set(__CLASS__.'_objects_'.$pk, false, 1);
 			$ret = $this->SOAP->deleteFoundingDocument(array('id' => $pk));
-			return $ret->return;
+            $ret = SoapComponent::parseReturn($ret, false);
+            if ($ret){
+                $this->clearCache();
+            }
+            return $ret;
 		}
 		return false;
 	}
@@ -90,36 +142,102 @@ class FoundingDocument extends SOAPModel
 	 * Сохранение учредительного документа
 	 * @return array
 	 */
-	public function save() {
-		$data = $this->attributes;
-		if (!$this->primaryKey) {
-            unset($data['id']);
-        } else {
-			$cacher = new CFileCache();
-			$cacher->set(__CLASS__.'_objects_'.$this->primaryKey, false, 1);
-		}
-		unset($data['deleted']);
+	public function save()
+    {
+        $data = $this->getAttributes();
 
-		$data = array(
-            'data' => array(
-                'ElementsStructure' => SoapComponent::getStructureElement($data, array('lang' => 'eng')),
-                'Tables' => array(
-                    SoapComponent::getStructureActions($this),
-                    SoapComponent::getStructureScans($this),
-                    SoapComponent::getStructureFiles($this),
-                )
-            )
-        );
-		$ret = $this->SOAP->saveFoundingDocument($data);
-		$ret = SoapComponent::parseReturn($ret);
-		return $ret;
+        if (!$this->primaryKey){
+            unset($data['id']);
+        }
+//        $data['from_user'] = true;
+//        $data['typ_doc'] = '';
+
+        $list_scans = array();
+        $list_files = array();
+
+        $id = ($this->primaryKey) ? $this->primaryKey : 'tmp_id';
+
+        $path = Yii::app()->user->getId(). DIRECTORY_SEPARATOR . __CLASS__ . DIRECTORY_SEPARATOR . $id;
+        $path_scans = $path . DIRECTORY_SEPARATOR . MDocumentCategory::SCAN;
+        $path_files = $path . DIRECTORY_SEPARATOR . MDocumentCategory::FILE;
+
+        foreach ($this->upload_scans as $f) {
+            if ($this->upload($path_scans, $f)){
+                $list_scans[] = $f->name;
+            }
+        }
+        foreach ($this->upload_files as $f) {
+            if ($this->upload($path_files, $f)){
+                $list_files[] = $f->name;
+            }
+        }
+        $list_files = array_merge($list_files, $this->list_files);
+        $list_scans = array_merge($list_scans, $this->list_scans);
+
+        $list_files = (empty($list_files)) ? array('Null') : $list_files;
+        $list_scans = (empty($list_scans)) ? array('Null') : $list_scans;
+
+        unset($data['deleted']);
+        unset($data['list_scans']);
+        unset($data['list_files']);
+        unset($data['upload_scans']);
+        unset($data['upload_files']);
+
+        $ret = $this->SOAP->saveFoundingDocuments(array(
+            'data' => SoapComponent::getStructureElement($data),
+            'list_files' => $list_files,
+            'list_scans' => $list_scans,
+        ));
+        $ret = SoapComponent::parseReturn($ret, false);
+
+        /**
+         * Если создается новая довереность:
+         * 1. Возникли ошибки - удаляем все документы из временной диретории.
+         * 2. Все нормально - переносим документы из временной папки в папку
+         * созданного документа ($this->primaryKey).
+         */
+        if (!$this->primaryKey) {
+            try {
+                if (!ctype_digit($ret)){
+                    $this->removeFiles($path_files, $list_files);
+                    $this->removeFiles($path_scans, $list_scans);
+                } else {
+                    $path = Yii::app()->user->getId()
+                        .DIRECTORY_SEPARATOR . __CLASS__
+                        .DIRECTORY_SEPARATOR . $ret;
+                    $dest_scans = $path.DIRECTORY_SEPARATOR.MDocumentCategory::SCAN;
+                    $dest_files = $path.DIRECTORY_SEPARATOR.MDocumentCategory::FILE;
+
+                    $this->moveFiles($path_files, $dest_files, $list_files);
+                    $this->moveFiles($path_scans, $dest_scans, $list_scans);
+                }
+            } catch (UploadDocumentException $e){
+                Yii::log($e->getMessage(), cLogger::LEVEL_ERROR);
+                $this->addError('id', $e->getMessage());
+            }
+        }
+        $this->clearCache();
+        return $ret;
 	}
+
+    /**
+     * Сбрасываем кэши.
+     */
+    public function clearCache()
+    {
+        $class = get_class($this);
+        if ($this->primaryKey){
+            Yii::app()->cache->delete($class . self::PREFIX_CACHE_ID_FOR_MODEL_ID . $this->primaryKey);
+            Yii::app()->cache->delete($class . self::PREFIX_CACHE_ID_LIST_DATA . $this->id_yur);
+        }
+    }
 
 	/**
 	 * Returns the list of attribute names of the model.
 	 * @return array list of attribute names.
 	 */
-	public function attributeLabels() {
+	public function attributeLabels()
+    {
 		return array(
 			'id'                => '#',
 			'id_yur'            => 'Юр.Лицо',
@@ -134,54 +252,49 @@ class FoundingDocument extends SOAPModel
 			'from_user'         => 'Добавлено пользователем',
 			'user'              => 'Пользователь',
 
-//			'scans'             => 'Сканы',
-//			'files'             => 'Файлы'
+			'list_scans'        => 'Сканы',
+			'list_files'        => 'Файлы'
 		);
-
-		/*
-		ТЗ:
-
-		+	ID (уникальный идентификатор, целое число, автоинкремент, обязательное);
-		+	Дата загрузки документа (дата, обязательное);
-		+	Пользовательское? (флаг: да или нет; обозначает источник документа, загружен оператором системы, или самим пользователем; обязательное);
-		+	Пользователь, загрузивший документ (пользователь системы);
-		+	Юридическое лицо (выбор из справочника, обязательное);
-		+	Тип документа (выбор из справочника, обязательное);
-		+	Наименование (текст, обязательно);
-		+	Срок действия (дата, обязательное);
-		-	Электронная версия (файл);
-		-	Скан (файл или набор файлов).
-		*/
 	}
 
 	/**
 	 * @return array validation rules for model attributes.
 	 */
-	public function rules() {
+	public function rules()
+    {
 		return array(
             array('name', 'required'),
-            array('name', 'length', 'max' => 25),
+//            array('name', 'length', 'max' => 25),
 
+            array('num', 'required'),
             array('num', 'length', 'max' => 10),
 
             array('typ_doc', 'required'),
-            array('typ_doc', 'in', 'range'  => array_keys(LEDocumentType::getValues())),
+            array('typ_doc', 'in', 'range'  => array_keys(LEDocumentType::model()->listNames($this->getForceCached()))),
 
+            array('date, expire', 'required'),
             array('date, expire', 'date', 'format' => 'yyyy-MM-dd'),
 
             array('comment', 'length', 'max' => 50),
+
+            array('list_scans', 'existsScans'),
+            array('list_files', 'existsFiles'),
+
+            array('json_exists_files', 'validJson'),
+            array('json_exists_scans', 'validJson'),
 		);
 	}
 
     /**
      * Список учредительных документов
      * @param Organization $org
+     * @param bool $force_cache
      * @return FoundingDocument[]
      */
-    public function getData(Organization $org){
-        $cache_id = get_class($this).self::PREFIX_CACHE_ID_LIST_DATA.$org->primaryKey;
-        $data = Yii::app()->cache->get($cache_id);
-        if ($data === false){
+    public function listModels(Organization $org, $force_cache=false)
+    {
+        $cache_id = __CLASS__.self::PREFIX_CACHE_ID_LIST_DATA.$org->primaryKey;
+        if ($force_cache || ($data = Yii::app()->cache->get($cache_id)) === false){
             $data = $this->where('deleted', false)
                 ->where('id_yur',  $org->primaryKey)
                 ->where('type_yur', 'Организации')
