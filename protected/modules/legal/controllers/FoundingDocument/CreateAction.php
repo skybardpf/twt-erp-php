@@ -8,7 +8,7 @@ class CreateAction extends CAction
 {
     /**
      * Создание нового учредительного документа.
-     * @param string $id
+     * @param string $org_id
      * @throws CHttpException
      */
     public function run($org_id)
@@ -22,14 +22,8 @@ class CreateAction extends CAction
         $force_cache = (isset($_GET['force_cache']) && $_GET['force_cache'] == 1) ? true : false;
 
         $org = Organization::loadModel($org_id, $force_cache);
-
-        $model = new FoundingDocument();
-        $model->id_yur    = $org->primaryKey;
-        $model->type_yur  = "Организации";
-        $model->from_user = true;
-        $model->user      = SOAPModel::USER_NAME;
-        $model->list_files = array();
-        $model->list_scans = array();
+        $model = FoundingDocument::model()->createModel($org);
+        $model->setForceCached($force_cache);
 
         $class = get_class($model);
         if ($_POST && !empty($_POST[$class])) {

@@ -93,6 +93,22 @@ class FoundingDocument extends SOAPModel
         return $model;
     }
 
+    /**
+     * @param Organization $org
+     * @return FoundingDocument
+     * @throws CHttpException
+     */
+    public function createModel($org)
+    {
+        $this->id_yur    = $org->primaryKey;
+        $this->type_yur  = "Организации";
+        $this->from_user = true;
+        $this->user      = SOAPModel::USER_NAME;
+        $this->list_files = array();
+        $this->list_scans = array();
+        return $this;
+    }
+
 	/**
 	 * Список учредительных документов
 	 * @return FoundingDocument[]
