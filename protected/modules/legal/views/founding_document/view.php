@@ -14,7 +14,7 @@
 
 <?php
 Yii::app()->clientScript->registerScriptFile($this->asset_static.'/js/jquery.fileDownload.js');
-Yii::app()->clientScript->registerScriptFile($this->asset_static.'/js/legal/show_manage_files.js');
+Yii::app()->clientScript->registerScriptFile($this->asset_static.'/js/legal/manage_files.js');
 
 $this->widget('bootstrap.widgets.TbButton', array(
     'buttonType' => 'link',
