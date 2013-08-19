@@ -107,5 +107,7 @@ return array(
 	'params'=>array(
 		// this is used in contact page
 		'adminEmail'=>'yury@artektiv.ru',
+
+        'uploadDocumentDir' => dirname(__FILE__).DIRECTORY_SEPARATOR.'..'.DIRECTORY_SEPARATOR.'filestorage'.DIRECTORY_SEPARATOR.'uploads',
 	),
 );

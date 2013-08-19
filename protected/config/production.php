@@ -18,12 +18,12 @@
                     )
                 ),
             ),
-            'params' => array(
-                /**
-                 * Директория для загрузки документов.
-                 */
-                'uploadDocumentDir' => dirname(__FILE__).'/../filestorage',
-//                'uploadTmpDir' => '/tmp',
-            ),
+//            'params' => array(
+//                /**
+//                 * Директория для загрузки документов.
+//                 */
+//                'uploadDocumentDir' => dirname(__FILE__).'/../filestorage',
+////                'uploadTmpDir' => '/tmp',
+//            ),
         )
     );
