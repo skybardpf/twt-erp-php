@@ -22,7 +22,7 @@ echo '<h2>' . ($model->primaryKey ? 'Редактирование ' : 'Созд�
 $form = $this->beginWidget('bootstrap.widgets.MTbActiveForm', array(
     'id' => 'form-power-attorney',
     'type' => 'horizontal',
-    'enableAjaxValidation' => false,
+    'enableAjaxValidation' => true,
     'clientOptions' => array(
         'validateOnChange' => true,
     ),
@@ -83,28 +83,30 @@ echo $form->hiddenField($model, 'json_type_of_contract');
 echo $form->hiddenField($model, 'json_exists_files');
 echo $form->hiddenField($model, 'json_exists_scans');
 
+/**
+ * Заполняем выбранные виды договоров.
+ */
 $data_type_of_contract = array();
+$contract_types = ContractType::model()->listNames($model->getForceCached());
+foreach ($model->type_of_contract as $f) {
+    $data_type_of_contract[] = array(
+        'id' => $f . '_id',
+        'type' => (!isset($contract_types[$f])) ? '---' : $contract_types[$f],
+        'delete' => $this->widget('bootstrap.widgets.TbButton', array(
+            'buttonType' => 'button',
+            'type' => 'primary',
+            'label' => 'Удалить',
+            'htmlOptions' => array(
+                'class' => 'del-type-contract',
+                'data-id' => $f
+            )
+        ), true)
+    );
+}
+
 $data_files = array();
 $data_scans = array();
 if ($model->primaryKey) {
-
-    $contract_types = ContractType::model()->listNames($model->getForceCached());
-    foreach ($model->type_of_contract as $f) {
-        $data_type_of_contract[] = array(
-            'id' => $f . '_id',
-            'type' => (!isset($contract_types[$f])) ? '---' : $contract_types[$f],
-            'delete' => $this->widget('bootstrap.widgets.TbButton', array(
-                'buttonType' => 'button',
-                'type' => 'primary',
-                'label' => 'Удалить',
-                'htmlOptions' => array(
-                    'class' => 'del-type-contract',
-                    'data-id' => $f
-                )
-            ), true)
-        );
-    }
-
     $path = Yii::app()->user->getId() . DIRECTORY_SEPARATOR . __CLASS__ . DIRECTORY_SEPARATOR . $model->primaryKey;
     $path_scans = $path . DIRECTORY_SEPARATOR . MDocumentCategory::SCAN;
     $path_files = $path . DIRECTORY_SEPARATOR . MDocumentCategory::FILE;
@@ -245,6 +247,7 @@ if ($model->primaryKey) {
             'data' => $data_files,
             'model' => $model,
             'attribute' => 'list_files',
+            'attribute_files' => 'upload_files',
             'grid_id' => 'grid-files',
             'accept_ext' => '',
         ),
@@ -256,6 +259,7 @@ if ($model->primaryKey) {
             'model' => $model,
             'attribute' => 'list_scans',
             'grid_id' => 'grid-scans',
+            'attribute_files' => 'upload_scans',
             'accept_ext' => '',
         ),
         true
@@ -268,10 +272,10 @@ if ($model->primaryKey) {
 
     echo $this->renderPartial('/_files/download_hint', array(), true);
 
-/**
-* Модальное окошко для выбора вида договора
-*/
-$this->beginWidget('bootstrap.widgets.TbModal', array('id'=>'modalWindow'));
+    /**
+    * Модальное окошко для выбора вида договора
+    */
+    $this->beginWidget('bootstrap.widgets.TbModal', array('id'=>'modalWindow'));
 ?>
 <div class="modal-header">
     <a class="close" data-dismiss="modal">×</a>

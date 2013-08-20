@@ -68,6 +68,8 @@ class PowerAttorneyForContractor extends PowerAttorneyAbstract
         unset($data['list_files']);
         unset($data['upload_scans']);
         unset($data['upload_files']);
+        unset($data['json_exists_scans']);
+        unset($data['json_exists_files']);
 
         $ret = $this->SOAP->savePowerAttorney(array(
             'data' => SoapComponent::getStructureElement($data),

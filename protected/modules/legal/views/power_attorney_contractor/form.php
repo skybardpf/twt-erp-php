@@ -21,7 +21,7 @@
     $form = $this->beginWidget('bootstrap.widgets.MTbActiveForm', array(
         'id' => 'form-power-attorney',
         'type' => 'horizontal',
-        'enableAjaxValidation' => false,
+        'enableAjaxValidation' => true,
         'clientOptions' => array(
             'validateOnChange' => true,
         ),
@@ -182,6 +182,7 @@
             'data' => $data_files,
             'model' => $model,
             'attribute' => 'list_files',
+            'attribute_files' => 'upload_files',
             'grid_id' => 'grid-files',
             'accept_ext' => '',
         ),
@@ -193,6 +194,7 @@
             'model' => $model,
             'attribute' => 'list_scans',
             'grid_id' => 'grid-scans',
+            'attribute_files' => 'upload_scans',
             'accept_ext' => '',
         ),
         true

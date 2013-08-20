@@ -165,6 +165,7 @@ if ($model->hasErrors()) {
             'data' => $data_files,
             'model' => $model,
             'attribute' => 'list_files',
+            'attribute_files' => 'upload_files',
             'grid_id' => 'grid-files',
             'accept_ext' => '',
         ),
@@ -176,6 +177,7 @@ if ($model->hasErrors()) {
             'model' => $model,
             'attribute' => 'list_scans',
             'grid_id' => 'grid-scans',
+            'attribute_files' => 'upload_scans',
             'accept_ext' => '',
         ),
         true

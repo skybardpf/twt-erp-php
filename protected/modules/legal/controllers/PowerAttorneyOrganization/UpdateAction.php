@@ -42,6 +42,8 @@ class UpdateAction extends CAction
             if ($model->validate('json_exists_scans')){
                 $model->list_scans = CJSON::decode($model->json_exists_scans);
             }
+            $model->type_of_contract = CJSON::decode($model->json_type_of_contract);
+            $model->type_of_contract = ($model->type_of_contract === null) ? array () : $model->type_of_contract;
 
             $model->upload_scans  = CUploadedFile::getInstancesByName('upload_scans');
             $model->upload_files  = CUploadedFile::getInstancesByName('upload_files');

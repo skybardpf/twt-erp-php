@@ -17,7 +17,7 @@
                 'label'=>'Новая доверенность',
                 'type'=>'success', // null, 'primary', 'info', 'success', 'warning', 'danger' or 'inverse'
                 'size'=>'normal', // null, 'large', 'small' or 'mini'
-                'url' => $this->createUrl("power_attorney_le/add", array('org_id' => $organization->primaryKey))
+                'url' => $this->createUrl("power_attorney_organization/add", array('org_id' => $organization->primaryKey))
             )); ?>
         </div>
         <h3>Доверенности</h3>

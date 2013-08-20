@@ -1,28 +1,34 @@
 <?php
 /**
- * Создание доверенности для контрагента.
+ * Создание доверенности для организации.
  *
  * @author Skibardin A.A. <skybardpf@artektiv.ru>
  */
 class CreateAction extends CAction
 {
     /**
-     * Создание доверенности для контрагента.
-     * @param string $cid
+     * Создание доверенности для организации.
+     * @param string $org_id
      */
-    public function run($cid)
+    public function run($org_id)
     {
         /**
-         * @var Power_attorney_contractorController $controller
+         * @var Power_attorney_organizationController $controller
          */
         $controller = $this->controller;
         $controller->pageTitle .= ' | Создание доверенности';
 
         $force_cache = (isset($_GET['force_cache']) && $_GET['force_cache'] == 1) ? true : false;
 
-        $org = Contractor::loadModel($cid, $force_cache);
-        $model = PowerAttorneyForContractor::model()->createModel($org->primaryKey);
+        $org = Organization::loadModel($org_id, $force_cache);
+        /**
+         * @var PowerAttorneyForOrganization $model
+         */
+        $model = PowerAttorneyForOrganization::model()->createModel($org->primaryKey);
         $model->setForceCached($force_cache);
+        $model->list_files = array();
+        $model->list_scans = array();
+        $model->type_of_contract = array();
 
         if(isset($_POST['ajax']) && $_POST['ajax'] === 'form-power-attorney') {
             echo CActiveForm::validate($model);
@@ -39,6 +45,8 @@ class CreateAction extends CAction
             if ($model->validate('json_exists_scans')){
                 $model->list_scans = CJSON::decode($model->json_exists_scans);
             }
+            $model->type_of_contract = CJSON::decode($model->json_type_of_contract);
+            $model->type_of_contract = ($model->type_of_contract === null) ? array () : $model->type_of_contract;
 
             $model->upload_scans  = CUploadedFile::getInstancesByName('upload_scans');
             $model->upload_files  = CUploadedFile::getInstancesByName('upload_files');
@@ -47,21 +55,28 @@ class CreateAction extends CAction
                 try {
                     $model->save();
                     $org->clearCache();
-                    $controller->redirect($controller->createUrl('list', array('cid' => $model->id_yur)));
+                    $controller->redirect($controller->createUrl('documents/list', array('org_id' => $model->id_yur)));
                 } catch (CException $e) {
                     $model->addError('id', $e->getMessage());
                 }
             }
         }
 
-        $model->json_exists_files = CJSON::encode(array());
-        $model->json_exists_scans = CJSON::encode(array());
+        $model->json_exists_files = CJSON::encode($model->list_files);
+        $model->json_exists_scans = CJSON::encode($model->list_scans);
+        $model->json_type_of_contract = CJSON::encode($model->type_of_contract);
 
-        $controller->render('/power_attorney_contractor/form',
-            array(
-                'model' => $model,
-                'organization' => $org
-            )
-        );
+        $controller->render('/organization/show', array(
+            'content' => $controller->renderPartial(
+                '/power_attorney_organization/form',
+                array(
+                    'model'         => $model,
+                    'organization'  => $org
+                ),
+                true
+            ),
+            'organization' => $org,
+            'cur_tab' => 'documents',
+        ));
     }
 }

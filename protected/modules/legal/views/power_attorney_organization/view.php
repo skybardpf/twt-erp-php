@@ -17,7 +17,9 @@
 <h2>Доверенность</h2>
 
 <?php
-    Yii::app()->clientScript->registerScriptFile($this->asset_static.'/js/legal/show_manage_files.js');
+    Yii::app()->clientScript->registerScriptFile($this->asset_static . '/js/jquery.fileDownload.js');
+    Yii::app()->clientScript->registerScriptFile($this->asset_static . '/js/legal/manage_files.js');
+
 
     $this->widget('bootstrap.widgets.TbButton', array(
         'buttonType' => 'link',
@@ -58,8 +60,9 @@
             );
         }
         $type_of_contract = '';
+        $contract_types = ContractType::model()->listNames($model->getForceCached());
         foreach($model->type_of_contract as $t){
-            $type_of_contract .= $t.'<br/>';
+            $type_of_contract .= (!isset($contract_types[$t])) ? '---' : ' - '.$contract_types[$t].'<br/>';
         }
 
         $this->widget('bootstrap.widgets.TbDetailView', array(
@@ -102,3 +105,37 @@
         ));
 	?>
 </div>
+
+<fieldset>
+    <?php
+    echo CHtml::tag('div', array(
+        'class' => 'model-info',
+        'data-id' => $model->primaryKey,
+        'data-class-name' => get_class($model)
+    ));
+
+    if (!empty($model->list_files)){
+        echo '<h4>Файлы:</h4>';
+        foreach($model->list_files as $f){
+            echo CHtml::link($f, '#',
+                    array(
+                        'class' => 'download_file',
+                        'data-type' => MDocumentCategory::FILE,
+                    )
+                ) . '<br/>';
+        }
+    }
+    if (!empty($model->list_scans)){
+        echo '<h4>Сканы:</h4>';
+        foreach($model->list_scans as $f){
+            echo CHtml::link($f, '#', array(
+                        'class' => 'download_file',
+                        'data-type' => MDocumentCategory::SCAN,
+                    )
+                ) . '<br/>';
+        }
+    }
+    ?>
+</fieldset>
+
+<?= $this->renderPartial('/_files/download_hint', array(), true); ?>

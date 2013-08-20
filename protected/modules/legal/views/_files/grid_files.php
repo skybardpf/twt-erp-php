@@ -4,6 +4,7 @@
  *
  * @var SoapModel   $model
  * @var string      $attribute
+ * @var string      $attribute_files
  * @var array       $data
  * @var string      $grid_id
  * @var string      $accept_ext
@@ -37,7 +38,7 @@
             )
         );
         $this->widget('CMultiFileUpload', array(
-            'name' => 'upload_files',
+            'name' => $attribute_files,
 //            'accept' => 'jpeg|jpg|gif|png', // useful for verifying files
             'accept' => $accept_ext,
             'duplicate' => 'Файл с таким именем уже выбран!',
