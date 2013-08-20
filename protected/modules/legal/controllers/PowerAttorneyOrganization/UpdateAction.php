@@ -1,35 +1,42 @@
 <?php
 /**
- * Создание доверенности для контрагента.
+ * Редактирование доверенности для организации.
  *
  * @author Skibardin A.A. <skybardpf@artektiv.ru>
  */
 class UpdateAction extends CAction
 {
     /**
-     * Создание доверенности для контрагента.
+     * Редактирование доверенности для организации.
      * @param string $id
      */
     public function run($id)
     {
         /**
-         * @var Power_attorney_contractorController $controller
+         * @var Power_attorney_organizationController $controller
          */
         $controller = $this->controller;
         $controller->pageTitle .= ' | Редактирование доверенности';
 
         $force_cache = (isset($_GET['force_cache']) && $_GET['force_cache'] == 1) ? true : false;
 
-        $model = PowerAttorneyForContractor::model()->loadModel($id, $force_cache);
+        /**
+         * @var PowerAttorneyForOrganization $model
+         */
+        $model = PowerAttorneyForOrganization::model()->loadModel($id, $force_cache);
         $model->setForceCached($force_cache);
-        $org = Contractor::loadModel($model->id_yur, $force_cache);
+        $org = Organization::loadModel($model->id_yur, $force_cache);
+
+        $class = get_class($model);
+//        if (isset($_POST[$class]) && isset($_POST[$class]['typ_doc']) && $_POST[$class]['typ_doc'] == $model::TYPE_DOC_GENERAL){
+//
+//        }
 
         if(isset($_POST['ajax']) && $_POST['ajax'] === 'form-power-attorney') {
             echo CActiveForm::validate($model);
             Yii::app()->end();
         }
 
-        $class = get_class($model);
         if (isset($_POST[$class])) {
             $model->setAttributes($_POST[$class]);
 
@@ -38,6 +45,13 @@ class UpdateAction extends CAction
             }
             if ($model->validate('json_exists_scans')){
                 $model->list_scans = CJSON::decode($model->json_exists_scans);
+            }
+            if ($model->typ_doc == $model::TYPE_DOC_GENERAL){
+                $model->type_of_contract = array();
+            } else {
+                $model->setScenario('typeDocNotGeneral');
+                $model->type_of_contract = CJSON::decode($model->json_type_of_contract);
+                $model->type_of_contract = ($model->type_of_contract === null) ? array () : $model->type_of_contract;
             }
 
             $model->upload_scans  = CUploadedFile::getInstancesByName('upload_scans');
@@ -52,15 +66,21 @@ class UpdateAction extends CAction
                 }
             }
         }
-
         $model->json_exists_files = CJSON::encode($model->list_files);
         $model->json_exists_scans = CJSON::encode($model->list_scans);
+        $model->json_type_of_contract = CJSON::encode($model->type_of_contract);
 
-        $controller->render('/power_attorney_contractor/form',
-            array(
-                'model' => $model,
-                'organization' => $org
-            )
-        );
+        $controller->render('/organization/show', array(
+            'content' => $controller->renderPartial(
+                '/power_attorney_organization/form',
+                array(
+                    'model'         => $model,
+                    'organization'  => $org
+                ),
+                true
+            ),
+            'organization' => $org,
+            'cur_tab' => 'documents',
+        ));
     }
 }

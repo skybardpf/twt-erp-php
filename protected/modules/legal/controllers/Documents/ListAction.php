@@ -22,10 +22,11 @@ class ListAction extends CAction
 
         $org = Organization::loadModel($org_id, $force_cache);
 
+        // Учредительные документы
         $founding_docs = FoundingDocument::model()->listModels($org, $force_cache);
-
         // Доверенности
-//        $power_attorneys_docs =  PowerAttorneyForOrganization::model()->listModels($org->primaryKey);
+        $power_attorneys_docs =  PowerAttorneyForOrganization::model()->listModels($org->primaryKey, $force_cache);
+
         // Свободные документы.
 //        $free_docs = FreeDocument::model()->getData($org);
 
@@ -34,7 +35,7 @@ class ListAction extends CAction
                 array(
 //                    'free_docs'         => $free_docs,
                     'founding_docs'     => $founding_docs,
-//                    'power_attorneys_docs' => $power_attorneys_docs,
+                    'power_attorneys_docs' => $power_attorneys_docs,
                     'organization'      => $org
                 ), true),
             'organization' => $org,

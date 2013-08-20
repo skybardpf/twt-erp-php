@@ -4,32 +4,13 @@
  *
  * @author Skibardin A.A. <skybardpf@artektiv.ru>
  *
- * @property string $id             Идентификатор доверенности
- * @property string $id_yur         Идентификатор юрлица
- * @property string $type_yur       Тип юрлица ("Контрагенты", "Организации")
- * @property string $nom            номер доверенности
- * @property string $typ_doc        вид доверенности («Генеральная», «Свободная», «ПоВидамДоговоров»)
- * @property string $id_lico        идентификатор физлица, на которое выписана доверенность
- * @property string $name           наименование
- * @property string $date           дата доверенности (дата)
- * @property string $expire         дата окончания действия доверенности (дата)
- * @property string $break          дата досрочного окончания действия доверенности (дата)
- * @property string $comment        комментрий
- * @property bool   $deleted        флаг, удален ли данный документ
- *
- * @property string $loaded         дата загрузки доверенности (дата)
- * @property string $e_ver          ссылка на электронную версию доверенности
- * @property string $contract_types массив строк-идентификаторов видов договоров, на которые распространяется доверенность
- *
- * @property array  $list_scans     массив строк-ссылок на сканы доверенности
- * @property array  $list_files     массив строк-ссылок на файлы доверенности
- *
- * @property string $from_user      признак того, что доверенность загружена пользователем
- * @property string $user           идентификатор пользователя
+ * @property array $type_of_contract
  */
 class  PowerAttorneyForOrganization extends PowerAttorneyAbstract
 {
-	public $owner_name = '';
+    const TYPE_DOC_GENERAL = 'Генеральная';
+
+    public $json_type_of_contract;
 
     /**
      * @return string
@@ -50,21 +31,17 @@ class  PowerAttorneyForOrganization extends PowerAttorneyAbstract
 
     /**
      *  Сохранение доверенности
-     *
      *  @return array
      *  @throws CHttpException
      */
     public function save()
     {
         $data = $this->getAttributes();
-        $data['user']       = SOAPModel::USER_NAME;
-        $data['from_user']  = true;
 
-        if (!$this->getprimaryKey()){
+        if (!$this->primaryKey){
             unset($data['id']);
-            $data['type_yur']  = 'Организации';
         }
-
+        $data['from_user'] = true;
         $doc_types = array(
             'Генеральная'       => 'Генеральная',
             'Свободная'         => 'Свободная',
@@ -72,63 +49,76 @@ class  PowerAttorneyForOrganization extends PowerAttorneyAbstract
         );
         $data['typ_doc'] = (isset($doc_types[$data['typ_doc']])) ? $doc_types[$data['typ_doc']] : $doc_types['Генеральная'];
 
-        $upload_ids = array();
-        if (!empty($this->upload_scans)) {
-            foreach ($this->upload_scans as $f) {
-                $uf = new UploadFile();
-                $id = ($this->primaryKey) ? $this->primaryKey : 0;
-                $id = $uf->upload($f, UploadFile::CLIENT_ID, __CLASS__, $id, UploadFile::TYPE_FILE_SCANS);
-                if (!is_null($id)){
-                    $upload_ids[] = $id;
-                }
+        $list_scans = array();
+        $list_files = array();
+
+        $id = ($this->primaryKey) ? $this->primaryKey : 'tmp_id';
+
+        $path = Yii::app()->user->getId(). DIRECTORY_SEPARATOR . __CLASS__ . DIRECTORY_SEPARATOR . $id;
+        $path_scans = $path . DIRECTORY_SEPARATOR . MDocumentCategory::SCAN;
+        $path_files = $path . DIRECTORY_SEPARATOR . MDocumentCategory::FILE;
+
+        foreach ($this->upload_scans as $f) {
+            if ($this->upload($path_scans, $f)){
+                $list_scans[] = $f->name;
             }
         }
-        if (!empty($this->upload_files)) {
-            foreach ($this->upload_files as $f) {
-                $uf = new UploadFile();
-                $id = ($this->primaryKey) ? $this->primaryKey : 0;
-                $id = $uf->upload($f, UploadFile::CLIENT_ID, __CLASS__, $id, UploadFile::TYPE_FILE_FILES);
-                if (!is_null($id)){
-                    $upload_ids[] = $id;
-                }
+        foreach ($this->upload_files as $f) {
+            if ($this->upload($path_files, $f)){
+                $list_files[] = $f->name;
             }
         }
+        $list_files = array_merge($list_files, $this->list_files);
+        $list_scans = array_merge($list_scans, $this->list_scans);
+
+        $list_files = (empty($list_files)) ? array('Null') : $list_files;
+        $list_scans = (empty($list_scans)) ? array('Null') : $list_scans;
 
         unset($data['deleted']);
         unset($data['list_scans']);
         unset($data['list_files']);
         unset($data['upload_scans']);
         unset($data['upload_files']);
-        // unused
-        unset($data['e_ver']);
-        unset($data['contract_types']);
-        unset($data['loaded']);
+        unset($data['json_type_of_contract']);
+        unset($data['json_exists_scans']);
+        unset($data['json_exists_files']);
+        unset($data['type_of_contract']);
 
-        $ret = $this->SOAP->savePowerAttorneyLE(array(
-            'data' => array(
-                'ElementsStructure' => SoapComponent::getStructureElement($data, array('lang' => 'eng')),
-                'Tables' => array(
-                    SoapComponent::getStructureActions($this),
-                    SoapComponent::getStructureScans($this),
-                    SoapComponent::getStructureFiles($this),
-                )
-            )
+        $ret = $this->SOAP->savePowerAttorney(array(
+            'data' => SoapComponent::getStructureElement($data),
+            'list_files' => $list_files,
+            'list_scans' => $list_scans,
+            'type_of_contract' => (empty($this->type_of_contract)) ? array('Null') : $this->type_of_contract
         ));
         $ret = SoapComponent::parseReturn($ret, false);
 
+        /**
+         * Если создается новая довереность:
+         * 1. Возникли ошибки - удаляем все документы из временной диретории.
+         * 2. Все нормально - переносим документы из временной папки в папку
+         * созданного документа ($this->primaryKey).
+         */
         if (!$this->primaryKey) {
-            if (!ctype_digit($ret)){
-                foreach($upload_ids as $id){
-                    $uf = new UploadFile();
-                    $uf->delete_file($id);
+            try {
+                if (!ctype_digit($ret)){
+                    $this->removeFiles($path_files, $list_files);
+                    $this->removeFiles($path_scans, $list_scans);
+                } else {
+                    $path = Yii::app()->user->getId()
+                        .DIRECTORY_SEPARATOR . __CLASS__
+                        .DIRECTORY_SEPARATOR . $ret;
+                    $dest_scans = $path.DIRECTORY_SEPARATOR.MDocumentCategory::SCAN;
+                    $dest_files = $path.DIRECTORY_SEPARATOR.MDocumentCategory::FILE;
+
+                    $this->moveFiles($path_files, $dest_files, $list_files);
+                    $this->moveFiles($path_scans, $dest_scans, $list_scans);
                 }
-            } else {
-                foreach($upload_ids as $id){
-                    $uf = new UploadFile();
-                    $uf->move($id, $ret);
-                }
+            } catch (UploadDocumentException $e){
+                Yii::log($e->getMessage(), cLogger::LEVEL_ERROR);
+                $this->addError('id', $e->getMessage());
             }
         }
+        $this->clearCache();
         return $ret;
     }
 
@@ -146,31 +136,17 @@ class  PowerAttorneyForOrganization extends PowerAttorneyAbstract
 		);
 	}
 
-    /**
-     *  Виды юр. лиц
-     *
-     *  @return array
-     */
-    public static function getYurTypes()
-    {
-        return array(
-            'Организации' => 'Организации',
-            'Контрагенты' => 'Контрагенты',
-        );
-    }
-
 	/**
 	 * Returns the list of attribute names of the model.
 	 * @return array list of attribute names.
 	 */
 	public function attributeLabels()
     {
-        $parentLabels = parent::attributeLabels();
 		return array_merge(
-            $parentLabels,
+            parent::attributeLabels(),
             array(
-                'typ_doc'           => 'Вид',                  // см. getDocTypes()
-                'types_of_contract' => 'Виды договора',
+                'typ_doc'          => 'Вид',                  // см. getDocTypes()
+                'type_of_contract' => 'Виды договора',
             )
         );
 	}
@@ -182,126 +158,16 @@ class  PowerAttorneyForOrganization extends PowerAttorneyAbstract
      */
     public function rules()
 	{
-		return array(
-            array('id_lico', 'required'),
-            array('id_lico', 'in', 'range'  => array_keys(Individuals::getValues())),
+        return array_merge(
+            parent::rules(),
+            array(
+                array('typ_doc', 'required'),
+                array('typ_doc', 'in', 'range'  => array_keys(PowerAttorneyForOrganization::getDocTypes())),
 
-            array('typ_doc', 'required'),
-            array('typ_doc', 'in', 'range'  => array_keys( PowerAttorneyForOrganization::getDocTypes())),
+                array('type_of_contract', 'required', 'on'=>'typeDocNotGeneral'),
 
-            array('name', 'required'),
-            array('name', 'length', 'max' => 25),
-
-            array('nom', 'length', 'max' => 20),
-            array('comment', 'length', 'max' => 50),
-
-            array('date, expire, break', 'date', 'format' => 'yyyy-MM-dd'),
-
-            array('list_scans', 'existsScans'),
-            array('list_files', 'existsFiles'),
-		);
+                array('json_type_of_contract', 'validJson'),
+            )
+        );
 	}
-
-    /**
-     * Список довереностей.
-     * @deprecated
-     * @param Organization $org
-     * @return  PowerAttorneyForOrganization[]
-     */
-    public function getData(Organization $org){
-        $cache_id = get_class($this).self::PREFIX_CACHE_ID_LIST_DATA.$org->primaryKey;
-        $data = Yii::app()->cache->get($cache_id);
-        if ($data === false){
-            $data = $this->where('deleted', false)
-                ->where('id_yur',  $org->primaryKey)
-                ->where('type_yur', 'Организации')
-                ->findAll();
-            Yii::app()->cache->set($cache_id, $data);
-        }
-        return $data;
-    }
-
-    /**
-     * Список довереностей.
-     * @deprecated
-     * @param string $type
-     * @param bool $force_cache
-     * @return  PowerAttorneyForOrganization[]
-     * @throws CException
-     */
-    public function getAllData($type, $force_cache = false){
-        if (!in_array($type, array(Contractor::TYPE, Organization::TYPE))){
-            throw new CException('Указан неизвестный тип организации.');
-        }
-
-        $cache_id = get_class($this).self::PREFIX_CACHE_ID_LIST_ALL_DATA.$type;
-        if ($force_cache || ($data = Yii::app()->cache->get($cache_id)) === false){
-            $tmp = $this->where('deleted', false)
-                ->where('type_yur', $type)
-                ->findAll();
-            $data = array();
-            if ($tmp){
-                foreach($tmp as $v){
-                    $data[$v->primaryKey] = $v;
-                }
-            }
-            Yii::app()->cache->set($cache_id, $data);
-        }
-        return $data;
-    }
-
-    /**
-     * Список назавний довереностей.
-     * @deprecated
-     * @param string $type
-     * @param string $org_id
-     * @param bool $force_cache
-     * @return array Format [id => name]
-     * @throws CException
-     */
-    public function getNamesByOrganizationId($type, $org_id, $force_cache = false){
-        if (!in_array($type, array(Contractor::TYPE, Organization::TYPE))){
-            throw new CException('Указан неизвестный тип организации.');
-        }
-        $cache_id = get_class($this).self::PREFIX_CACHE_ID_LIST_ALL_NAMES.$type.'_'.$org_id;
-        if ($force_cache || ($data = Yii::app()->cache->get($cache_id)) === false){
-            $data = array();
-            $tmp = $this->where('deleted', false)
-                ->where('type_yur', $type)
-                ->where('id_yur', $org_id)
-                ->findAll();
-            if ($tmp){
-                foreach($tmp as $v){
-                    $data[$v->primaryKey] = $v->name;
-                }
-            }
-            Yii::app()->cache->set($cache_id, $data);
-        }
-        return $data;
-    }
-
-    /**
-     * Список назавний довереностей.
-     * @deprecated
-     * @param string $type
-     * @param bool $force_cache
-     * @return array Format [id => name]
-     * @throws CException
-     */
-    public function getAllNames($type, $force_cache = false){
-        if (!in_array($type, array(Contractor::TYPE, Organization::TYPE))){
-            throw new CException('Указан неизвестный тип организации.');
-        }
-
-        $cache_id = get_class($this).self::PREFIX_CACHE_ID_LIST_ALL_NAMES.$type;
-        if ($force_cache || ($data = Yii::app()->cache->get($cache_id)) === false){
-            $data = array();
-            $tmp = $this->getAllData($type, $force_cache);
-            foreach($tmp as $v){
-                $data[$v->primaryKey] = $v->name;
-            }
-            Yii::app()->cache->set($cache_id, $data);
-        }
-        return $data;
-    }
 }

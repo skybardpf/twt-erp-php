@@ -2,11 +2,11 @@
 /**
  *  Список доступных документов для юр. лица.
  *
- *  @var $this                  DocumentsController         Контролер
- *  @var $founding_docs         FoundingDocument[]          Учредительные документы
- *  @var $power_attorneys_docs   PowerAttorneyForOrganization[]          Доверенности
- *  @var $free_docs             FreeDocument[]              Свободные документы
- *  @var $organization          Organization
+ *  @var DocumentsController                $this                           Контролер
+ *  @var FoundingDocument[]                 $founding_docs                  Учредительные документы
+ *  @var PowerAttorneyForOrganization[]     $power_attorneys_docs           Доверенности
+ *  @var FreeDocument[]                     $free_docs                      Свободные документы
+ *  @var Organization                       $organization
  */
 
 /* Учредительные документы */
@@ -14,11 +14,11 @@ $this->renderPartial('/founding_document/list', array(
     'docs' => $founding_docs,
     'organization' => $organization
 ));
-///* Доверенности */
-//$this->renderPartial('/power_attorney_le/list', array(
-//    'docs' => $power_attorneys_docs,
-//    'organization' => $organization
-//));
+/* Доверенности */
+$this->renderPartial('/power_attorney_organization/list', array(
+    'data' => $power_attorneys_docs,
+    'organization' => $organization
+));
 ///* Свободные документы */
 //$this->renderPartial('/free_documents/list', array(
 //    'docs' => $free_docs,

@@ -57,10 +57,18 @@ class CreateAction extends CAction
         $model->json_exists_files = CJSON::encode(array());
         $model->json_exists_scans = CJSON::encode(array());
 
-        $controller->render('/power_attorney_contractor/form',
+        $controller->render(
+            '/contractor/menu_tabs',
             array(
-                'model' => $model,
-                'organization' => $org
+                'content' => $controller->renderPartial('/power_attorney_contractor/form',
+                    array(
+                        'model' => $model,
+                        'organization' => $org,
+                    ),
+                    true
+                ),
+                'model' => $org,
+                'current_tab_menu' => 'power_attorney'
             )
         );
     }
