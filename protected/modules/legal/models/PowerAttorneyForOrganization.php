@@ -4,32 +4,11 @@
  *
  * @author Skibardin A.A. <skybardpf@artektiv.ru>
  *
- * @property string $id             Идентификатор доверенности
- * @property string $id_yur         Идентификатор юрлица
- * @property string $type_yur       Тип юрлица ("Контрагенты", "Организации")
- * @property string $nom            номер доверенности
- * @property string $typ_doc        вид доверенности («Генеральная», «Свободная», «ПоВидамДоговоров»)
- * @property string $id_lico        идентификатор физлица, на которое выписана доверенность
- * @property string $name           наименование
- * @property string $date           дата доверенности (дата)
- * @property string $expire         дата окончания действия доверенности (дата)
- * @property string $break          дата досрочного окончания действия доверенности (дата)
- * @property string $comment        комментрий
- * @property bool   $deleted        флаг, удален ли данный документ
- *
- * @property string $loaded         дата загрузки доверенности (дата)
- * @property string $e_ver          ссылка на электронную версию доверенности
- * @property string $contract_types массив строк-идентификаторов видов договоров, на которые распространяется доверенность
- *
- * @property array  $list_scans     массив строк-ссылок на сканы доверенности
- * @property array  $list_files     массив строк-ссылок на файлы доверенности
- *
- * @property string $from_user      признак того, что доверенность загружена пользователем
- * @property string $user           идентификатор пользователя
+ * @property array $type_of_contract
  */
 class  PowerAttorneyForOrganization extends PowerAttorneyAbstract
 {
-	public $owner_name = '';
+    public $json_type_of_contract;
 
     /**
      * @return string
@@ -146,18 +125,18 @@ class  PowerAttorneyForOrganization extends PowerAttorneyAbstract
 		);
 	}
 
-    /**
-     *  Виды юр. лиц
-     *
-     *  @return array
-     */
-    public static function getYurTypes()
-    {
-        return array(
-            'Организации' => 'Организации',
-            'Контрагенты' => 'Контрагенты',
-        );
-    }
+//    /**
+//     *  Виды юр. лиц
+//     *
+//     *  @return array
+//     */
+//    public static function getYurTypes()
+//    {
+//        return array(
+//            'Организации' => 'Организации',
+//            'Контрагенты' => 'Контрагенты',
+//        );
+//    }
 
 	/**
 	 * Returns the list of attribute names of the model.
@@ -165,12 +144,11 @@ class  PowerAttorneyForOrganization extends PowerAttorneyAbstract
 	 */
 	public function attributeLabels()
     {
-        $parentLabels = parent::attributeLabels();
 		return array_merge(
-            $parentLabels,
+            parent::attributeLabels(),
             array(
-                'typ_doc'           => 'Вид',                  // см. getDocTypes()
-                'types_of_contract' => 'Виды договора',
+                'typ_doc'          => 'Вид',                  // см. getDocTypes()
+                'type_of_contract' => 'Виды договора',
             )
         );
 	}
@@ -182,126 +160,14 @@ class  PowerAttorneyForOrganization extends PowerAttorneyAbstract
      */
     public function rules()
 	{
-		return array(
-            array('id_lico', 'required'),
-            array('id_lico', 'in', 'range'  => array_keys(Individuals::getValues())),
+        return array_merge(
+            parent::rules(),
+            array(
+                array('typ_doc', 'required'),
+                array('typ_doc', 'in', 'range'  => array_keys(PowerAttorneyForOrganization::getDocTypes())),
 
-            array('typ_doc', 'required'),
-            array('typ_doc', 'in', 'range'  => array_keys( PowerAttorneyForOrganization::getDocTypes())),
-
-            array('name', 'required'),
-            array('name', 'length', 'max' => 25),
-
-            array('nom', 'length', 'max' => 20),
-            array('comment', 'length', 'max' => 50),
-
-            array('date, expire, break', 'date', 'format' => 'yyyy-MM-dd'),
-
-            array('list_scans', 'existsScans'),
-            array('list_files', 'existsFiles'),
-		);
+                array('type_of_contract', 'required'),
+            )
+        );
 	}
-
-    /**
-     * Список довереностей.
-     * @deprecated
-     * @param Organization $org
-     * @return  PowerAttorneyForOrganization[]
-     */
-    public function getData(Organization $org){
-        $cache_id = get_class($this).self::PREFIX_CACHE_ID_LIST_DATA.$org->primaryKey;
-        $data = Yii::app()->cache->get($cache_id);
-        if ($data === false){
-            $data = $this->where('deleted', false)
-                ->where('id_yur',  $org->primaryKey)
-                ->where('type_yur', 'Организации')
-                ->findAll();
-            Yii::app()->cache->set($cache_id, $data);
-        }
-        return $data;
-    }
-
-    /**
-     * Список довереностей.
-     * @deprecated
-     * @param string $type
-     * @param bool $force_cache
-     * @return  PowerAttorneyForOrganization[]
-     * @throws CException
-     */
-    public function getAllData($type, $force_cache = false){
-        if (!in_array($type, array(Contractor::TYPE, Organization::TYPE))){
-            throw new CException('Указан неизвестный тип организации.');
-        }
-
-        $cache_id = get_class($this).self::PREFIX_CACHE_ID_LIST_ALL_DATA.$type;
-        if ($force_cache || ($data = Yii::app()->cache->get($cache_id)) === false){
-            $tmp = $this->where('deleted', false)
-                ->where('type_yur', $type)
-                ->findAll();
-            $data = array();
-            if ($tmp){
-                foreach($tmp as $v){
-                    $data[$v->primaryKey] = $v;
-                }
-            }
-            Yii::app()->cache->set($cache_id, $data);
-        }
-        return $data;
-    }
-
-    /**
-     * Список назавний довереностей.
-     * @deprecated
-     * @param string $type
-     * @param string $org_id
-     * @param bool $force_cache
-     * @return array Format [id => name]
-     * @throws CException
-     */
-    public function getNamesByOrganizationId($type, $org_id, $force_cache = false){
-        if (!in_array($type, array(Contractor::TYPE, Organization::TYPE))){
-            throw new CException('Указан неизвестный тип организации.');
-        }
-        $cache_id = get_class($this).self::PREFIX_CACHE_ID_LIST_ALL_NAMES.$type.'_'.$org_id;
-        if ($force_cache || ($data = Yii::app()->cache->get($cache_id)) === false){
-            $data = array();
-            $tmp = $this->where('deleted', false)
-                ->where('type_yur', $type)
-                ->where('id_yur', $org_id)
-                ->findAll();
-            if ($tmp){
-                foreach($tmp as $v){
-                    $data[$v->primaryKey] = $v->name;
-                }
-            }
-            Yii::app()->cache->set($cache_id, $data);
-        }
-        return $data;
-    }
-
-    /**
-     * Список назавний довереностей.
-     * @deprecated
-     * @param string $type
-     * @param bool $force_cache
-     * @return array Format [id => name]
-     * @throws CException
-     */
-    public function getAllNames($type, $force_cache = false){
-        if (!in_array($type, array(Contractor::TYPE, Organization::TYPE))){
-            throw new CException('Указан неизвестный тип организации.');
-        }
-
-        $cache_id = get_class($this).self::PREFIX_CACHE_ID_LIST_ALL_NAMES.$type;
-        if ($force_cache || ($data = Yii::app()->cache->get($cache_id)) === false){
-            $data = array();
-            $tmp = $this->getAllData($type, $force_cache);
-            foreach($tmp as $v){
-                $data[$v->primaryKey] = $v->name;
-            }
-            Yii::app()->cache->set($cache_id, $data);
-        }
-        return $data;
-    }
 }

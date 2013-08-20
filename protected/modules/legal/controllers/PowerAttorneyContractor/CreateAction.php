@@ -4,25 +4,25 @@
  *
  * @author Skibardin A.A. <skybardpf@artektiv.ru>
  */
-class UpdateAction extends CAction
+class CreateAction extends CAction
 {
     /**
      * Создание доверенности для контрагента.
-     * @param string $id
+     * @param string $cid
      */
-    public function run($id)
+    public function run($cid)
     {
         /**
          * @var Power_attorney_contractorController $controller
          */
         $controller = $this->controller;
-        $controller->pageTitle .= ' | Редактирование доверенности';
+        $controller->pageTitle .= ' | Создание доверенности';
 
         $force_cache = (isset($_GET['force_cache']) && $_GET['force_cache'] == 1) ? true : false;
 
-        $model = PowerAttorneyForContractor::model()->loadModel($id, $force_cache);
+        $org = Contractor::loadModel($cid, $force_cache);
+        $model = PowerAttorneyForContractor::model()->createModel($org->primaryKey);
         $model->setForceCached($force_cache);
-        $org = Contractor::loadModel($model->id_yur, $force_cache);
 
         if(isset($_POST['ajax']) && $_POST['ajax'] === 'form-power-attorney') {
             echo CActiveForm::validate($model);
@@ -46,20 +46,29 @@ class UpdateAction extends CAction
             if ($model->validate()) {
                 try {
                     $model->save();
-                    $controller->redirect($controller->createUrl('view', array('id' => $model->primaryKey)));
+                    $org->clearCache();
+                    $controller->redirect($controller->createUrl('list', array('cid' => $model->id_yur)));
                 } catch (CException $e) {
                     $model->addError('id', $e->getMessage());
                 }
             }
         }
 
-        $model->json_exists_files = CJSON::encode($model->list_files);
-        $model->json_exists_scans = CJSON::encode($model->list_scans);
+        $model->json_exists_files = CJSON::encode(array());
+        $model->json_exists_scans = CJSON::encode(array());
 
-        $controller->render('/power_attorney_contractor/form',
+        $controller->render(
+            '/contractor/menu_tabs',
             array(
-                'model' => $model,
-                'organization' => $org
+                'content' => $controller->renderPartial('/power_attorney_contractor/form',
+                    array(
+                        'model' => $model,
+                        'organization' => $org,
+                    ),
+                    true
+                ),
+                'model' => $org,
+                'current_tab_menu' => 'power_attorney'
             )
         );
     }

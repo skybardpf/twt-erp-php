@@ -7,6 +7,7 @@
 class Founding_documentController extends Controller {
     public $layout = 'inner';
     public $menu_current = 'legal';
+    public $pageTitle = 'TWT Consult | Документы | Учредительные документы';
 
     /**
      * @return array

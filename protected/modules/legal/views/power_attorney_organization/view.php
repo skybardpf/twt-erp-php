@@ -1,13 +1,12 @@
 <?php
 /**
- *  Документы -> Просмотр доверенности.
+ *  Организации -> Просмотр доверенности.
  *
- *  User: Skibardin A.A.
- *  Date: 03.07.13
+ *  @author Skibardin A.A. <skybardpf@artektiv.ru>
  *
- *  @var $this          Power_attorney_leController
- *  @var $model          PowerAttorneyForOrganization
- *  @var $organization  Organization
+ *  @var Power_attorney_organizationController  $this
+ *  @var PowerAttorneyForOrganization           $model
+ *  @var Organization                           $organization
  */
 ?>
 
@@ -49,7 +48,7 @@
 <br/><br/>
 <div>
 	<?php
-        $individuals = Individuals::getValues();
+        $individuals = Individuals::model()->getDataNames($model->getForceCached());
         if (!isset($individuals[$model->id_lico])){
             $p = 'Не задано';
         } else {
@@ -58,38 +57,48 @@
                 $this->createUrl('individuals/view', array('id' => $model->id_lico))
             );
         }
+        $type_of_contract = '';
+        foreach($model->type_of_contract as $t){
+            $type_of_contract .= $t.'<br/>';
+        }
+
         $this->widget('bootstrap.widgets.TbDetailView', array(
             'data' => $model,
             'attributes'=>array(
-                array('name' => 'id_lico', 'type' => 'raw', 'label' => 'На кого оформлена', 'value' => $p),
-                array('name' => 'nom',          'label' => 'Номер'),
-                array('name' => 'name',         'label' => 'Название'),
-                array('name' => 'typ_doc',      'label' => 'Вид'),
-                array('name' => 'date',         'label' => 'Дата начала действия'),
-                array('name' => 'expire',       'label' => 'Срок действия'),
+                array(
+                    'name' => 'id_lico',
+                    'type' => 'raw',
+                    'label' =>
+                    'На кого оформлена',
+                    'value' => $p
+                ),
+                array(
+                    'name' => 'nom',
+                    'label' => 'Номер'
+                ),
+                array(
+                    'name' => 'name',
+                    'label' => 'Наименование'
+                ),
+                array(
+                    'name' => 'typ_doc',
+                    'label' => 'Вид'
+                ),
+                array(
+                    'name' => 'type_of_contract',
+                    'label' => 'Действительна для договоров',
+                    'value' => $type_of_contract,
+                    'type' => 'raw'
+                ),
+                array(
+                    'name' => 'date',
+                    'label' => 'Дата начала действия'
+                ),
+                array(
+                    'name' => 'expire',
+                    'label' => 'Срок действия'
+                ),
             )
         ));
 	?>
 </div>
-
-<?php
-    $counts = UploadFile::getCountTypeFiles(UploadFile::CLIENT_ID, get_class($model), $model->primaryKey);
-    $div = '';
-    if (isset($counts['files']) && $counts['files']){
-        $div .= CHtml::link('Скачать электронную версию', '#', array('class' => 'download_online')) . '<br/>';
-    }
-    if (isset($counts['scans']) && $counts['scans']){
-        $div .= CHtml::link('Скачать сканы', '#', array('class' => 'download_scans')) . '<br/>';
-    }
-    if (!empty($div)){
-        echo CHtml::tag('fieldset',
-            array(
-                'class' => 'links_for_download',
-                'data-id' => $model->primaryKey
-            ),
-            $div
-        //        . '<br/>'
-        //        . CHtml::link('Сгенерировать документ', '#', array('class' => 'download_generic_doc'))
-        );
-    }
-?>

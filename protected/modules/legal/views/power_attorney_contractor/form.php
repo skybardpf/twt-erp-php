@@ -176,101 +176,30 @@
 
     echo $form->hiddenField($model, 'json_exists_files');
     echo $form->hiddenField($model, 'json_exists_scans');
+
+    echo $this->renderPartial('/_files/grid_files',
+        array(
+            'data' => $data_files,
+            'model' => $model,
+            'attribute' => 'list_files',
+            'grid_id' => 'grid-files',
+            'accept_ext' => '',
+        ),
+        true
+    );
+    echo $this->renderPartial('/_files/grid_files',
+        array(
+            'data' => $data_scans,
+            'model' => $model,
+            'attribute' => 'list_scans',
+            'grid_id' => 'grid-scans',
+            'accept_ext' => '',
+        ),
+        true
+    );
+
+    $this->endWidget();
+
+    echo $this->renderPartial('/_files/download_hint', array(), true);
 ?>
-    <div class="control-group">
-        <?= $form->labelEx($model, 'list_files', array('class' => 'control-label')); ?>
-        <div class="controls">
-        <?php
-            $this->widget('bootstrap.widgets.TbGridView',
-                array(
-                    'id' => 'grid-files',
-                    'type' => 'striped bordered condensed',
-                    'dataProvider' => new CArrayDataProvider($data_files),
-                    'template' => "{items}",
-                    'columns' => array(
-                        array(
-                            'name' => 'filename',
-                            'header' => 'Название',
-                            'type' => 'raw',
-                            'htmlOptions' => array(
-                                'style' => 'width: 90%',
-                            )
-                        ),
-                        array(
-                            'name' => 'delete',
-                            'header' => '',
-                            'type' => 'raw'
-                        ),
-                    )
-                )
-            );
-            $this->widget('CMultiFileUpload', array(
-                'name' => 'upload_files',
-//                'accept' => 'jpeg|jpg|gif|png', // useful for verifying files
-                'duplicate' => 'Файл с таким именем уже выбран!',
-                'denied' => 'Неправильный тип файла',
-                'htmlOptions' => array(
-                    'multiple' => 'multiple',
-                ),
-            ));
-            echo $form->error($model, 'list_files');
-        ?>
-        </div>
-    </div>
-
-    <div class="control-group">
-        <?= $form->labelEx($model, 'list_scans', array('class' => 'control-label')); ?>
-        <div class="controls">
-            <?php
-            $this->widget('bootstrap.widgets.TbGridView',
-                array(
-                    'id' => 'grid-scans',
-                    'type' => 'striped bordered condensed',
-                    'dataProvider' => new CArrayDataProvider($data_scans),
-                    'template' => "{items}",
-//                    'htmlOptions' => array(
-//                        'data-id' => ($model->primaryKey) ? $model->primaryKey : ''
-//                    ),
-                    'columns' => array(
-                        array(
-                            'name' => 'filename',
-                            'header' => 'Название',
-                            'type' => 'raw',
-                            'htmlOptions' => array(
-                                'style' => 'width: 90%',
-                            )
-                        ),
-                        array(
-                            'name' => 'delete',
-                            'header' => '',
-                            'type' => 'raw'
-                        ),
-                    )
-                )
-            );
-            $this->widget('CMultiFileUpload', array(
-                'name' => 'upload_scans',
-//                'accept' => 'jpeg|jpg|gif|png', // useful for verifying files
-                'duplicate' => 'Скан с таким именем уже выбран!',
-                'denied' => 'Неправильный тип скана',
-                'htmlOptions' => array(
-                    'multiple' => 'multiple',
-                ),
-            ));
-            echo $form->error($model, 'list_scans');
-            ?>
-        </div>
-    </div>
-
 </fieldset>
-
-<?php $this->endWidget(); ?>
-
-<div id="preparing-file-modal" title="Подготовка файла..." style="display: none;">
-    Подготавливается файл для скачивания, подождите...
-
-    <div class="ui-progressbar-value ui-corner-left ui-corner-right" style="width: 100%; height:22px; margin-top: 20px;"></div>
-</div>
-<div id="error-modal" title="Error" style="display: none;">
-    Возникли проблемы при подготовке файла, повторите попытку
-</div>

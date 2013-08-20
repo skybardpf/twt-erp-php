@@ -23,7 +23,7 @@ class CodesOKOPF extends SOAPModel
 	 */
 	public function findAll()
     {
-        $request = array('filters' => array(), 'sort' => array($this->order));
+        $request = array('filters' => array(array()), 'sort' => array($this->order));
 		$ret = $this->SOAP->listOKOPF($request);
 		$ret = SoapComponent::parseReturn($ret);
 		return $this->publish_list($ret, __CLASS__);
