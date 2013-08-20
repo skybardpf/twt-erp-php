@@ -7,6 +7,15 @@ $(document).ready(function(){
     $('button.del-type-contract').on('click', del_type_contract);
     $('button.add-type-contract').on('click', showModal);
 
+    $('#PowerAttorneyForOrganization_typ_doc').change(function(){
+        var tc = $('#block_type_of_contract');
+        if ($(this).val() == 'Генеральная'){
+            tc.addClass('hide');
+        } else {
+            tc.removeClass('hide');
+        }
+    });
+
     /**
      * Удаляем вид договора из списка
      * @returns {boolean}

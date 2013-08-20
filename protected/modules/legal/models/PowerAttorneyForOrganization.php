@@ -8,6 +8,8 @@
  */
 class  PowerAttorneyForOrganization extends PowerAttorneyAbstract
 {
+    const TYPE_DOC_GENERAL = 'Генеральная';
+
     public $json_type_of_contract;
 
     /**
@@ -86,7 +88,7 @@ class  PowerAttorneyForOrganization extends PowerAttorneyAbstract
             'data' => SoapComponent::getStructureElement($data),
             'list_files' => $list_files,
             'list_scans' => $list_scans,
-            'type_of_contract' => $this->type_of_contract
+            'type_of_contract' => (empty($this->type_of_contract)) ? array('Null') : $this->type_of_contract
         ));
         $ret = SoapComponent::parseReturn($ret, false);
 
@@ -162,7 +164,7 @@ class  PowerAttorneyForOrganization extends PowerAttorneyAbstract
                 array('typ_doc', 'required'),
                 array('typ_doc', 'in', 'range'  => array_keys(PowerAttorneyForOrganization::getDocTypes())),
 
-                array('type_of_contract', 'required'),
+                array('type_of_contract', 'required', 'on'=>'typeDocNotGeneral'),
 
                 array('json_type_of_contract', 'validJson'),
             )

@@ -150,9 +150,11 @@ if ($model->primaryKey) {
         );
     }
 }
+
+$class_tc = ($model->typ_doc == $model::TYPE_DOC_GENERAL) ? 'hide' : '';
 ?>
 
-<div class="control-group">
+<div class="control-group <?= $class_tc; ?>" id="block_type_of_contract">
     <?= $form->labelEx($model, 'type_of_contract', array('class' => 'control-label')); ?>
     <div class="controls">
         <?php
