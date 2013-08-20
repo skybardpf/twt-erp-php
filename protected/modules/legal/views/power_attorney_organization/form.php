@@ -98,7 +98,7 @@ if ($model->primaryKey) {
                 'type' => 'primary',
                 'label' => 'Удалить',
                 'htmlOptions' => array(
-                    'class' => 'delete_type_contract',
+                    'class' => 'del-type-contract',
                     'data-id' => $f
                 )
             ), true)
@@ -267,5 +267,31 @@ if ($model->primaryKey) {
     $this->endWidget();
 
     echo $this->renderPartial('/_files/download_hint', array(), true);
+
+/**
+* Модальное окошко для выбора вида договора
+*/
+$this->beginWidget('bootstrap.widgets.TbModal', array('id'=>'modalWindow'));
 ?>
+<div class="modal-header">
+    <a class="close" data-dismiss="modal">×</a>
+    <h4><?=Yii::t("menu", "Выберите")?></h4>
+</div>
+<div class="modal-body"></div>
+<div class="modal-footer">
+    <?php
+    $this->widget('bootstrap.widgets.TbButton', array(
+        'label' => Yii::t("menu", "Сохранить"),
+        'url'   => '#',
+        'htmlOptions' => array('class'=>'button_save', 'data-dismiss'=>'modal'),
+    ));
+
+    $this->widget('bootstrap.widgets.TbButton', array(
+        'label' => Yii::t("menu", "Отмена"),
+        'url'   => '#',
+        'htmlOptions' => array('data-dismiss'=>'modal'),
+    ));
+    ?>
+</div>
+<?php $this->endWidget(); ?>
 
