@@ -9,7 +9,7 @@
 
 /*@var $this Controller */
 
-Yii::app()->clientScript->registerCssFile(CHtml::asset(Yii::app()->basePath.'/../static/css/main.css'));
+Yii::app()->clientScript->registerCssFile(CHtml::asset(Yii::app()->basePath.'/assets/css/main.css'));
 
 ?>
 <!DOCTYPE html>
@@ -22,18 +22,18 @@ Yii::app()->clientScript->registerCssFile(CHtml::asset(Yii::app()->basePath.'/..
 </head>
 
 <body style="padding-top: 50px;">
-    <div class="container">
-        <?php
-            $this->renderPartial('head');
-        ?>
-    </div>
-    <div class="container">
-        <?=$content?>
-    </div>
-    <footer class="container">
-        <hr>
-        © TWT - Юридический блок, 2013
-        <br><br>
-    </footer>
+<div class="container">
+    <?php
+    $this->renderPartial('head');
+    ?>
+</div>
+<div class="container">
+    <?=$content?>
+</div>
+<footer class="container">
+    <hr>
+    © TWT - Юридический блок, 2013
+    <br><br>
+</footer>
 </body>
 </html>

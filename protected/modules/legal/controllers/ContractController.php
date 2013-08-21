@@ -1,8 +1,8 @@
 <?php
 /**
- *  Управление договорами для определенной организации.
+ * Управление договорами для определенной организации.
  *
- *  @author Skibardin A.A. <skybardpf@artektiv.ru>
+ * @author Skibardin A.A. <skybardpf@artektiv.ru>
  */
 class ContractController extends Controller{
     public $layout = 'inner';

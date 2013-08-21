@@ -1,0 +1,99 @@
+.grid-view {
+	padding-top: 0;
+}
+
+.left-menu {
+	padding-top: 60px;
+}
+
+h1 {
+    font-size: 33px;
+}
+
+.form-horizontal .control-group {
+    padding: 15px 10px;
+    margin: 0;
+}
+.form-horizontal .control-group:nth-child(even) {
+    background-color: #f9f9f9;
+}
+
+.form-horizontal fieldset {
+    border: 1px solid #DDDDDD;
+    border-radius: 4px;
+    margin: 20px 0;
+}
+.form-horizontal input[type='text'], .form-horizontal input[type='password'], .form-horizontal textarea {
+    width: 90%;
+}
+.form-horizontal input.input-small, .form-horizontal textarea.input-small, .form-horizontal select.input-small {
+    width: 25%;
+}
+.form-horizontal input.input-small.notsosmall, .form-horizontal textarea.input-small.notsosmall, .form-horizontal select.input-small.notsosmall {
+    width: 45%;
+}
+.form-horizontal .control-label.small {
+    width: 80px;
+    display: inline-block;
+    float: none;
+}
+.form-horizontal select {
+    width: 93%;
+}
+.yur-tabs ul {
+    margin-bottom: 0;
+}
+.yur-tabs .narrow {
+    width: 160px;
+}
+.yur-tabs .narrower {
+    width: 120px;
+}
+.yur-tabs {
+    font-size: 12px;
+}
+.yur-tabs li a {
+    font-size: 12px;
+    padding: 15px 12px;
+    text-align: center;
+}
+.yur-tabs .narrow a {
+    padding: 5px 12px;
+}
+.yur-content {
+    border: 1px solid #DDDDDD;
+    border-top: none;
+    padding: 15px;
+}
+.yur-content img {
+    /*border: 1px solid #DDDDDD;*/
+    /*box-shadow: 0 0 2px #666;*/
+    max-width: 50%;
+}
+.bordered {
+    border: 1px solid #DDDDDD;
+    border-radius: 5px 5px 5px 5px;
+    padding: 20px 40px;
+}
+.bank_account {
+    border-bottom: 1px solid #DDDDDD;
+    margin: 10px 0;
+}
+.control-add {
+
+}
+.table thead th {
+	text-align: center;
+	vertical-align: top;
+	white-space: normal;
+}
+.x-grid-cell-inner-treecolumn {
+	padding-right: 0;
+}
+.x-tree-node-text table {
+	margin-top: 10px;
+}
+.x-body {
+	font-size: 14px;
+	font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
+}

@@ -22,7 +22,8 @@ return array(
 	),
 
 	'modules'=>array(
-		'legal', 'support',
+		'legal',
+        'calc' => array(),
 		'gii' => array(
 			'generatorPaths'=>array(
 				'bootstrap.gii',
