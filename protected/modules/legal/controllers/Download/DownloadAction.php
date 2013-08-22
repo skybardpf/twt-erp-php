@@ -11,7 +11,7 @@ class DownloadAction extends CAction
      */
     public function run($class_name, $id, $type, $file)
     {
-        $path = Yii::app()->params->uploadDocumentDir
+        $path = Yii::getPathOfAlias(Yii::app()->params->uploadDocumentDir)
             . DIRECTORY_SEPARATOR . Yii::app()->user->getId()
             . DIRECTORY_SEPARATOR . $class_name
             . DIRECTORY_SEPARATOR . $id

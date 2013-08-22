@@ -1,12 +1,12 @@
 <?php
 /**
- *  Документы -> Свободные документы
- *  User: Skibardin A.A.
- *  Date: 03.07.13
+ * Документы -> Свободные документы
  *
- *  @var $this          DocumentsController
- *  @var $docs          FreeDocument[]
- *  @var $organization  Organization
+ * @author Skibardin A.A. <skybardpf@artektiv.ru>
+ *
+ * @var DocumentsController $this
+ * @var FreeDocument[]      $docs
+ * @var Organization        $organization
  */
 ?>
 
@@ -17,7 +17,7 @@
                 'label' => 'Новый свободный документ',
                 'type'  => 'success', // null, 'primary', 'info', 'success', 'warning', 'danger' or 'inverse'
                 'size'  => 'normal', // null, 'large', 'small' or 'mini'
-                'url'   => $this->createUrl("free_documents/add", array("org_id" => $organization->primaryKey))
+                'url'   => $this->createUrl("free_document/add", array("org_id" => $organization->primaryKey))
             )); ?>
         </div>
         <h3>Свободные документы</h3>
@@ -35,7 +35,7 @@
                     'name'  => 'name',
                     'header'=> 'Название',
                     'type'  => 'raw',
-                    'value' => 'CHtml::link($data["name"], Yii::app()->getController()->createUrl("free_documents/view", array("id" => $data["id"])))'
+                    'value' => 'CHtml::link($data["name"], Yii::app()->getController()->createUrl("free_document/view", array("id" => $data["id"])))'
                 ),
                 array('name'=>'expire', 'header'=>'Срок действия'),
             ),
