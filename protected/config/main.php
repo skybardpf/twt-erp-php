@@ -1,6 +1,12 @@
 <?php
 
 Yii::setPathOfAlias('bootstrap', dirname(__FILE__).'/../extensions/bootstrap');
+Yii::setPathOfAlias('filestorage', dirname(__FILE__).'/../filestorage/twt-erp');
+
+//$fileStorageDir = dirname(__FILE__)
+//    . DIRECTORY_SEPARATOR . '..'
+//    . DIRECTORY_SEPARATOR . 'filestorage'
+//    . DIRECTORY_SEPARATOR . 'twt-erp';
 
 // uncomment the following to define a path alias
 // Yii::setPathOfAlias('local','path/to/local-folder');
@@ -109,6 +115,6 @@ return array(
 		// this is used in contact page
 		'adminEmail'=>'yury@artektiv.ru',
 
-        'uploadDocumentDir' => dirname(__FILE__).DIRECTORY_SEPARATOR.'..'.DIRECTORY_SEPARATOR.'filestorage'.DIRECTORY_SEPARATOR.'uploads',
+        'uploadDocumentDir' => 'filestorage.uploads',
 	),
 );

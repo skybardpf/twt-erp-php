@@ -1,0 +1,867 @@
+2013-08-12 14:25:31,092 INFO  [DefaultSoapUICore] initialized soapui-settings from [/usr/bin/soapui-4.5.0/soapui-settings.xml]
+2013-08-12 14:25:34,545 INFO  [SoapUI] Used java version: 1.6.0_27
+2013-08-12 14:25:39,880 INFO  [b] JxBrowser is unpacking XULRunner to /home/leadert/.JxBrowser/xulrunner-linux-version-1.9.2.1 It's may spend some time which is depends on computer performance...
+2013-08-12 14:25:44,111 INFO  [b] JxBrowser has extracted XULRunner to /home/leadert/.JxBrowser/xulrunner-linux-version-1.9.2.1/xulrunner-linux
+2013-08-12 14:26:54,628 INFO  [SchemaUtils] Added default schema from file:/usr/bin/soapui-4.5.0/bin/soapui-4.5.0.jar!/com/eviware/soapui/resources/xsds/xop.xsd with targetNamespace http://www.w3.org/2004/08/xop/include
+2013-08-12 14:26:54,780 INFO  [SchemaUtils] Added default schema from file:/usr/bin/soapui-4.5.0/bin/soapui-4.5.0.jar!/com/eviware/soapui/resources/xsds/XMLSchema.xsd with targetNamespace http://www.w3.org/2001/XMLSchema
+2013-08-12 14:26:54,788 INFO  [SchemaUtils] Added default schema from file:/usr/bin/soapui-4.5.0/bin/soapui-4.5.0.jar!/com/eviware/soapui/resources/xsds/xml.xsd with targetNamespace http://www.w3.org/XML/1998/namespace
+2013-08-12 14:26:54,790 INFO  [SchemaUtils] Added default schema from file:/usr/bin/soapui-4.5.0/bin/soapui-4.5.0.jar!/com/eviware/soapui/resources/xsds/swaref.xsd with targetNamespace http://ws-i.org/profiles/basic/1.1/xsd
+2013-08-12 14:26:54,801 INFO  [SchemaUtils] Added default schema from file:/usr/bin/soapui-4.5.0/bin/soapui-4.5.0.jar!/com/eviware/soapui/resources/xsds/xmime200505.xsd with targetNamespace http://www.w3.org/2005/05/xmlmime
+2013-08-12 14:26:54,805 INFO  [SchemaUtils] Added default schema from file:/usr/bin/soapui-4.5.0/bin/soapui-4.5.0.jar!/com/eviware/soapui/resources/xsds/xmime200411.xsd with targetNamespace http://www.w3.org/2004/11/xmlmime
+2013-08-12 14:26:54,817 INFO  [SchemaUtils] Added default schema from file:/usr/bin/soapui-4.5.0/bin/soapui-4.5.0.jar!/com/eviware/soapui/resources/xsds/soapEnvelope.xsd with targetNamespace http://schemas.xmlsoap.org/soap/envelope/
+2013-08-12 14:26:54,854 INFO  [SchemaUtils] Added default schema from file:/usr/bin/soapui-4.5.0/bin/soapui-4.5.0.jar!/com/eviware/soapui/resources/xsds/soapEncoding.xsd with targetNamespace http://schemas.xmlsoap.org/soap/encoding/
+2013-08-12 14:26:54,860 INFO  [SchemaUtils] Added default schema from file:/usr/bin/soapui-4.5.0/bin/soapui-4.5.0.jar!/com/eviware/soapui/resources/xsds/soapEnvelope12.xsd with targetNamespace http://www.w3.org/2003/05/soap-envelope
+2013-08-12 14:26:54,879 INFO  [SchemaUtils] Added default schema from file:/usr/bin/soapui-4.5.0/bin/soapui-4.5.0.jar!/com/eviware/soapui/resources/xsds/soapEncoding12.xsd with targetNamespace http://www.w3.org/2003/05/soap-encoding
+2013-08-12 14:26:55,832 INFO  [SchemaUtils] Loading schema types from [http://spar-trade/site/clientorder?wsdl]
+2013-08-12 14:26:55,832 INFO  [SchemaUtils] Getting schema http://spar-trade/site/clientorder?wsdl
+2013-08-12 14:26:55,842 INFO  [SchemaUtils] Getting schema http://spar-trade/spar_trade/shema.xsd
+2013-08-12 14:26:56,419 INFO  [WsdlImporter] Finding importer for {http://eng3_soap.artektiv.ru/}Spartrade_Binding
+2013-08-12 14:26:56,452 INFO  [WsdlImporter] Importing binding {http://eng3_soap.artektiv.ru/}Spartrade_Binding
+2013-08-12 14:26:56,636 INFO  [Soap11HttpBindingImporter] importing endpoint http://spar-trade/site/clientorder
+2013-08-12 14:26:56,801 INFO  [Soap11HttpBindingImporter] importing operation getRequestById
+2013-08-12 14:26:56,874 INFO  [Soap11HttpBindingImporter] importing operation getRequestsID
+2013-08-12 14:26:56,875 INFO  [Soap11HttpBindingImporter] importing operation send
+2013-08-12 14:26:56,876 INFO  [Soap11HttpBindingImporter] importing operation test
+2013-08-12 14:28:08,371 INFO  [AbstractHttpRequestDesktopPanel] Got response for [Spartrade_Binding.test:Request 1] in 165ms (575 bytes)
+2013-08-12 14:29:56,063 INFO  [AbstractHttpRequestDesktopPanel] Got response for [Spartrade_Binding.test:Request 1] in 72ms (299 bytes)
+2013-08-12 14:29:58,264 INFO  [AbstractHttpRequestDesktopPanel] Got response for [Spartrade_Binding.test:Request 1] in 57ms (299 bytes)
+2013-08-12 14:35:00,061 INFO  [SchemaUtils] Loading schema types from [http://spar-trade/site/clientorder?wsdl]
+2013-08-12 14:35:00,067 INFO  [SchemaUtils] Getting schema http://spar-trade/site/clientorder?wsdl
+2013-08-12 14:35:00,073 INFO  [SchemaUtils] Getting schema http://spar-trade/spar_trade/shema.xsd
+2013-08-12 14:35:00,651 INFO  [WsdlInterface] Synchronizing existing operation [send]
+2013-08-12 14:35:00,654 INFO  [WsdlInterface] Synchronizing existing operation [getRequestsID]
+2013-08-12 14:35:00,665 INFO  [WsdlInterface] Synchronizing existing operation [getRequestById]
+2013-08-12 14:35:00,674 INFO  [WsdlInterface] Synchronizing existing operation [test]
+2013-08-12 14:35:08,788 INFO  [AbstractHttpRequestDesktopPanel] Got response for [Spartrade_Binding.test:Request 1] in 75ms (299 bytes)
+2013-08-12 14:48:01,506 INFO  [AbstractHttpRequestDesktopPanel] Got response for [Spartrade_Binding.test:Request 1] in 113ms (257 bytes)
+2013-08-12 14:59:26,266 INFO  [AbstractHttpRequestDesktopPanel] Got response for [Spartrade_Binding.test:Request 1] in 68ms (278 bytes)
+2013-08-12 15:13:32,429 INFO  [AbstractHttpRequestDesktopPanel] Got response for [Spartrade_Binding.test:Request 1] in 100ms (18531 bytes)
+2013-08-12 15:14:09,807 INFO  [AbstractHttpRequestDesktopPanel] Got response for [Spartrade_Binding.test:Request 1] in 64ms (412 bytes)
+2013-08-12 15:15:32,257 INFO  [AbstractHttpRequestDesktopPanel] Got response for [Spartrade_Binding.test:Request 1] in 38ms (412 bytes)
+2013-08-12 15:15:33,389 INFO  [AbstractHttpRequestDesktopPanel] Got response for [Spartrade_Binding.test:Request 1] in 45ms (412 bytes)
+2013-08-12 15:15:34,440 INFO  [AbstractHttpRequestDesktopPanel] Got response for [Spartrade_Binding.test:Request 1] in 43ms (412 bytes)
+2013-08-12 15:15:36,321 INFO  [AbstractHttpRequestDesktopPanel] Got response for [Spartrade_Binding.test:Request 1] in 48ms (412 bytes)
+2013-08-12 15:15:54,436 INFO  [AbstractHttpRequestDesktopPanel] Got response for [Spartrade_Binding.test:Request 1] in 52ms (412 bytes)
+2013-08-12 15:16:19,037 ERROR [SoapUI] An error occured [com.eviware.soapui.impl.support.definition.support.InvalidDefinitionException], see error log for details
+2013-08-12 15:16:19,060 ERROR [errorlog] com.eviware.soapui.impl.support.definition.support.InvalidDefinitionException
+com.eviware.soapui.impl.support.definition.support.InvalidDefinitionException
+	at com.eviware.soapui.impl.wsdl.support.wsdl.WsdlInterfaceDefinition.load(WsdlInterfaceDefinition.java:56)
+	at com.eviware.soapui.impl.wsdl.support.wsdl.WsdlContext.loadDefinition(WsdlContext.java:66)
+	at com.eviware.soapui.impl.wsdl.support.wsdl.WsdlContext.loadDefinition(WsdlContext.java:30)
+	at com.eviware.soapui.impl.support.definition.support.AbstractDefinitionContext.cacheDefinition(AbstractDefinitionContext.java:268)
+	at com.eviware.soapui.impl.support.definition.support.AbstractDefinitionContext.access$400(AbstractDefinitionContext.java:44)
+	at com.eviware.soapui.impl.support.definition.support.AbstractDefinitionContext$Loader.construct(AbstractDefinitionContext.java:235)
+	at com.eviware.soapui.support.swing.SwingWorkerDelegator.construct(SwingWorkerDelegator.java:46)
+	at com.eviware.soapui.support.swing.SwingWorker$2.run(SwingWorker.java:149)
+	at java.lang.Thread.run(Thread.java:679)
+2013-08-12 15:16:22,972 ERROR [SoapUI] An error occured [com.eviware.soapui.impl.support.definition.support.InvalidDefinitionException], see error log for details
+2013-08-12 15:16:22,978 ERROR [errorlog] com.eviware.soapui.impl.support.definition.support.InvalidDefinitionException
+com.eviware.soapui.impl.support.definition.support.InvalidDefinitionException
+	at com.eviware.soapui.impl.wsdl.support.wsdl.WsdlInterfaceDefinition.load(WsdlInterfaceDefinition.java:56)
+	at com.eviware.soapui.impl.wsdl.support.wsdl.WsdlContext.loadDefinition(WsdlContext.java:66)
+	at com.eviware.soapui.impl.wsdl.support.wsdl.WsdlContext.loadDefinition(WsdlContext.java:30)
+	at com.eviware.soapui.impl.support.definition.support.AbstractDefinitionContext.cacheDefinition(AbstractDefinitionContext.java:268)
+	at com.eviware.soapui.impl.support.definition.support.AbstractDefinitionContext.access$400(AbstractDefinitionContext.java:44)
+	at com.eviware.soapui.impl.support.definition.support.AbstractDefinitionContext$Loader.construct(AbstractDefinitionContext.java:235)
+	at com.eviware.soapui.support.swing.SwingWorkerDelegator.construct(SwingWorkerDelegator.java:46)
+	at com.eviware.soapui.support.swing.SwingWorker$2.run(SwingWorker.java:149)
+	at java.lang.Thread.run(Thread.java:679)
+2013-08-12 15:17:09,432 ERROR [SoapUI] An error occured [com.eviware.soapui.impl.support.definition.support.InvalidDefinitionException], see error log for details
+2013-08-12 15:17:09,434 ERROR [errorlog] com.eviware.soapui.impl.support.definition.support.InvalidDefinitionException
+com.eviware.soapui.impl.support.definition.support.InvalidDefinitionException
+	at com.eviware.soapui.impl.wsdl.support.wsdl.WsdlInterfaceDefinition.load(WsdlInterfaceDefinition.java:56)
+	at com.eviware.soapui.impl.wsdl.support.wsdl.WsdlContext.loadDefinition(WsdlContext.java:66)
+	at com.eviware.soapui.impl.wsdl.support.wsdl.WsdlContext.loadDefinition(WsdlContext.java:30)
+	at com.eviware.soapui.impl.support.definition.support.AbstractDefinitionContext.cacheDefinition(AbstractDefinitionContext.java:268)
+	at com.eviware.soapui.impl.support.definition.support.AbstractDefinitionContext.access$400(AbstractDefinitionContext.java:44)
+	at com.eviware.soapui.impl.support.definition.support.AbstractDefinitionContext$Loader.construct(AbstractDefinitionContext.java:235)
+	at com.eviware.soapui.support.swing.SwingWorkerDelegator.construct(SwingWorkerDelegator.java:46)
+	at com.eviware.soapui.support.swing.SwingWorker$2.run(SwingWorker.java:149)
+	at java.lang.Thread.run(Thread.java:679)
+2013-08-12 15:17:13,814 ERROR [SoapUI] An error occured [com.eviware.soapui.impl.support.definition.support.InvalidDefinitionException], see error log for details
+2013-08-12 15:17:13,815 ERROR [errorlog] com.eviware.soapui.impl.support.definition.support.InvalidDefinitionException
+com.eviware.soapui.impl.support.definition.support.InvalidDefinitionException
+	at com.eviware.soapui.impl.wsdl.support.wsdl.WsdlInterfaceDefinition.load(WsdlInterfaceDefinition.java:56)
+	at com.eviware.soapui.impl.wsdl.support.wsdl.WsdlContext.loadDefinition(WsdlContext.java:66)
+	at com.eviware.soapui.impl.wsdl.support.wsdl.WsdlContext.loadDefinition(WsdlContext.java:30)
+	at com.eviware.soapui.impl.support.definition.support.AbstractDefinitionContext.cacheDefinition(AbstractDefinitionContext.java:268)
+	at com.eviware.soapui.impl.support.definition.support.AbstractDefinitionContext.access$400(AbstractDefinitionContext.java:44)
+	at com.eviware.soapui.impl.support.definition.support.AbstractDefinitionContext$Loader.construct(AbstractDefinitionContext.java:235)
+	at com.eviware.soapui.support.swing.SwingWorkerDelegator.construct(SwingWorkerDelegator.java:46)
+	at com.eviware.soapui.support.swing.SwingWorker$2.run(SwingWorker.java:149)
+	at java.lang.Thread.run(Thread.java:679)
+2013-08-12 15:18:47,948 ERROR [SoapUI] An error occured [com.eviware.soapui.impl.support.definition.support.InvalidDefinitionException], see error log for details
+2013-08-12 15:18:47,949 ERROR [errorlog] com.eviware.soapui.impl.support.definition.support.InvalidDefinitionException
+com.eviware.soapui.impl.support.definition.support.InvalidDefinitionException
+	at com.eviware.soapui.impl.wsdl.support.wsdl.WsdlInterfaceDefinition.load(WsdlInterfaceDefinition.java:56)
+	at com.eviware.soapui.impl.wsdl.support.wsdl.WsdlContext.loadDefinition(WsdlContext.java:66)
+	at com.eviware.soapui.impl.wsdl.support.wsdl.WsdlContext.loadDefinition(WsdlContext.java:30)
+	at com.eviware.soapui.impl.support.definition.support.AbstractDefinitionContext.cacheDefinition(AbstractDefinitionContext.java:268)
+	at com.eviware.soapui.impl.support.definition.support.AbstractDefinitionContext.access$400(AbstractDefinitionContext.java:44)
+	at com.eviware.soapui.impl.support.definition.support.AbstractDefinitionContext$Loader.construct(AbstractDefinitionContext.java:235)
+	at com.eviware.soapui.support.swing.SwingWorkerDelegator.construct(SwingWorkerDelegator.java:46)
+	at com.eviware.soapui.support.swing.SwingWorker$2.run(SwingWorker.java:149)
+	at java.lang.Thread.run(Thread.java:679)
+2013-08-12 15:19:21,178 INFO  [SchemaUtils] Loading schema types from [http://spar-trade/site/clientorder?wsdl]
+2013-08-12 15:19:21,185 INFO  [SchemaUtils] Getting schema http://spar-trade/site/clientorder?wsdl
+2013-08-12 15:19:21,189 INFO  [SchemaUtils] Getting schema http://spar-trade/spar_trade/shema.xsd
+2013-08-12 15:19:21,492 INFO  [WsdlImporter] Finding importer for {http://eng3_soap.artektiv.ru/}Spartrade_Binding
+2013-08-12 15:19:21,495 INFO  [WsdlImporter] Importing binding {http://eng3_soap.artektiv.ru/}Spartrade_Binding
+2013-08-12 15:19:21,512 INFO  [Soap11HttpBindingImporter] importing endpoint http://spar-trade/site/clientorder
+2013-08-12 15:19:21,543 INFO  [Soap11HttpBindingImporter] importing operation getRequestById
+2013-08-12 15:19:21,570 INFO  [Soap11HttpBindingImporter] importing operation getRequestsID
+2013-08-12 15:19:21,584 INFO  [Soap11HttpBindingImporter] importing operation send
+2013-08-12 15:19:21,587 INFO  [Soap11HttpBindingImporter] importing operation test
+2013-08-12 15:19:32,079 INFO  [AbstractHttpRequestDesktopPanel] Got response for [Spartrade_Binding.test:Request 1] in 69ms (316 bytes)
+2013-08-12 15:20:39,359 INFO  [SchemaUtils] Loading schema types from [http://spar-trade/site/clientorder?wsdl]
+2013-08-12 15:20:39,359 INFO  [SchemaUtils] Getting schema http://spar-trade/site/clientorder?wsdl
+2013-08-12 15:20:39,367 INFO  [SchemaUtils] Getting schema http://spar-trade/spar_trade/shema.xsd
+2013-08-12 15:20:39,811 INFO  [WsdlInterface] Synchronizing existing operation [send]
+2013-08-12 15:20:39,812 INFO  [WsdlInterface] Synchronizing existing operation [getRequestsID]
+2013-08-12 15:20:39,813 INFO  [WsdlInterface] Synchronizing existing operation [getRequestById]
+2013-08-12 15:20:39,813 INFO  [WsdlInterface] Synchronizing existing operation [test]
+2013-08-12 15:20:42,624 INFO  [AbstractHttpRequestDesktopPanel] Got response for [Spartrade_Binding.test:Request 1] in 63ms (285 bytes)
+2013-08-12 15:40:05,114 INFO  [SchemaUtils] Loading schema types from [http://spar-trade/site/clientorder?wsdl]
+2013-08-12 15:40:05,115 INFO  [SchemaUtils] Getting schema http://spar-trade/site/clientorder?wsdl
+2013-08-12 15:40:05,122 INFO  [SchemaUtils] Getting schema http://spar-trade/spar_trade/shema.xsd
+2013-08-12 15:40:05,796 INFO  [WsdlInterface] Synchronizing existing operation [send]
+2013-08-12 15:40:05,803 INFO  [WsdlInterface] Synchronizing existing operation [getRequestsID]
+2013-08-12 15:40:05,806 INFO  [WsdlInterface] Synchronizing existing operation [getRequestById]
+2013-08-12 15:40:05,813 INFO  [WsdlInterface] Synchronizing existing operation [test]
+2013-08-12 15:40:08,445 INFO  [AbstractHttpRequestDesktopPanel] Got response for [Spartrade_Binding.test:Request 1] in 55ms (316 bytes)
+2013-08-12 15:41:01,208 INFO  [AbstractHttpRequestDesktopPanel] Got response for [Spartrade_Binding.test:Request 1] in 34ms (316 bytes)
+2013-08-12 15:41:04,027 INFO  [AbstractHttpRequestDesktopPanel] Got response for [Spartrade_Binding.test:Request 1] in 62ms (316 bytes)
+2013-08-12 15:41:04,857 INFO  [AbstractHttpRequestDesktopPanel] Got response for [Spartrade_Binding.test:Request 1] in 35ms (316 bytes)
+2013-08-12 15:45:12,581 INFO  [SchemaUtils] Loading schema types from [http://spar-trade/site/clientorder?wsdl]
+2013-08-12 15:45:12,583 INFO  [SchemaUtils] Getting schema http://spar-trade/site/clientorder?wsdl
+2013-08-12 15:45:12,587 INFO  [SchemaUtils] Getting schema http://spar-trade/spar_trade/shema.xsd
+2013-08-12 15:45:12,905 INFO  [WsdlInterface] Synchronizing existing operation [send]
+2013-08-12 15:45:12,906 INFO  [WsdlInterface] Synchronizing existing operation [getRequestsID]
+2013-08-12 15:45:12,908 INFO  [WsdlInterface] Synchronizing existing operation [getRequestById]
+2013-08-12 15:45:12,910 INFO  [WsdlInterface] Synchronizing existing operation [test]
+2013-08-12 15:45:15,117 INFO  [AbstractHttpRequestDesktopPanel] Got response for [Spartrade_Binding.test:Request 1] in 61ms (316 bytes)
+2013-08-12 15:45:16,547 INFO  [AbstractHttpRequestDesktopPanel] Got response for [Spartrade_Binding.test:Request 1] in 55ms (316 bytes)
+2013-08-12 15:45:17,616 INFO  [AbstractHttpRequestDesktopPanel] Got response for [Spartrade_Binding.test:Request 1] in 36ms (316 bytes)
+2013-08-12 15:45:18,510 INFO  [AbstractHttpRequestDesktopPanel] Got response for [Spartrade_Binding.test:Request 1] in 51ms (316 bytes)
+2013-08-12 15:46:18,914 INFO  [AbstractHttpRequestDesktopPanel] Got response for [Spartrade_Binding.test:Request 1] in 41ms (316 bytes)
+2013-08-12 15:47:04,870 INFO  [log] Logging to org.slf4j.impl.Log4jLoggerAdapter(org.mortbay.log) via org.mortbay.log.Slf4jLog
+2013-08-12 15:47:05,142 INFO  [log] jetty-6.1.x
+2013-08-12 15:47:05,463 INFO  [log] Started SocketConnector@0.0.0.0:8081
+2013-08-12 15:47:05,466 INFO  [SoapUI] Started HTTP Monitor on local port 8081
+2013-08-12 15:47:11,006 INFO  [AbstractHttpRequestDesktopPanel] Got response for [Spartrade_Binding.test:Request 1] in 47ms (316 bytes)
+2013-08-12 15:47:12,221 INFO  [AbstractHttpRequestDesktopPanel] Got response for [Spartrade_Binding.test:Request 1] in 46ms (316 bytes)
+2013-08-12 15:47:37,287 INFO  [AbstractHttpRequestDesktopPanel] Got response for [Spartrade_Binding.test:Request 1] in 44ms (316 bytes)
+2013-08-12 15:47:37,939 INFO  [AbstractHttpRequestDesktopPanel] Got response for [Spartrade_Binding.test:Request 1] in 59ms (316 bytes)
+2013-08-12 15:47:38,130 INFO  [AbstractHttpRequestDesktopPanel] Got response for [Spartrade_Binding.test:Request 1] in 39ms (316 bytes)
+2013-08-12 15:47:58,981 INFO  [log] Stopped SocketConnector@0.0.0.0:8081
+2013-08-12 15:48:39,667 INFO  [SchemaUtils] Loading schema types from [http://spar-trade/site/clientorder?wsdl]
+2013-08-12 15:48:39,675 INFO  [SchemaUtils] Getting schema http://spar-trade/site/clientorder?wsdl
+2013-08-12 15:48:39,679 INFO  [SchemaUtils] Getting schema http://spar-trade/spar_trade/shema.xsd
+2013-08-12 15:48:39,819 INFO  [WsdlImporter] Finding importer for {http://eng3_soap.artektiv.ru/}Spartrade_Binding
+2013-08-12 15:48:39,853 INFO  [WsdlImporter] Importing binding {http://eng3_soap.artektiv.ru/}Spartrade_Binding
+2013-08-12 15:48:39,856 INFO  [Soap11HttpBindingImporter] importing endpoint http://spar-trade/site/clientorder
+2013-08-12 15:48:39,878 INFO  [Soap11HttpBindingImporter] importing operation getRequestById
+2013-08-12 15:48:39,880 INFO  [Soap11HttpBindingImporter] importing operation getRequestsID
+2013-08-12 15:48:39,881 INFO  [Soap11HttpBindingImporter] importing operation send
+2013-08-12 15:48:39,883 INFO  [Soap11HttpBindingImporter] importing operation test
+2013-08-12 15:49:21,949 ERROR [WsdlSubmit] Exception in request: org.apache.http.conn.HttpHostConnectException: Connection to http://leadert-Aspire-M1470:8080 refused
+2013-08-12 15:49:21,980 ERROR [SoapUI] An error occured [Connection to http://leadert-Aspire-M1470:8080 refused], see error log for details
+2013-08-12 15:49:21,980 ERROR [errorlog] org.apache.http.conn.HttpHostConnectException: Connection to http://leadert-Aspire-M1470:8080 refused
+org.apache.http.conn.HttpHostConnectException: Connection to http://leadert-Aspire-M1470:8080 refused
+	at com.eviware.soapui.impl.wsdl.support.http.SoapUIMultiThreadedHttpConnectionManager$SoapUIClientConnectionOperator.openConnection(SoapUIMultiThreadedHttpConnectionManager.java:321)
+	at org.apache.http.impl.conn.AbstractPoolEntry.open(AbstractPoolEntry.java:149)
+	at org.apache.http.impl.conn.AbstractPooledConnAdapter.open(AbstractPooledConnAdapter.java:121)
+	at org.apache.http.impl.client.DefaultRequestDirector.tryConnect(DefaultRequestDirector.java:561)
+	at org.apache.http.impl.client.DefaultRequestDirector.execute(DefaultRequestDirector.java:415)
+	at org.apache.http.impl.client.AbstractHttpClient.execute(AbstractHttpClient.java:820)
+	at org.apache.http.impl.client.AbstractHttpClient.execute(AbstractHttpClient.java:754)
+	at com.eviware.soapui.impl.wsdl.support.http.HttpClientSupport$Helper.execute(HttpClientSupport.java:218)
+	at com.eviware.soapui.impl.wsdl.support.http.HttpClientSupport.execute(HttpClientSupport.java:329)
+	at com.eviware.soapui.impl.wsdl.submit.transports.http.HttpClientRequestTransport.sendRequest(HttpClientRequestTransport.java:251)
+	at com.eviware.soapui.impl.wsdl.WsdlSubmit.run(WsdlSubmit.java:123)
+	at java.util.concurrent.Executors$RunnableAdapter.call(Executors.java:471)
+	at java.util.concurrent.FutureTask$Sync.innerRun(FutureTask.java:334)
+	at java.util.concurrent.FutureTask.run(FutureTask.java:166)
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1146)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:615)
+	at java.lang.Thread.run(Thread.java:679)
+Caused by: java.net.ConnectException: В соединении отказано
+	at java.net.PlainSocketImpl.socketConnect(Native Method)
+	at java.net.AbstractPlainSocketImpl.doConnect(AbstractPlainSocketImpl.java:327)
+	at java.net.AbstractPlainSocketImpl.connectToAddress(AbstractPlainSocketImpl.java:193)
+	at java.net.AbstractPlainSocketImpl.connect(AbstractPlainSocketImpl.java:180)
+	at java.net.SocksSocketImpl.connect(SocksSocketImpl.java:385)
+	at java.net.Socket.connect(Socket.java:546)
+	at org.apache.http.conn.scheme.PlainSocketFactory.connectSocket(PlainSocketFactory.java:123)
+	at com.eviware.soapui.impl.wsdl.support.http.SoapUIMultiThreadedHttpConnectionManager$SoapUIClientConnectionOperator.openConnection(SoapUIMultiThreadedHttpConnectionManager.java:299)
+	... 16 more
+2013-08-12 15:49:22,039 INFO  [AbstractHttpRequestDesktopPanel] Error getting response for [Spartrade_Binding.test:Request 1]; org.apache.http.conn.HttpHostConnectException: Connection to http://leadert-Aspire-M1470:8080 refused
+2013-08-12 15:49:29,065 ERROR [WsdlSubmit] Exception in request: org.apache.http.conn.HttpHostConnectException: Connection to http://leadert-Aspire-M1470:8080 refused
+2013-08-12 15:49:29,066 ERROR [SoapUI] An error occured [Connection to http://leadert-Aspire-M1470:8080 refused], see error log for details
+2013-08-12 15:49:29,066 ERROR [errorlog] org.apache.http.conn.HttpHostConnectException: Connection to http://leadert-Aspire-M1470:8080 refused
+org.apache.http.conn.HttpHostConnectException: Connection to http://leadert-Aspire-M1470:8080 refused
+	at com.eviware.soapui.impl.wsdl.support.http.SoapUIMultiThreadedHttpConnectionManager$SoapUIClientConnectionOperator.openConnection(SoapUIMultiThreadedHttpConnectionManager.java:321)
+	at org.apache.http.impl.conn.AbstractPoolEntry.open(AbstractPoolEntry.java:149)
+	at org.apache.http.impl.conn.AbstractPooledConnAdapter.open(AbstractPooledConnAdapter.java:121)
+	at org.apache.http.impl.client.DefaultRequestDirector.tryConnect(DefaultRequestDirector.java:561)
+	at org.apache.http.impl.client.DefaultRequestDirector.execute(DefaultRequestDirector.java:415)
+	at org.apache.http.impl.client.AbstractHttpClient.execute(AbstractHttpClient.java:820)
+	at org.apache.http.impl.client.AbstractHttpClient.execute(AbstractHttpClient.java:754)
+	at com.eviware.soapui.impl.wsdl.support.http.HttpClientSupport$Helper.execute(HttpClientSupport.java:218)
+	at com.eviware.soapui.impl.wsdl.support.http.HttpClientSupport.execute(HttpClientSupport.java:329)
+	at com.eviware.soapui.impl.wsdl.submit.transports.http.HttpClientRequestTransport.sendRequest(HttpClientRequestTransport.java:251)
+	at com.eviware.soapui.impl.wsdl.WsdlSubmit.run(WsdlSubmit.java:123)
+	at java.util.concurrent.Executors$RunnableAdapter.call(Executors.java:471)
+	at java.util.concurrent.FutureTask$Sync.innerRun(FutureTask.java:334)
+	at java.util.concurrent.FutureTask.run(FutureTask.java:166)
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1146)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:615)
+	at java.lang.Thread.run(Thread.java:679)
+Caused by: java.net.ConnectException: В соединении отказано
+	at java.net.PlainSocketImpl.socketConnect(Native Method)
+	at java.net.AbstractPlainSocketImpl.doConnect(AbstractPlainSocketImpl.java:327)
+	at java.net.AbstractPlainSocketImpl.connectToAddress(AbstractPlainSocketImpl.java:193)
+	at java.net.AbstractPlainSocketImpl.connect(AbstractPlainSocketImpl.java:180)
+	at java.net.SocksSocketImpl.connect(SocksSocketImpl.java:385)
+	at java.net.Socket.connect(Socket.java:546)
+	at org.apache.http.conn.scheme.PlainSocketFactory.connectSocket(PlainSocketFactory.java:123)
+	at com.eviware.soapui.impl.wsdl.support.http.SoapUIMultiThreadedHttpConnectionManager$SoapUIClientConnectionOperator.openConnection(SoapUIMultiThreadedHttpConnectionManager.java:299)
+	... 16 more
+2013-08-12 15:49:29,074 INFO  [AbstractHttpRequestDesktopPanel] Error getting response for [Spartrade_Binding.test:Request 1]; org.apache.http.conn.HttpHostConnectException: Connection to http://leadert-Aspire-M1470:8080 refused
+2013-08-12 15:49:29,663 ERROR [WsdlSubmit] Exception in request: org.apache.http.conn.HttpHostConnectException: Connection to http://leadert-Aspire-M1470:8080 refused
+2013-08-12 15:49:29,666 ERROR [SoapUI] An error occured [Connection to http://leadert-Aspire-M1470:8080 refused], see error log for details
+2013-08-12 15:49:29,666 ERROR [errorlog] org.apache.http.conn.HttpHostConnectException: Connection to http://leadert-Aspire-M1470:8080 refused
+org.apache.http.conn.HttpHostConnectException: Connection to http://leadert-Aspire-M1470:8080 refused
+	at com.eviware.soapui.impl.wsdl.support.http.SoapUIMultiThreadedHttpConnectionManager$SoapUIClientConnectionOperator.openConnection(SoapUIMultiThreadedHttpConnectionManager.java:321)
+	at org.apache.http.impl.conn.AbstractPoolEntry.open(AbstractPoolEntry.java:149)
+	at org.apache.http.impl.conn.AbstractPooledConnAdapter.open(AbstractPooledConnAdapter.java:121)
+	at org.apache.http.impl.client.DefaultRequestDirector.tryConnect(DefaultRequestDirector.java:561)
+	at org.apache.http.impl.client.DefaultRequestDirector.execute(DefaultRequestDirector.java:415)
+	at org.apache.http.impl.client.AbstractHttpClient.execute(AbstractHttpClient.java:820)
+	at org.apache.http.impl.client.AbstractHttpClient.execute(AbstractHttpClient.java:754)
+	at com.eviware.soapui.impl.wsdl.support.http.HttpClientSupport$Helper.execute(HttpClientSupport.java:218)
+	at com.eviware.soapui.impl.wsdl.support.http.HttpClientSupport.execute(HttpClientSupport.java:329)
+	at com.eviware.soapui.impl.wsdl.submit.transports.http.HttpClientRequestTransport.sendRequest(HttpClientRequestTransport.java:251)
+	at com.eviware.soapui.impl.wsdl.WsdlSubmit.run(WsdlSubmit.java:123)
+	at java.util.concurrent.Executors$RunnableAdapter.call(Executors.java:471)
+	at java.util.concurrent.FutureTask$Sync.innerRun(FutureTask.java:334)
+	at java.util.concurrent.FutureTask.run(FutureTask.java:166)
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1146)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:615)
+	at java.lang.Thread.run(Thread.java:679)
+Caused by: java.net.ConnectException: В соединении отказано
+	at java.net.PlainSocketImpl.socketConnect(Native Method)
+	at java.net.AbstractPlainSocketImpl.doConnect(AbstractPlainSocketImpl.java:327)
+	at java.net.AbstractPlainSocketImpl.connectToAddress(AbstractPlainSocketImpl.java:193)
+	at java.net.AbstractPlainSocketImpl.connect(AbstractPlainSocketImpl.java:180)
+	at java.net.SocksSocketImpl.connect(SocksSocketImpl.java:385)
+	at java.net.Socket.connect(Socket.java:546)
+	at org.apache.http.conn.scheme.PlainSocketFactory.connectSocket(PlainSocketFactory.java:123)
+	at com.eviware.soapui.impl.wsdl.support.http.SoapUIMultiThreadedHttpConnectionManager$SoapUIClientConnectionOperator.openConnection(SoapUIMultiThreadedHttpConnectionManager.java:299)
+	... 16 more
+2013-08-12 15:49:29,690 INFO  [AbstractHttpRequestDesktopPanel] Error getting response for [Spartrade_Binding.test:Request 1]; org.apache.http.conn.HttpHostConnectException: Connection to http://leadert-Aspire-M1470:8080 refused
+2013-08-12 15:49:29,875 ERROR [WsdlSubmit] Exception in request: org.apache.http.conn.HttpHostConnectException: Connection to http://leadert-Aspire-M1470:8080 refused
+2013-08-12 15:49:29,889 ERROR [SoapUI] An error occured [Connection to http://leadert-Aspire-M1470:8080 refused], see error log for details
+2013-08-12 15:49:29,889 ERROR [errorlog] org.apache.http.conn.HttpHostConnectException: Connection to http://leadert-Aspire-M1470:8080 refused
+org.apache.http.conn.HttpHostConnectException: Connection to http://leadert-Aspire-M1470:8080 refused
+	at com.eviware.soapui.impl.wsdl.support.http.SoapUIMultiThreadedHttpConnectionManager$SoapUIClientConnectionOperator.openConnection(SoapUIMultiThreadedHttpConnectionManager.java:321)
+	at org.apache.http.impl.conn.AbstractPoolEntry.open(AbstractPoolEntry.java:149)
+	at org.apache.http.impl.conn.AbstractPooledConnAdapter.open(AbstractPooledConnAdapter.java:121)
+	at org.apache.http.impl.client.DefaultRequestDirector.tryConnect(DefaultRequestDirector.java:561)
+	at org.apache.http.impl.client.DefaultRequestDirector.execute(DefaultRequestDirector.java:415)
+	at org.apache.http.impl.client.AbstractHttpClient.execute(AbstractHttpClient.java:820)
+	at org.apache.http.impl.client.AbstractHttpClient.execute(AbstractHttpClient.java:754)
+	at com.eviware.soapui.impl.wsdl.support.http.HttpClientSupport$Helper.execute(HttpClientSupport.java:218)
+	at com.eviware.soapui.impl.wsdl.support.http.HttpClientSupport.execute(HttpClientSupport.java:329)
+	at com.eviware.soapui.impl.wsdl.submit.transports.http.HttpClientRequestTransport.sendRequest(HttpClientRequestTransport.java:251)
+	at com.eviware.soapui.impl.wsdl.WsdlSubmit.run(WsdlSubmit.java:123)
+	at java.util.concurrent.Executors$RunnableAdapter.call(Executors.java:471)
+	at java.util.concurrent.FutureTask$Sync.innerRun(FutureTask.java:334)
+	at java.util.concurrent.FutureTask.run(FutureTask.java:166)
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1146)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:615)
+	at java.lang.Thread.run(Thread.java:679)
+Caused by: java.net.ConnectException: В соединении отказано
+	at java.net.PlainSocketImpl.socketConnect(Native Method)
+	at java.net.AbstractPlainSocketImpl.doConnect(AbstractPlainSocketImpl.java:327)
+	at java.net.AbstractPlainSocketImpl.connectToAddress(AbstractPlainSocketImpl.java:193)
+	at java.net.AbstractPlainSocketImpl.connect(AbstractPlainSocketImpl.java:180)
+	at java.net.SocksSocketImpl.connect(SocksSocketImpl.java:385)
+	at java.net.Socket.connect(Socket.java:546)
+	at org.apache.http.conn.scheme.PlainSocketFactory.connectSocket(PlainSocketFactory.java:123)
+	at com.eviware.soapui.impl.wsdl.support.http.SoapUIMultiThreadedHttpConnectionManager$SoapUIClientConnectionOperator.openConnection(SoapUIMultiThreadedHttpConnectionManager.java:299)
+	... 16 more
+2013-08-12 15:49:29,902 INFO  [AbstractHttpRequestDesktopPanel] Error getting response for [Spartrade_Binding.test:Request 1]; org.apache.http.conn.HttpHostConnectException: Connection to http://leadert-Aspire-M1470:8080 refused
+2013-08-12 15:49:30,021 ERROR [WsdlSubmit] Exception in request: org.apache.http.conn.HttpHostConnectException: Connection to http://leadert-Aspire-M1470:8080 refused
+2013-08-12 15:49:30,023 ERROR [SoapUI] An error occured [Connection to http://leadert-Aspire-M1470:8080 refused], see error log for details
+2013-08-12 15:49:30,023 ERROR [errorlog] org.apache.http.conn.HttpHostConnectException: Connection to http://leadert-Aspire-M1470:8080 refused
+org.apache.http.conn.HttpHostConnectException: Connection to http://leadert-Aspire-M1470:8080 refused
+	at com.eviware.soapui.impl.wsdl.support.http.SoapUIMultiThreadedHttpConnectionManager$SoapUIClientConnectionOperator.openConnection(SoapUIMultiThreadedHttpConnectionManager.java:321)
+	at org.apache.http.impl.conn.AbstractPoolEntry.open(AbstractPoolEntry.java:149)
+	at org.apache.http.impl.conn.AbstractPooledConnAdapter.open(AbstractPooledConnAdapter.java:121)
+	at org.apache.http.impl.client.DefaultRequestDirector.tryConnect(DefaultRequestDirector.java:561)
+	at org.apache.http.impl.client.DefaultRequestDirector.execute(DefaultRequestDirector.java:415)
+	at org.apache.http.impl.client.AbstractHttpClient.execute(AbstractHttpClient.java:820)
+	at org.apache.http.impl.client.AbstractHttpClient.execute(AbstractHttpClient.java:754)
+	at com.eviware.soapui.impl.wsdl.support.http.HttpClientSupport$Helper.execute(HttpClientSupport.java:218)
+	at com.eviware.soapui.impl.wsdl.support.http.HttpClientSupport.execute(HttpClientSupport.java:329)
+	at com.eviware.soapui.impl.wsdl.submit.transports.http.HttpClientRequestTransport.sendRequest(HttpClientRequestTransport.java:251)
+	at com.eviware.soapui.impl.wsdl.WsdlSubmit.run(WsdlSubmit.java:123)
+	at java.util.concurrent.Executors$RunnableAdapter.call(Executors.java:471)
+	at java.util.concurrent.FutureTask$Sync.innerRun(FutureTask.java:334)
+	at java.util.concurrent.FutureTask.run(FutureTask.java:166)
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1146)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:615)
+	at java.lang.Thread.run(Thread.java:679)
+Caused by: java.net.ConnectException: В соединении отказано
+	at java.net.PlainSocketImpl.socketConnect(Native Method)
+	at java.net.AbstractPlainSocketImpl.doConnect(AbstractPlainSocketImpl.java:327)
+	at java.net.AbstractPlainSocketImpl.connectToAddress(AbstractPlainSocketImpl.java:193)
+	at java.net.AbstractPlainSocketImpl.connect(AbstractPlainSocketImpl.java:180)
+	at java.net.SocksSocketImpl.connect(SocksSocketImpl.java:385)
+	at java.net.Socket.connect(Socket.java:546)
+	at org.apache.http.conn.scheme.PlainSocketFactory.connectSocket(PlainSocketFactory.java:123)
+	at com.eviware.soapui.impl.wsdl.support.http.SoapUIMultiThreadedHttpConnectionManager$SoapUIClientConnectionOperator.openConnection(SoapUIMultiThreadedHttpConnectionManager.java:299)
+	... 16 more
+2013-08-12 15:49:30,036 INFO  [AbstractHttpRequestDesktopPanel] Error getting response for [Spartrade_Binding.test:Request 1]; org.apache.http.conn.HttpHostConnectException: Connection to http://leadert-Aspire-M1470:8080 refused
+2013-08-12 15:49:30,204 ERROR [WsdlSubmit] Exception in request: org.apache.http.conn.HttpHostConnectException: Connection to http://leadert-Aspire-M1470:8080 refused
+2013-08-12 15:49:30,206 ERROR [SoapUI] An error occured [Connection to http://leadert-Aspire-M1470:8080 refused], see error log for details
+2013-08-12 15:49:30,206 ERROR [errorlog] org.apache.http.conn.HttpHostConnectException: Connection to http://leadert-Aspire-M1470:8080 refused
+org.apache.http.conn.HttpHostConnectException: Connection to http://leadert-Aspire-M1470:8080 refused
+	at com.eviware.soapui.impl.wsdl.support.http.SoapUIMultiThreadedHttpConnectionManager$SoapUIClientConnectionOperator.openConnection(SoapUIMultiThreadedHttpConnectionManager.java:321)
+	at org.apache.http.impl.conn.AbstractPoolEntry.open(AbstractPoolEntry.java:149)
+	at org.apache.http.impl.conn.AbstractPooledConnAdapter.open(AbstractPooledConnAdapter.java:121)
+	at org.apache.http.impl.client.DefaultRequestDirector.tryConnect(DefaultRequestDirector.java:561)
+	at org.apache.http.impl.client.DefaultRequestDirector.execute(DefaultRequestDirector.java:415)
+	at org.apache.http.impl.client.AbstractHttpClient.execute(AbstractHttpClient.java:820)
+	at org.apache.http.impl.client.AbstractHttpClient.execute(AbstractHttpClient.java:754)
+	at com.eviware.soapui.impl.wsdl.support.http.HttpClientSupport$Helper.execute(HttpClientSupport.java:218)
+	at com.eviware.soapui.impl.wsdl.support.http.HttpClientSupport.execute(HttpClientSupport.java:329)
+	at com.eviware.soapui.impl.wsdl.submit.transports.http.HttpClientRequestTransport.sendRequest(HttpClientRequestTransport.java:251)
+	at com.eviware.soapui.impl.wsdl.WsdlSubmit.run(WsdlSubmit.java:123)
+	at java.util.concurrent.Executors$RunnableAdapter.call(Executors.java:471)
+	at java.util.concurrent.FutureTask$Sync.innerRun(FutureTask.java:334)
+	at java.util.concurrent.FutureTask.run(FutureTask.java:166)
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1146)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:615)
+	at java.lang.Thread.run(Thread.java:679)
+Caused by: java.net.ConnectException: В соединении отказано
+	at java.net.PlainSocketImpl.socketConnect(Native Method)
+	at java.net.AbstractPlainSocketImpl.doConnect(AbstractPlainSocketImpl.java:327)
+	at java.net.AbstractPlainSocketImpl.connectToAddress(AbstractPlainSocketImpl.java:193)
+	at java.net.AbstractPlainSocketImpl.connect(AbstractPlainSocketImpl.java:180)
+	at java.net.SocksSocketImpl.connect(SocksSocketImpl.java:385)
+	at java.net.Socket.connect(Socket.java:546)
+	at org.apache.http.conn.scheme.PlainSocketFactory.connectSocket(PlainSocketFactory.java:123)
+	at com.eviware.soapui.impl.wsdl.support.http.SoapUIMultiThreadedHttpConnectionManager$SoapUIClientConnectionOperator.openConnection(SoapUIMultiThreadedHttpConnectionManager.java:299)
+	... 16 more
+2013-08-12 15:49:30,212 INFO  [AbstractHttpRequestDesktopPanel] Error getting response for [Spartrade_Binding.test:Request 1]; org.apache.http.conn.HttpHostConnectException: Connection to http://leadert-Aspire-M1470:8080 refused
+2013-08-12 15:49:30,942 ERROR [WsdlSubmit] Exception in request: org.apache.http.conn.HttpHostConnectException: Connection to http://leadert-Aspire-M1470:8080 refused
+2013-08-12 15:49:30,942 ERROR [SoapUI] An error occured [Connection to http://leadert-Aspire-M1470:8080 refused], see error log for details
+2013-08-12 15:49:30,942 ERROR [errorlog] org.apache.http.conn.HttpHostConnectException: Connection to http://leadert-Aspire-M1470:8080 refused
+org.apache.http.conn.HttpHostConnectException: Connection to http://leadert-Aspire-M1470:8080 refused
+	at com.eviware.soapui.impl.wsdl.support.http.SoapUIMultiThreadedHttpConnectionManager$SoapUIClientConnectionOperator.openConnection(SoapUIMultiThreadedHttpConnectionManager.java:321)
+	at org.apache.http.impl.conn.AbstractPoolEntry.open(AbstractPoolEntry.java:149)
+	at org.apache.http.impl.conn.AbstractPooledConnAdapter.open(AbstractPooledConnAdapter.java:121)
+	at org.apache.http.impl.client.DefaultRequestDirector.tryConnect(DefaultRequestDirector.java:561)
+	at org.apache.http.impl.client.DefaultRequestDirector.execute(DefaultRequestDirector.java:415)
+	at org.apache.http.impl.client.AbstractHttpClient.execute(AbstractHttpClient.java:820)
+	at org.apache.http.impl.client.AbstractHttpClient.execute(AbstractHttpClient.java:754)
+	at com.eviware.soapui.impl.wsdl.support.http.HttpClientSupport$Helper.execute(HttpClientSupport.java:218)
+	at com.eviware.soapui.impl.wsdl.support.http.HttpClientSupport.execute(HttpClientSupport.java:329)
+	at com.eviware.soapui.impl.wsdl.submit.transports.http.HttpClientRequestTransport.sendRequest(HttpClientRequestTransport.java:251)
+	at com.eviware.soapui.impl.wsdl.WsdlSubmit.run(WsdlSubmit.java:123)
+	at java.util.concurrent.Executors$RunnableAdapter.call(Executors.java:471)
+	at java.util.concurrent.FutureTask$Sync.innerRun(FutureTask.java:334)
+	at java.util.concurrent.FutureTask.run(FutureTask.java:166)
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1146)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:615)
+	at java.lang.Thread.run(Thread.java:679)
+Caused by: java.net.ConnectException: В соединении отказано
+	at java.net.PlainSocketImpl.socketConnect(Native Method)
+	at java.net.AbstractPlainSocketImpl.doConnect(AbstractPlainSocketImpl.java:327)
+	at java.net.AbstractPlainSocketImpl.connectToAddress(AbstractPlainSocketImpl.java:193)
+	at java.net.AbstractPlainSocketImpl.connect(AbstractPlainSocketImpl.java:180)
+	at java.net.SocksSocketImpl.connect(SocksSocketImpl.java:385)
+	at java.net.Socket.connect(Socket.java:546)
+	at org.apache.http.conn.scheme.PlainSocketFactory.connectSocket(PlainSocketFactory.java:123)
+	at com.eviware.soapui.impl.wsdl.support.http.SoapUIMultiThreadedHttpConnectionManager$SoapUIClientConnectionOperator.openConnection(SoapUIMultiThreadedHttpConnectionManager.java:299)
+	... 16 more
+2013-08-12 15:49:30,950 INFO  [AbstractHttpRequestDesktopPanel] Error getting response for [Spartrade_Binding.test:Request 1]; org.apache.http.conn.HttpHostConnectException: Connection to http://leadert-Aspire-M1470:8080 refused
+2013-08-12 15:49:42,598 ERROR [WsdlSubmit] Exception in request: org.apache.http.conn.HttpHostConnectException: Connection to http://leadert-Aspire-M1470:8080 refused
+2013-08-12 15:49:42,599 ERROR [SoapUI] An error occured [Connection to http://leadert-Aspire-M1470:8080 refused], see error log for details
+2013-08-12 15:49:42,599 ERROR [errorlog] org.apache.http.conn.HttpHostConnectException: Connection to http://leadert-Aspire-M1470:8080 refused
+org.apache.http.conn.HttpHostConnectException: Connection to http://leadert-Aspire-M1470:8080 refused
+	at com.eviware.soapui.impl.wsdl.support.http.SoapUIMultiThreadedHttpConnectionManager$SoapUIClientConnectionOperator.openConnection(SoapUIMultiThreadedHttpConnectionManager.java:321)
+	at org.apache.http.impl.conn.AbstractPoolEntry.open(AbstractPoolEntry.java:149)
+	at org.apache.http.impl.conn.AbstractPooledConnAdapter.open(AbstractPooledConnAdapter.java:121)
+	at org.apache.http.impl.client.DefaultRequestDirector.tryConnect(DefaultRequestDirector.java:561)
+	at org.apache.http.impl.client.DefaultRequestDirector.execute(DefaultRequestDirector.java:415)
+	at org.apache.http.impl.client.AbstractHttpClient.execute(AbstractHttpClient.java:820)
+	at org.apache.http.impl.client.AbstractHttpClient.execute(AbstractHttpClient.java:754)
+	at com.eviware.soapui.impl.wsdl.support.http.HttpClientSupport$Helper.execute(HttpClientSupport.java:218)
+	at com.eviware.soapui.impl.wsdl.support.http.HttpClientSupport.execute(HttpClientSupport.java:329)
+	at com.eviware.soapui.impl.wsdl.submit.transports.http.HttpClientRequestTransport.sendRequest(HttpClientRequestTransport.java:251)
+	at com.eviware.soapui.impl.wsdl.WsdlSubmit.run(WsdlSubmit.java:123)
+	at java.util.concurrent.Executors$RunnableAdapter.call(Executors.java:471)
+	at java.util.concurrent.FutureTask$Sync.innerRun(FutureTask.java:334)
+	at java.util.concurrent.FutureTask.run(FutureTask.java:166)
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1146)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:615)
+	at java.lang.Thread.run(Thread.java:679)
+Caused by: java.net.ConnectException: В соединении отказано
+	at java.net.PlainSocketImpl.socketConnect(Native Method)
+	at java.net.AbstractPlainSocketImpl.doConnect(AbstractPlainSocketImpl.java:327)
+	at java.net.AbstractPlainSocketImpl.connectToAddress(AbstractPlainSocketImpl.java:193)
+	at java.net.AbstractPlainSocketImpl.connect(AbstractPlainSocketImpl.java:180)
+	at java.net.SocksSocketImpl.connect(SocksSocketImpl.java:385)
+	at java.net.Socket.connect(Socket.java:546)
+	at org.apache.http.conn.scheme.PlainSocketFactory.connectSocket(PlainSocketFactory.java:123)
+	at com.eviware.soapui.impl.wsdl.support.http.SoapUIMultiThreadedHttpConnectionManager$SoapUIClientConnectionOperator.openConnection(SoapUIMultiThreadedHttpConnectionManager.java:299)
+	... 16 more
+2013-08-12 15:49:42,616 INFO  [AbstractHttpRequestDesktopPanel] Error getting response for [Spartrade_Binding.test:Request 1]; org.apache.http.conn.HttpHostConnectException: Connection to http://leadert-Aspire-M1470:8080 refused
+2013-08-12 15:50:07,536 ERROR [WsdlSubmit] Exception in request: org.apache.http.conn.HttpHostConnectException: Connection to http://leadert-Aspire-M1470:8080 refused
+2013-08-12 15:50:07,539 ERROR [SoapUI] An error occured [Connection to http://leadert-Aspire-M1470:8080 refused], see error log for details
+2013-08-12 15:50:07,539 ERROR [errorlog] org.apache.http.conn.HttpHostConnectException: Connection to http://leadert-Aspire-M1470:8080 refused
+org.apache.http.conn.HttpHostConnectException: Connection to http://leadert-Aspire-M1470:8080 refused
+	at com.eviware.soapui.impl.wsdl.support.http.SoapUIMultiThreadedHttpConnectionManager$SoapUIClientConnectionOperator.openConnection(SoapUIMultiThreadedHttpConnectionManager.java:321)
+	at org.apache.http.impl.conn.AbstractPoolEntry.open(AbstractPoolEntry.java:149)
+	at org.apache.http.impl.conn.AbstractPooledConnAdapter.open(AbstractPooledConnAdapter.java:121)
+	at org.apache.http.impl.client.DefaultRequestDirector.tryConnect(DefaultRequestDirector.java:561)
+	at org.apache.http.impl.client.DefaultRequestDirector.execute(DefaultRequestDirector.java:415)
+	at org.apache.http.impl.client.AbstractHttpClient.execute(AbstractHttpClient.java:820)
+	at org.apache.http.impl.client.AbstractHttpClient.execute(AbstractHttpClient.java:754)
+	at com.eviware.soapui.impl.wsdl.support.http.HttpClientSupport$Helper.execute(HttpClientSupport.java:218)
+	at com.eviware.soapui.impl.wsdl.support.http.HttpClientSupport.execute(HttpClientSupport.java:329)
+	at com.eviware.soapui.impl.wsdl.submit.transports.http.HttpClientRequestTransport.sendRequest(HttpClientRequestTransport.java:251)
+	at com.eviware.soapui.impl.wsdl.WsdlSubmit.run(WsdlSubmit.java:123)
+	at java.util.concurrent.Executors$RunnableAdapter.call(Executors.java:471)
+	at java.util.concurrent.FutureTask$Sync.innerRun(FutureTask.java:334)
+	at java.util.concurrent.FutureTask.run(FutureTask.java:166)
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1146)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:615)
+	at java.lang.Thread.run(Thread.java:679)
+Caused by: java.net.ConnectException: В соединении отказано
+	at java.net.PlainSocketImpl.socketConnect(Native Method)
+	at java.net.AbstractPlainSocketImpl.doConnect(AbstractPlainSocketImpl.java:327)
+	at java.net.AbstractPlainSocketImpl.connectToAddress(AbstractPlainSocketImpl.java:193)
+	at java.net.AbstractPlainSocketImpl.connect(AbstractPlainSocketImpl.java:180)
+	at java.net.SocksSocketImpl.connect(SocksSocketImpl.java:385)
+	at java.net.Socket.connect(Socket.java:546)
+	at org.apache.http.conn.scheme.PlainSocketFactory.connectSocket(PlainSocketFactory.java:123)
+	at com.eviware.soapui.impl.wsdl.support.http.SoapUIMultiThreadedHttpConnectionManager$SoapUIClientConnectionOperator.openConnection(SoapUIMultiThreadedHttpConnectionManager.java:299)
+	... 16 more
+2013-08-12 15:50:07,549 INFO  [AbstractHttpRequestDesktopPanel] Error getting response for [Spartrade_Binding.test:Request 1]; org.apache.http.conn.HttpHostConnectException: Connection to http://leadert-Aspire-M1470:8080 refused
+2013-08-12 15:50:22,187 INFO  [SchemaUtils] Loading schema types from [http://spar-trade/site/clientorder?wsdl]
+2013-08-12 15:50:22,197 INFO  [SchemaUtils] Getting schema http://spar-trade/site/clientorder?wsdl
+2013-08-12 15:50:22,207 INFO  [SchemaUtils] Getting schema http://spar-trade/spar_trade/shema.xsd
+2013-08-12 15:50:22,498 INFO  [WsdlImporter] Finding importer for {http://eng3_soap.artektiv.ru/}Spartrade_Binding
+2013-08-12 15:50:22,528 INFO  [WsdlImporter] Importing binding {http://eng3_soap.artektiv.ru/}Spartrade_Binding
+2013-08-12 15:50:22,530 INFO  [Soap11HttpBindingImporter] importing endpoint http://spar-trade/site/clientorder
+2013-08-12 15:50:22,530 INFO  [Soap11HttpBindingImporter] importing operation getRequestById
+2013-08-12 15:50:22,531 INFO  [Soap11HttpBindingImporter] importing operation getRequestsID
+2013-08-12 15:50:22,531 INFO  [Soap11HttpBindingImporter] importing operation send
+2013-08-12 15:50:22,532 INFO  [Soap11HttpBindingImporter] importing operation test
+2013-08-12 15:50:27,966 INFO  [AbstractHttpRequestDesktopPanel] Got response for [Spartrade_Binding.test:Request 1] in 51ms (316 bytes)
+2013-08-12 15:50:51,420 INFO  [AbstractHttpRequestDesktopPanel] Got response for [Spartrade_Binding.test:Request 1] in 42ms (316 bytes)
+2013-08-12 15:50:52,681 INFO  [AbstractHttpRequestDesktopPanel] Got response for [Spartrade_Binding.test:Request 1] in 43ms (316 bytes)
+2013-08-12 15:50:53,041 INFO  [AbstractHttpRequestDesktopPanel] Got response for [Spartrade_Binding.test:Request 1] in 59ms (316 bytes)
+2013-08-12 15:50:53,362 INFO  [AbstractHttpRequestDesktopPanel] Got response for [Spartrade_Binding.test:Request 1] in 44ms (316 bytes)
+2013-08-12 15:50:53,690 INFO  [AbstractHttpRequestDesktopPanel] Got response for [Spartrade_Binding.test:Request 1] in 62ms (316 bytes)
+2013-08-12 15:50:54,054 INFO  [AbstractHttpRequestDesktopPanel] Got response for [Spartrade_Binding.test:Request 1] in 45ms (316 bytes)
+2013-08-12 15:50:54,437 INFO  [AbstractHttpRequestDesktopPanel] Got response for [Spartrade_Binding.test:Request 1] in 55ms (316 bytes)
+2013-08-12 15:50:55,104 INFO  [AbstractHttpRequestDesktopPanel] Got response for [Spartrade_Binding.test:Request 1] in 50ms (316 bytes)
+2013-08-12 15:50:55,827 INFO  [AbstractHttpRequestDesktopPanel] Got response for [Spartrade_Binding.test:Request 1] in 42ms (316 bytes)
+2013-08-12 16:30:07,435 INFO  [AbstractHttpRequestDesktopPanel] Got response for [Spartrade_Binding.test:Request 1] in 607ms (316 bytes)
+2013-08-12 16:30:38,943 INFO  [AbstractHttpRequestDesktopPanel] Got response for [Spartrade_Binding.test:Request 1] in 55ms (328 bytes)
+2013-08-12 16:36:09,923 INFO  [AbstractHttpRequestDesktopPanel] Got response for [Spartrade_Binding.test:Request 1] in 71ms (315 bytes)
+2013-08-12 16:37:45,283 INFO  [AbstractHttpRequestDesktopPanel] Got response for [Spartrade_Binding.test:Request 1] in 247ms (15464 bytes)
+2013-08-12 16:45:17,059 INFO  [AbstractHttpRequestDesktopPanel] Got response for [Spartrade_Binding.test:Request 1] in 46ms (316 bytes)
+2013-08-12 16:50:22,600 INFO  [AbstractHttpRequestDesktopPanel] Got response for [Spartrade_Binding.test:Request 1] in 75ms (316 bytes)
+2013-08-12 16:51:02,117 INFO  [AbstractHttpRequestDesktopPanel] Got response for [Spartrade_Binding.test:Request 1] in 44ms (316 bytes)
+2013-08-12 16:51:03,555 INFO  [AbstractHttpRequestDesktopPanel] Got response for [Spartrade_Binding.test:Request 1] in 38ms (316 bytes)
+2013-08-12 16:51:03,929 INFO  [AbstractHttpRequestDesktopPanel] Got response for [Spartrade_Binding.test:Request 1] in 52ms (316 bytes)
+2013-08-12 16:51:04,758 INFO  [AbstractHttpRequestDesktopPanel] Got response for [Spartrade_Binding.test:Request 1] in 54ms (316 bytes)
+2013-08-12 16:51:19,396 INFO  [AbstractHttpRequestDesktopPanel] Got response for [Spartrade_Binding.test:Request 1] in 44ms (491 bytes)
+2013-08-12 16:53:37,819 INFO  [AbstractHttpRequestDesktopPanel] Got response for [Spartrade_Binding.test:Request 1] in 91ms (491 bytes)
+2013-08-12 16:53:38,791 INFO  [AbstractHttpRequestDesktopPanel] Got response for [Spartrade_Binding.test:Request 1] in 53ms (491 bytes)
+2013-08-12 16:53:39,133 INFO  [AbstractHttpRequestDesktopPanel] Got response for [Spartrade_Binding.test:Request 1] in 50ms (491 bytes)
+2013-08-12 16:53:39,235 INFO  [AbstractHttpRequestDesktopPanel] Got response for [Spartrade_Binding.test:Request 1] in 37ms (491 bytes)
+2013-08-12 16:53:39,660 INFO  [AbstractHttpRequestDesktopPanel] Got response for [Spartrade_Binding.test:Request 1] in 42ms (491 bytes)
+2013-08-12 16:53:40,422 INFO  [AbstractHttpRequestDesktopPanel] Got response for [Spartrade_Binding.test:Request 1] in 69ms (491 bytes)
+2013-08-12 16:53:40,982 INFO  [AbstractHttpRequestDesktopPanel] Got response for [Spartrade_Binding.test:Request 1] in 54ms (491 bytes)
+2013-08-12 17:00:14,373 INFO  [AbstractHttpRequestDesktopPanel] Got response for [Spartrade_Binding.test:Request 1] in 221ms (18656 bytes)
+2013-08-12 17:00:51,928 INFO  [AbstractHttpRequestDesktopPanel] Got response for [Spartrade_Binding.test:Request 1] in 79ms (322 bytes)
+2013-08-12 17:01:35,908 INFO  [AbstractHttpRequestDesktopPanel] Got response for [Spartrade_Binding.test:Request 1] in 59ms (316 bytes)
+2013-08-12 17:01:38,213 INFO  [AbstractHttpRequestDesktopPanel] Got response for [Spartrade_Binding.test:Request 1] in 46ms (316 bytes)
+2013-08-12 17:01:57,088 INFO  [AbstractHttpRequestDesktopPanel] Got response for [Spartrade_Binding.test:Request 1] in 40ms (385 bytes)
+2013-08-12 17:02:34,919 INFO  [AbstractHttpRequestDesktopPanel] Got response for [Spartrade_Binding.test:Request 1] in 40ms (472 bytes)
+2013-08-12 19:16:10,417 ERROR [WsdlLoader] Failed to load url [file:/home/leadert/spar-trade.roman.devel/GetSimpleArray.php%3Fwsdl]
+2013-08-12 19:16:10,441 ERROR [SoapUI] An error occured [com.eviware.soapui.impl.support.definition.support.InvalidDefinitionException], see error log for details
+2013-08-12 19:16:10,441 ERROR [errorlog] com.eviware.soapui.impl.support.definition.support.InvalidDefinitionException
+com.eviware.soapui.impl.support.definition.support.InvalidDefinitionException
+	at com.eviware.soapui.impl.wsdl.support.wsdl.WsdlLoader.loadXmlObject(WsdlLoader.java:138)
+	at com.eviware.soapui.impl.wsdl.support.xsd.SchemaUtils.getDefinitionParts(SchemaUtils.java:535)
+	at com.eviware.soapui.impl.wsdl.support.xsd.SchemaUtils.getDefinitionParts(SchemaUtils.java:524)
+	at com.eviware.soapui.impl.support.definition.support.AbstractDefinitionCache.update(AbstractDefinitionCache.java:97)
+	at com.eviware.soapui.impl.support.definition.support.AbstractDefinitionContext$Loader.construct(AbstractDefinitionContext.java:226)
+	at com.eviware.soapui.support.swing.SwingWorkerDelegator.construct(SwingWorkerDelegator.java:46)
+	at com.eviware.soapui.support.swing.SwingWorker$2.run(SwingWorker.java:149)
+	at java.lang.Thread.run(Thread.java:679)
+2013-08-12 19:16:27,169 ERROR [WsdlLoader] Failed to load url [file:/home/leadert/nusoap.roman.devel/GetSimpleArray.php%3Fwsdl]
+2013-08-12 19:16:27,169 ERROR [SoapUI] An error occured [com.eviware.soapui.impl.support.definition.support.InvalidDefinitionException], see error log for details
+2013-08-12 19:16:27,169 ERROR [errorlog] com.eviware.soapui.impl.support.definition.support.InvalidDefinitionException
+com.eviware.soapui.impl.support.definition.support.InvalidDefinitionException
+	at com.eviware.soapui.impl.wsdl.support.wsdl.WsdlLoader.loadXmlObject(WsdlLoader.java:138)
+	at com.eviware.soapui.impl.wsdl.support.xsd.SchemaUtils.getDefinitionParts(SchemaUtils.java:535)
+	at com.eviware.soapui.impl.wsdl.support.xsd.SchemaUtils.getDefinitionParts(SchemaUtils.java:524)
+	at com.eviware.soapui.impl.support.definition.support.AbstractDefinitionCache.update(AbstractDefinitionCache.java:97)
+	at com.eviware.soapui.impl.support.definition.support.AbstractDefinitionContext$Loader.construct(AbstractDefinitionContext.java:226)
+	at com.eviware.soapui.support.swing.SwingWorkerDelegator.construct(SwingWorkerDelegator.java:46)
+	at com.eviware.soapui.support.swing.SwingWorker$2.run(SwingWorker.java:149)
+	at java.lang.Thread.run(Thread.java:679)
+2013-08-12 19:17:03,922 ERROR [WsdlLoader] Failed to load url [file:/home/leadert/nusoap.roman.devel/GetSimpleArray.php%3Fwsdl]
+2013-08-12 19:17:03,922 ERROR [SoapUI] An error occured [com.eviware.soapui.impl.support.definition.support.InvalidDefinitionException], see error log for details
+2013-08-12 19:17:03,922 ERROR [errorlog] com.eviware.soapui.impl.support.definition.support.InvalidDefinitionException
+com.eviware.soapui.impl.support.definition.support.InvalidDefinitionException
+	at com.eviware.soapui.impl.wsdl.support.wsdl.WsdlLoader.loadXmlObject(WsdlLoader.java:138)
+	at com.eviware.soapui.impl.wsdl.support.xsd.SchemaUtils.getDefinitionParts(SchemaUtils.java:535)
+	at com.eviware.soapui.impl.wsdl.support.xsd.SchemaUtils.getDefinitionParts(SchemaUtils.java:524)
+	at com.eviware.soapui.impl.support.definition.support.AbstractDefinitionCache.update(AbstractDefinitionCache.java:97)
+	at com.eviware.soapui.impl.support.definition.support.AbstractDefinitionContext$Loader.construct(AbstractDefinitionContext.java:226)
+	at com.eviware.soapui.support.swing.SwingWorkerDelegator.construct(SwingWorkerDelegator.java:46)
+	at com.eviware.soapui.support.swing.SwingWorker$2.run(SwingWorker.java:149)
+	at java.lang.Thread.run(Thread.java:679)
+2013-08-12 19:17:28,422 INFO  [SchemaUtils] Loading schema types from [http://nusoap.roman.devel/GetSimpleArray.php?wsdl]
+2013-08-12 19:17:28,424 INFO  [SchemaUtils] Getting schema http://nusoap.roman.devel/GetSimpleArray.php?wsdl
+2013-08-12 19:17:28,663 INFO  [WsdlImporter] Finding importer for {http://nusoap.roman.devel/GetSimpleArray.php}GetSimpleArrayBinding
+2013-08-12 19:17:28,664 INFO  [WsdlImporter] Importing binding {http://nusoap.roman.devel/GetSimpleArray.php}GetSimpleArrayBinding
+2013-08-12 19:17:28,665 INFO  [Soap11HttpBindingImporter] importing endpoint http://nusoap.roman.devel/GetSimpleArray.php
+2013-08-12 19:17:28,666 INFO  [Soap11HttpBindingImporter] importing operation GetSimpleArray
+2013-08-12 19:17:34,366 INFO  [AbstractHttpRequestDesktopPanel] Got response for [GetSimpleArrayBinding.GetSimpleArray:Request 1] in 29ms (640 bytes)
+2013-08-12 19:19:09,071 INFO  [AbstractHttpRequestDesktopPanel] Got response for [Spartrade_Binding.test:Request 1] in 242ms (18573 bytes)
+2013-08-12 19:19:33,370 INFO  [AbstractHttpRequestDesktopPanel] Got response for [Spartrade_Binding.test:Request 1] in 64ms (257 bytes)
+2013-08-12 19:20:02,916 INFO  [AbstractHttpRequestDesktopPanel] Got response for [Spartrade_Binding.test:Request 1] in 66ms (158 bytes)
+2013-08-12 19:20:57,318 INFO  [AbstractHttpRequestDesktopPanel] Got response for [Spartrade_Binding.test:Request 1] in 39ms (421 bytes)
+2013-08-12 19:22:25,756 INFO  [AbstractHttpRequestDesktopPanel] Got response for [Spartrade_Binding.test:Request 1] in 81ms (431 bytes)
+2013-08-12 19:22:41,224 INFO  [AbstractHttpRequestDesktopPanel] Got response for [Spartrade_Binding.test:Request 1] in 67ms (506 bytes)
+2013-08-12 19:23:17,392 INFO  [AbstractHttpRequestDesktopPanel] Got response for [Spartrade_Binding.test:Request 1] in 54ms (538 bytes)
+2013-08-12 19:23:25,186 INFO  [AbstractHttpRequestDesktopPanel] Got response for [Spartrade_Binding.test:Request 1] in 73ms (463 bytes)
+2013-08-12 19:23:26,121 INFO  [AbstractHttpRequestDesktopPanel] Got response for [Spartrade_Binding.test:Request 1] in 45ms (463 bytes)
+2013-08-12 19:26:02,090 INFO  [AbstractHttpRequestDesktopPanel] Got response for [Spartrade_Binding.test:Request 1] in 42ms (360 bytes)
+2013-08-12 19:26:27,958 INFO  [AbstractHttpRequestDesktopPanel] Got response for [Spartrade_Binding.test:Request 1] in 57ms (360 bytes)
+2013-08-12 19:26:29,160 INFO  [AbstractHttpRequestDesktopPanel] Got response for [Spartrade_Binding.test:Request 1] in 48ms (360 bytes)
+2013-08-12 19:26:29,804 INFO  [AbstractHttpRequestDesktopPanel] Got response for [Spartrade_Binding.test:Request 1] in 73ms (360 bytes)
+2013-08-12 19:26:50,869 INFO  [AbstractHttpRequestDesktopPanel] Got response for [Spartrade_Binding.test:Request 1] in 41ms (347 bytes)
+2013-08-12 19:32:38,019 INFO  [SchemaUtils] Loading schema types from [http://spar-trade/site/clientorder?wsdl]
+2013-08-12 19:32:38,026 INFO  [SchemaUtils] Getting schema http://spar-trade/site/clientorder?wsdl
+2013-08-12 19:32:38,034 INFO  [SchemaUtils] Getting schema http://spar-trade/spar_trade/shema.xsd
+2013-08-12 19:32:38,082 ERROR [SoapUI] An error occured [Invalid QName value: Can't resolve prefix 'SOAP-ENC'], see error log for details
+2013-08-12 19:32:38,082 ERROR [errorlog] org.apache.xmlbeans.XmlException: Invalid QName value: Can't resolve prefix 'SOAP-ENC'
+org.apache.xmlbeans.XmlException: Invalid QName value: Can't resolve prefix 'SOAP-ENC'
+	at org.apache.xmlbeans.XmlBeans.wrappedException(XmlBeans.java:149)
+	at org.apache.xmlbeans.XmlBeans.compileXmlBeans(XmlBeans.java:675)
+	at org.apache.xmlbeans.XmlBeans.compileXsd(XmlBeans.java:553)
+	at com.eviware.soapui.impl.wsdl.support.xsd.SchemaUtils.buildSchemaTypes(SchemaUtils.java:287)
+	at com.eviware.soapui.impl.wsdl.support.xsd.SchemaUtils.loadSchemaTypes(SchemaUtils.java:194)
+	at com.eviware.soapui.impl.support.definition.support.XmlSchemaBasedInterfaceDefinition.loadSchemaTypes(XmlSchemaBasedInterfaceDefinition.java:79)
+	at com.eviware.soapui.impl.wsdl.support.wsdl.WsdlInterfaceDefinition.load(WsdlInterfaceDefinition.java:61)
+	at com.eviware.soapui.impl.wsdl.support.wsdl.WsdlContext.loadDefinition(WsdlContext.java:66)
+	at com.eviware.soapui.impl.wsdl.support.wsdl.WsdlContext.loadDefinition(WsdlContext.java:30)
+	at com.eviware.soapui.impl.support.definition.support.AbstractDefinitionContext.cacheDefinition(AbstractDefinitionContext.java:268)
+	at com.eviware.soapui.impl.support.definition.support.AbstractDefinitionContext.access$400(AbstractDefinitionContext.java:44)
+	at com.eviware.soapui.impl.support.definition.support.AbstractDefinitionContext$Loader.construct(AbstractDefinitionContext.java:235)
+	at com.eviware.soapui.support.swing.SwingWorkerDelegator.construct(SwingWorkerDelegator.java:46)
+	at com.eviware.soapui.support.swing.SwingWorker$2.run(SwingWorker.java:149)
+	at java.lang.Thread.run(Thread.java:679)
+Caused by: org.apache.xmlbeans.impl.values.XmlValueOutOfRangeException: Invalid QName value: Can't resolve prefix 'SOAP-ENC'
+	at org.apache.xmlbeans.impl.values.JavaQNameHolder.parse(JavaQNameHolder.java:140)
+	at org.apache.xmlbeans.impl.values.JavaQNameHolder.set_text(JavaQNameHolder.java:155)
+	at org.apache.xmlbeans.impl.values.XmlObjectBase.update_from_wscanon_text(XmlObjectBase.java:1166)
+	at org.apache.xmlbeans.impl.values.XmlObjectBase.check_dated(XmlObjectBase.java:1305)
+	at org.apache.xmlbeans.impl.values.JavaQNameHolder.getQNameValue(JavaQNameHolder.java:181)
+	at org.apache.xmlbeans.impl.xb.xsdschema.impl.RestrictionTypeImpl.getBase(RestrictionTypeImpl.java:2148)
+	at org.apache.xmlbeans.impl.schema.StscComplexTypeResolver.resolveCcRestriction(StscComplexTypeResolver.java:361)
+	at org.apache.xmlbeans.impl.schema.StscComplexTypeResolver.resolveComplexType(StscComplexTypeResolver.java:234)
+	at org.apache.xmlbeans.impl.schema.StscResolver.resolveType(StscResolver.java:87)
+	at org.apache.xmlbeans.impl.schema.StscResolver.resolveAll(StscResolver.java:59)
+	at org.apache.xmlbeans.impl.schema.SchemaTypeSystemCompiler.compileImpl(SchemaTypeSystemCompiler.java:307)
+	at org.apache.xmlbeans.impl.schema.SchemaTypeSystemCompiler.compile(SchemaTypeSystemCompiler.java:218)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:57)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.lang.reflect.Method.invoke(Method.java:616)
+	at org.apache.xmlbeans.XmlBeans.compileXmlBeans(XmlBeans.java:667)
+	... 13 more
+2013-08-12 19:32:38,084 ERROR [SoapUI] An error occured [com.eviware.soapui.impl.wsdl.support.xsd.SchemaException], see error log for details
+2013-08-12 19:32:38,084 ERROR [errorlog] com.eviware.soapui.impl.wsdl.support.xsd.SchemaException
+com.eviware.soapui.impl.wsdl.support.xsd.SchemaException
+	at com.eviware.soapui.impl.wsdl.support.xsd.SchemaUtils.buildSchemaTypes(SchemaUtils.java:297)
+	at com.eviware.soapui.impl.wsdl.support.xsd.SchemaUtils.loadSchemaTypes(SchemaUtils.java:194)
+	at com.eviware.soapui.impl.support.definition.support.XmlSchemaBasedInterfaceDefinition.loadSchemaTypes(XmlSchemaBasedInterfaceDefinition.java:79)
+	at com.eviware.soapui.impl.wsdl.support.wsdl.WsdlInterfaceDefinition.load(WsdlInterfaceDefinition.java:61)
+	at com.eviware.soapui.impl.wsdl.support.wsdl.WsdlContext.loadDefinition(WsdlContext.java:66)
+	at com.eviware.soapui.impl.wsdl.support.wsdl.WsdlContext.loadDefinition(WsdlContext.java:30)
+	at com.eviware.soapui.impl.support.definition.support.AbstractDefinitionContext.cacheDefinition(AbstractDefinitionContext.java:268)
+	at com.eviware.soapui.impl.support.definition.support.AbstractDefinitionContext.access$400(AbstractDefinitionContext.java:44)
+	at com.eviware.soapui.impl.support.definition.support.AbstractDefinitionContext$Loader.construct(AbstractDefinitionContext.java:235)
+	at com.eviware.soapui.support.swing.SwingWorkerDelegator.construct(SwingWorkerDelegator.java:46)
+	at com.eviware.soapui.support.swing.SwingWorker$2.run(SwingWorker.java:149)
+	at java.lang.Thread.run(Thread.java:679)
+2013-08-12 19:32:38,084 ERROR [SoapUI] An error occured [com.eviware.soapui.impl.wsdl.support.xsd.SchemaException], see error log for details
+2013-08-12 19:32:38,084 ERROR [errorlog] com.eviware.soapui.impl.wsdl.support.xsd.SchemaException
+com.eviware.soapui.impl.wsdl.support.xsd.SchemaException
+	at com.eviware.soapui.impl.wsdl.support.xsd.SchemaUtils.buildSchemaTypes(SchemaUtils.java:297)
+	at com.eviware.soapui.impl.wsdl.support.xsd.SchemaUtils.loadSchemaTypes(SchemaUtils.java:194)
+	at com.eviware.soapui.impl.support.definition.support.XmlSchemaBasedInterfaceDefinition.loadSchemaTypes(XmlSchemaBasedInterfaceDefinition.java:79)
+	at com.eviware.soapui.impl.wsdl.support.wsdl.WsdlInterfaceDefinition.load(WsdlInterfaceDefinition.java:61)
+	at com.eviware.soapui.impl.wsdl.support.wsdl.WsdlContext.loadDefinition(WsdlContext.java:66)
+	at com.eviware.soapui.impl.wsdl.support.wsdl.WsdlContext.loadDefinition(WsdlContext.java:30)
+	at com.eviware.soapui.impl.support.definition.support.AbstractDefinitionContext.cacheDefinition(AbstractDefinitionContext.java:268)
+	at com.eviware.soapui.impl.support.definition.support.AbstractDefinitionContext.access$400(AbstractDefinitionContext.java:44)
+	at com.eviware.soapui.impl.support.definition.support.AbstractDefinitionContext$Loader.construct(AbstractDefinitionContext.java:235)
+	at com.eviware.soapui.support.swing.SwingWorkerDelegator.construct(SwingWorkerDelegator.java:46)
+	at com.eviware.soapui.support.swing.SwingWorker$2.run(SwingWorker.java:149)
+	at java.lang.Thread.run(Thread.java:679)
+2013-08-12 19:32:38,088 ERROR [AbstractDefinitionContext] Error loading schema types from http://spar-trade/site/clientorder?wsdl, see log for details
+2013-08-12 19:32:40,714 ERROR [SoapUI] An error occured [com.eviware.soapui.impl.support.definition.support.InvalidDefinitionException], see error log for details
+2013-08-12 19:32:40,715 ERROR [errorlog] com.eviware.soapui.impl.support.definition.support.InvalidDefinitionException
+com.eviware.soapui.impl.support.definition.support.InvalidDefinitionException
+	at com.eviware.soapui.impl.support.definition.support.AbstractDefinitionContext.load(AbstractDefinitionContext.java:159)
+	at com.eviware.soapui.impl.support.definition.support.AbstractDefinitionContext.load(AbstractDefinitionContext.java:115)
+	at com.eviware.soapui.impl.wsdl.WsdlInterface.updateDefinition(WsdlInterface.java:291)
+	at com.eviware.soapui.impl.wsdl.actions.iface.UpdateInterfaceAction.perform(UpdateInterfaceAction.java:125)
+	at com.eviware.soapui.impl.wsdl.actions.iface.UpdateInterfaceAction.perform(UpdateInterfaceAction.java:52)
+	at com.eviware.soapui.support.action.swing.SwingActionDelegate.actionPerformed(SwingActionDelegate.java:89)
+	at javax.swing.AbstractButton.fireActionPerformed(AbstractButton.java:2012)
+	at javax.swing.AbstractButton$Handler.actionPerformed(AbstractButton.java:2335)
+	at javax.swing.DefaultButtonModel.fireActionPerformed(DefaultButtonModel.java:404)
+	at javax.swing.DefaultButtonModel.setPressed(DefaultButtonModel.java:259)
+	at javax.swing.AbstractButton.doClick(AbstractButton.java:374)
+	at javax.swing.plaf.basic.BasicMenuItemUI.doClick(BasicMenuItemUI.java:829)
+	at javax.swing.plaf.basic.BasicMenuItemUI$Handler.mouseReleased(BasicMenuItemUI.java:873)
+	at java.awt.AWTEventMulticaster.mouseReleased(AWTEventMulticaster.java:289)
+	at java.awt.Component.processMouseEvent(Component.java:6288)
+	at javax.swing.JComponent.processMouseEvent(JComponent.java:3267)
+	at java.awt.Component.processEvent(Component.java:6053)
+	at java.awt.Container.processEvent(Container.java:2045)
+	at java.awt.Component.dispatchEventImpl(Component.java:4649)
+	at java.awt.Container.dispatchEventImpl(Container.java:2103)
+	at java.awt.Component.dispatchEvent(Component.java:4475)
+	at java.awt.LightweightDispatcher.retargetMouseEvent(Container.java:4633)
+	at java.awt.LightweightDispatcher.processMouseEvent(Container.java:4297)
+	at java.awt.LightweightDispatcher.dispatchEvent(Container.java:4227)
+	at java.awt.Container.dispatchEventImpl(Container.java:2089)
+	at java.awt.Component.dispatchEvent(Component.java:4475)
+	at java.awt.EventQueue.dispatchEventImpl(EventQueue.java:675)
+	at java.awt.EventQueue.access$300(EventQueue.java:96)
+	at java.awt.EventQueue$2.run(EventQueue.java:634)
+	at java.awt.EventQueue$2.run(EventQueue.java:632)
+	at java.security.AccessController.doPrivileged(Native Method)
+	at java.security.AccessControlContext$1.doIntersectionPrivilege(AccessControlContext.java:108)
+	at java.security.AccessControlContext$1.doIntersectionPrivilege(AccessControlContext.java:119)
+	at java.awt.EventQueue$3.run(EventQueue.java:648)
+	at java.awt.EventQueue$3.run(EventQueue.java:646)
+	at java.security.AccessController.doPrivileged(Native Method)
+	at java.security.AccessControlContext$1.doIntersectionPrivilege(AccessControlContext.java:108)
+	at java.awt.EventQueue.dispatchEvent(EventQueue.java:645)
+	at java.awt.EventDispatchThread.pumpOneEventForFilters(EventDispatchThread.java:275)
+	at java.awt.EventDispatchThread.pumpEventsForFilter(EventDispatchThread.java:200)
+	at java.awt.EventDispatchThread.pumpEventsForHierarchy(EventDispatchThread.java:190)
+	at java.awt.EventDispatchThread.pumpEvents(EventDispatchThread.java:185)
+	at java.awt.EventDispatchThread.pumpEvents(EventDispatchThread.java:177)
+	at java.awt.EventDispatchThread.run(EventDispatchThread.java:138)
+2013-08-12 19:36:37,654 INFO  [SchemaUtils] Loading schema types from [http://spar-trade/site/clientorder?wsdl]
+2013-08-12 19:36:37,673 INFO  [SchemaUtils] Getting schema http://spar-trade/site/clientorder?wsdl
+2013-08-12 19:36:37,685 INFO  [SchemaUtils] Getting schema http://spar-trade/spar_trade/shema.xsd
+2013-08-12 19:36:37,779 ERROR [SoapUI] An error occured [Invalid QName value: Can't resolve prefix 'SOAP-ENC'], see error log for details
+2013-08-12 19:36:37,780 ERROR [errorlog] org.apache.xmlbeans.XmlException: Invalid QName value: Can't resolve prefix 'SOAP-ENC'
+org.apache.xmlbeans.XmlException: Invalid QName value: Can't resolve prefix 'SOAP-ENC'
+	at org.apache.xmlbeans.XmlBeans.wrappedException(XmlBeans.java:149)
+	at org.apache.xmlbeans.XmlBeans.compileXmlBeans(XmlBeans.java:675)
+	at org.apache.xmlbeans.XmlBeans.compileXsd(XmlBeans.java:553)
+	at com.eviware.soapui.impl.wsdl.support.xsd.SchemaUtils.buildSchemaTypes(SchemaUtils.java:287)
+	at com.eviware.soapui.impl.wsdl.support.xsd.SchemaUtils.loadSchemaTypes(SchemaUtils.java:194)
+	at com.eviware.soapui.impl.support.definition.support.XmlSchemaBasedInterfaceDefinition.loadSchemaTypes(XmlSchemaBasedInterfaceDefinition.java:79)
+	at com.eviware.soapui.impl.wsdl.support.wsdl.WsdlInterfaceDefinition.load(WsdlInterfaceDefinition.java:61)
+	at com.eviware.soapui.impl.wsdl.support.wsdl.WsdlContext.loadDefinition(WsdlContext.java:66)
+	at com.eviware.soapui.impl.wsdl.support.wsdl.WsdlContext.loadDefinition(WsdlContext.java:30)
+	at com.eviware.soapui.impl.support.definition.support.AbstractDefinitionContext.cacheDefinition(AbstractDefinitionContext.java:268)
+	at com.eviware.soapui.impl.support.definition.support.AbstractDefinitionContext.access$400(AbstractDefinitionContext.java:44)
+	at com.eviware.soapui.impl.support.definition.support.AbstractDefinitionContext$Loader.construct(AbstractDefinitionContext.java:235)
+	at com.eviware.soapui.support.swing.SwingWorkerDelegator.construct(SwingWorkerDelegator.java:46)
+	at com.eviware.soapui.support.swing.SwingWorker$2.run(SwingWorker.java:149)
+	at java.lang.Thread.run(Thread.java:679)
+Caused by: org.apache.xmlbeans.impl.values.XmlValueOutOfRangeException: Invalid QName value: Can't resolve prefix 'SOAP-ENC'
+	at org.apache.xmlbeans.impl.values.JavaQNameHolder.parse(JavaQNameHolder.java:140)
+	at org.apache.xmlbeans.impl.values.JavaQNameHolder.set_text(JavaQNameHolder.java:155)
+	at org.apache.xmlbeans.impl.values.XmlObjectBase.update_from_wscanon_text(XmlObjectBase.java:1166)
+	at org.apache.xmlbeans.impl.values.XmlObjectBase.check_dated(XmlObjectBase.java:1305)
+	at org.apache.xmlbeans.impl.values.JavaQNameHolder.getQNameValue(JavaQNameHolder.java:181)
+	at org.apache.xmlbeans.impl.xb.xsdschema.impl.RestrictionTypeImpl.getBase(RestrictionTypeImpl.java:2148)
+	at org.apache.xmlbeans.impl.schema.StscComplexTypeResolver.resolveCcRestriction(StscComplexTypeResolver.java:361)
+	at org.apache.xmlbeans.impl.schema.StscComplexTypeResolver.resolveComplexType(StscComplexTypeResolver.java:234)
+	at org.apache.xmlbeans.impl.schema.StscResolver.resolveType(StscResolver.java:87)
+	at org.apache.xmlbeans.impl.schema.StscResolver.resolveAll(StscResolver.java:59)
+	at org.apache.xmlbeans.impl.schema.SchemaTypeSystemCompiler.compileImpl(SchemaTypeSystemCompiler.java:307)
+	at org.apache.xmlbeans.impl.schema.SchemaTypeSystemCompiler.compile(SchemaTypeSystemCompiler.java:218)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:57)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.lang.reflect.Method.invoke(Method.java:616)
+	at org.apache.xmlbeans.XmlBeans.compileXmlBeans(XmlBeans.java:667)
+	... 13 more
+2013-08-12 19:36:37,784 ERROR [SoapUI] An error occured [com.eviware.soapui.impl.wsdl.support.xsd.SchemaException], see error log for details
+2013-08-12 19:36:37,784 ERROR [errorlog] com.eviware.soapui.impl.wsdl.support.xsd.SchemaException
+com.eviware.soapui.impl.wsdl.support.xsd.SchemaException
+	at com.eviware.soapui.impl.wsdl.support.xsd.SchemaUtils.buildSchemaTypes(SchemaUtils.java:297)
+	at com.eviware.soapui.impl.wsdl.support.xsd.SchemaUtils.loadSchemaTypes(SchemaUtils.java:194)
+	at com.eviware.soapui.impl.support.definition.support.XmlSchemaBasedInterfaceDefinition.loadSchemaTypes(XmlSchemaBasedInterfaceDefinition.java:79)
+	at com.eviware.soapui.impl.wsdl.support.wsdl.WsdlInterfaceDefinition.load(WsdlInterfaceDefinition.java:61)
+	at com.eviware.soapui.impl.wsdl.support.wsdl.WsdlContext.loadDefinition(WsdlContext.java:66)
+	at com.eviware.soapui.impl.wsdl.support.wsdl.WsdlContext.loadDefinition(WsdlContext.java:30)
+	at com.eviware.soapui.impl.support.definition.support.AbstractDefinitionContext.cacheDefinition(AbstractDefinitionContext.java:268)
+	at com.eviware.soapui.impl.support.definition.support.AbstractDefinitionContext.access$400(AbstractDefinitionContext.java:44)
+	at com.eviware.soapui.impl.support.definition.support.AbstractDefinitionContext$Loader.construct(AbstractDefinitionContext.java:235)
+	at com.eviware.soapui.support.swing.SwingWorkerDelegator.construct(SwingWorkerDelegator.java:46)
+	at com.eviware.soapui.support.swing.SwingWorker$2.run(SwingWorker.java:149)
+	at java.lang.Thread.run(Thread.java:679)
+2013-08-12 19:36:37,785 ERROR [SoapUI] An error occured [com.eviware.soapui.impl.wsdl.support.xsd.SchemaException], see error log for details
+2013-08-12 19:36:37,785 ERROR [errorlog] com.eviware.soapui.impl.wsdl.support.xsd.SchemaException
+com.eviware.soapui.impl.wsdl.support.xsd.SchemaException
+	at com.eviware.soapui.impl.wsdl.support.xsd.SchemaUtils.buildSchemaTypes(SchemaUtils.java:297)
+	at com.eviware.soapui.impl.wsdl.support.xsd.SchemaUtils.loadSchemaTypes(SchemaUtils.java:194)
+	at com.eviware.soapui.impl.support.definition.support.XmlSchemaBasedInterfaceDefinition.loadSchemaTypes(XmlSchemaBasedInterfaceDefinition.java:79)
+	at com.eviware.soapui.impl.wsdl.support.wsdl.WsdlInterfaceDefinition.load(WsdlInterfaceDefinition.java:61)
+	at com.eviware.soapui.impl.wsdl.support.wsdl.WsdlContext.loadDefinition(WsdlContext.java:66)
+	at com.eviware.soapui.impl.wsdl.support.wsdl.WsdlContext.loadDefinition(WsdlContext.java:30)
+	at com.eviware.soapui.impl.support.definition.support.AbstractDefinitionContext.cacheDefinition(AbstractDefinitionContext.java:268)
+	at com.eviware.soapui.impl.support.definition.support.AbstractDefinitionContext.access$400(AbstractDefinitionContext.java:44)
+	at com.eviware.soapui.impl.support.definition.support.AbstractDefinitionContext$Loader.construct(AbstractDefinitionContext.java:235)
+	at com.eviware.soapui.support.swing.SwingWorkerDelegator.construct(SwingWorkerDelegator.java:46)
+	at com.eviware.soapui.support.swing.SwingWorker$2.run(SwingWorker.java:149)
+	at java.lang.Thread.run(Thread.java:679)
+2013-08-12 19:36:37,796 ERROR [AbstractDefinitionContext] Error loading schema types from http://spar-trade/site/clientorder?wsdl, see log for details
+2013-08-12 19:36:39,174 ERROR [SoapUI] An error occured [com.eviware.soapui.impl.support.definition.support.InvalidDefinitionException], see error log for details
+2013-08-12 19:36:39,174 ERROR [errorlog] com.eviware.soapui.impl.support.definition.support.InvalidDefinitionException
+com.eviware.soapui.impl.support.definition.support.InvalidDefinitionException
+	at com.eviware.soapui.impl.support.definition.support.AbstractDefinitionContext.load(AbstractDefinitionContext.java:159)
+	at com.eviware.soapui.impl.support.definition.support.AbstractDefinitionContext.load(AbstractDefinitionContext.java:115)
+	at com.eviware.soapui.impl.wsdl.WsdlInterface.updateDefinition(WsdlInterface.java:291)
+	at com.eviware.soapui.impl.wsdl.actions.iface.UpdateInterfaceAction.perform(UpdateInterfaceAction.java:125)
+	at com.eviware.soapui.impl.wsdl.actions.iface.UpdateInterfaceAction.perform(UpdateInterfaceAction.java:52)
+	at com.eviware.soapui.support.action.swing.SwingActionDelegate.actionPerformed(SwingActionDelegate.java:89)
+	at javax.swing.AbstractButton.fireActionPerformed(AbstractButton.java:2012)
+	at javax.swing.AbstractButton$Handler.actionPerformed(AbstractButton.java:2335)
+	at javax.swing.DefaultButtonModel.fireActionPerformed(DefaultButtonModel.java:404)
+	at javax.swing.DefaultButtonModel.setPressed(DefaultButtonModel.java:259)
+	at javax.swing.AbstractButton.doClick(AbstractButton.java:374)
+	at javax.swing.plaf.basic.BasicMenuItemUI.doClick(BasicMenuItemUI.java:829)
+	at javax.swing.plaf.basic.BasicMenuItemUI$Handler.mouseReleased(BasicMenuItemUI.java:873)
+	at java.awt.AWTEventMulticaster.mouseReleased(AWTEventMulticaster.java:289)
+	at java.awt.Component.processMouseEvent(Component.java:6288)
+	at javax.swing.JComponent.processMouseEvent(JComponent.java:3267)
+	at java.awt.Component.processEvent(Component.java:6053)
+	at java.awt.Container.processEvent(Container.java:2045)
+	at java.awt.Component.dispatchEventImpl(Component.java:4649)
+	at java.awt.Container.dispatchEventImpl(Container.java:2103)
+	at java.awt.Component.dispatchEvent(Component.java:4475)
+	at java.awt.LightweightDispatcher.retargetMouseEvent(Container.java:4633)
+	at java.awt.LightweightDispatcher.processMouseEvent(Container.java:4297)
+	at java.awt.LightweightDispatcher.dispatchEvent(Container.java:4227)
+	at java.awt.Container.dispatchEventImpl(Container.java:2089)
+	at java.awt.Component.dispatchEvent(Component.java:4475)
+	at java.awt.EventQueue.dispatchEventImpl(EventQueue.java:675)
+	at java.awt.EventQueue.access$300(EventQueue.java:96)
+	at java.awt.EventQueue$2.run(EventQueue.java:634)
+	at java.awt.EventQueue$2.run(EventQueue.java:632)
+	at java.security.AccessController.doPrivileged(Native Method)
+	at java.security.AccessControlContext$1.doIntersectionPrivilege(AccessControlContext.java:108)
+	at java.security.AccessControlContext$1.doIntersectionPrivilege(AccessControlContext.java:119)
+	at java.awt.EventQueue$3.run(EventQueue.java:648)
+	at java.awt.EventQueue$3.run(EventQueue.java:646)
+	at java.security.AccessController.doPrivileged(Native Method)
+	at java.security.AccessControlContext$1.doIntersectionPrivilege(AccessControlContext.java:108)
+	at java.awt.EventQueue.dispatchEvent(EventQueue.java:645)
+	at java.awt.EventDispatchThread.pumpOneEventForFilters(EventDispatchThread.java:275)
+	at java.awt.EventDispatchThread.pumpEventsForFilter(EventDispatchThread.java:200)
+	at java.awt.EventDispatchThread.pumpEventsForHierarchy(EventDispatchThread.java:190)
+	at java.awt.EventDispatchThread.pumpEvents(EventDispatchThread.java:185)
+	at java.awt.EventDispatchThread.pumpEvents(EventDispatchThread.java:177)
+	at java.awt.EventDispatchThread.run(EventDispatchThread.java:138)
+2013-08-12 19:40:52,468 INFO  [SchemaUtils] Loading schema types from [http://spar-trade/site/clientorder?wsdl]
+2013-08-12 19:40:52,472 INFO  [SchemaUtils] Getting schema http://spar-trade/site/clientorder?wsdl
+2013-08-12 19:40:52,482 INFO  [SchemaUtils] Getting schema http://spar-trade/spar_trade/shema.xsd
+2013-08-12 19:40:52,869 INFO  [WsdlInterface] deleting operation [send]
+2013-08-12 19:40:52,870 INFO  [WsdlInterface] deleting operation [getRequestsID]
+2013-08-12 19:40:52,870 INFO  [WsdlInterface] deleting operation [test]
+2013-08-12 19:40:52,933 INFO  [WsdlInterface] deleting operation [getRequestById]
+2013-08-12 19:42:32,434 INFO  [SchemaUtils] Loading schema types from [http://spar-trade/site/clientorder?wsdl]
+2013-08-12 19:42:32,434 INFO  [SchemaUtils] Getting schema http://spar-trade/site/clientorder?wsdl
+2013-08-12 19:42:32,436 INFO  [SchemaUtils] Getting schema http://spar-trade/spar_trade/shema.xsd
+2013-08-12 19:43:42,910 INFO  [SchemaUtils] Loading schema types from [http://nusoap.roman.devel/GetSimpleArray.php?wsdl]
+2013-08-12 19:43:42,913 INFO  [SchemaUtils] Getting schema http://nusoap.roman.devel/GetSimpleArray.php?wsdl
+2013-08-12 19:43:43,161 INFO  [WsdlImporter] Finding importer for {http://nusoap.roman.devel/GetSimpleArray.php}GetSimpleArrayBinding
+2013-08-12 19:43:43,176 INFO  [WsdlImporter] Importing binding {http://nusoap.roman.devel/GetSimpleArray.php}GetSimpleArrayBinding
+2013-08-12 19:43:43,178 INFO  [Soap11HttpBindingImporter] importing endpoint http://nusoap.roman.devel/GetSimpleArray.php
+2013-08-12 19:43:43,178 INFO  [Soap11HttpBindingImporter] importing operation GetSimpleArray
+2013-08-12 19:44:15,392 INFO  [SchemaUtils] Loading schema types from [http://spar-trade/site/clientorder?wsdl]
+2013-08-12 19:44:15,397 INFO  [SchemaUtils] Getting schema http://spar-trade/site/clientorder?wsdl
+2013-08-12 19:44:15,400 INFO  [SchemaUtils] Getting schema http://spar-trade/spar_trade/shema.xsd
+2013-08-12 19:44:21,055 ERROR [SoapUI] An error occured [java.lang.NullPointerException], see error log for details
+2013-08-12 19:44:21,058 ERROR [errorlog] java.lang.NullPointerException
+java.lang.NullPointerException
+	at com.eviware.soapui.impl.wsdl.submit.transports.jms.util.HermesUtils.addHermesJarsToClasspath(HermesUtils.java:120)
+	at com.eviware.soapui.impl.wsdl.submit.transports.jms.util.HermesUtils.getHermes(HermesUtils.java:74)
+	at com.eviware.soapui.impl.wsdl.submit.transports.jms.util.HermesUtils.hermesContext(HermesUtils.java:63)
+	at com.eviware.soapui.impl.wsdl.actions.iface.AddJMSEndpointAction.getHermesContext(AddJMSEndpointAction.java:179)
+	at com.eviware.soapui.impl.wsdl.actions.iface.AddJMSEndpointAction.getSessionOptions(AddJMSEndpointAction.java:110)
+	at com.eviware.soapui.impl.wsdl.actions.iface.AddJMSEndpointAction.initValues(AddJMSEndpointAction.java:133)
+	at com.eviware.soapui.impl.wsdl.actions.iface.AddJMSEndpointAction.perform(AddJMSEndpointAction.java:65)
+	at com.eviware.soapui.impl.wsdl.actions.iface.AddJMSEndpointAction.perform(AddJMSEndpointAction.java:45)
+	at com.eviware.soapui.support.action.swing.SwingActionDelegate.actionPerformed(SwingActionDelegate.java:89)
+	at javax.swing.AbstractButton.fireActionPerformed(AbstractButton.java:2012)
+	at javax.swing.AbstractButton$Handler.actionPerformed(AbstractButton.java:2335)
+	at javax.swing.DefaultButtonModel.fireActionPerformed(DefaultButtonModel.java:404)
+	at javax.swing.DefaultButtonModel.setPressed(DefaultButtonModel.java:259)
+	at javax.swing.AbstractButton.doClick(AbstractButton.java:374)
+	at javax.swing.plaf.basic.BasicMenuItemUI.doClick(BasicMenuItemUI.java:829)
+	at javax.swing.plaf.basic.BasicMenuItemUI$Handler.mouseReleased(BasicMenuItemUI.java:873)
+	at java.awt.AWTEventMulticaster.mouseReleased(AWTEventMulticaster.java:289)
+	at java.awt.Component.processMouseEvent(Component.java:6288)
+	at javax.swing.JComponent.processMouseEvent(JComponent.java:3267)
+	at java.awt.Component.processEvent(Component.java:6053)
+	at java.awt.Container.processEvent(Container.java:2045)
+	at java.awt.Component.dispatchEventImpl(Component.java:4649)
+	at java.awt.Container.dispatchEventImpl(Container.java:2103)
+	at java.awt.Component.dispatchEvent(Component.java:4475)
+	at java.awt.LightweightDispatcher.retargetMouseEvent(Container.java:4633)
+	at java.awt.LightweightDispatcher.processMouseEvent(Container.java:4297)
+	at java.awt.LightweightDispatcher.dispatchEvent(Container.java:4227)
+	at java.awt.Container.dispatchEventImpl(Container.java:2089)
+	at java.awt.Component.dispatchEvent(Component.java:4475)
+	at java.awt.EventQueue.dispatchEventImpl(EventQueue.java:675)
+	at java.awt.EventQueue.access$300(EventQueue.java:96)
+	at java.awt.EventQueue$2.run(EventQueue.java:634)
+	at java.awt.EventQueue$2.run(EventQueue.java:632)
+	at java.security.AccessController.doPrivileged(Native Method)
+	at java.security.AccessControlContext$1.doIntersectionPrivilege(AccessControlContext.java:108)
+	at java.security.AccessControlContext$1.doIntersectionPrivilege(AccessControlContext.java:119)
+	at java.awt.EventQueue$3.run(EventQueue.java:648)
+	at java.awt.EventQueue$3.run(EventQueue.java:646)
+	at java.security.AccessController.doPrivileged(Native Method)
+	at java.security.AccessControlContext$1.doIntersectionPrivilege(AccessControlContext.java:108)
+	at java.awt.EventQueue.dispatchEvent(EventQueue.java:645)
+	at java.awt.EventDispatchThread.pumpOneEventForFilters(EventDispatchThread.java:275)
+	at java.awt.EventDispatchThread.pumpEventsForFilter(EventDispatchThread.java:200)
+	at java.awt.EventDispatchThread.pumpEventsForHierarchy(EventDispatchThread.java:190)
+	at java.awt.EventDispatchThread.pumpEvents(EventDispatchThread.java:185)
+	at java.awt.EventDispatchThread.pumpEvents(EventDispatchThread.java:177)
+	at java.awt.EventDispatchThread.run(EventDispatchThread.java:138)
+2013-08-12 19:44:21,060 WARN  [SoapUI] no HermesJMS context!
+2013-08-12 19:44:21,061 INFO  [SoapUI] no hermes context
+2013-08-12 19:45:00,301 INFO  [SchemaUtils] Loading schema types from [http://spar-trade/site/clientorder?wsdl]
+2013-08-12 19:45:00,302 INFO  [SchemaUtils] Getting schema http://spar-trade/site/clientorder?wsdl
+2013-08-12 19:45:27,617 INFO  [SchemaUtils] Loading schema types from [http://spar-trade/site/clientorder?wsdl]
+2013-08-12 19:45:27,619 INFO  [SchemaUtils] Getting schema http://spar-trade/site/clientorder?wsdl
+2013-08-12 19:45:27,629 INFO  [SchemaUtils] Getting schema http://spar-trade/spar_trade/shema.xsd
