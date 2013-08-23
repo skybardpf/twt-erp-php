@@ -8,6 +8,7 @@ class DownloadAction extends CAction
     {
 //        $path = strtr(base64_encode(addslashes(gzcompress(serialize('Прототипы.Библиотека шаблонов.pdf'),9))), '+/=', '-_,');
         $path = unserialize(gzuncompress(stripslashes(base64_decode(strtr($path, '-_,', '+/=')))));
+        $path = str_replace('\\', '/', $path);
         $path = Yii::getPathOfAlias('filestorage').DIRECTORY_SEPARATOR.$path;
         if (!file_exists($path)){
             echo 'NotFound';
