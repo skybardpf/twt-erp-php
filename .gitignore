@@ -7,3 +7,4 @@ uploads/*
 #index.php
 public/ext4/*
 #protected/assets/js/*
+protected/filestorage/*
