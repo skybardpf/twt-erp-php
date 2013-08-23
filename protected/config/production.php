@@ -1,4 +1,8 @@
 <?php
+//    $fileStorageDir = dirname(__FILE__)
+//        . DIRECTORY_SEPARATOR . '..'
+//        . DIRECTORY_SEPARATOR . 'filestorage'
+//        . DIRECTORY_SEPARATOR . 'twt-erp';
     return CMap::mergeArray(
         // наследуемся от main.php
         require(dirname(__FILE__).'/main.php'),
@@ -18,8 +22,9 @@
                     )
                 ),
             ),
-            'params' => array(
-                'uploadDocumentDir' => dirname(__FILE__).DIRECTORY_SEPARATOR.'..'.DIRECTORY_SEPARATOR.'filestorage'.DIRECTORY_SEPARATOR.'twt-erp'.DIRECTORY_SEPARATOR.'uploads',
-            ),
+//            'params' => array(
+//                'uploadDocumentDir' => $fileStorageDir.DIRECTORY_SEPARATOR.'uploads',
+//                'fileStorageDir' => $fileStorageDir,
+//            ),
         )
     );

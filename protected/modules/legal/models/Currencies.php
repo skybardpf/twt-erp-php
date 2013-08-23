@@ -53,7 +53,7 @@ class Currencies extends SOAPModel {
 	 * Список доступных значений Валют. Формат [key=>value]
 	 * @return array
 	 */
-	static function getValues() {
+	public static function getValues() {
         $cache_id = __CLASS__.'_list';
 		$data = Yii::app()->cache->get($cache_id);
 		if ($data === false) {

@@ -57,7 +57,7 @@ class FoundingDocument extends SOAPModel
         return array(
             'uploadDocument' => array(
                 'class' => 'application.components.Behavior.UploadDocument',
-                'uploadDir' => Yii::app()->params->uploadDocumentDir,
+                'uploadDir' => Yii::getPathOfAlias(Yii::app()->params->uploadDocumentDir),
             ),
         );
     }
@@ -165,8 +165,6 @@ class FoundingDocument extends SOAPModel
         if (!$this->primaryKey){
             unset($data['id']);
         }
-//        $data['from_user'] = true;
-//        $data['typ_doc'] = '';
 
         $list_scans = array();
         $list_files = array();

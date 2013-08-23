@@ -105,6 +105,9 @@ if ($model->hasErrors()) {
     <?php
     echo $form->textAreaRow($model, 'comment', array('class' => 'span6'));
 
+    /**
+     * Вывод файлов и сканов
+     */
     $data_files = array();
     $data_scans = array();
     if ($model->primaryKey) {

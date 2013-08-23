@@ -66,7 +66,7 @@ abstract class PowerAttorneyAbstract extends SOAPModel
         return array(
             'uploadDocument' => array(
                 'class' => 'application.components.Behavior.UploadDocument',
-                'uploadDir' => Yii::app()->params->uploadDocumentDir,
+                'uploadDir' => Yii::getPathOfAlias(Yii::app()->params->uploadDocumentDir),
             ),
         );
     }
