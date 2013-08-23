@@ -1,7 +1,7 @@
 <?php
 
 Yii::setPathOfAlias('bootstrap', dirname(__FILE__).'/../extensions/bootstrap');
-Yii::setPathOfAlias('filestorage', dirname(__FILE__).'/../filestorage/twt-erp');
+Yii::setPathOfAlias('filestorage', dirname(__FILE__).'/../filestorage');
 
 //$fileStorageDir = dirname(__FILE__)
 //    . DIRECTORY_SEPARATOR . '..'
@@ -115,6 +115,6 @@ return array(
 		// this is used in contact page
 		'adminEmail'=>'yury@artektiv.ru',
 
-        'uploadDocumentDir' => 'filestorage.uploads',
+        'uploadDocumentDir' => 'filestorage.twt-erp.uploads',
 	),
 );
