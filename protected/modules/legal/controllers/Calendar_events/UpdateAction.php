@@ -1,6 +1,6 @@
 <?php
 /**
- * Редактирование события
+ * Редактирование события.
  *
  * @author Skibardin A.A. <skybardpf@artektiv.ru>
  */
@@ -21,7 +21,9 @@ class UpdateAction extends CAction
         $controller = $this->controller;
         $controller->pageTitle .= ' | Редактирование события';
 
-        $model = $controller->loadModel($id);
+        $force_cache = (isset($_GET['force_cache']) && $_GET['force_cache'] == 1) ? true : false;
+        $model = Event::model()->loadModel($id, $force_cache);
+        $model->setForceCached($force_cache);
         if (!$model->made_by_user){
             throw new CHttpException(500, 'Нельзя редактировать событие, созданное администратором.');
         }
@@ -31,14 +33,17 @@ class UpdateAction extends CAction
             Yii::app()->end();
         }
 
-        $org = $controller->loadOrganization($org_id);
+        $org = Organization::loadModel($org_id, $force_cache);
 
         if ($_POST && !empty($_POST['Event'])) {
             $model->setAttributes($_POST['Event']);
 
-            $model->upload_files  = CUploadedFile::getInstancesByName('upload_files');
-            $model->list_yur = $model->getStructureOrg();
             $model->countries = CJSON::decode($model->json_countries);
+
+            if ($model->validate('json_exists_files')){
+                $model->list_files = CJSON::decode($model->json_exists_files);
+            }
+            $model->upload_files = CUploadedFile::getInstancesByName('upload_files');
 
             if ($model->validate()) {
                 try {
@@ -49,26 +54,6 @@ class UpdateAction extends CAction
                 }
             }
         } else {
-            $list = array();
-            if (isset($model->list_yur[0]) && is_array($model->list_yur[0])){
-                for ($i = 0, $l=count($model->list_yur[0])/2; $i<$l; $i++){
-                    $type = 'type_yur'.$i;
-                    $id = 'id_yur'.$i;
-                    if ($model->list_yur[0][$type] == 'Организации'){
-                        $list[] = array(
-                            'id_yur' => $model->list_yur[0][$id],
-                            'type_yur' => 'Организации'
-                        );
-                    } elseif($model->list_yur[0][$type] == 'Контрагенты'){
-                        $list[] = array(
-                            'id_yur' => $model->list_yur[0][$id],
-                            'type_yur' => 'Контрагенты'
-                        );
-                    }
-                }
-            }
-            $model->list_yur = $list;
-
             $organizations = array();
             $contractors = array();
             foreach ($model->list_yur as $v){
@@ -83,6 +68,8 @@ class UpdateAction extends CAction
             $model->json_contractors = CJSON::encode($contractors);
             $model->json_countries = CJSON::encode($model->countries);
         }
+
+        $model->json_exists_files = CJSON::encode($model->list_files);
 
         $controller->render('/organization/show', array(
             'content' => $controller->renderPartial('/my_events/form',

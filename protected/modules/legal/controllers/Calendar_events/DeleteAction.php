@@ -20,8 +20,9 @@ class DeleteAction extends CAction
          */
         $controller = $this->controller;
 
-        $model = $controller->loadModel($id);
-
+        $force_cache = (isset($_GET['force_cache']) && $_GET['force_cache'] == 1) ? true : false;
+        $model = Event::model()->loadModel($id, $force_cache);
+        $model->setForceCached($force_cache);
 
         if (Yii::app()->request->isAjaxRequest) {
             $ret = array();
@@ -36,13 +37,13 @@ class DeleteAction extends CAction
             echo CJSON::encode($ret);
             Yii::app()->end();
         } else {
-            $controller->pageTitle .= ' | Просмотр события';
-
-            $org = $controller->loadOrganization($org_id);
+            $controller->pageTitle .= ' | Удаление события';
 
             if (!$model->made_by_user){
                 throw new CHttpException(500, 'Нельзя удалить событие, созданное администратором.');
             }
+
+            $org = Organization::loadModel($org_id, $force_cache);
             if (isset($_POST['result'])) {
                 switch ($_POST['result']) {
                     case 'yes':

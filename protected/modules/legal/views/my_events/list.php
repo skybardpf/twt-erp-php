@@ -5,15 +5,22 @@
  * @author Skibardin A.A. <skybardpf@artektiv.ru>
  *
  * @var Calendar_eventsController   $this
- * @var Organization               $organization
- * @var $data                       Event[]
- *
+ * @var Organization                $organization
+ * @var Event[]                     $data
+ * @var string                      $title
  */
 ?>
-<h2>Ближайшие события</h2>
+<h2><?= $title; ?></h2>
 
 <?php
-    echo CHtml::link('Ближайшие 10', '#') . ' | ' . CHtml::link('На год вперед', '#') . '<br/><br/>';
+    echo CHtml::link(
+        'Ближайшие 10',
+        $this->createUrl('list', array('org_id' => $organization->primaryKey)).'?ten=1') .
+        ' | '
+        . CHtml::link(
+            'На год вперед',
+            $this->createUrl('list', array('org_id' => $organization->primaryKey)).'?year=1'
+    ) . '<br/><br/>';
 
     $provider = new CArrayDataProvider($data);
     foreach($provider->rawData as $k=>$v){

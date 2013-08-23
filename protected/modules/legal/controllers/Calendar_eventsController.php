@@ -31,43 +31,4 @@ class Calendar_eventsController extends Controller{
 
         );
     }
-
-    /**
-     * Получаем список событий указанной организации.
-     * @param Organization $org
-     * @return Event[]
-     */
-    public function getDataProvider(Organization $org)
-    {
-        $cache_id = get_class(Event::model()).'_list_org_id_'.$org->primaryKey;
-        $data = Yii::app()->cache->get($cache_id);
-        if ($data === false){
-            $data = Event::model()
-                ->where('id_yur', $org->primaryKey)
-                ->where('deleted', false)
-                ->findAll();
-
-            Yii::app()->cache->set($cache_id, $data);
-        }
-        return $data;
-    }
-
-    /**
-     * @param string $id Идентификатор события.
-     * @return Event
-     * @throws CHttpException
-     */
-    public function loadModel($id)
-    {
-        $cache_id = get_class(Event::model()).'_'.$id;
-        $model = Yii::app()->cache->get($cache_id);
-        if ($model === false){
-            $model = Event::model()->findByPk($id);
-            if ($model === null) {
-                throw new CHttpException(404, 'Не найдено событие.');
-            }
-            Yii::app()->cache->set($cache_id, $model, 0);
-        }
-        return $model;
-    }
 }

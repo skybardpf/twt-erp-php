@@ -40,14 +40,14 @@ abstract class AbstractOrganization extends SOAPModel {
     }
 
     /**
-     *  Список названий организаций|контаргентов.
-     *  @return array Формат [id => name]
+     * Список названий организаций|контаргентов.
+     * @param bool $force_cache
+     * @return array Формат [id => name]
      */
-    public function getListNames() {
+    public function getListNames($force_cache=false) {
         $cache_id = get_class($this).self::PREFIX_CACHE_ID_LIST_NAMES;
-        $data = Yii::app()->cache->get($cache_id);
-        if ($data === false) {
-            $elements = $this->getFullData();
+        if ($force_cache || ($data = Yii::app()->cache->get($cache_id)) === false) {
+            $elements = $this->getFullData($force_cache);
             $data = array();
             foreach ($elements as $elem) {
                 $data[$elem->primaryKey] = $elem->name;

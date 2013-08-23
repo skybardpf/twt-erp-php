@@ -6,8 +6,11 @@
  *
  * @var My_eventsController | Calendar_eventsController $this
  * @var Event           $model
- * @var Organization   $organization
+ * @var Organization    $organization
  */
+
+Yii::app()->clientScript->registerScriptFile($this->asset_static.'/js/jquery.fileDownload.js');
+Yii::app()->clientScript->registerScriptFile($this->asset_static.'/js/legal/manage_files.js');
 ?>
 
 <script>
@@ -62,58 +65,88 @@
 <div>
 <?php
     $div = '';
-    $organizations = Organization::model()->getListNames();
-    $contractors = Contractor::model()->getListNames();
-
     if ($model->for_yur){
+        $label = 'Для юридических лиц';
+        $organizations = Organization::model()->getListNames($model->getForceCached());
+        $contractors = Contractor::model()->getListNames($model->getForceCached());
         foreach ($model->list_yur as $list){
-            for ($i = 0, $l=count($list)/2; $i<$l; $i++){
-                $type = 'type_yur'.$i;
-                $id = 'id_yur'.$i;
-                if ($list[$type] == 'Организации'){
-                    if (isset($organizations[$list[$id]])){
-                        $div .= CHtml::link(
-                                $organizations[$list[$id]],
-                                $this->createUrl('organization/view', array('id' => $list[$id]))
-                            ).'<br/>';
-                    }
-                } elseif($list[$type] == 'Контрагенты'){
-                    if (isset($contractors[$list[$id]])){
-                        $div .= CHtml::link(
-                                $contractors[$list[$id]],
-                                $this->createUrl('contractor/view', array('id' => $list[$id]))
-                            ).'<br/>';
-                    }
+            if ($list['type_yur'] == 'Организации'){
+                if (isset($organizations[$list['id_yur']])){
+                    $div .= CHtml::link(
+                        $organizations[$list['id_yur']],
+                        $this->createUrl('organization/view', array('id' => $list['id_yur']))
+                    ).'<br/>';
+                }
+            } elseif($list[$type] == 'Контрагенты'){
+                if (isset($contractors[$list['id_yur']])){
+                    $div .= CHtml::link(
+                        $contractors[$list['id_yur']],
+                        $this->createUrl('contractor/view', array('id' => $list['id_yur']))
+                    ).'<br/>';
                 }
             }
+        }
+    } else {
+        $label = 'Для юрисдикций';
+        $countries = Countries::model()->getDataNames($model->getForceCached());
+        foreach ($model->countries as $country){
+            $div .= ((isset($countries[$country])) ? $countries[$country] : '---').'<br/>';
         }
     }
 
     $this->widget('bootstrap.widgets.TbDetailView', array(
         'data' => $model,
         'attributes'=>array(
-            array('name' => 'div_list_yur', 'label' => 'Для юридических лиц', 'type' => 'raw', 'value' => $div),
-            array('name' => 'event_date', 'label' => 'Первая дата наступления'),
-            array('name' => 'notification_date', 'label' => 'Первая дата напоминания'),
-            array('name' => 'period', 'label' => 'Периодичность'),
+            array(
+                'name' => 'div_list_yur',
+                'label' => $label,
+                'type' => 'raw',
+                'value' => $div
+            ),
+            array(
+                'name' => 'event_date',
+                'label' => 'Первая дата наступления'
+            ),
+            array(
+                'name' => 'notification_date',
+                'label' => 'Первая дата напоминания'
+            ),
+            array(
+                'name' => 'period',
+                'label' => 'Периодичность'
+            ),
         )
     ));
 ?>
 </div>
 
-<?php
-$counts = UploadFile::getCountTypeFiles(UploadFile::CLIENT_ID, get_class($model), $model->primaryKey);
-$div = '';
-if (isset($counts['files']) && $counts['files']){
-    $div .= CHtml::link('Скачать файлы', '#', array('class' => 'download_online')) . '<br/>';
-}
-if (!empty($div)){
-    echo CHtml::tag('fieldset',
-        array(
-            'class' => 'links_for_download',
-            'data-id' => $model->primaryKey
-        ),
-        $div
-    );
-}
-?>
+<fieldset>
+    <?php
+    echo CHtml::tag('div', array(
+        'class' => 'model-info',
+        'data-id' => $model->primaryKey,
+        'data-class-name' => get_class($model)
+    ));
+
+    if (!empty($model->list_files)){
+        echo '<h4>Файлы:</h4>';
+        foreach($model->list_files as $f){
+            echo CHtml::link($f, '#',
+                    array(
+                        'class' => 'download_file',
+                        'data-type' => MDocumentCategory::FILE,
+                    )
+                ) . '<br/>';
+        }
+    }
+    ?>
+</fieldset>
+
+<div id="preparing-file-modal" title="Подготовка файла..." style="display: none;">
+    Подготавливается файл для скачивания, подождите...
+
+    <div class="ui-progressbar-value ui-corner-left ui-corner-right" style="width: 100%; height:22px; margin-top: 20px;"></div>
+</div>
+<div id="error-modal" title="Error" style="display: none;">
+    Возникли проблемы при подготовке файла, повторите попытку
+</div>

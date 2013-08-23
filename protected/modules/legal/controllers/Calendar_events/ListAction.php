@@ -17,16 +17,35 @@ class ListAction extends CAction
          * @var $controller Calendar_eventsController
          */
         $controller = $this->controller;
-        $controller->pageTitle .= ' | Текущие события';
 
-        $org = $controller->loadOrganization($org_id);
-        $data = $controller->getDataProvider($org);
+        if (isset($_GET['year']) && $_GET['year'] = 1){
+            $filter = 'year';
+            $title = 'События на год вперед';
+            $controller->pageTitle .= ' | События на год вперед';
+        } elseif (isset($_GET['ten']) && $_GET['ten'] = 1){
+            $filter = 'ten';
+            $title = 'Ближайщие 10 событий';
+            $controller->pageTitle .= ' | Ближайщие 10 событий';
+        } else {
+            $filter = 'all';
+            $title = 'Все события';
+            $controller->pageTitle .= ' | Все события';
+        }
+
+        $force_cache = (isset($_GET['force_cache']) && $_GET['force_cache'] == 1) ? true : false;
+        $org = Organization::loadModel($org_id, $force_cache);
+
+        // TODO пока $force_cache = true
+        $force_cache = true;
+        $data = Event::model()->listModelsByOrg($org->primaryKey, $filter, $force_cache);
 
         $controller->render('/organization/show', array(
             'content' => $controller->renderPartial('/my_events/list',
                 array(
                     'organization' => $org,
                     'data' => $data,
+                    'title' => $title,
+                    'force_cache' => $force_cache
                 ),
                 true
             ),

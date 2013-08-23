@@ -6,7 +6,7 @@
  *
  * @var My_eventsController | Calendar_eventsController $this
  * @var Event           $model
- * @var Organization   $organization
+ * @var Organization    $organization
  */
 ?>
 
@@ -18,6 +18,8 @@
     Yii::app()->clientScript->registerScriptFile($this->asset_static.'/js/legal/form_manage_files.js');
     Yii::app()->clientScript->registerScriptFile($this->asset_static.'/js/legal/my_events/form.js');
     Yii::app()->clientScript->registerScriptFile($this->asset_static.'/js/jquery.json-2.4.min.js');
+    Yii::app()->clientScript->registerScriptFile($this->asset_static . '/js/jquery.fileDownload.js');
+    Yii::app()->clientScript->registerScriptFile($this->asset_static . '/js/legal/manage_files.js');
 
     if ($this instanceof Calendar_eventsController){
         $url_list = $this->createUrl('list', array("org_id" => $organization->primaryKey, "id" => $model->primaryKey));
@@ -36,7 +38,7 @@
         'enableAjaxValidation' => true,
         'enableClientValidation'=>true,
         'clientOptions' => array(
-            'validateOnSubmit' => true,
+//            'validateOnSubmit' => true,
             'validateOnChange' => true,
         ),
         'htmlOptions' => array(
@@ -108,8 +110,8 @@
         /**
          * Список огранизаций и контрагентов
          */
-        $organizations = Organization::model()->getListNames();
-        $contractors = Contractor::model()->getListNames();
+        $organizations = Organization::model()->getListNames($model->getForceCached());
+        $contractors = Contractor::model()->getListNames($model->getForceCached());
         foreach ($model->list_yur as $v){
             if ($v['type_yur'] == 'Организации'){
                 if (isset($organizations[$v['id_yur']])){
@@ -188,7 +190,7 @@
     $div_countries = '';
     $data = array();
     if (!empty($model->countries)){
-        $countries = Countries::getValues();
+        $countries = Countries::model()->getDataNames($model->getForceCached());
         foreach($model->countries as $v){
             if (isset($countries[$v])){
                 $data[] = array(
@@ -294,37 +296,57 @@
     echo $form->dropDownListRow($model, 'period',Event::getPeriods(), array('class' => 'span6'));
     echo $form->textAreaRow($model, 'description', array('class' => 'span6'));
 ?>
+
 <?php
-    $div_files  = '';
-    if ($model->primaryKey){
-        $files = UploadFile::getListFiles(UploadFile::CLIENT_ID, get_class($model), $model->primaryKey, UploadFile::TYPE_FILE_FILES);
-        foreach ($files as $f){
-            $div_files .= CHtml::tag('div',
-                array(
-                    'class' => 'block'
-                ),
-                CHtml::link($f['filename'], '#', array('class' => 'download_file', 'data-file_id' => $f['id'])) .
-                '&nbsp;&nbsp;&nbsp;' .
-                CHtml::link('', '#', array('class' => 'icon-remove', 'data-file_id' => $f['id']))
-            );
-        }
+/**
+ * Вывод файлов
+ */
+$data_files = array();
+if ($model->primaryKey) {
+    $path = Yii::app()->user->getId() . DIRECTORY_SEPARATOR . __CLASS__ . DIRECTORY_SEPARATOR . $model->primaryKey;
+    $path_scans = $path . DIRECTORY_SEPARATOR . MDocumentCategory::SCAN;
+    $path_files = $path . DIRECTORY_SEPARATOR . MDocumentCategory::FILE;
+
+    foreach ($model->list_files as $f) {
+        $data_files[] = array(
+            'id' => $f . '_id',
+            'filename' => CHtml::link($f, '#', array(
+                'class' => 'download_file',
+                'data-type' => MDocumentCategory::FILE
+            )),
+            'delete' => $this->widget('bootstrap.widgets.TbButton', array(
+                'buttonType' => 'button',
+                'type' => 'primary',
+                'label' => 'Удалить',
+                'htmlOptions' => array(
+                    'class' => 'delete_file',
+                    'data-type' => MDocumentCategory::FILE,
+                    'data-filename' => $f
+                )
+            ), true)
+        );
     }
+}
+echo CHtml::tag('div', array(
+    'class' => 'model-info',
+    'data-id' => $model->primaryKey,
+    'data-class-name' => get_class($model)
+));
+echo $form->hiddenField($model, 'json_exists_files');
+
+echo $this->renderPartial('/_files/grid_files',
+    array(
+        'data' => $data_files,
+        'model' => $model,
+        'attribute' => 'list_files',
+        'attribute_files' => 'upload_files',
+        'grid_id' => 'grid-files',
+        'accept_ext' => '',
+    ),
+    true
+);
 ?>
-    <div class="control-group">
-        <?= $form->labelEx($model, 'files', array('class' => 'control-label')); ?>
-        <div class="controls bordered" id="list_uploaded_files">
-            <?php
-            echo (empty($div_files)) ? '' : $div_files.'<br/>';
-            $this->widget('CMultiFileUpload', array(
-                'name' => 'upload_files',
-//                'accept' => 'jpeg|jpg|gif|png', // useful for verifying files
-                'duplicate' => 'Duplicate file!', // useful, i think
-                'denied' => 'Invalid file type', // useful, i think
-                'htmlOptions' => array( 'multiple' => 'multiple', ),
-            ));
-            ?>
-        </div>
-    </div>
+
 
 </fieldset>
 <?php $this->endWidget(); ?>
@@ -353,30 +375,7 @@
         ));
         ?>
     </div>
-<?php $this->endWidget(); ?>
-
 <?php
-    // Модальное окошко для выбора страны
-//    $this->beginWidget('bootstrap.widgets.TbModal', array('id'=>'dataModalCountries'));
+$this->endWidget();
+echo $this->renderPartial('/_files/download_hint', array(), true);
 ?>
-<!--    <div class="modal-header">-->
-<!--        <a class="close" data-dismiss="modal">×</a>-->
-<!--        <h4>--><?//=Yii::t("menu", "Выберите страну")?><!--</h4>-->
-<!--    </div>-->
-<!--    <div class="modal-body"></div>-->
-<!--    <div class="modal-footer">-->
-<!--        --><?php
-//        $this->widget('bootstrap.widgets.TbButton', array(
-//            'label' => Yii::t("menu", "Сохранить"),
-//            'url'   => '#',
-//            'htmlOptions' => array('class'=>'button_save', 'data-dismiss'=>'modal'),
-//        ));
-//
-//        $this->widget('bootstrap.widgets.TbButton', array(
-//            'label' => Yii::t("menu", "Отмена"),
-//            'url'   => '#',
-//            'htmlOptions' => array('data-dismiss'=>'modal'),
-//        ));
-//        ?>
-<!--    </div>-->
-<?php //$this->endWidget(); ?>

@@ -154,12 +154,12 @@ if ($model->primaryKey) {
         );
     }
 }
+
 echo CHtml::tag('div', array(
     'class' => 'model-info',
     'data-id' => $model->primaryKey,
     'data-class-name' => get_class($model)
 ));
-
 echo $form->hiddenField($model, 'json_exists_files');
 echo $form->hiddenField($model, 'json_exists_scans');
 

@@ -11,7 +11,6 @@
 
 Yii::app()->clientScript->registerScriptFile($this->asset_static.'/js/jquery.fileDownload.js');
 Yii::app()->clientScript->registerScriptFile($this->asset_static.'/js/legal/manage_files.js');
-
 ?>
 
 <h2>Свободный документ</h2>

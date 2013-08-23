@@ -17,64 +17,18 @@ class My_eventsController extends Controller{
     public function actions()
     {
         return array(
-            '_html_form_select_element' => 'application.modules.legal.controllers.My_events.HtmlFormSelectElementAction',
-            '_html_row_element' => 'application.modules.legal.controllers.My_events.HtmlRowElementAction',
+            '_html_form_select_element' => 'application.modules.legal.controllers.MyEvent.HtmlFormSelectElementAction',
+            '_html_row_element' => 'application.modules.legal.controllers.MyEvent.HtmlRowElementAction',
 
-            'index' => 'application.modules.legal.controllers.My_events.IndexAction',
-            'add' => 'application.modules.legal.controllers.My_events.CreateAction',
-            'view' => 'application.modules.legal.controllers.My_events.ViewAction',
-            'edit' => 'application.modules.legal.controllers.My_events.UpdateAction',
-            'delete' => 'application.modules.legal.controllers.My_events.DeleteAction',
+            'index' => 'application.modules.legal.controllers.MyEvent.IndexAction',
+            'add' => 'application.modules.legal.controllers.MyEvent.CreateAction',
+            'view' => 'application.modules.legal.controllers.MyEvent.ViewAction',
+            'edit' => 'application.modules.legal.controllers.MyEvent.UpdateAction',
+            'delete' => 'application.modules.legal.controllers.MyEvent.DeleteAction',
 
-            'delete_file' => 'application.modules.legal.controllers.My_events.Delete_fileAction',
-            'download_archive' => 'application.modules.legal.controllers.My_events.Download_archiveAction',
-            'download_file' => 'application.modules.legal.controllers.My_events.Download_fileAction',
+            'delete_file' => 'application.modules.legal.controllers.MyEvent.Delete_fileAction',
+            'download_archive' => 'application.modules.legal.controllers.MyEvent.Download_archiveAction',
+            'download_file' => 'application.modules.legal.controllers.MyEvent.Download_fileAction',
         );
-    }
-
-    /**
-     * @param string $id Идентификатор события.
-     * @return Event
-     * @throws CHttpException
-     */
-    public function loadModel($id)
-    {
-        $cache_id = get_class(Event::model()).'_'.$id;
-        $model = Yii::app()->cache->get($cache_id);
-        if ($model === false){
-            $model = Event::model()->findByPk($id);
-            if ($model === null) {
-                throw new CHttpException(404, 'Не найдено событие.');
-            }
-            Yii::app()->cache->set($cache_id, $model, 0);
-        }
-        return $model;
-    }
-
-    /**
-     * Получаем список событий.
-     * @return Event[]
-     */
-    public function getDataProvider()
-    {
-        $cache_id = get_class(Event::model()).'_list';
-        $data = Yii::app()->cache->get($cache_id);
-        if ($data === false){
-            $data = Event::model()
-                ->where('deleted', false)
-                ->findAll();
-            Yii::app()->cache->set($cache_id, $data);
-        }
-        return $data;
-    }
-
-    /**
-     * Создаем новое событие.
-     * @return Event
-     */
-    public function createModel()
-    {
-        $model = new Event();
-        return $model;
     }
 }
