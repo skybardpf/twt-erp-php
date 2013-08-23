@@ -18,7 +18,9 @@ class DownloadAction extends CAction
             . DIRECTORY_SEPARATOR . $type;
 
         $filename = $path . DIRECTORY_SEPARATOR . $file;
-        if (file_exists($filename)){
+        if (!file_exists($filename)){
+            echo 'Файл не найден';
+        } else {
             header('Set-Cookie: fileDownload=true; path=/');
             header('Cache-Control: max-age=60, must-revalidate');
             header('Content-type: application/*');
