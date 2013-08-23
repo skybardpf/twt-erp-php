@@ -103,7 +103,7 @@ $this->widget('bootstrap.widgets.TbButton', array(
 	</div>
 
 <?php
-$form->textAreaRow($model, 'comment', array('class' => 'span6'));
+echo $form->textAreaRow($model, 'comment', array('class' => 'span6'));
 
 /**
  * Вывод файлов и сканов
