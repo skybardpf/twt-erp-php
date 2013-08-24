@@ -2,7 +2,7 @@
 /**
  * Only Ajax. Возращает html строку для вставки в таблицу организаций.
  *
- * @author Skibardin A.A. <skybardpf@artektiv.ru>
+ * @author Skibardin A.A. <webprofi1983@gmail.com>
  */
 class HtmlRowElementAction extends CAction
 {

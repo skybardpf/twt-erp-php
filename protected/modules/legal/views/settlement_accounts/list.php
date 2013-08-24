@@ -1,7 +1,7 @@
 <?php
 /**
  * Банковские счета -> Список.
- * @author Skibardin A.A. <skybardpf@artektiv.ru>
+ * @author Skibardin A.A. <webprofi1983@gmail.com>
  *
  * @var Settlement_accountsController  $this
  * @var SettlementAccount[]            $data

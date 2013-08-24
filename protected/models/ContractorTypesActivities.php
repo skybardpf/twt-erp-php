@@ -2,15 +2,14 @@
 /**
  * Модель: Виды деятельности контрагентов.
  *
- * @author Skibardin A.A. <skybardpf@artektiv.ru>
+ * @author Skibardin A.A. <webprofi1983@gmail.com>
  *
  * @property string $id
  * @property string $name
  */
-
 class ContractorTypesActivities extends SOAPModel
 {
-    const PREFIX_CACHE_ID_LIST_NAMES = '_list_names';
+    const PREFIX_CACHE_LIST_NAMES = '_list_names';
 
     /**
      * @static
@@ -26,7 +25,7 @@ class ContractorTypesActivities extends SOAPModel
      * Список видов деятельности контрагентов.
      * @return ContractorTypesActivities[]
      */
-    public function findAll()
+    protected function findAll()
     {
         $filters = SoapComponent::getStructureElement($this->where);
         $ret = $this->SOAP->listTypeActContr(
@@ -51,25 +50,14 @@ class ContractorTypesActivities extends SOAPModel
     }
 
     /**
-     * Список доступных видов деятельности. С сохранением в кеше.
-     * @deprecated
      * @return array
      */
-    public static function getValues()
+    public function attributeNames()
     {
-        $cache_id = __CLASS__.'_list';
-        $data = Yii::app()->cache->get($cache_id);
-        if ($data === false) {
-            $elements = self::model()->findAll();
-            $data = array();
-            if ($elements) {
-                foreach ($elements as $elem) {
-                    $data[$elem->getprimaryKey()] = $elem->name;
-                }
-            }
-            Yii::app()->cache->set($cache_id, $data);
-        }
-        return $data;
+        return array(
+            'id',            // string
+            'name',          // string
+        );
     }
 
     /**
@@ -77,16 +65,14 @@ class ContractorTypesActivities extends SOAPModel
      * @param bool $force_cache
      * @return array
      */
-    public static function getDataNames($force_cache = false)
+    public function listNames($force_cache = false)
     {
-        $cache_id = __CLASS__. self::PREFIX_CACHE_ID_LIST_NAMES;
+        $cache_id = __CLASS__. self::PREFIX_CACHE_LIST_NAMES;
         if ($force_cache ||($data = Yii::app()->cache->get($cache_id)) === false) {
-            $elements = self::model()->findAll();
+            $elements = $this->findAll();
             $data = array();
-            if ($elements) {
-                foreach ($elements as $elem) {
-                    $data[$elem->getprimaryKey()] = $elem->name;
-                }
+            foreach ($elements as $elem) {
+                $data[$elem->primaryKey] = $elem->name;
             }
             Yii::app()->cache->set($cache_id, $data);
         }

@@ -2,9 +2,8 @@
 /**
  * Модель для работы с организацией.
  *
- * @author Skibardin A.A. <skybardpf@artektiv.ru>
+ * @author Skibardin A.A. <webprofi1983@gmail.com>
  *
- * @property string $id
  * @property string $name
  * @property string $full_name
  * @property string $country
@@ -21,14 +20,12 @@
  * @property string $vat_nom
  * @property string $profile
  * @property string $deleted
- *
  * @property array  $signatories
- * @property string $json_signatories   // private
+ *
+ * @property string $json_signatories
  */
 class Organization extends OrganizationAbstract
 {
-    const TYPE = 'Организации';
-
 	/**
 	 * @static
 	 * @param string $className
@@ -40,35 +37,14 @@ class Organization extends OrganizationAbstract
 	}
 
     /**
-     * @static
-     * @return Organization Возвращаем созданную модель Организации.
+     * Действия, которые можно произвести после создания объекта SOAPModel.
      */
-    public static function createModel()
+    protected function afterConstruct()
     {
-        $model = new Organization();
-        $model->signatories = array();
-        $model->json_signatories = '{}';
-        return $model;
-    }
+        parent::afterConstruct();
 
-    /**
-     * @static
-     * @param string $id    Идентификатор организации.
-     * @param bool $force_cache
-     * @return Organization
-     * @throws CHttpException
-     */
-    public static function loadModel($id, $force_cache = false)
-    {
-        $cache_id = __CLASS__ . '_' . $id;
-        if ($force_cache || ($model = Yii::app()->cache->get($cache_id)) === false){
-            $model = self::model()->findByPk($id);
-            if ($model === null) {
-                throw new CHttpException(404, 'Не найдена организация.');
-            }
-            Yii::app()->cache->set($cache_id, $model);
-        }
-        return $model;
+        $this->signatories = array();
+        $this->json_signatories = '{}';
     }
 
 	/**
@@ -96,11 +72,6 @@ class Organization extends OrganizationAbstract
     {
 		$data = $this->getAttributes();
 
-        /*if($data['sert_date'] == ''){
-            $data['sert_date'] = date('Y-m-d', 0);
-        }*/
-
-		// New record
 		if (!$this->primaryKey) {
             unset($data['id']);
             $data['creation_date'] = date('Y-m-d');
@@ -141,7 +112,7 @@ class Organization extends OrganizationAbstract
 	 *
 	 * @return Organization[]
 	 */
-	public function findAll()
+	protected function findAll()
     {
 		$filters = SoapComponent::getStructureElement($this->where);
 		if (!$filters) $filters = array(array());
@@ -153,17 +124,65 @@ class Organization extends OrganizationAbstract
 	}
 
 	/**
-	 * Собственное Юр.Лицо
-	 * @param string $id
-	 * @return Organization
+	 * @param string $id    Идентификатор организации.
+     * @param bool $force_cache
+     * @return Organization
+     * @throws CHttpException
 	 */
-	public function findByPk($id)
+	public function findByPk($id, $force_cache=false)
     {
-        $data = $this->SOAP->getOrganization(array('id' => $id));
-        $data = SoapComponent::parseReturn($data);
-        $data = current($data);
-		return $this->publish_elem($data, __CLASS__);
+        Yii::trace(get_class($this).'.findByPk()','SoapModel');
+        $cache_id = __CLASS__ . self::PREFIX_CACHE_MODEL_PK . $id;
+        if ($force_cache || ($model = Yii::app()->cache->get($cache_id)) === false){
+            $data = $this->SOAP->getOrganization(array('id' => $id));
+            $data = SoapComponent::parseReturn($data);
+            $data = current($data);
+            $model = $this->publish_elem($data, __CLASS__);
+            if ($model === null) {
+                throw new CHttpException(404, 'Организация не найдена.');
+            }
+            Yii::app()->cache->set($cache_id, $model);
+        }
+        $model->setForceCached($force_cache);
+        return $model;
 	}
+
+    /**
+     * @return array
+     */
+    public function attributeNames()
+    {
+        return array(
+            'id',               // string
+            'country',          // string
+            'country_name',     // string
+            'name',             // string
+            'full_name',        // string
+            'sert_date',        // string
+            'inn',              // string
+            'kpp',              // string
+            'ogrn',             // string
+            'vat_nom',          // string
+            'reg_nom',          // string
+            'sert_nom',         // string
+            'info',             // string
+            'profile',          // string
+            'yur_address',      // string
+            'fact_address',     // string
+            'email',            // string
+            'phone',            // string
+            'fax',              // string
+            'comment',          // string
+            'okopf',            // string
+            'creation_date',    // date
+            'creator',          // string
+            'signatories',      // array
+            'gendirector_id',   // string
+            'deleted',          // bool
+
+            'json_signatories', // string
+        );
+    }
 
 	/**
 	 * Returns the list of attribute names of the model.
@@ -172,12 +191,10 @@ class Organization extends OrganizationAbstract
 	public function attributeLabels()
     {
         return array(
-            "id"            => '#',
-            "country"       => 'Страна',    // id
-            "country_name"  => '',
-
-            "name"          => 'Наименование',
-            "full_name"     => 'Полное наименование',
+            'id'            => '#',
+            'country'       => 'Страна',
+            'name'          => 'Наименование',
+            'full_name'     => 'Полное наименование',
             'sert_date'     => 'Дата государственной регистрации',
             'inn'           => 'ИНН',
             'kpp'           => 'КПП',
@@ -194,17 +211,10 @@ class Organization extends OrganizationAbstract
             'fax'           => 'Факс',
             'comment'       => 'Комментарий',
             'okopf'         => 'Организационно-правовая форма',
-
             'creation_date' => 'Дата создания',
             'creator'       => 'Пользователь, добавивший в систему',
-
             'signatories'   => 'Подписанты',
             'gendirector_id' => 'Генеральный директор',
-
-            'json_signatories' => '', // private
-
-            'deleted'       => 'Помечен на удаление',                // +
-
         );
 	}
 
@@ -215,13 +225,13 @@ class Organization extends OrganizationAbstract
     {
 		return array(
 			array('country', 'required'),
-			array('country', 'in', 'range' => array_keys(Countries::model()->getDataNames($this->getForceCached()))),
+			array('country', 'in', 'range' => array_keys(Country::model()->listNames($this->getForceCached()))),
 
             array('okopf', 'required'),
-            array('okopf', 'in', 'range' => array_keys(CodesOKOPF::model()->getDataNames($this->getForceCached()))),
+            array('okopf', 'in', 'range' => array_keys(CodesOKOPF::model()->listNames($this->getForceCached()))),
 
             array('profile', 'required'),
-            array('profile', 'in', 'range' => array_keys(ContractorTypesActivities::model()->getDataNames($this->getForceCached()))),
+            array('profile', 'in', 'range' => array_keys(ContractorTypesActivities::model()->listNames($this->getForceCached()))),
 
 			array('name, full_name', 'required'),
             array('name', 'length', 'max' => 50),
@@ -248,7 +258,7 @@ class Organization extends OrganizationAbstract
             array('sert_date', 'date', 'format' => 'yyyy-MM-dd'),
 
             array('gendirector_id', 'required'),
-            array('gendirector_id', 'in', 'range' => array_keys(ContactPersonForOrganization::model()->getDataNames($this->getForceCached()))),
+            array('gendirector_id', 'in', 'range' => array_keys(ContactPersonForOrganization::model()->listNames($this->getForceCached()))),
 
             array('json_signatories', 'validJson'),
 		);

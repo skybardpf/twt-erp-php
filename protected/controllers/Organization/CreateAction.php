@@ -2,7 +2,7 @@
 /**
  * Добавление организации.
  *
- * @author Skibardin A.A. <skybardpf@artektiv.ru>
+ * @author Skibardin A.A. <webprofi1983@gmail.com>
  */
 class CreateAction extends CAction
 {
@@ -18,7 +18,7 @@ class CreateAction extends CAction
         $controller->pageTitle .= ' | Добавление организации';
 
         $force_cache = (isset($_GET['force_cache']) && $_GET['force_cache'] == 1) ? true : false;
-        $model = Organization::createModel();
+        $model = new Organization();
         $model->setForceCached($force_cache);
 
         $class = get_class($model);

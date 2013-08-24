@@ -9,7 +9,7 @@
 Yii::app()->clientScript->registerCss('LEDocumentTypeDetailView', 'table.table-striped th {text-align: left;}');
 
 $gridDataProvider = new CArrayDataProvider($model->list_of_countries, array('keyField' => 'country'));
-Countries::getValues();
+Country::getValues();
 ?>
 <h2>Тип документа "<?=$model->name_of_doc?>"</h2>
 <a href="<?=$this->createUrl('index')?>">Назад к списку</a>
@@ -34,7 +34,7 @@ Countries::getValues();
 						'enableSorting' => false,
 						'template' => '{items}',
 						'columns'=>array(
-							array('name' => 'country', 'header'=>'Страна', 'type' => 'raw', 'value' => '($data["country"] && isset(Countries::$values[$data["country"]])) ? Countries::$values[$data["country"]] : "Не указана"'),
+							array('name' => 'country', 'header'=>'Страна', 'type' => 'raw', 'value' => '($data["country"] && isset(Country::$values[$data["country"]])) ? Country::$values[$data["country"]] : "Не указана"'),
 							array('name' => 'name_in_country', 'header'=>'Название документа',),
 						),
 					), true)

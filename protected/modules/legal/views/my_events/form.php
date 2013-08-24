@@ -2,7 +2,7 @@
 /**
  * Форма редактирования данных о событие(мероприятие).
  *
- * @author Skibardin A.A. <skybardpf@artektiv.ru>
+ * @author Skibardin A.A. <webprofi1983@gmail.com>
  *
  * @var My_eventsController | Calendar_eventsController $this
  * @var Event           $model
@@ -190,7 +190,7 @@
     $div_countries = '';
     $data = array();
     if (!empty($model->countries)){
-        $countries = Countries::model()->getDataNames($model->getForceCached());
+        $countries = Country::model()->getDataNames($model->getForceCached());
         foreach($model->countries as $v){
             if (isset($countries[$v])){
                 $data[] = array(

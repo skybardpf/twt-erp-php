@@ -2,7 +2,7 @@
 /**
  *  Управление довереностями организации.
  *
- *  @author Skibardin A.A. <skybardpf@artektiv.ru>
+ *  @author Skibardin A.A. <webprofi1983@gmail.com>
  */
 class Power_attorney_organizationController extends Controller {
     public $layout = 'inner';

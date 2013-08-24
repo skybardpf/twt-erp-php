@@ -17,7 +17,7 @@
 </div>
 <h2>Физические лица</h2>
 <?php
-    $countries = Countries::model()->getDataNames($force_cache);
+    $countries = Country::model()->getDataNames($force_cache);
 
 	$provider = new CArrayDataProvider($data);
     foreach($provider->rawData as $k=>$v){

@@ -2,7 +2,7 @@
 /**
  * Список текущих событий для организации.
  *
- * @author Skibardin A.A. <skybardpf@artektiv.ru>
+ * @author Skibardin A.A. <webprofi1983@gmail.com>
  */
 class ListAction extends CAction
 {

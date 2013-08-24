@@ -2,7 +2,7 @@
 /**
  *  Вкладка информация о Юр.Лице
  *
- *  @author Skibardin A.A. <skybardpf@artektiv.ru>
+ *  @author Skibardin A.A. <webprofi1983@gmail.com>
  *
  *  @var OrganizationController     $this
  *  @var Organization               $model
@@ -36,8 +36,8 @@
 ?>
 <br/><br/>
 <?php
-    $countries = Countries::model()->getDataNames($model->getForceCached());
-    $types = ContractorTypesActivities::model()->getDataNames($model->getForceCached());
+    $countries = Country::model()->listNames($model->getForceCached());
+    $types = ContractorTypesActivities::model()->listNames($model->getForceCached());
 
     $attributes = array(
         array(

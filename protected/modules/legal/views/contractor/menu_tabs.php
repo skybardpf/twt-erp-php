@@ -2,7 +2,7 @@
 /**
  * Просмотр информации об контрагенте. Иформация разбита по вкладкам.
  *
- * @author Skibardin A.A. <skybardpf@artektiv.ru>
+ * @author Skibardin A.A. <webprofi1983@gmail.com>
  *
  * @var Controller    $this
  * @var Contractor    $model

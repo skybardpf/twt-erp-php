@@ -2,7 +2,7 @@
 /**
  * Модель: Мои события (мероприятия).
  *
- * @author Skibardin A.A. <skybardpf@artektiv.ru>
+ * @author Skibardin A.A. <webprofi1983@gmail.com>
  *
  * @property string $id
  * @property string $name

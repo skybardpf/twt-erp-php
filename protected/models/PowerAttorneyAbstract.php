@@ -2,7 +2,7 @@
 /**
  * Общие свойства и методы для реализации модели "Довереность".
  *
- * @author Skibardin A.A. <skybardpf@artektiv.ru>
+ * @author Skibardin A.A. <webprofi1983@gmail.com>
  *
  * @property string $id             Идентификатор доверенности
  * @property string $id_yur         Идентификатор юрлица
@@ -71,36 +71,11 @@ abstract class PowerAttorneyAbstract extends SOAPModel
         );
     }
 
-    /**
-     * @return bool
-     */
-    protected function beforeSave(){
-//        if ($file = CUploadedFile::getInstance($this, 'file')){
-//            $this->deleteFile();
-//            $file->saveAs($this->filePath . '/' . $file->name);
-//            $this->file = $file->name;
-//        }
-        return true;
-    }
-
-    /**
-     * @return bool
-     */
-    protected function beforeDelete()
-    {
-        return true;
-    }
-
-//    public function deleteFile(){
-//        unlink($this->filePpath . '/' . $this->file);
-//        $this->file = '';
-//    }
-
 	/**
 	 * Список доверенностей
 	 * @return PowerAttorneyAbstract[]
 	 */
-	public function findAll()
+	protected function findAll()
     {
 		$filters = SoapComponent::getStructureElement($this->where);
 		if (!$filters) $filters = array(array());
@@ -128,8 +103,6 @@ abstract class PowerAttorneyAbstract extends SOAPModel
 	 */
 	public function delete()
     {
-        $this->beforeDelete();
-
 		if ($this->primaryKey) {
 			$ret = $this->SOAP->deletePowerAttorneyLE(array('id' => $this->primaryKey));
             $ret = SoapComponent::parseReturn($ret, false);
@@ -231,6 +204,29 @@ abstract class PowerAttorneyAbstract extends SOAPModel
             Yii::app()->cache->set($cache_id, $data);
         }
         return $data;
+    }
+
+    /**
+     * @return array
+     */
+    public function attributeNames()
+    {
+        return array(
+            'id',            // string
+            'name',          // string
+            'id_yur',        // string
+            'type_yur',      // string
+            'id_lico',       // string
+            'nom',           // string
+            'date',          // date
+            'expire',        // date
+            'break',         // date
+            'comment',       // string
+            'list_scans',    // array
+            'list_files',    // array
+            'from_user',     // bool
+            'deleted',       // bool
+        );
     }
 
     /**

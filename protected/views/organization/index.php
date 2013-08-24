@@ -2,7 +2,7 @@
 /**
  * Список организаций.
  *
- * @author Skibardin A.A. <skybardpf@artektiv.ru>
+ * @author Skibardin A.A. <webprofi1983@gmail.com>
  *
  * @var OrganizationController  $this
  * @var Organization[]          $data
@@ -20,7 +20,7 @@
 <h2>Организации</h2>
 
 <?php
-    $countries = Countries::model()->getDataNames($force_cache);
+    $countries = Country::model()->listNames($force_cache);
     foreach($data as $k=>$v){
         $data[$k]->country = (isset($countries[$v->country]) ? $countries[$v->country] : '---');
     }
@@ -41,10 +41,6 @@
                 'name' => 'country',
                 'header' => 'Страна'
             ),
-//            array(
-//                'name' => 'creation_date',
-//                'header' => 'Дата добавления'
-//            ),
             array(
                 'name' => 'creator',
                 'header' => 'Пользователь, добавивший в систему'

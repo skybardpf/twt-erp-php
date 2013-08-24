@@ -1,16 +1,19 @@
 <?php
 /**
- * Коды ОКОПФ (Организационо-правовая форма).
+ * Модель: Страна.
+ *
  * @author Skibardin A.A. <webprofi1983@gmail.com>
- */
-class CodesOKOPF extends SOAPModel
-{
-    const  PREFIX_CACHE_ID_LIST_NAMES_BY = '_list_names_by_key_';
+ *
+ * @property string $id
+ * @property string $name
+*/
+class Country extends SOAPModel {
+    const PREFIX_CACHE_LIST_NAMES = '_list_names';
 
 	/**
 	 * @static
 	 * @param string $className
-	 * @return CodesOKOPF
+	 * @return Country
 	 */
 	public static function model($className = __CLASS__)
     {
@@ -18,13 +21,13 @@ class CodesOKOPF extends SOAPModel
 	}
 
 	/**
-	 * Список кодов.
-	 * @return CodesOKOPF[]
+	 * Список стран
+	 * @return Country[]
 	 */
 	protected function findAll()
     {
-        $request = array('filters' => array(array()), 'sort' => array($this->order));
-		$ret = $this->SOAP->listOKOPF($request);
+        $request = array('filters' => array(), 'sort' => array($this->order));
+		$ret = $this->SOAP->listCountries($request);
 		$ret = SoapComponent::parseReturn($ret);
 		return $this->publish_list($ret, __CLASS__);
 	}
@@ -63,21 +66,21 @@ class CodesOKOPF extends SOAPModel
 	}
 
     /**
-     * Список доступных кодов ОКОПФ.
-     * @param bool $force_cache.
-     * @param bool $key_name. Если TRUE, то ключом будет название кода ОКОПФ.
+     * Список доступных значений Стран [id => name].
+     * Результат сохраняем в кеш.
+     * @param bool $force_cache
      * @return array
      */
-    public function listNames($force_cache = false, $key_name = false)
+    public function listNames($force_cache = false)
     {
-        $cache_id = __CLASS__.self::PREFIX_CACHE_ID_LIST_NAMES_BY.($key_name ? 'name' : 'key');
+        $cache_id = __CLASS__ . self::PREFIX_CACHE_LIST_NAMES;
         if ($force_cache || ($data = Yii::app()->cache->get($cache_id)) === false) {
             $data = array();
-            $elements = $this->findAll();
+            $elements = $this->where('deleted', true)->findAll();
             foreach ($elements as $elem) {
-                $key = ($key_name ? $elem->name : $elem->getprimaryKey());
-                $data[$key] = $elem->name;
+                $data[$elem->primaryKey] = $elem->name;
             }
+            asort($data);
             Yii::app()->cache->set($cache_id, $data);
         }
         return $data;

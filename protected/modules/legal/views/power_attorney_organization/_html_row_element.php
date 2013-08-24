@@ -2,7 +2,7 @@
 /**
  * Возращает html. Новая строка для вставки в таблицу видов договоров.
  *
- * @author Skibardin A.A. <skybardpf@artektiv.ru>
+ * @author Skibardin A.A. <webprofi1983@gmail.com>
  *
  * @var Power_attorney_organizationController $this
  * @var string $id

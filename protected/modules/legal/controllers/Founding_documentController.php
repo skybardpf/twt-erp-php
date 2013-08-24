@@ -2,7 +2,7 @@
 /**
  *  Управление учредительными документами.
  *
- *  @author Skibardin A.A. <skybardpf@artektiv.ru>
+ *  @author Skibardin A.A. <webprofi1983@gmail.com>
  */
 class Founding_documentController extends Controller {
     public $layout = 'inner';

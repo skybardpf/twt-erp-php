@@ -2,7 +2,7 @@
 /**
  * Просмотр информации о договоре.
  *
- * @author Skibardin A.A. <skybardpf@artektiv.ru>
+ * @author Skibardin A.A. <webprofi1983@gmail.com>
  *
  * @var ContractController $this
  * @var Contract            $model

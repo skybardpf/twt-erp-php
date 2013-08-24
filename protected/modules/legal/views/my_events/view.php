@@ -2,7 +2,7 @@
 /**
  * Просмотр события (мероприятия).
  *
- * @author Skibardin A.A. <skybardpf@artektiv.ru>
+ * @author Skibardin A.A. <webprofi1983@gmail.com>
  *
  * @var My_eventsController | Calendar_eventsController $this
  * @var Event           $model
@@ -88,7 +88,7 @@ Yii::app()->clientScript->registerScriptFile($this->asset_static.'/js/legal/mana
         }
     } else {
         $label = 'Для юрисдикций';
-        $countries = Countries::model()->getDataNames($model->getForceCached());
+        $countries = Country::model()->getDataNames($model->getForceCached());
         foreach ($model->countries as $country){
             $div .= ((isset($countries[$country])) ? $countries[$country] : '---').'<br/>';
         }

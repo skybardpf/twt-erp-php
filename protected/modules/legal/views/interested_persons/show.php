@@ -2,7 +2,7 @@
 /**
  * Просмотр заитересованного лица.
  *
- * @author Skibardin A.A. <skybardpf@artektiv.ru>
+ * @author Skibardin A.A. <webprofi1983@gmail.com>
  *
  * @var $this           Interested_personsController
  * @var $model          InterestedPerson | Beneficiary
@@ -83,7 +83,7 @@
             array('name' => 'quantStock',     'label' => 'Кол-во акций'),
 
 			/*array('name' => 'eng_name',     'label' => 'Английское наименование'),
-			array('name' => 'country',      'label' => 'Страна юрисдикции', 'type' => 'raw', 'value' => $element->country ? Countries::$values[$element->country] : 'Не указана'),
+			array('name' => 'country',      'label' => 'Страна юрисдикции', 'type' => 'raw', 'value' => $element->country ? Country::$values[$element->country] : 'Не указана'),
 
 
 			 <!--'id'            => 'Лицо',

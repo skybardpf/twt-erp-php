@@ -2,7 +2,7 @@
 /**
  * Выбор организации, прикрепленной к событию (мероприятию).
  *
- * @author Skibardin A.A. <skybardpf@artektiv.ru>
+ * @author Skibardin A.A. <webprofi1983@gmail.com>
  *
  * @var $this       My_eventsController
  * @var $data       array

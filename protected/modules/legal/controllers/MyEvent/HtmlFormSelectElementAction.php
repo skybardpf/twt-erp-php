@@ -2,7 +2,7 @@
 /**
  * Only Ajax. Возращает HTML форму с со списком организаций.
  *
- * @author Skibardin A.A. <skybardpf@artektiv.ru>
+ * @author Skibardin A.A. <webprofi1983@gmail.com>
  */
 class HtmlFormSelectElementAction extends CAction
 {
@@ -20,7 +20,7 @@ class HtmlFormSelectElementAction extends CAction
                     $data = Organization::model()->getListNames();
                     $str = 'Выберите организацию';
                 } else {
-                    $data = Countries::getValues();
+                    $data = Country::getValues();
                     $str = 'Выберите страну';
                 }
                 if (isset($_POST['ids']) && !empty($_POST['ids'])){

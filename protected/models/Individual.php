@@ -2,7 +2,7 @@
 /**
  * Модель: Физические лица.
  *
- * @author Skibardin A.A. <skybardpf@artektiv.ru>
+ * @author Skibardin A.A. <webprofi1983@gmail.com>
  *
  * @property string $id             Идентификатор
  * @property bool   $deleted        Удален? ("true" - да, "false" - нет)
@@ -73,7 +73,8 @@ class Individual extends SOAPModel {
 	 * Список Физ.лиц
 	 * @return Individual[]
 	 */
-	public function findAll() {
+	protected function findAll()
+    {
 		$filters = SoapComponent::getStructureElement($this->where);
 		if (!$filters) $filters = array(array());
 		$request = array('filters' => $filters, 'sort' => array($this->order));
@@ -89,7 +90,8 @@ class Individual extends SOAPModel {
 	 * @param string $id
 	 * @return Individual
 	 */
-	public function findByPk($id) {
+	protected function findByPk($id)
+    {
         $data = $this->SOAP->getIndividual(array('id' => $id));
         $data = SoapComponent::parseReturn($data);
         $data = current($data);
@@ -100,7 +102,8 @@ class Individual extends SOAPModel {
      * Сохранение Физ.Лица
      * @return array
      */
-    public function save() {
+    public function save()
+    {
         $attr = $this->getAttributes();
         if (!$this->primaryKey) {
             unset($attr['id']);
@@ -119,7 +122,8 @@ class Individual extends SOAPModel {
 	 * Удаление Физ.лица
 	 * @return bool
 	 */
-	public function delete() {
+	public function delete()
+    {
 		if ($id = $this->getprimaryKey()) {
 			$ret = $this->SOAP->deleteIndividual(array('id' => $id));
             $ret = SoapComponent::parseReturn($ret, false);
@@ -130,12 +134,37 @@ class Individual extends SOAPModel {
 		}
         return false;
 	}
+
+    /**
+     * @return array
+     */
+    public function attributeNames()
+    {
+        return array(
+            'id',           // string
+            'name',         // string
+            'family',       // string
+            'parent_name',  // string
+            'citizenship',  // string
+            'birth_date',   // date
+            'birth_place',  // string
+            'phone',        // string
+            'email',        // string
+            'adres',        // string
+            'ser_nom_pass', // string
+            'date_pass',    // date
+            'organ_pass',   // string
+            'date_exp_pass',// date
+            'deleted',      // bool
+        );
+    }
     
 	/**
 	 * Returns the list of attribute names of the model.
 	 * @return array list of attribute names.
 	 */
-	public function attributeLabels() {
+	public function attributeLabels()
+    {
         return array(
             'id'              => '#',
             'name'            => 'Имя',
@@ -160,42 +189,19 @@ class Individual extends SOAPModel {
         );
 	}
 
-	/**
-	 * Список доступных ФИО физ.лиц. [id => name]
-     * @deprecated
-	 * @return array
-	 */
-	public static function getValues() {
-        $cache_id = __CLASS__.self::PREFIX_CACHE_ID_LIST_FIO;
-        $data = Yii::app()->cache->get($cache_id);
-        if ($data === false) {
-            $elements = self::model()->findAll();
-            $data = array();
-            if ($elements) {
-                foreach ($elements as $elem) {
-                    $data[$elem->primaryKey] = $elem->family .' '.$elem->name.' '.$elem->parent_name;
-                }
-            }
-            Yii::app()->cache->set($cache_id, $data);
-        }
-        return $data;
-	}
-
     /**
      * Список доступных ФИО физ.лиц. [id => name]
      * @param bool $force_cache
      * @return array
      */
-    public static function getDataNames($force_cache = false)
+    public function listNames($force_cache = false)
     {
         $cache_id = __CLASS__.self::PREFIX_CACHE_ID_LIST_FIO;
         if ($force_cache || ($data = Yii::app()->cache->get($cache_id)) === false) {
             $data = array();
-            $elements = self::model()->findAll();
-            if ($elements) {
-                foreach ($elements as $elem) {
-                    $data[$elem->primaryKey] = $elem->family .' '.$elem->name.' '.$elem->parent_name;
-                }
+            $elements = $this->findAll();
+            foreach ($elements as $elem) {
+                $data[$elem->primaryKey] = $elem->family .' '.$elem->name.' '.$elem->parent_name;
             }
             Yii::app()->cache->set($cache_id, $data);
         }
@@ -263,7 +269,7 @@ class Individual extends SOAPModel {
     {
 		return array(
             array('citizenship', 'required'),
-            array('citizenship', 'in', 'range'  => array_keys(Countries::model()->getDataNames($this->getForceCached()))),
+            array('citizenship', 'in', 'range'  => array_keys(Country::model()->getDataNames($this->getForceCached()))),
 
             array('name, family', 'required'),
             array('name, family, parent_name', 'length', 'max' => 50),

@@ -2,7 +2,7 @@
 /**
  * Модель: "Заинтересованные персоны".
  *
- * @author Skibardin A.A. <skybardpf@artektiv.ru>
+ * @author Skibardin A.A. <webprofi1983@gmail.com>
  *
  * @property string $id_yur
  * @property string $type_yur       Тип юр. лица: Организации, контрагенты

@@ -2,12 +2,12 @@
 /**
  * Модель: Страна.
  *
- * @author Skibardin A.A. <skybardpf@artektiv.ru>
+ * @author Skibardin A.A. <webprofi1983@gmail.com>
  *
  * @property string $id
  * @property string $name
 */
-class Countries extends SOAPModel {
+class Country extends SOAPModel {
     const PREFIX_CACHE_ID_LIST_DATA_NAMES = '_list_data_names';
     const CACHE_EXPIRE = 0;
 
@@ -16,7 +16,7 @@ class Countries extends SOAPModel {
 	 *
 	 * @param string $className
 	 *
-	 * @return Countries
+	 * @return Country
 	 */
 	public static function model($className = __CLASS__) {
 		return parent::model($className);
@@ -25,7 +25,7 @@ class Countries extends SOAPModel {
 	/**
 	 * Список стран
 	 *
-	 * @return Countries[]
+	 * @return Country[]
 	 */
 	public function findAll() {
         $request = array('filters' => array(), 'sort' => array($this->order));

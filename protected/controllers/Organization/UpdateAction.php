@@ -2,7 +2,7 @@
 /**
  * Редактирование организации.
  *
- * @author Skibardin A.A. <skybardpf@artektiv.ru>
+ * @author Skibardin A.A. <webprofi1983@gmail.com>
  */
 class UpdateAction extends CAction
 {
@@ -19,8 +19,7 @@ class UpdateAction extends CAction
         $controller->pageTitle .= ' | Редактирование организации';
 
         $force_cache = (isset($_GET['force_cache']) && $_GET['force_cache'] == 1) ? true : false;
-        $model = $controller->loadOrganization($id, $force_cache);
-        $model->setForceCached($force_cache);
+        $model = Organization::model()->findByPk($id, $force_cache);
 
         $class = get_class($model);
         $country_id = (isset($_POST[$class]) && isset($_POST[$class]['country']) ? $_POST[$class]['country'] : null);

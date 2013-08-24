@@ -1,6 +1,6 @@
 <?php
 /**
- * @author Skibardin A.A. <skybardpf@artektiv.ru>
+ * @author Skibardin A.A. <webprofi1983@gmail.com>
  *
  * @var Free_documentController $this
  * @var FreeDocument            $model

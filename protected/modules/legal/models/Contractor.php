@@ -2,7 +2,7 @@
 /**
  * Модель: Контрагенты, сторонние организации.
  *
- * @author Skibardin A.A. <skybardpf@artektiv.ru>
+ * @author Skibardin A.A. <webprofi1983@gmail.com>
  *
  * @property string $id
  * @property string $name
@@ -205,7 +205,7 @@ class Contractor extends OrganizationAbstract
     {
 		return array(
 			array('country', 'required'),
-			array('country', 'in', 'range' => array_keys(Countries::model()->getDataNames($this->getForceCached()))),
+			array('country', 'in', 'range' => array_keys(Country::model()->getDataNames($this->getForceCached()))),
 
             array('gendirector', 'required'),
             array('gendirector', 'in', 'range' => array_keys(ContactPersonForContractors::model()->getDataNames($this->getForceCached()))),

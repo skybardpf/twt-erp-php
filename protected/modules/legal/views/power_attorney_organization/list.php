@@ -2,7 +2,7 @@
 /**
  *  Список доверенностей для организаций и контрагентов.
  *
- *  @author Skibardin A.A. <skybardpf@artektiv.ru>
+ *  @author Skibardin A.A. <webprofi1983@gmail.com>
  *
  *  @var DocumentsController | Power_attorney_contractorController      $this
  *  @var PowerAttorneyForOrganization[]     $data

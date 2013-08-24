@@ -2,7 +2,7 @@
 /**
  * Only Ajax. Возращает HTML форму с со списком подписантов и довереностей.
  *
- * @author Skibardin A.A. <skybardpf@artektiv.ru>
+ * @author Skibardin A.A. <webprofi1983@gmail.com>
  */
 class HtmlFormSelectElementAction extends CAction
 {

@@ -7,7 +7,7 @@ class OrganizationException extends CException{}
 /**
  * Общие методы и свойства для организаций и контрагентов.
  *
- * @author Skibardin A.A. <skybardpf@artektiv.ru>
+ * @author Skibardin A.A. <webprofi1983@gmail.com>
  */
 abstract class OrganizationAbstract extends SOAPModel
 {
@@ -27,7 +27,7 @@ abstract class OrganizationAbstract extends SOAPModel
     {
         $cache_id = get_class($this).self::PREFIX_CACHE_ID_LIST_FULL_DATA;
         if ($force_cache || ($data = Yii::app()->cache->get($cache_id)) === false) {
-            $countries = Countries::model()->getDataNames($force_cache);
+            $countries = Country::model()->listNames($force_cache);
             $elements = $this->where('deleted', false)->findAll();
             $data = array();
             if ($elements) {
@@ -237,14 +237,4 @@ abstract class OrganizationAbstract extends SOAPModel
         }
         return false;
     }
-}
-
-/**
- * Class MTypeOrganization
- * Типы организаций.
- */
-class MTypeOrganization extends CEnumerable
-{
-    const ORGANIZATION = 'Организации';
-    const CONTRACTOR = 'Контрагенты';
 }

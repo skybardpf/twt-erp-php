@@ -1,6 +1,6 @@
 <?php
 /**
- * @author Skibardin A.A. <skybardpf@artektiv.ru>
+ * @author Skibardin A.A. <webprofi1983@gmail.com>
  */
 ?>
 <div id="preparing-file-modal" title="Подготовка файла..." style="display: none;">

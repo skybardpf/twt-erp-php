@@ -2,7 +2,7 @@
 /**
  * Редактирование/Добавление доверенности для контрагента.
  *
- * @author Skibardin A.A. <skybardpf@artektiv.ru>
+ * @author Skibardin A.A. <webprofi1983@gmail.com>
  *
  * @var Power_attorney_organizationController $this
  * @var PowerAttorneyForOrganization $model

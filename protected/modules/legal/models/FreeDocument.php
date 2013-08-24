@@ -4,7 +4,7 @@ Yii::import('application.components.Behavior.UploadDocument');
 /**
  * Свободный документ
  *
- * @author Skibardin A.A. <skybardpf@artektiv.ru>
+ * @author Skibardin A.A. <webprofi1983@gmail.com>
  *
  * @property int    $id
  * @property int    $id_yur

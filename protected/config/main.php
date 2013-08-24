@@ -11,12 +11,12 @@ return array(
 	'sourceLanguage' => 'root',
 	'language' => 'ru',
 
-	'preload'=>array('log', 'bootstrap'),
+	'preload' => array('log', 'bootstrap'),
 
-	'import'=>array(
+	'import' => array(
 		'application.models.*',
 		'application.components.*',
-//		'application.components.Enumerable.*',
+		'application.components.Enumerable.*',
 	),
 
     'defaultController' => 'organization',

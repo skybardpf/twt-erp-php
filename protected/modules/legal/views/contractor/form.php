@@ -2,7 +2,7 @@
 /**
  * Форма редактирования данных о контрагенте.
  *
- * @author Skibardin A.A. <skybardpf@artektiv.ru>
+ * @author Skibardin A.A. <webprofi1983@gmail.com>
  *
  * @var ContractorController    $this
  * @var Contractor              $model
@@ -67,7 +67,7 @@
     );
 
     echo $form->dropDownListRow($model, 'group_id', ContractorGroup::model()->getDropDownData($model->getForceCached()));
-    echo $form->dropDownListRow($model, 'country', Countries::model()->getDataNames($model->getForceCached()), array('class' => 'list-countries'));
+    echo $form->dropDownListRow($model, 'country', Country::model()->getDataNames($model->getForceCached()), array('class' => 'list-countries'));
     echo $form->dropDownListRow($model, 'okopf', CodesOKOPF::model()->getDataNames($model->getForceCached()));
     echo $form->textFieldRow($model, 'name');
     echo $form->textFieldRow($model, 'full_name');

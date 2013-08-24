@@ -2,7 +2,7 @@
 /**
  * Управление группами контрагентов.
  *
- * @author Skibardin A.A. <skybardpf@artektiv.ru>
+ * @author Skibardin A.A. <webprofi1983@gmail.com>
  */
 class Contractor_groupController extends Controller{
     public $layout = 'inner';

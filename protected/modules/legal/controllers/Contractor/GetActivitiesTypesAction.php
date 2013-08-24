@@ -2,7 +2,7 @@
 /**
  * Возращает вид деятельности по переданой строке поиска.
  *
- * @author Skibardin A.A. <skybardpf@artektiv.ru>
+ * @author Skibardin A.A. <webprofi1983@gmail.com>
  */
 class GetActivitiesTypesAction extends CAction
 {

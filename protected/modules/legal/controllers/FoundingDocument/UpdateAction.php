@@ -2,7 +2,7 @@
 /**
  * Редактирование данных об учредительном документе.
  *
- * @author Skibardin A.A. <skybardpf@artektiv.ru>
+ * @author Skibardin A.A. <webprofi1983@gmail.com>
  */
 class UpdateAction extends CAction
 {

@@ -2,7 +2,7 @@
 /**
  * Просмотр организации.
  *
- * @author Skibardin A.A. <skybardpf@artektiv.ru>
+ * @author Skibardin A.A. <webprofi1983@gmail.com>
  */
 class ViewAction extends CAction
 {
@@ -13,14 +13,13 @@ class ViewAction extends CAction
     public function run($id)
     {
         /**
-         * @var OrganizationController    $controller
+         * @var OrganizationController $controller
          */
         $controller = $this->controller;
         $controller->pageTitle .= ' | Просмотр организации';
 
         $force_cache = (isset($_GET['force_cache']) && $_GET['force_cache'] == 1) ? true : false;
-        $model = $controller->loadOrganization($id, $force_cache);
-        $model->setForceCached($force_cache);
+        $model = Organization::model()->findByPk($id, $force_cache);
 
         $controller->render('/organization/show', array(
             'content' => $controller->renderPartial('/organization/tab_info',

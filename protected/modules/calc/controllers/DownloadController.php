@@ -2,7 +2,7 @@
 /**
  * Отдаем на скачивание pdf файлы с заявками.
  *
- * @author Skibardin A.A. <skybardpf@artektiv.ru>
+ * @author Skibardin A.A. <webprofi1983@gmail.com>
  */
 class DownloadController extends Controller
 {

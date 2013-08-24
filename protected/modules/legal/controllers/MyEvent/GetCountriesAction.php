@@ -2,7 +2,7 @@
 /**
  * Only Ajax. Возращает HTML форму с со списком стран.
  *
- * @author Skibardin A.A. <skybardpf@artektiv.ru>
+ * @author Skibardin A.A. <webprofi1983@gmail.com>
  */
 class GetCountriesAction extends CAction
 {
@@ -14,7 +14,7 @@ class GetCountriesAction extends CAction
     {
         if (Yii::app()->request->isAjaxRequest) {
             try {
-                $countries = Countries::getValues();
+                $countries = Country::getValues();
                 if (isset($_POST['ids']) && !empty($_POST['ids'])){
                     $sel = CJSON::decode($_POST['ids']);
                     if ($sel !== null){

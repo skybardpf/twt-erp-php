@@ -2,7 +2,7 @@
 /**
  * Учредительный документ
  *
- * @author Skibardin A.A. <skybardpf@artektiv.ru>
+ * @author Skibardin A.A. <webprofi1983@gmail.com>
  *
  * @property string $id         Идентификатор
  * @property string $id_yur     Юр.Лицо

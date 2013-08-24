@@ -2,7 +2,7 @@
 /**
  * Просмотр информации об контрагенте.
  *
- * @author Skibardin A.A. <skybardpf@artektiv.ru>
+ * @author Skibardin A.A. <webprofi1983@gmail.com>
  *
  * @var ContractorController    $this
  * @var Contractor              $model
@@ -36,7 +36,7 @@
 ?>
 <br/><br/>
 <?php
-    $countries = Countries::model()->getDataNames($model->getForceCached());
+    $countries = Country::model()->getDataNames($model->getForceCached());
     $types = ContractorTypesActivities::model()->getDataNames($model->getForceCached());
     $groups = ContractorGroup::model()->getInheritedGroupsData($model->group_id, $model->getForceCached());
 

@@ -2,7 +2,7 @@
 /**
  * Список доступных документов для юр. лица.
  *
- * @author Skibardin A.A. <skybardpf@artektiv.ru>
+ * @author Skibardin A.A. <webprofi1983@gmail.com>
  *
  * @var DocumentsController                $this                           Контролер
  * @var FoundingDocument[]                 $founding_docs                  Учредительные документы

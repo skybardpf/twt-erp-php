@@ -2,7 +2,7 @@
 /**
  * Модель: Доверенность для организации.
  *
- * @author Skibardin A.A. <skybardpf@artektiv.ru>
+ * @author Skibardin A.A. <webprofi1983@gmail.com>
  *
  * @property array $type_of_contract
  */
@@ -15,7 +15,8 @@ class  PowerAttorneyForOrganization extends PowerAttorneyAbstract
     /**
      * @return string
      */
-    public function getTypeOrganization(){
+    public function getTypeOrganization()
+    {
         return MTypeOrganization::ORGANIZATION;
     }
 
@@ -135,6 +136,20 @@ class  PowerAttorneyForOrganization extends PowerAttorneyAbstract
 			'По видам договоров'=> 'По видам договоров'
 		);
 	}
+
+    /**
+     * @return array
+     */
+    public function attributeNames()
+    {
+        return array_merge(
+            parent::attributeNames(),
+            array(
+                'typ_doc',              // string
+                'type_of_contract',     // string
+            )
+        );
+    }
 
 	/**
 	 * Returns the list of attribute names of the model.

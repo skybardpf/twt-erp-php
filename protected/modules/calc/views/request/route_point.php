@@ -8,7 +8,7 @@
 /* @var $name string */
 /* @var $point array */
 
-$countries = Countries::model()->getDataNames();
+$countries = Country::model()->getDataNames();
 ?>
 <div class="row-fluid">
 	<div class="span3"><label class="pull-right">Страна</label></div>
