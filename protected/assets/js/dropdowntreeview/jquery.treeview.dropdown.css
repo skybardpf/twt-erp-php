@@ -1,0 +1,76 @@
+/* 
+    Document   : treeselect
+    Created on : 20.09.2011, 11:14:34
+    Author     : Nenashev
+    Description:
+        Purpose of the stylesheet follows.
+*/
+
+/* 
+   TODO customize this sample style
+   Syntax recommendation http://www.w3.org/TR/REC-CSS2/
+*/
+
+root { 
+    display: block;
+}
+
+/*.mydtreeviewselected {
+    border: 1px solid  #000;
+    min-width: 50px;
+    min-height: 50px;
+    background-color:  #06b;
+}
+
+.my_treedit {
+    border: 1px solid  #888;
+    min-width: 25px;
+    min-height: 25px;
+    
+}*/
+
+.mytreeviewselected {
+ background:  #ddd;
+  color: red;
+ padding: 2px;
+ 
+}
+
+.mytreeviewlights {
+   color: red;  
+}
+
+div.mydtreeviewvisible {
+    display:block!important;
+}
+
+div[mydtreeview] {
+   display:none; 
+   position: absolute;
+   border: #ddd outset 1px;
+   max-height: 400px;
+   min-height: 400px;
+   overflow: scroll;
+   background: white;
+   z-index: 99000;
+}
+
+
+div[mydtreeview] span {
+    cursor: pointer;
+    font-size: 11pt;
+    display:inline-block!important;
+    white-space:  nowrap;
+}
+
+.mytreeviewbutton {    
+    padding: 0;
+}
+
+.mytreeviewclose {
+    margin-left: 10px;
+    padding: 0;
+    position: absolute;   
+    display: none;
+    z-index: 100000;
+}
