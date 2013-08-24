@@ -20,16 +20,16 @@ class OrganizationController extends Controller
     public function actions()
     {
         return array(
-            'index' => 'application.modules.legal.controllers.Organization.IndexAction',
-            'view' => 'application.modules.legal.controllers.Organization.ViewAction',
-            'edit' => 'application.modules.legal.controllers.Organization.UpdateAction',
-            'add' => 'application.modules.legal.controllers.Organization.CreateAction',
-            'delete' => 'application.modules.legal.controllers.Organization.DeleteAction',
+            'index' => 'application.controllers.Organization.IndexAction',
+            'view' => 'application.controllers.Organization.ViewAction',
+            'edit' => 'application.controllers.Organization.UpdateAction',
+            'add' => 'application.controllers.Organization.CreateAction',
+            'delete' => 'application.controllers.Organization.DeleteAction',
 
             /**
              * Redirect ContractorController
              */
-            'get_activities_types' => 'application.modules.legal.controllers.Contractor.GetActivitiesTypesAction',
+            'get_activities_types' => 'application.controllers.Contractor.GetActivitiesTypesAction',
         );
     }
 }
