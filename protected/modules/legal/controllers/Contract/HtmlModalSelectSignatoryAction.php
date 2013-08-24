@@ -16,7 +16,7 @@ class HtmlModalSelectSignatoryAction extends CAction
                 echo 'Передан неизвестный тип подписанта';
                 Yii::app()->end();
             }
-            $data = Individuals::getValues();
+            $data = Individual::getValues();
             if (isset($_POST['ids']) && !empty($_POST['ids'])){
                 $sel = CJSON::decode($_POST['ids']);
                 if ($sel !== null){

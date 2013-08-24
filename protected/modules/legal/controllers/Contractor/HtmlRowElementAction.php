@@ -16,7 +16,7 @@ class HtmlRowElementAction extends CAction
                     throw new CException('Не указан идентификатор доверености');
                 }
                 $doc = PowerAttorneysLE::loadModel($_POST['doc_id']);
-                $person = Individuals::loadModel($doc->id_lico);
+                $person = Individual::loadModel($doc->id_lico);
 
                 echo CJSON::encode(
                     array(

@@ -41,7 +41,7 @@
 <br/><br/>
 <?php
     $currency = Currencies::getValues();
-    $persons = Individuals::getValues();
+    $persons = Individual::getValues();
     $prolongation = Contract::getProlongationTypes();
     $contractors = Contractor::model()->getListNames();
     $court_locations = CourtLocation::getValues();
@@ -58,7 +58,7 @@
         $side_data[$pid] = (isset($persons[$id])
             ? CHtml::link(
                 $persons[$id],
-                $this->createUrl('individuals/view', array('id' => $id))
+                $this->createUrl('Individual/view', array('id' => $id))
             )
             : '---'
         );
@@ -84,7 +84,7 @@
         $side_data[$pid] = (isset($persons[$id])
             ? CHtml::link(
                 $persons[$id],
-                $this->createUrl('individuals/view', array('id' => $id))
+                $this->createUrl('Individual/view', array('id' => $id))
             )
             : '---'
         );

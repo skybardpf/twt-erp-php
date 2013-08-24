@@ -12,7 +12,7 @@
 ?>
 
 <td style="width: 90%">
-    <?= CHtml::link($name, $this->createUrl('individuals/view', array('id' => $id))); ?>
+    <?= CHtml::link($name, $this->createUrl('Individual/view', array('id' => $id))); ?>
 </td>
 <td>
 <?php

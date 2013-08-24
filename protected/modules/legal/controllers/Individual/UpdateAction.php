@@ -1,25 +1,26 @@
 <?php
 /**
- * Добавление Физ.лица
+ * Редактирование Физ.лица
  *
  * @author Skibardin A.A. <skybardpf@artektiv.ru>
  */
-class CreateAction extends CAction
+class UpdateAction extends CAction
 {
     /**
-     * Добавление Физ.лица
+     * Редактирование Физ.лица
+     * @param string $id       Идентификатор Физ.лица
      */
-    public function run()
+    public function run($id)
     {
         /**
-         * @var IndividualsController $controller
+         * @var IndividualController $controller
          */
         $controller = $this->controller;
-        $controller->pageTitle .= ' | Добавление физического лица';
+        $controller->pageTitle .= ' | Редактирование физического лица';
 
         $force_cache = (isset($_GET['force_cache']) && $_GET['force_cache'] == 1) ? true : false;
 
-        $model = $controller->createModel();
+        $model = Individual::loadModel($id, $force_cache);
         $model->setForceCached($force_cache);
 
         if(isset($_POST['ajax']) && $_POST['ajax']==='form-individual') {
@@ -32,7 +33,7 @@ class CreateAction extends CAction
             if ($model->validate()) {
                 try {
                     $model->save();
-                    $controller->redirect($controller->createUrl('index'));
+                    $controller->redirect($controller->createUrl('view', array('id' => $model->primaryKey)));
                 } catch (Exception $e) {
                     $model->addError('id', $e->getMessage());
                 }
@@ -41,7 +42,8 @@ class CreateAction extends CAction
         $controller->render(
             'form',
             array(
-                'model' => $model
+                'model' => $model,
+                'force_cache' => $force_cache
             )
         );
     }

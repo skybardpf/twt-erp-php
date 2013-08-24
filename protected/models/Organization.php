@@ -25,7 +25,7 @@
  * @property array  $signatories
  * @property string $json_signatories   // private
  */
-class Organization extends AbstractOrganization
+class Organization extends OrganizationAbstract
 {
     const TYPE = 'Организации';
 

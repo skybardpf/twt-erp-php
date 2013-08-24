@@ -67,7 +67,7 @@
         )
     );
 
-    echo $form->dropDownListRow($model, 'id_lico', Individuals::model()->getDataNames($model->getForceCached()), array('class' => 'span6'));
+    echo $form->dropDownListRow($model, 'id_lico', Individual::model()->getDataNames($model->getForceCached()), array('class' => 'span6'));
     echo $form->textFieldRow($model, 'nom', array('class' => 'span6'));
     echo $form->textFieldRow($model, 'name', array('class' => 'span6'));
 ?>

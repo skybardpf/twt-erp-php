@@ -18,14 +18,14 @@
     $provider = new CArrayDataProvider($data);
 
     $cur = Currencies::getValues();
-    $p   = Individuals::getValues();
+    $p   = Individual::getValues();
     $org = Organization::model()->getListNames();
     foreach ($provider->rawData as $k=>$v){
         $person = '';
         if (!empty($provider->rawData[$k]->managing_persons)){
             foreach ($provider->rawData[$k]->managing_persons as $pid){
                 if (isset($p[$pid])){
-                    $person .= CHtml::link($p[$pid], $this->createUrl('/legal/individuals/view/', array('id' => $pid)));
+                    $person .= CHtml::link($p[$pid], $this->createUrl('/legal/Individual/view/', array('id' => $pid)));
                 } else {
                     $person .= $pid;
                 }

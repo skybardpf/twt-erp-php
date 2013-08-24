@@ -3,8 +3,8 @@
  * User: Forgon
  * Date: 10.06.2013 от Рождества Христова
  *
- * @var IndividualsController   $this
- * @var Individuals             $model
+ * @var IndividualController   $this
+ * @var Individual             $model
  */
 ?>
     <h2><?=$model->family?> <?=$model->name?> <?=$model->parent_name?></h2>

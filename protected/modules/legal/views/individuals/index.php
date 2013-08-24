@@ -2,7 +2,7 @@
 /**
  *  Список Физ.Лиц
  *
- *  @var IndividualsController  $this
+ *  @var IndividualController  $this
  *  @var bool                   $force_cache
  *  @var array                  $data
  */

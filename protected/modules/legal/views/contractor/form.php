@@ -133,7 +133,7 @@
     echo $form->textFieldRow($model, 'phone');
     echo $form->textFieldRow($model, 'fax');
 
-    $persons = Individuals::model()->getDataNames($model->getForceCached());
+    $persons = Individual::model()->getDataNames($model->getForceCached());
     $docs = PowerAttorneyForContractor::model()->listNames($model->primaryKey, $model->getForceCached());
 
     $data_signatories = array();
@@ -141,7 +141,7 @@
         $data_signatories[] = array(
             'id' => $v['id'].'_'.$v['doc_id'],
             'fio' => (isset($persons[$v['id']])
-                ? CHtml::link($persons[$v['id']], $this->createUrl('individuals/view', array('id' => $v['id'])))
+                ? CHtml::link($persons[$v['id']], $this->createUrl('Individual/view', array('id' => $v['id'])))
                 : '---'
             ),
             'doc' => (isset($docs[$v['doc_id']])

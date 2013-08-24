@@ -81,7 +81,7 @@ class Beneficiary extends SOAPModel {
         $data['deleted'] = ($data['deleted'] == 1) ? false : true;
 
 //        if ($data['type_lico'] == self::TYPE_LICO_INDIVIDUAL){
-//            $data['id'] = $data['list_individuals'];
+//            $data['id'] = $data['list_Individual'];
 //        } elseif ($data['type_lico'] == self::TYPE_LICO_ORGANIZATION){
 //            $data['id'] = $data['list_organizations'];
 //        } else {

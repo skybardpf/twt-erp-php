@@ -13,14 +13,14 @@ class ViewAction extends CAction
     public function run($id)
     {
         /**
-         * @var IndividualsController $controller
+         * @var IndividualController $controller
          */
         $controller = $this->controller;
         $controller->pageTitle .= ' | Просмотр физического лица';
 
         $force_cache = (isset($_GET['force_cache']) && $_GET['force_cache'] == 1) ? true : false;
 
-        $model = Individuals::loadModel($id, $force_cache);
+        $model = Individual::loadModel($id, $force_cache);
         $controller->render(
             'view',
             array(

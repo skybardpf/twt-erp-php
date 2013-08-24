@@ -14,8 +14,13 @@
             ),
             array(
                 'label' => 'Физические лица',
-                'url' => $this->createUrl('individuals/'),
-                'active' => ($this->menu_current == 'individuals')
+                'url' => $this->createUrl('Individual/'),
+                'active' => ($this->menu_current == 'Individual')
+            ),
+            array(
+                'label' => 'Календарь событий',
+                'url'   => $this->createUrl('my_events/'),
+                'active'=> ($this->menu_current == 'my_events')
             ),
         );
     } else {
@@ -37,7 +42,7 @@
             ),
             array(
                 'label' => 'Физические лица',
-                'url' => $this->createUrl('individuals/'),
+                'url' => $this->createUrl('Individual/'),
                 'active'=> ($this->menu_current == 'individuals')
             ),
 

@@ -49,7 +49,7 @@
 <br/><br/>
 <div>
 <?php
-    $persons = Individuals::model()->getDataNames($model->getForceCached());
+    $persons = Individual::model()->getDataNames($model->getForceCached());
     $this->widget('bootstrap.widgets.TbDetailView', array(
         'data' => $model,
         'attributes'=>array(
@@ -57,7 +57,7 @@
                 'name' => 'id_lico',
                 'type' => 'raw',
                 'label' => 'На кого оформлена',
-                'value' => (isset($persons[$model->id_lico])) ? CHtml::link($persons[$model->id_lico], $this->createUrl('individuals/view', array('id' => $model->id_lico))) : '---'
+                'value' => (isset($persons[$model->id_lico])) ? CHtml::link($persons[$model->id_lico], $this->createUrl('Individual/view', array('id' => $model->id_lico))) : '---'
             ),
             array(
                 'name' => 'nom',

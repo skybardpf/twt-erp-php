@@ -20,6 +20,4 @@ composer.phar
 
 protected/runtime/*
 public/assets/*
-uploads/*
-public/ext4/*
 protected/filestorage/*

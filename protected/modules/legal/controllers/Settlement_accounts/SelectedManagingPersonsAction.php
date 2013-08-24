@@ -14,7 +14,7 @@ class SelectedManagingPersonsAction extends CAction
         if (Yii::app()->request->isAjaxRequest) {
             try {
                 $selected_ids = CJSON::decode($selected_ids);
-                $data = Individuals::getValues();
+                $data = Individual::getValues();
                 foreach ($selected_ids as $pid){
                     if (isset($data[$pid])){
                         unset($data[$pid]);

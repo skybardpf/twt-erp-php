@@ -14,11 +14,11 @@ class DeleteAction extends CAction
     public function run($id)
     {
         /**
-         * @var IndividualsController $controller
+         * @var IndividualController $controller
          */
         $controller = $this->controller;
 
-        $model = Individuals::loadModel($id);
+        $model = Individual::loadModel($id);
 
         if (Yii::app()->request->isAjaxRequest) {
             $ret = array();

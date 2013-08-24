@@ -12,14 +12,14 @@ class IndexAction extends CAction
     public function run()
     {
         /**
-         * @var IndividualsController $controller
+         * @var IndividualController $controller
          */
         $controller = $this->controller;
         $controller->pageTitle .= ' | Список физических лиц';
 
         $force_cache = (isset($_GET['force_cache']) && $_GET['force_cache'] == 1) ? true : false;
 
-        $data = Individuals::model()->getData($force_cache);
+        $data = Individual::model()->getData($force_cache);
         $controller->render(
             'index',
             array(

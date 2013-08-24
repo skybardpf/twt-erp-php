@@ -13,7 +13,7 @@
 ?>
 
 <td style="width: 45%">
-<?= CHtml::link($person_name, $this->createUrl('individuals/view', array('id' => $person_id))); ?>
+<?= CHtml::link($person_name, $this->createUrl('Individual/view', array('id' => $person_id))); ?>
 </td>
 <td style="width: 45%">
     <?= CHtml::link($doc_name, $this->createUrl('power_attorney_le/view', array('id' => $doc_id))); ?>

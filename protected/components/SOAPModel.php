@@ -7,7 +7,7 @@
  */
 abstract class SOAPModel extends CModel {
     /**
-     * @var bool $_force_cache Сбрасывать кэши принудительно. Используется для всех
+     * @var bool $_force_cached Сбрасывать кэши принудительно. Используется для всех
      * функции, которые получают данные по SOAP.
      */
     private $_force_cached = false;

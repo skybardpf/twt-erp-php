@@ -9,7 +9,8 @@ class OrganizationException extends CException{}
  *
  * @author Skibardin A.A. <skybardpf@artektiv.ru>
  */
-abstract class AbstractOrganization extends SOAPModel {
+abstract class OrganizationAbstract extends SOAPModel
+{
     const COUNTRY_RUSSIAN_ID = 643;
 
     const PREFIX_CACHE_ID_LIST_INN = '_list_inn';
@@ -22,7 +23,8 @@ abstract class AbstractOrganization extends SOAPModel {
      * @param bool $force_cache
      * @return array [id => Model]
      */
-    public function getFullData($force_cache = false) {
+    public function getFullData($force_cache = false)
+    {
         $cache_id = get_class($this).self::PREFIX_CACHE_ID_LIST_FULL_DATA;
         if ($force_cache || ($data = Yii::app()->cache->get($cache_id)) === false) {
             $countries = Countries::model()->getDataNames($force_cache);
@@ -44,7 +46,8 @@ abstract class AbstractOrganization extends SOAPModel {
      * @param bool $force_cache
      * @return array Формат [id => name]
      */
-    public function getListNames($force_cache=false) {
+    public function getListNames($force_cache=false)
+    {
         $cache_id = get_class($this).self::PREFIX_CACHE_ID_LIST_NAMES;
         if ($force_cache || ($data = Yii::app()->cache->get($cache_id)) === false) {
             $elements = $this->getFullData($force_cache);
@@ -61,7 +64,8 @@ abstract class AbstractOrganization extends SOAPModel {
      *  Список уже существующих ИНН.
      *  @return array Формат [inn => id]
      */
-    public function listInn() {
+    public function listInn()
+    {
         $cache_id = get_class($this).self::PREFIX_CACHE_ID_LIST_INN;
         $data = Yii::app()->cache->get($cache_id);
         if ($data === false) {
@@ -81,7 +85,8 @@ abstract class AbstractOrganization extends SOAPModel {
      *  Список уже существующих ОГРН.
      *  @return array
      */
-    public function listOgrn() {
+    public function listOgrn()
+    {
         $cache_id = get_class($this).self::PREFIX_CACHE_ID_LIST_OGRN;
         $data = Yii::app()->cache->get($cache_id);
         if ($data === false) {
@@ -238,7 +243,8 @@ abstract class AbstractOrganization extends SOAPModel {
  * Class MTypeOrganization
  * Типы организаций.
  */
-class MTypeOrganization extends CEnumerable{
+class MTypeOrganization extends CEnumerable
+{
     const ORGANIZATION = 'Организации';
     const CONTRACTOR = 'Контрагенты';
 }

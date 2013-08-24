@@ -50,13 +50,13 @@
 <br/><br/>
 <div>
 	<?php
-        $individuals = Individuals::model()->getDataNames($model->getForceCached());
-        if (!isset($individuals[$model->id_lico])){
+        $Individual = Individual::model()->getDataNames($model->getForceCached());
+        if (!isset($Individual[$model->id_lico])){
             $p = 'Не задано';
         } else {
             $p = CHtml::link(
-                $individuals[$model->id_lico],
-                $this->createUrl('individuals/view', array('id' => $model->id_lico))
+                $Individual[$model->id_lico],
+                $this->createUrl('Individual/view', array('id' => $model->id_lico))
             );
         }
         $type_of_contract = '';

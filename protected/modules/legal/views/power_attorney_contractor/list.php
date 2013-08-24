@@ -24,7 +24,7 @@
 
         <?php
         $provider = new CArrayDataProvider($data);
-        $persons = Individuals::model()->getDataNames($model->getForceCached());
+        $persons = Individual::model()->getDataNames($model->getForceCached());
         foreach ($provider->rawData as $k=>$v){
             $provider->rawData[$k]['owner_name'] = (isset($persons[$v['id_lico']])) ? $persons[$v['id_lico']] : NULL;
         }
@@ -48,7 +48,7 @@
                     'name'   => 'owner_name',
                     'header' => 'Кому выдана',
                     'type'   => 'raw',
-                    'value'  => '(is_null($data["owner_name"])) ? "Не задано" : CHtml::link($data["owner_name"], Yii::app()->getController()->createUrl("individuals/view", array("id" => $data["id_lico"])))'
+                    'value'  => '(is_null($data["owner_name"])) ? "Не задано" : CHtml::link($data["owner_name"], Yii::app()->getController()->createUrl("Individual/view", array("id" => $data["id_lico"])))'
                 ),
                 array(
                     'name' => 'expire',

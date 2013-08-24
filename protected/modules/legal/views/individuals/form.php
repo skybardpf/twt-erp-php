@@ -1,7 +1,7 @@
 <?php
 /**
- * @var IndividualsController   $this
- * @var Individuals             $model
+ * @var IndividualController   $this
+ * @var Individual             $model
  */
 ?>
 
