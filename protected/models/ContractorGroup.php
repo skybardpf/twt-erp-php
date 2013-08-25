@@ -39,7 +39,7 @@ class ContractorGroup extends SOAPModel
      * Список групп контрагентов.
      * @return ContractorGroup[]
      */
-    public function findAll()
+    protected function findAll()
     {
         $filters = SoapComponent::getStructureElement($this->where);
         if (!$filters) {
@@ -117,17 +117,27 @@ class ContractorGroup extends SOAPModel
     }
 
     /**
+     * @return array
+     */
+    public function attributeNames()
+    {
+        return array(
+            'id',               // string
+            'name',             // string
+            'parent_id',        // string
+            'level',            // int
+            'country',          // string
+        );
+    }
+
+    /**
      * Returns the list of attribute names of the model.
      * @return array list of attribute names.
      */
     public function attributeLabels()
     {
         return array(
-            'id' => '#',
             'name' => 'Название',
-            'parent_id' => 'Родительская группа',
-            'level' => '',
-            'country' => ''
         );
     }
 

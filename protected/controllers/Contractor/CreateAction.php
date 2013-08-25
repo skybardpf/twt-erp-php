@@ -1,27 +1,27 @@
 <?php
 /**
- * Редактирование контрагента.
+ * Создание контрагента.
  *
  * @author Skibardin A.A. <webprofi1983@gmail.com>
  */
-class UpdateAction extends CAction
+class CreateAction extends CAction
 {
     /**
-     * Редактирование контрагента.
-     * @param string $id       Идентификатор контрагента
+     * Создание контрагента.
      * @throws CHttpException
      */
-    public function run($id)
+    public function run()
     {
         /**
          * @var ContractorController    $controller
          */
         $controller = $this->controller;
-        $controller->pageTitle .= ' | Редактирование контрагента';
+        $controller->pageTitle .= ' | Создание контрагента';
 
         $force_cache = (isset($_GET['force_cache']) && $_GET['force_cache'] == 1) ? true : false;
-        $model = Contractor::model()->loadModel($id, $force_cache);
-        $model->setForceCached($force_cache);
+
+        $model = new Contractor();
+        $model->forceCached = $force_cache;
 
         $class = get_class($model);
         $country_id = (isset($_POST[$class]) && isset($_POST[$class]['country']) ? $_POST[$class]['country'] : null);
@@ -40,23 +40,10 @@ class UpdateAction extends CAction
 
         if (isset($_POST[$class])) {
             $model->setAttributes($_POST[$class]);
-
-            $signatory = array();
-            $tmp = CJSON::decode($model->json_signatories);
-            foreach ($tmp as $v){
-                $signatory[] = $v;
-            }
-            $model->signatories = $signatory;
-
             if ($model->validate()) {
                 try {
                     $model->save();
-                    $controller->redirect($controller->createUrl(
-                        'view',
-                        array(
-                            'id' => $model->primaryKey,
-                        )
-                    ));
+                    $controller->redirect($controller->createUrl('index'));
                 } catch (CException $e) {
                     $model->addError('id', $e->getMessage());
                 }

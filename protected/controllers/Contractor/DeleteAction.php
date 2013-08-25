@@ -20,7 +20,8 @@ class DeleteAction extends CAction
         $controller = $this->controller;
         $controller->pageTitle .= ' | Удаление контрагента';
 
-        $model = $controller->loadModel($id);
+        $force_cache = (isset($_GET['force_cache']) && $_GET['force_cache'] == 1) ? true : false;
+        $model = Contractor::model()->findByPk($id, $force_cache);
 
         if (Yii::app()->request->isAjaxRequest) {
             $ret = array();

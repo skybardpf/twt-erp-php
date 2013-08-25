@@ -9,7 +9,8 @@ class PowerAttorneyForContractor extends PowerAttorneyAbstract
     /**
      * @return string
      */
-    public function getTypeOrganization(){
+    public function getTypeOrganization()
+    {
         return MTypeOrganization::CONTRACTOR;
     }
 

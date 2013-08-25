@@ -20,8 +20,7 @@ class ViewAction extends CAction
         $controller->pageTitle .= ' | Просмотр контрагента';
 
         $force_cache = (isset($_GET['force_cache']) && $_GET['force_cache'] == 1) ? true : false;
-        $model = Contractor::model()->loadModel($id, $force_cache);
-        $model->setForceCached($force_cache);
+        $model = Contractor::model()->findByPk($id, $force_cache);
 
         $controller->render(
             '/contractor/menu_tabs',

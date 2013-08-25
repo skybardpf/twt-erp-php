@@ -36,17 +36,6 @@ class Organization extends OrganizationAbstract
 		return parent::model($className);
 	}
 
-    /**
-     * Действия, которые можно произвести после создания объекта SOAPModel.
-     */
-    protected function afterConstruct()
-    {
-        parent::afterConstruct();
-
-        $this->signatories = array();
-        $this->json_signatories = '{}';
-    }
-
 	/**
 	 * Удаляем организацию.
 	 * @return bool
@@ -226,13 +215,13 @@ class Organization extends OrganizationAbstract
     {
 		return array(
 			array('country', 'required'),
-			array('country', 'in', 'range' => array_keys(Country::model()->listNames($this->getForceCached()))),
+			array('country', 'in', 'range' => array_keys(Country::model()->listNames($this->forceCached))),
 
             array('okopf', 'required'),
-            array('okopf', 'in', 'range' => array_keys(CodesOKOPF::model()->listNames($this->getForceCached()))),
+            array('okopf', 'in', 'range' => array_keys(CodesOKOPF::model()->listNames($this->forceCached))),
 
             array('profile', 'required'),
-            array('profile', 'in', 'range' => array_keys(ContractorTypesActivities::model()->listNames($this->getForceCached()))),
+            array('profile', 'in', 'range' => array_keys(ContractorTypesActivities::model()->listNames($this->forceCached))),
 
 			array('name, full_name', 'required'),
             array('name', 'length', 'max' => 50),
@@ -246,7 +235,7 @@ class Organization extends OrganizationAbstract
             array('ogrn', 'validateOgrn', 'on' => 'russianCountry'),
             array('kpp', 'length', 'max' => 9, 'on' => 'russianCountry'),
 
-            /**
+            /**modules.legal.
              * Foreign country
              */
             array('reg_nom, sert_nom, vat_nom', 'safe', 'on' => 'russianCountry'),
@@ -259,7 +248,7 @@ class Organization extends OrganizationAbstract
             array('sert_date', 'date', 'format' => 'yyyy-MM-dd'),
 
             array('gendirector_id', 'required'),
-            array('gendirector_id', 'in', 'range' => array_keys(ContactPersonForOrganization::model()->listNames($this->getForceCached()))),
+            array('gendirector_id', 'in', 'range' => array_keys(ContactPersonForOrganization::model()->listNames($this->forceCached))),
 
             array('json_signatories', 'validJson'),
 		);

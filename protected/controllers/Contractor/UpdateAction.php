@@ -1,27 +1,26 @@
 <?php
 /**
- * Создание контрагента.
+ * Редактирование контрагента.
  *
  * @author Skibardin A.A. <webprofi1983@gmail.com>
  */
-class CreateAction extends CAction
+class UpdateAction extends CAction
 {
     /**
-     * Создание контрагента.
+     * Редактирование контрагента.
+     * @param string $id       Идентификатор контрагента
      * @throws CHttpException
      */
-    public function run()
+    public function run($id)
     {
         /**
          * @var ContractorController    $controller
          */
         $controller = $this->controller;
-        $controller->pageTitle .= ' | Создание контрагента';
+        $controller->pageTitle .= ' | Редактирование контрагента';
 
         $force_cache = (isset($_GET['force_cache']) && $_GET['force_cache'] == 1) ? true : false;
-
-        $model = Contractor::createModel();
-        $model->setForceCached($force_cache);
+        $model = Contractor::model()->findByPk($id, $force_cache);
 
         $class = get_class($model);
         $country_id = (isset($_POST[$class]) && isset($_POST[$class]['country']) ? $_POST[$class]['country'] : null);
@@ -40,10 +39,23 @@ class CreateAction extends CAction
 
         if (isset($_POST[$class])) {
             $model->setAttributes($_POST[$class]);
+
+            $signatory = array();
+            $tmp = CJSON::decode($model->json_signatories);
+            foreach ($tmp as $v){
+                $signatory[] = $v;
+            }
+            $model->signatories = $signatory;
+
             if ($model->validate()) {
                 try {
                     $model->save();
-                    $controller->redirect($controller->createUrl('index'));
+                    $controller->redirect($controller->createUrl(
+                        'view',
+                        array(
+                            'id' => $model->primaryKey,
+                        )
+                    ));
                 } catch (CException $e) {
                     $model->addError('id', $e->getMessage());
                 }

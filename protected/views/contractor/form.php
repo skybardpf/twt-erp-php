@@ -66,9 +66,9 @@
         )
     );
 
-    echo $form->dropDownListRow($model, 'group_id', ContractorGroup::model()->getDropDownData($model->getForceCached()));
-    echo $form->dropDownListRow($model, 'country', Country::model()->getDataNames($model->getForceCached()), array('class' => 'list-countries'));
-    echo $form->dropDownListRow($model, 'okopf', CodesOKOPF::model()->getDataNames($model->getForceCached()));
+    echo $form->dropDownListRow($model, 'group_id', ContractorGroup::model()->getDropDownData($model->forceCached));
+    echo $form->dropDownListRow($model, 'country', Country::model()->listNames($model->forceCached), array('class' => 'list-countries'));
+    echo $form->dropDownListRow($model, 'okopf', CodesOKOPF::model()->listNames($model->forceCached));
     echo $form->textFieldRow($model, 'name');
     echo $form->textFieldRow($model, 'full_name');
 ?>
@@ -125,16 +125,16 @@
 </div>-->
 
 <?php
-    echo $form->dropDownListRow($model, 'profile', ContractorTypesActivities::model()->getDataNames($model->getForceCached()));
+    echo $form->dropDownListRow($model, 'profile', ContractorTypesActivities::model()->listNames($model->forceCached));
     echo $form->textFieldRow($model, 'yur_address');
     echo $form->textFieldRow($model, 'fact_address');
-    echo $form->dropDownListRow($model, 'gendirector', ContactPersonForContractors::model()->getDataNames($model->getForceCached()));
+    echo $form->dropDownListRow($model, 'gendirector', ContactPersonForContractors::model()->listNames($model->forceCached));
     echo $form->textFieldRow($model, 'email');
     echo $form->textFieldRow($model, 'phone');
     echo $form->textFieldRow($model, 'fax');
 
-    $persons = Individual::model()->getDataNames($model->getForceCached());
-    $docs = PowerAttorneyForContractor::model()->listNames($model->primaryKey, $model->getForceCached());
+    $persons = Individual::model()->listNames($model->forceCached);
+    $docs = PowerAttorneyForContractor::model()->listNames($model->primaryKey, $model->forceCached);
 
     $data_signatories = array();
     foreach ($model->signatories as $v){

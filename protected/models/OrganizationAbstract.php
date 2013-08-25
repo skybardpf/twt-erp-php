@@ -19,6 +19,17 @@ abstract class OrganizationAbstract extends SOAPModel
     const PREFIX_CACHE_ID_LIST_NAMES = '_list_names';
 
     /**
+     * Действия, которые можно произвести после создания объекта SOAPModel.
+     */
+    protected function afterConstruct()
+    {
+        parent::afterConstruct();
+
+        $this->signatories = array();
+        $this->json_signatories = '{}';
+    }
+
+    /**
      * Список организаций|контаргентов.
      * @param bool $force_cache
      * @return array [id => Model]

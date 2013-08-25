@@ -286,7 +286,7 @@ class FoundingDocument extends SOAPModel
             array('num', 'length', 'max' => 10),
 
             array('typ_doc', 'required'),
-            array('typ_doc', 'in', 'range'  => array_keys(LEDocumentType::model()->listNames($this->getForceCached()))),
+            array('typ_doc', 'in', 'range'  => array_keys(LEDocumentType::model()->listNames($this->forceCached))),
 
             array('date, expire', 'required'),
             array('date, expire', 'date', 'format' => 'yyyy-MM-dd'),

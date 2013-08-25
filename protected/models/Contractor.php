@@ -18,7 +18,7 @@
  */
 class Contractor extends OrganizationAbstract
 {
-    const TYPE = 'Контрагенты';
+//    const TYPE = 'Контрагенты';
 
     const PREFIX_CACHE_ID_LIST_FULL_DATA_GROUP_BY = '_list_full_data_group_by';
 
@@ -33,35 +33,13 @@ class Contractor extends OrganizationAbstract
 	}
 
     /**
-     * @static
-     * @param string $id    Идентификатор контрагента.
-     * @param bool $force_cache
-     * @return Contractor
-     * @throws CHttpException
+     * Действия, которые можно произвести после создания объекта SOAPModel.
      */
-    public static function loadModel($id, $force_cache = false)
+    protected function afterConstruct()
     {
-        $cache_id = __CLASS__ . '_' . $id;
-        if ($force_cache || ($model = Yii::app()->cache->get($cache_id)) === false){
-            $model = self::model()->findByPk($id);
-            if ($model === null) {
-                throw new CHttpException(404, 'Не найден контрагент.');
-            }
-            Yii::app()->cache->set($cache_id, $model);
-        }
-        return $model;
-    }
+        parent::afterConstruct();
 
-    /**
-     * @static
-     * @return Contractor
-     */
-    public static function createModel()
-    {
-        $model = new Contractor();
-        $model->signatories = array();
-        $model->group_id = ContractorGroup::GROUP_DEFAULT;
-        return $model;
+        $this->group_id = ContractorGroup::GROUP_DEFAULT;
     }
 
     /**
@@ -69,7 +47,7 @@ class Contractor extends OrganizationAbstract
      *
      * @return Contractor[]
      */
-    public function findAll()
+    protected function findAll()
     {
         $filters = SoapComponent::getStructureElement($this->where);
         $ret = $this->SOAP->listContragents(array(
@@ -81,14 +59,25 @@ class Contractor extends OrganizationAbstract
     }
 
     /**
-     * @param string $id
-     * @return Contractor Возвращает контрагента.
+     * @param string $id    Идентификатор контрагента.
+     * @param bool $force_cache
+     * @return Contractor Возвращает контрагента
+     * @throws CHttpException
      */
-    public function findByPk($id)
+    public function findByPk($id, $force_cache=false)
     {
-        $ret = $this->SOAP->getContragent(array('id' => $id));
-        $ret = SoapComponent::parseReturn($ret);
-        return $this->publish_elem(current($ret), __CLASS__);
+        $cache_id = __CLASS__ . self::PREFIX_CACHE_MODEL_PK . $id;
+        if ($force_cache || ($model = Yii::app()->cache->get($cache_id)) === false){
+            $ret = $this->SOAP->getContragent(array('id' => $id));
+            $ret = SoapComponent::parseReturn($ret);
+            $model = $this->publish_elem(current($ret), __CLASS__);
+            if ($model === null) {
+                throw new CHttpException(404, 'Не найден контрагент.');
+            }
+            Yii::app()->cache->set($cache_id, $model);
+        }
+        $model->forceCached = $force_cache;
+        return $model;
     }
 
     /**
@@ -153,6 +142,44 @@ class Contractor extends OrganizationAbstract
         return SoapComponent::parseReturn($ret, false);
 	}
 
+    /**
+     * @return array
+     */
+    public function attributeNames()
+    {
+        return array(
+            'id',               // string
+            'country',          // string
+            'country_name',     // string
+            'name',             // string
+            'full_name',        // string
+            'creation_date',    // date
+            'parent',           // string
+            'gendirector',      // string
+            'creator',          // string
+            'deleted',          // bool
+            'sert_date',        // date
+            'okopf',            // string
+            'profile',          // string
+            'yur_address',      // string
+            'fact_address',     // string
+            'email',            // string
+            'phone',            // string
+            'fax',              // string
+            'comment',          // string
+            'info',             // string
+            'signatories',      // array
+            'json_signatories', // string
+            'group_id',         // string
+            'inn',              // string
+            'inn',              // string
+            'kpp',              // string
+            'vat_nom',          // string
+            'reg_nom',          // string
+            'sert_nom',         // string
+        );
+    }
+
 	/**
 	 * Returns the list of attribute names of the model.
 	 * @return array list of attribute names.
@@ -205,23 +232,23 @@ class Contractor extends OrganizationAbstract
     {
 		return array(
 			array('country', 'required'),
-			array('country', 'in', 'range' => array_keys(Country::model()->getDataNames($this->getForceCached()))),
+			array('country', 'in', 'range' => array_keys(Country::model()->listNames($this->forceCached))),
 
             array('gendirector', 'required'),
-            array('gendirector', 'in', 'range' => array_keys(ContactPersonForContractors::model()->getDataNames($this->getForceCached()))),
+            array('gendirector', 'in', 'range' => array_keys(ContactPersonForContractors::model()->listNames($this->forceCached))),
 
             array('okopf', 'required'),
-            array('okopf', 'in', 'range' => array_keys(CodesOKOPF::model()->getDataNames($this->getForceCached()))),
+            array('okopf', 'in', 'range' => array_keys(CodesOKOPF::model()->listNames($this->forceCached))),
 
             array('profile', 'required'),
-            array('profile', 'in', 'range' => array_keys(ContractorTypesActivities::model()->getDataNames($this->getForceCached()))),
+            array('profile', 'in', 'range' => array_keys(ContractorTypesActivities::model()->listNames($this->forceCached))),
 //
 			array('name, full_name', 'required'),
             array('name', 'length', 'max' => 150),
             array('full_name', 'length', 'max' => 100),
 
             array('group_id', 'required'),
-            array('group_id', 'in', 'range' => array_keys(ContractorGroup::model()->getData($this->getForceCached())), 'message' => 'Выберите группу из списка'),
+            array('group_id', 'in', 'range' => array_keys(ContractorGroup::model()->getData($this->forceCached)), 'message' => 'Выберите группу из списка'),
 
             /**
              * Russian country

@@ -266,7 +266,7 @@ abstract class PowerAttorneyAbstract extends SOAPModel
     {
         return array(
             array('id_lico', 'required'),
-            array('id_lico', 'in', 'range'  => array_keys(Individual::model()->getDataNames($this->getForceCached()))),
+            array('id_lico', 'in', 'range'  => array_keys(Individual::model()->listNames($this->forceCached))),
 
             array('name', 'required'),
             array('name', 'length', 'max' => 25),

@@ -242,19 +242,8 @@ class Individual extends SOAPModel {
             array('ser_nom_pass', 'length', 'max' => 50),
 
             array('birth_date, date_exp_pass, date_pass', 'date', 'format' => 'yyyy-MM-dd', 'message' => "Поле {attribute} имеет неправильный формат даты. Либо дата больше 2038-01-19"),
-//            array('birth_date, date_exp_pass, date_pass', 'validDate'),
 
             array('email', 'ARuEmailValidator'),
 		);
 	}
-
-    /**
-     * @param $attribute
-     */
-    public function validDate($attribute)
-    {
-        if (!empty($this->$attribute) && strtotime($this->$attribute) === false){
-            $this->addError($attribute, 'Поле {$attribute} имеет неправильный формат даты. Либо дата больше 2038-01-19');
-        }
-    }
 }
