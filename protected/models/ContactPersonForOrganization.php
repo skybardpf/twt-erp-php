@@ -3,6 +3,9 @@
  * Контактное лицо для организации.
  *
  * @author Skibardin A.A. <webprofi1983@gmail.com>
+ *
+ * @property string $id
+ * @property string $name
  */
 class ContactPersonForOrganization extends SOAPModel
 {

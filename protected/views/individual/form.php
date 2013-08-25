@@ -60,7 +60,7 @@
     echo $form->textFieldRow($model, 'family', array('class' => 'span6'));
     echo $form->textFieldRow($model, 'name', array('class' => 'span6'));
     echo $form->textFieldRow($model, 'parent_name', array('class' => 'span6'));
-    echo $form->dropDownListRow($model, 'citizenship', Country::model()->getDataNames($model->getForceCached()));
+    echo $form->dropDownListRow($model, 'citizenship', Country::model()->listNames($model->getForceCached()));
 ?>
     <div class="control-group">
         <?= $form->labelEx($model, 'birth_date', array('class' => 'control-label')); ?>

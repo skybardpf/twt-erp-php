@@ -2,6 +2,9 @@
 /**
  * Коды ОКОПФ (Организационо-правовая форма).
  * @author Skibardin A.A. <webprofi1983@gmail.com>
+ *
+ * @property string $id
+ * @property string $name
  */
 class CodesOKOPF extends SOAPModel
 {

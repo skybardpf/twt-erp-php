@@ -19,7 +19,8 @@ class DeleteAction extends CAction
         $controller = $this->controller;
         $controller->pageTitle .= ' | Удаление организации';
 
-        $model = $controller->loadOrganization($id);
+        $force_cache = (isset($_GET['force_cache']) && $_GET['force_cache'] == 1) ? true : false;
+        $model = Organization::model()->findByPk($id, $force_cache);
 
         if (Yii::app()->request->isAjaxRequest) {
             $ret = array();

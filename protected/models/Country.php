@@ -7,7 +7,8 @@
  * @property string $id
  * @property string $name
 */
-class Country extends SOAPModel {
+class Country extends SOAPModel
+{
     const PREFIX_CACHE_LIST_NAMES = '_list_names';
 
 	/**

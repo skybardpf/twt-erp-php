@@ -37,27 +37,6 @@ class Individual extends SOAPModel {
 	}
 
     /**
-     * @static
-     * @param string $id
-     * @param bool $force_cache
-     * @return Individual
-     * @throws CHttpException
-     */
-    public static function loadModel($id, $force_cache = false)
-    {
-        $cache_id = __CLASS__.'_'.$id;
-//        $model = Yii::app()->cache->get($cache_id);
-        if ($force_cache || ($model = Yii::app()->cache->get($cache_id)) === false){
-            $model = self::model()->findByPk($id);
-            if ($model === null) {
-                throw new CHttpException(404, 'Не найдено физическое лицо.');
-            }
-            Yii::app()->cache->set($cache_id, $model);
-        }
-        return $model;
-    }
-
-    /**
      * Сбрасываем кеш по данному физ. лицу и для списков физ. лиц.
      */
     public function clearCache()
@@ -75,6 +54,7 @@ class Individual extends SOAPModel {
 	 */
 	protected function findAll()
     {
+        Yii::trace(get_class($this).'.findAll()','SoapModel');
 		$filters = SoapComponent::getStructureElement($this->where);
 		if (!$filters) $filters = array(array());
 		$request = array('filters' => $filters, 'sort' => array($this->order));
@@ -86,16 +66,27 @@ class Individual extends SOAPModel {
 
 	/**
 	 * Получаем модель "Физ. лицо" по его $id.
-	 *
 	 * @param string $id
-	 * @return Individual
+     * @param bool $force_cache
+     * @return Individual
+     * @throws CHttpException
 	 */
-	protected function findByPk($id)
+	public function findByPk($id, $force_cache=false)
     {
-        $data = $this->SOAP->getIndividual(array('id' => $id));
-        $data = SoapComponent::parseReturn($data);
-        $data = current($data);
-		return $this->publish_elem($data, __CLASS__);
+        Yii::trace(get_class($this).'.findByPk()','SoapModel');
+        $cache_id = __CLASS__.self::PREFIX_CACHE_MODEL_PK.$id;
+        if ($force_cache || ($model = Yii::app()->cache->get($cache_id)) === false){
+            $data = $this->SOAP->getIndividual(array('id' => $id));
+            $data = SoapComponent::parseReturn($data);
+            $data = current($data);
+            $model = $this->publish_elem($data, __CLASS__);
+            if ($model === null) {
+                throw new CHttpException(404, 'Не найдено физическое лицо.');
+            }
+            Yii::app()->cache->set($cache_id, $model);
+        }
+        $model->forceCached = $force_cache;
+        return $model;
 	}
 
     /**
@@ -209,52 +200,23 @@ class Individual extends SOAPModel {
     }
 
     /**
-     * Список доступных физических лиц. Формат [family + key] = element
-     * @deprecated @see getData()
-     * @return array
-     */
-    public static function getFullValues() {
-        $cache_id = __CLASS__.self::PREFIX_CACHE_ID_LIST_FULL_DATA;
-        $data = Yii::app()->cache->get($cache_id);
-        if ($data === false) {
-            $elements = self::model()
-                ->where('deleted', false)
-                ->findAll();
-            $data = array();
-            if ($elements) {
-                $tmp = array();
-                foreach ($elements as $elem) {
-                    $tmp[$elem->family.'_'.$elem->primaryKey] = $elem;
-                }
-                ksort($tmp);
-                foreach ($tmp as $elem) {
-                    $data[] = $elem;
-                }
-            }
-            Yii::app()->cache->set($cache_id, $data);
-        }
-        return $data;
-    }
-
-    /**
      * Список физических лиц.
      * @param bool $force_cache
      * @return Individual[]
      */
-    public function getData($force_cache = false) {
+    public function getData($force_cache = false)
+    {
         $cache_id = __CLASS__.self::PREFIX_CACHE_ID_LIST_FULL_DATA;
         if ($force_cache || ($data = Yii::app()->cache->get($cache_id)) === false) {
             $data = array();
-            $elements = self::model()->where('deleted', false)->findAll();
-            if ($elements) {
-                $tmp = array();
-                foreach ($elements as $elem) {
-                    $tmp[$elem->family.'_'.$elem->primaryKey] = $elem;
-                }
-                ksort($tmp);
-                foreach ($tmp as $elem) {
-                    $data[] = $elem;
-                }
+            $tmp = array();
+            $elements = $this->where('deleted', false)->findAll();
+            foreach ($elements as $elem) {
+                $tmp[$elem->family.'_'.$elem->primaryKey] = $elem;
+            }
+            ksort($tmp);
+            foreach ($tmp as $elem) {
+                $data[] = $elem;
             }
             Yii::app()->cache->set($cache_id, $data);
         }
@@ -269,7 +231,7 @@ class Individual extends SOAPModel {
     {
 		return array(
             array('citizenship', 'required'),
-            array('citizenship', 'in', 'range'  => array_keys(Country::model()->getDataNames($this->getForceCached()))),
+            array('citizenship', 'in', 'range'  => array_keys(Country::model()->listNames($this->forceCached))),
 
             array('name, family', 'required'),
             array('name, family, parent_name', 'length', 'max' => 50),
@@ -286,6 +248,9 @@ class Individual extends SOAPModel {
 		);
 	}
 
+    /**
+     * @param $attribute
+     */
     public function validDate($attribute)
     {
         if (!empty($this->$attribute) && strtotime($this->$attribute) === false){

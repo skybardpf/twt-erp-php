@@ -18,7 +18,8 @@ class DeleteAction extends CAction
          */
         $controller = $this->controller;
 
-        $model = Individual::loadModel($id);
+        $force_cache = (isset($_GET['force_cache']) && $_GET['force_cache'] == 1) ? true : false;
+        $model = Individual::model()->findByPk($id, $force_cache);
 
         if (Yii::app()->request->isAjaxRequest) {
             $ret = array();

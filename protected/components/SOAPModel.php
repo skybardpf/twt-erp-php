@@ -5,14 +5,15 @@
  * @author Skibardin A.A. <webprofi1983@gmail.com>
  *
  * @property string $primaryKey
+ * @property bool   $forceCached
  */
 abstract class SOAPModel extends CModel
 {
     /**
-     * @var bool $_force_cached Сбрасывать кэши принудительно. Используется для всех
+     * @var bool $forceCached Сбрасывать кэши принудительно. Используется для всех
      * функции, которые получают данные по SOAP.
      */
-    private $_force_cached = false;
+    private $_forceCached = false;
 
 	/** Пока не реализована авторизация - для сохранения объектов надо передавать какого-то пользователя */
 	const USER_NAME = "test_user@user.test"; // TODO При реализации авторизации передавать правильное значение
@@ -58,7 +59,7 @@ abstract class SOAPModel extends CModel
      */
     public function setForceCached($force = false)
     {
-        $this->_force_cached = $force;
+        $this->_forceCached = $force;
     }
 
     /**
@@ -66,7 +67,7 @@ abstract class SOAPModel extends CModel
      */
     public function getForceCached()
     {
-        return $this->_force_cached;
+        return $this->_forceCached;
     }
 
     /**

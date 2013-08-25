@@ -114,6 +114,7 @@ class Organization extends OrganizationAbstract
 	 */
 	protected function findAll()
     {
+        Yii::trace(get_class($this).'.findAll()','SoapModel');
 		$filters = SoapComponent::getStructureElement($this->where);
 		if (!$filters) $filters = array(array());
 		$request = array('filters' => $filters, 'sort' => array($this->order));
@@ -143,7 +144,7 @@ class Organization extends OrganizationAbstract
             }
             Yii::app()->cache->set($cache_id, $model);
         }
-        $model->setForceCached($force_cache);
+        $model->forceCached = $force_cache;
         return $model;
 	}
 
