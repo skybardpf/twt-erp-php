@@ -1,28 +1,27 @@
 <?php
 /**
- * Создание доверенности для контрагента.
+ * Редактирование доверенности для контрагента.
  *
  * @author Skibardin A.A. <webprofi1983@gmail.com>
  */
-class CreateAction extends CAction
+class UpdateAction extends CAction
 {
     /**
      * Создание доверенности для контрагента.
-     * @param string $cid
+     * @param string $id
      */
-    public function run($cid)
+    public function run($id)
     {
         /**
          * @var Power_attorney_contractorController $controller
          */
         $controller = $this->controller;
-        $controller->pageTitle .= ' | Создание доверенности';
+        $controller->pageTitle .= ' | Редактирование доверенности';
 
         $force_cache = (isset($_GET['force_cache']) && $_GET['force_cache'] == 1) ? true : false;
 
-        $org = Contractor::loadModel($cid, $force_cache);
-        $model = PowerAttorneyForContractor::model()->createModel($org->primaryKey);
-        $model->setForceCached($force_cache);
+        $model = PowerAttorneyForContractor::model()->findByPk($id, $force_cache);
+        $org = Contractor::model()->findByPk($model->id_yur, $force_cache);
 
         if(isset($_POST['ajax']) && $_POST['ajax'] === 'form-power-attorney') {
             echo CActiveForm::validate($model);
@@ -46,16 +45,15 @@ class CreateAction extends CAction
             if ($model->validate()) {
                 try {
                     $model->save();
-                    $org->clearCache();
-                    $controller->redirect($controller->createUrl('list', array('cid' => $model->id_yur)));
+                    $controller->redirect($controller->createUrl('view', array('id' => $model->primaryKey)));
                 } catch (CException $e) {
                     $model->addError('id', $e->getMessage());
                 }
             }
         }
 
-        $model->json_exists_files = CJSON::encode(array());
-        $model->json_exists_scans = CJSON::encode(array());
+        $model->json_exists_files = CJSON::encode($model->list_files);
+        $model->json_exists_scans = CJSON::encode($model->list_scans);
 
         $controller->render(
             '/contractor/menu_tabs',

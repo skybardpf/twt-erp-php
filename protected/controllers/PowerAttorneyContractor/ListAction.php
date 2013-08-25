@@ -20,8 +20,7 @@ class ListAction extends CAction
 
         $force_cache = (isset($_GET['force_cache']) && $_GET['force_cache'] == 1) ? true : false;
 
-        $org = Contractor::loadModel($cid, $force_cache);
-        $org->setForceCached($force_cache);
+        $org = Contractor::model()->findByPk($cid, $force_cache);
         $data = PowerAttorneyForContractor::model()->listModels($org->primaryKey, $force_cache);
 
         $controller->render(

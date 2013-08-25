@@ -16,11 +16,11 @@ class Power_attorney_contractorController extends Controller {
     public function actions()
     {
         return array(
-            'list' => 'application.modules.legal.controllers.PowerAttorneyContractor.ListAction',
-            'view' => 'application.modules.legal.controllers.PowerAttorneyContractor.ViewAction',
-            'edit' => 'application.modules.legal.controllers.PowerAttorneyContractor.UpdateAction',
-            'add' => 'application.modules.legal.controllers.PowerAttorneyContractor.CreateAction',
-            'delete' => 'application.modules.legal.controllers.PowerAttorneyContractor.DeleteAction',
+            'list' => 'application.controllers.PowerAttorneyContractor.ListAction',
+            'view' => 'application.controllers.PowerAttorneyContractor.ViewAction',
+            'edit' => 'application.controllers.PowerAttorneyContractor.UpdateAction',
+            'add' => 'application.controllers.PowerAttorneyContractor.CreateAction',
+            'delete' => 'application.controllers.PowerAttorneyContractor.DeleteAction',
         );
     }
 }

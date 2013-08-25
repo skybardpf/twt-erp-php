@@ -49,7 +49,7 @@
 <br/><br/>
 <div>
 <?php
-    $persons = Individual::model()->getDataNames($model->getForceCached());
+    $persons = Individual::model()->listNames($model->forceCached);
     $this->widget('bootstrap.widgets.TbDetailView', array(
         'data' => $model,
         'attributes'=>array(

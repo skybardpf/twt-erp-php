@@ -21,9 +21,8 @@ class DeleteAction extends CAction
 
         $force_cache = (isset($_GET['force_cache']) && $_GET['force_cache'] == 1) ? true : false;
 
-        $model = PowerAttorneyForContractor::model()->loadModel($id, $force_cache);
-        $model->setForceCached($force_cache);
-        $org = Contractor::loadModel($model->id_yur, $force_cache);
+        $model = PowerAttorneyForContractor::model()->findByPk($id, $force_cache);
+        $org = Contractor::model()->findByPk($model->id_yur, $force_cache);
 
         if (Yii::app()->request->isAjaxRequest) {
             $ret = array();

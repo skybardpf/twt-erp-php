@@ -53,8 +53,11 @@ abstract class PowerAttorneyAbstract extends SOAPModel
      */
     protected function afterConstruct()
     {
-        $this->attachBehaviors($this->behaviors());
         parent::afterConstruct();
+        $this->attachBehaviors($this->behaviors());
+
+        $this->type_yur = $this->getTypeOrganization();
+        $this->from_user = true;
     }
 
     /**
@@ -132,38 +135,6 @@ abstract class PowerAttorneyAbstract extends SOAPModel
             Yii::app()->cache->delete($class . self::PREFIX_CACHE_ID_LIST_NAMES_FOR_ORG_ID . $this->id_yur);
             Yii::app()->cache->delete($class . self::PREFIX_CACHE_ID_LIST_MODELS_FOR_ORG_ID . $this->id_yur);
         }
-    }
-
-    /**
-     * @param string $id
-     * @param bool $force_cache
-     * @return PowerAttorneyAbstract
-     * @throws CHttpException
-     */
-    public function loadModel($id, $force_cache = false)
-    {
-        $cache_id = get_class($this) . self::PREFIX_CACHE_ID_FOR_MODEL_ID . $id;
-        if ($force_cache || ($model = Yii::app()->cache->get($cache_id)) === false){
-            $model = $this->findByPk($id);
-            if ($model === null) {
-                throw new CHttpException(404, 'Не найдена довереность.');
-            }
-            Yii::app()->cache->set($cache_id, $model);
-        }
-        return $model;
-    }
-
-    /**
-     * @param string $org_id
-     * @return PowerAttorneyAbstract
-     */
-    public function createModel($org_id)
-    {
-        $this->id_yur = $org_id;
-        $this->type_yur = $this->getTypeOrganization();
-//        $this->user = SOAPModel::USER_NAME;
-        $this->from_user = true;
-        return $this;
     }
 
     /**
