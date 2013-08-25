@@ -16,10 +16,10 @@ class Contractor_groupController extends Controller{
     public function actions()
     {
         return array(
-            'index' => 'application.modules.legal.controllers.ContractorGroup.IndexAction',
-            'update' => 'application.modules.legal.controllers.ContractorGroup.UpdateAction',
-            'create' => 'application.modules.legal.controllers.ContractorGroup.CreateAction',
-            'delete' => 'application.modules.legal.controllers.ContractorGroup.DeleteAction',
+            'index' => 'application.controllers.ContractorGroup.IndexAction',
+            'update' => 'application.controllers.ContractorGroup.UpdateAction',
+            'create' => 'application.controllers.ContractorGroup.CreateAction',
+            'delete' => 'application.controllers.ContractorGroup.DeleteAction',
         );
     }
 
