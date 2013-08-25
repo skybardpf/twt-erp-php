@@ -15,10 +15,10 @@ class Founding_documentController extends Controller {
     public function actions()
     {
         return array(
-            'view' => 'application.modules.legal.controllers.FoundingDocument.ViewAction',
-            'edit' => 'application.modules.legal.controllers.FoundingDocument.UpdateAction',
-            'add' => 'application.modules.legal.controllers.FoundingDocument.CreateAction',
-            'delete' => 'application.modules.legal.controllers.FoundingDocument.DeleteAction',
+            'view' => 'application.controllers.FoundingDocument.ViewAction',
+            'edit' => 'application.controllers.FoundingDocument.UpdateAction',
+            'add' => 'application.controllers.FoundingDocument.CreateAction',
+            'delete' => 'application.controllers.FoundingDocument.DeleteAction',
         );
     }
 }

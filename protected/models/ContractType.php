@@ -30,6 +30,17 @@ class ContractType extends SOAPModel
 		return $this->publish_list($ret, __CLASS__);
 	}
 
+    /**
+     * @return array
+     */
+    public function attributeNames()
+    {
+        return array(
+            'id',           // string
+            'name',         // string
+        );
+    }
+
 	/**
 	 * Returns the list of attribute names of the model.
 	 * @return array list of attribute names.

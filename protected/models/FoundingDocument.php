@@ -113,7 +113,7 @@ class FoundingDocument extends SOAPModel
 	 * Список учредительных документов
 	 * @return FoundingDocument[]
 	 */
-	public function findAll()
+	protected function findAll()
     {
 		$filters = SoapComponent::getStructureElement($this->where);
 		if (!$filters) $filters = array(array());
@@ -246,6 +246,29 @@ class FoundingDocument extends SOAPModel
         if ($this->id_yur){
             Yii::app()->cache->delete($class . self::PREFIX_CACHE_ID_LIST_DATA . $this->id_yur);
         }
+    }
+
+    /**
+     * @return array
+     */
+    public function attributeNames()
+    {
+        return array(
+            'id',           // string
+            'name',         // string
+            'id_yur',       // string
+            'type_yur',     // string
+            'num',          // string
+            'comment',      // string
+            'date',         // date
+            'expire',       // date
+            'typ_doc',      // string
+            'deleted',      // bool
+            'from_user',    // bool
+            'user',         // string
+            'list_scans',   // array
+            'list_files',   // array
+        );
     }
 
 	/**

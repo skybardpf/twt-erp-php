@@ -13,6 +13,15 @@ class  PowerAttorneyForOrganization extends PowerAttorneyAbstract
     public $json_type_of_contract;
 
     /**
+     *
+     */
+    protected function afterConstruct()
+    {
+        parent::afterConstruct();
+        $this->type_of_contract = array();
+    }
+
+    /**
      * @return string
      */
     public function getTypeOrganization()

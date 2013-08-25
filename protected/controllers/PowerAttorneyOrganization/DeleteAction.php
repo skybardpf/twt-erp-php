@@ -1,33 +1,27 @@
 <?php
 /**
- * Удаление учредительного документа.
+ * Удаление доверенности организации.
  *
  * @author Skibardin A.A. <webprofi1983@gmail.com>
  */
 class DeleteAction extends CAction
 {
     /**
-     * Удаление учредительного документа.
+     * Удаление доверенности организации.
      * @param $id
      * @throws CHttpException
      */
     public function run($id)
     {
         /**
-         * @var Founding_documentController $controller
+         * @var Power_attorney_organizationController $controller
          */
         $controller = $this->controller;
-        $controller->pageTitle .= ' | Удаление учредительного документа';
+        $controller->pageTitle .= ' | Удаление доверенности';
 
         $force_cache = (isset($_GET['force_cache']) && $_GET['force_cache'] == 1) ? true : false;
-
-        $model = FoundingDocument::model()->loadModel($id, $force_cache);
-        if ($model->type_yur != 'Организации') {
-            throw new CHttpException(404, 'У документа неверный тип для данной страницы');
-        }
-        $model->user = SOAPModel::USER_NAME;
-        $model->setForceCached($force_cache);
-        $org = Organization::loadModel($model->id_yur, $force_cache);
+        $model = PowerAttorneyForOrganization::model()->findByPk($id, $force_cache);
+        $org = Organization::model()->findByPk($model->id_yur, $force_cache);
 
         if (Yii::app()->request->isAjaxRequest) {
             $ret = array();
@@ -48,7 +42,7 @@ class DeleteAction extends CAction
                         $org->clearCache();
                         $controller->redirect($controller->createUrl('documents/list', array('org_id' => $org->primaryKey)));
                     } else {
-                        throw new CHttpException(500, 'Не удалось удалить учредительный документ.');
+                        throw new CHttpException(500, 'Не удалось удалить доверенность.');
                     }
                 break;
                 default:
@@ -63,11 +57,13 @@ class DeleteAction extends CAction
         }
 
         $controller->render('/organization/show', array(
-            'content' => $controller->renderPartial('/founding_document/delete',
+            'content' => $controller->renderPartial(
+                '/power_attorney_contractor/delete',
                 array(
                     'model' => $model,
-                    'organization' => $org
-                ), true),
+                ),
+                true
+            ),
             'organization' => $org,
             'cur_tab' => 'documents',
         ));

@@ -27,7 +27,7 @@ class UpdateAction extends CAction
         }
         $model->user = SOAPModel::USER_NAME;
         $model->setForceCached($force_cache);
-        $org = Organization::loadModel($model->id_yur, $force_cache);
+        $org = Organization::model()->findByPk($model->id_yur, $force_cache);
 
         $class = get_class($model);
         if ($_POST && !empty($_POST[$class])) {

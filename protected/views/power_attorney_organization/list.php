@@ -24,7 +24,7 @@
 
         <?php
         $provider = new CArrayDataProvider($data);
-        $p = Individual::model()->getDataNames($organization->getForceCached());
+        $p = Individual::model()->listNames($organization->forceCached);
         foreach ($provider->rawData as $k=>$v){
             $provider->rawData[$k]['owner_name'] = (isset($p[$v['id_lico']])) ? $p[$v['id_lico']] : NULL;
         }

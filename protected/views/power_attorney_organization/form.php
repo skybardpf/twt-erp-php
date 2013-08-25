@@ -41,7 +41,7 @@ $this->widget('bootstrap.widgets.TbButton', array(
     'label' => 'Отмена',
     'url' => $model->primaryKey
         ? $this->createUrl('view', array('id' => $model->primaryKey))
-        : $this->createUrl('power_attorney_contractor/list', array('cid' => $organization->primaryKey))
+        : $this->createUrl('documents/list', array('org_id' => $organization->primaryKey))
 ));
 ?>
 
@@ -68,7 +68,7 @@ $jui_date_options = array(
     )
 );
 
-echo $form->dropDownListRow($model, 'id_lico', Individual::model()->getDataNames($model->getForceCached()), array('class' => 'span6'));
+echo $form->dropDownListRow($model, 'id_lico', Individual::model()->listNames($model->forceCached), array('class' => 'span6'));
 echo $form->textFieldRow($model, 'nom', array('class' => 'span6'));
 echo $form->textFieldRow($model, 'name', array('class' => 'span6'));
 echo $form->dropDownListRow($model, 'typ_doc', PowerAttorneyForOrganization::getDocTypes(), array('class' => 'span6'));
@@ -87,7 +87,7 @@ echo $form->hiddenField($model, 'json_exists_scans');
  * Заполняем выбранные виды договоров.
  */
 $data_type_of_contract = array();
-$contract_types = ContractType::model()->listNames($model->getForceCached());
+$contract_types = ContractType::model()->listNames($model->forceCached);
 foreach ($model->type_of_contract as $f) {
     $data_type_of_contract[] = array(
         'id' => $f . '_id',

@@ -21,7 +21,7 @@ class CreateAction extends CAction
 
         $force_cache = (isset($_GET['force_cache']) && $_GET['force_cache'] == 1) ? true : false;
 
-        $org = Organization::loadModel($org_id, $force_cache);
+        $org = Organization::model()->findByPk($org_id, $force_cache);
         $model = FoundingDocument::model()->createModel($org);
         $model->setForceCached($force_cache);
 

@@ -19,8 +19,7 @@ class ListAction extends CAction
         $controller->pageTitle .= ' | Список документов';
 
         $force_cache = (isset($_GET['force_cache']) && $_GET['force_cache'] == 1) ? true : false;
-
-        $org = Organization::loadModel($org_id, $force_cache);
+        $org = Organization::model()->findByPk($org_id, $force_cache);
 
         // Учредительные документы
         $founding_docs = FoundingDocument::model()->listModels($org, $force_cache);

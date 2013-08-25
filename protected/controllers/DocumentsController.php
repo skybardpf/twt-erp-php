@@ -18,7 +18,7 @@ class DocumentsController extends Controller{
     public function actions()
     {
         return array(
-            'list' => 'application.modules.legal.controllers.Documents.ListAction',
+            'list' => 'application.controllers.Documents.ListAction',
         );
     }
 }

@@ -188,11 +188,11 @@ abstract class SOAPModel extends CModel
 
 	/**
 	 * Create object with data
-	 * @param array $data
+	 * @param mixed $data
 	 * @param SOAPModel $class
 	 * @return SOAPModel | null
 	 */
-	public function publish_elem(array $data, $class)
+	public function publish_elem($data, $class)
     {
 		if (!$data)
             return null;

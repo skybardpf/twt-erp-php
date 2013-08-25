@@ -30,7 +30,6 @@
  */
 abstract class PowerAttorneyAbstract extends SOAPModel
 {
-    const PREFIX_CACHE_ID_FOR_MODEL_ID = '_model_id_';
     const PREFIX_CACHE_ID_LIST_MODELS_FOR_ORG_ID = '_list_models_for_org_id_';
     const PREFIX_CACHE_ID_LIST_NAMES_FOR_ORG_ID = '_list_names_for_org_id_';
 
@@ -58,6 +57,8 @@ abstract class PowerAttorneyAbstract extends SOAPModel
 
         $this->type_yur = $this->getTypeOrganization();
         $this->from_user = true;
+        $this->list_files = array();
+        $this->list_scans = array();
     }
 
     /**
@@ -91,13 +92,26 @@ abstract class PowerAttorneyAbstract extends SOAPModel
 	/**
 	 * Доверенность
 	 * @param string $id
+	 * @param bool $force_cache
 	 * @return PowerAttorneyAbstract
 	 */
-	public function findByPk($id)
+	public function findByPk($id, $force_cache=false)
     {
-		$ret = $this->SOAP->getPowerAttorneyLE(array('id' => $id));
-		$ret = SoapComponent::parseReturn($ret);
-		return $this->publish_elem(current($ret), get_class($this));
+        Yii::trace(get_class($this).'.findByPk()','SoapModel');
+        $class = get_class($this);
+        $cache_id = $class . self::PREFIX_CACHE_MODEL_PK . $id;
+        if ($force_cache || ($model = Yii::app()->cache->get($cache_id)) === false){
+            $data = $this->SOAP->getPowerAttorneyLE(array('id' => $id));
+            $data = SoapComponent::parseReturn($data);
+            $data = current($data);
+            $model = $this->publish_elem($data, $class);
+            if ($model === null) {
+                throw new CHttpException(404, 'Доверенность не найдена.');
+            }
+            Yii::app()->cache->set($cache_id, $model);
+        }
+        $model->forceCached = $force_cache;
+        return $model;
 	}
 
 	/**
@@ -129,7 +143,7 @@ abstract class PowerAttorneyAbstract extends SOAPModel
     {
         $class = get_class($this);
         if ($this->primaryKey){
-            Yii::app()->cache->delete($class . self::PREFIX_CACHE_ID_FOR_MODEL_ID . $this->primaryKey);
+            Yii::app()->cache->delete($class . self::PREFIX_CACHE_MODEL_PK . $this->primaryKey);
         }
         if ($this->id_yur){
             Yii::app()->cache->delete($class . self::PREFIX_CACHE_ID_LIST_NAMES_FOR_ORG_ID . $this->id_yur);

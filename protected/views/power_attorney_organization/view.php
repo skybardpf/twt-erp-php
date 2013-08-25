@@ -50,17 +50,17 @@
 <br/><br/>
 <div>
 	<?php
-        $Individual = Individual::model()->getDataNames($model->getForceCached());
+        $Individual = Individual::model()->listNames($model->forceCached);
         if (!isset($Individual[$model->id_lico])){
             $p = 'Не задано';
         } else {
             $p = CHtml::link(
                 $Individual[$model->id_lico],
-                $this->createUrl('Individual/view', array('id' => $model->id_lico))
+                $this->createUrl('individual/view', array('id' => $model->id_lico))
             );
         }
         $type_of_contract = '';
-        $contract_types = ContractType::model()->listNames($model->getForceCached());
+        $contract_types = ContractType::model()->listNames($model->forceCached);
         foreach($model->type_of_contract as $t){
             $type_of_contract .= (!isset($contract_types[$t])) ? '---' : ' - '.$contract_types[$t].'<br/>';
         }

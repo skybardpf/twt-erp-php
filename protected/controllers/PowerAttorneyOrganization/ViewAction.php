@@ -19,9 +19,8 @@ class ViewAction extends CAction
         $controller->pageTitle .= ' | Просмотр доверенности';
 
         $force_cache = (isset($_GET['force_cache']) && $_GET['force_cache'] == 1) ? true : false;
-        $model = PowerAttorneyForOrganization::model()->loadModel($id, $force_cache);
-        $model->setForceCached($force_cache);
-        $org = Organization::loadModel($model->id_yur, $force_cache);
+        $model = PowerAttorneyForOrganization::model()->findByPk($id, $force_cache);
+        $org = Organization::model()->findByPk($model->id_yur, $force_cache);
 
         $controller->render('/organization/show', array(
             'content' => $controller->renderPartial('/power_attorney_organization/view',

@@ -252,6 +252,25 @@ class FreeDocument extends SOAPModel
         return $ret;
 	}
 
+    /**
+     * @return array
+     */
+    public function attributeNames()
+    {
+        return array(
+            'id',           // string
+            'name',         // string
+            'id_yur',       // string
+            'type_yur',     // string
+            'num',          // string
+            'date',         // date
+            'expire',       // date
+            'comment',      // string
+            'list_scans',   // array
+            'list_files',   // array
+        );
+    }
+
 	/**
 	 * Returns the list of attribute names of the model.
 	 * @return array list of attribute names.

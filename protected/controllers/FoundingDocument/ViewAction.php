@@ -26,7 +26,7 @@ class ViewAction extends CAction
             throw new CHttpException(404, 'У документа неверный тип для данной страницы');
         }
         $model->setForceCached($force_cache);
-        $org = Organization::loadModel($model->id_yur, $force_cache);
+        $org = Organization::model()->findByPk($model->id_yur, $force_cache);
 
         $controller->render('/organization/show', array(
             'content' => $controller->renderPartial('/founding_document/view',
