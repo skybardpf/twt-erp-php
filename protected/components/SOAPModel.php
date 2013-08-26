@@ -1,21 +1,25 @@
 <?php
 /**
- * User: Forgon
- * Date: 09.01.13
+ * Общая модель для работы с SOAP моделями.
+ *
+ * @author Skibardin A.A. <webprofi1983@gmail.com>
  *
  * @property string $primaryKey
+ * @property bool   $forceCached
  */
-abstract class SOAPModel extends CModel {
+abstract class SOAPModel extends CModel
+{
     /**
-     * @var bool $_force_cache Сбрасывать кэши принудительно. Используется для всех
+     * @var bool $forceCached Сбрасывать кэши принудительно. Используется для всех
      * функции, которые получают данные по SOAP.
      */
-    private $_force_cached = false;
+    private $_forceCached = false;
 
-	/** Кешируем Гет-ы на это время, кеширование возложено на подклассы */
-	const CACHE_TTL = 30;
 	/** Пока не реализована авторизация - для сохранения объектов надо передавать какого-то пользователя */
 	const USER_NAME = "test_user@user.test"; // TODO При реализации авторизации передавать правильное значение
+    const PREFIX_CACHE_MODEL_PK = '_model_pk_';
+
+    private static $_models = array();  // class name => model
 
 	/**
 	 * @var SoapComponent
@@ -27,11 +31,35 @@ abstract class SOAPModel extends CModel {
 	protected $order = array();
 
     /**
+     * EVERY derived SoapModel class must override this method as follows,
+     * <pre>
+     * public static function model($className=__CLASS__)
+     * {
+     *     return parent::model($className);
+     * }
+     * </pre>
+     *
+     * @param string $className active record class name.
+     * @return SoapModel
+     */
+    public static function model($className=__CLASS__)
+    {
+        if(isset(self::$_models[$className]))
+            return self::$_models[$className];
+        else
+        {
+            $model=self::$_models[$className]=new $className(null);
+            $model->attachBehaviors($model->behaviors());
+            return $model;
+        }
+    }
+
+    /**
      * @param bool $force
      */
     public function setForceCached($force = false)
     {
-        $this->_force_cached = $force;
+        $this->_forceCached = $force;
     }
 
     /**
@@ -39,39 +67,24 @@ abstract class SOAPModel extends CModel {
      */
     public function getForceCached()
     {
-        return $this->_force_cached;
+        return $this->_forceCached;
     }
 
-	public static function model($className=__CLASS__)
-    {
-		return new $className();
-	}
-
-	public function __construct()
+    /**
+     * Конструктор.
+     */
+    public function __construct()
 	{
 		$this->afterConstruct();
 	}
 
-	protected function afterConstruct()
+    /**
+     * Действия, которые можно произвести после создания объекта SOAPModel.
+     */
+    protected function afterConstruct()
 	{
 		$this->SOAP = Yii::app()->soap;
 		parent::afterConstruct();
-	}
-
-	/**
-	 * Returns the list of attribute names of the model.
-	 * @return array list of attribute names.
-	 */
-	public function attributeNames() {
-		return array_keys($this->attributeLabels());
-	}
-
-	/**
-	 * @return array
-	 * @throws Exception
-	 */
-	public function attributeLabels() {
-		throw new Exception('Перечислите все поля');
 	}
 
 	/**
@@ -163,20 +176,26 @@ abstract class SOAPModel extends CModel {
 			return parent::__isset($name);
 	}
 
-	public function getprimaryKey() {
+    /**
+     * Геттер для получение первичного ключа. @see $primaryKey.
+     * Может быть перкрыт в наследниках.
+     * @return string
+     */
+    public function getPrimaryKey()
+    {
 		return $this->id;
 	}
 
 	/**
 	 * Create object with data
-	 * @param $data
-	 * @param $class
-	 *
-	 * @return mixed
+	 * @param mixed $data
+	 * @param SOAPModel $class
+	 * @return SOAPModel | null
 	 */
-	public function publish_elem($data, $class) {
-		if (!$data) return null;
-		/** @var $obj SOAPModel */
+	public function publish_elem($data, $class)
+    {
+		if (!$data)
+            return null;
 		$obj = new $class;
 		$obj->setAttributes($data, false);
 		return $obj;
@@ -188,7 +207,8 @@ abstract class SOAPModel extends CModel {
 	 * @param $class
 	 * @return SOAPModel[]
 	 */
-	public function publish_list($data, $class) {
+	public function publish_list($data, $class)
+    {
 		$return = array();
 		if (is_array($data)) {
 			foreach ($data as $elem) {
@@ -220,12 +240,16 @@ abstract class SOAPModel extends CModel {
 	 *
 	 * @return SOAPModel
 	 */
-	public function where($param, $value) {
+	public function where($param, $value)
+    {
 		$this->where[$param] = $value;
 		return $this;
 	}
 
-	public abstract function findAll();
+    /**
+     * @return mixed
+     */
+    protected abstract function findAll();
 
     /**
      * @param string $attribute
@@ -241,7 +265,8 @@ abstract class SOAPModel extends CModel {
      *  Валидатор. Проверяет, что имена файлов-сканов, которые хотят загрузить
      *  не совпадают с именами файлов, которые были загружены прежде.
      */
-    public function existsScans(){
+    public function existsScans()
+    {
         if ($this->primaryKey) {
             $err = array();
             foreach ($this->upload_scans as $f) {
@@ -261,7 +286,8 @@ abstract class SOAPModel extends CModel {
      *  Валидатор. Проверяет, что имена файлов, которые хотят загрузить
      *  не совпадают с именами файлов, которые были загружены прежде.
      */
-    public function existsFiles(){
+    public function existsFiles()
+    {
         if ($this->primaryKey) {
             $err = array();
             foreach ($this->upload_files as $f) {

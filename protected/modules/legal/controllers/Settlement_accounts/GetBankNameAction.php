@@ -1,7 +1,7 @@
 <?php
 /**
  * Only Ajax. Получить название банка по его БИК/SWIFT
- * @author Skibardin A.A. <skybardpf@artektiv.ru>
+ * @author Skibardin A.A. <webprofi1983@gmail.com>
  */
 class GetBankNameAction extends CAction
 {

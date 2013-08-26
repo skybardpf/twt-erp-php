@@ -7,7 +7,7 @@ class UploadDocumentException extends CException{}
 /**
  * Поведение, реализующее загрузку файлов для различных моделей документов.
  *
- * @author Skibardin A.A. <skybardpf@artektiv.ru>
+ * @author Skibardin A.A. <webprofi1983@gmail.com>
  */
 class UploadDocument extends CModelBehavior
 {

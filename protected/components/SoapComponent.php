@@ -64,7 +64,7 @@
  * @method mixed saveBeneficiary            Сохранение
  * @method mixed deleteBeneficiary          Удаление
  *
- * Страны {@see Countries}
+ * Страны {@see Country}
  * @method mixed listCountries
  *
  * Контактные лица для контрагентов {@see ContactPersonForContractors}

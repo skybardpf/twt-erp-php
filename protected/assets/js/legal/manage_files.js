@@ -3,7 +3,7 @@ $(document).ready(function(){
     var model_name = info.data('class-name');
     $('.download_file').on('click', function(){
         var type = $(this).data('type');
-        var url = '/legal/download/download/?';
+        var url = '/download/download/?';
             url += 'id='+encodeURIComponent(info.data('id'));
             url += '&class_name='+encodeURIComponent(info.data('class-name'));
             url += '&type='+type;
@@ -51,7 +51,7 @@ $(document).ready(function(){
                     text: "Удалить",
                     class: 'btn btn-danger',
                     click: function(event){
-                        var url = '/legal/download/delete/?';
+                        var url = '/download/delete/?';
                             url += 'id='+encodeURIComponent(info.data('id'));
                             url += '&class_name='+encodeURIComponent(info.data('class-name'));
                             url += '&type='+type;

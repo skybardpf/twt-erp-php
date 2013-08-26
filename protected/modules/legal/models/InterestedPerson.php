@@ -2,7 +2,7 @@
 /**
  * Модель: "Заинтересованные персоны".
  *
- * @author Skibardin A.A. <skybardpf@artektiv.ru>
+ * @author Skibardin A.A. <webprofi1983@gmail.com>
  *
  * @property string $id_yur
  * @property string $type_yur       Тип юр. лица: Организации, контрагенты
@@ -246,7 +246,7 @@ class InterestedPerson extends SOAPModel
 //			array('role', 'required'),
 //			array('role', 'in', 'range' => array_keys(InterestedPerson::getRoles())),
 
-//			array('list_individuals', 'in', 'range' => array_keys(Individuals::getValues())),
+//			array('list_individuals', 'in', 'range' => array_keys(Individual::getValues())),
 //			array('list_organizations', 'in', 'range' => array_keys(Organization::getValues())),
 
             array('job_title', 'length', 'max' => 100),

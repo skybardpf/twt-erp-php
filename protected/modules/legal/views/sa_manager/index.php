@@ -5,7 +5,7 @@
 $this->breadcrumbs=array(
 	$this->controller_title,
 );
-Individuals::getValues();
+Individual::getValues();
 ?>
 <h2><?=$this->controller_title?></h2>
 <?php
@@ -17,7 +17,7 @@ if ($elements) {
 		'dataProvider' => $gridDataProvider,
 		'columns'=>array(
 			array('name' => 'id',       'header' => '#'),
-			array('name' => 'manager',  'header' => 'Физическое лицо', 'type' => 'raw', 'value' => 'isset(Individuals::$values[$data["manager"]]) ? Individuals::$values[$data["manager"]] : "-"'),
+			array('name' => 'manager',  'header' => 'Физическое лицо', 'type' => 'raw', 'value' => 'isset(Individual::$values[$data["manager"]]) ? Individual::$values[$data["manager"]] : "-"'),
 			//array('name' => 'id_yur', 'header' => 'Юр.Лицо',
 			array(
 				'class'=>'bootstrap.widgets.TbButtonColumn',

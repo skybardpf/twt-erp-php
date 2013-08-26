@@ -12,7 +12,7 @@ class CountriesController extends Controller {
 	 * Список стран
 	 */
 	public function actionIndex() {
-		$entities = Countries::model()->findAll();
+		$entities = Country::model()->findAll();
 		$this->render('index', array('elements' => $entities));
 	}
 }

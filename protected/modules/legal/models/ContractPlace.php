@@ -2,7 +2,7 @@
 /**
  * Список мест заключения контрактов.
  *
- * @author Skibardin A.A. <skybardpf@artektiv.ru>
+ * @author Skibardin A.A. <webprofi1983@gmail.com>
  */
 class ContractPlace extends SOAPModel {
     /**

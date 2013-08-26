@@ -1,7 +1,7 @@
 /**
  * @global {Number | NULL} window.organization_id
  *
- * @author Skibardin A.A. <skybardpf@artektiv.ru>
+ * @author Skibardin A.A. <webprofi1983@gmail.com>
  */
 $(document).ready(function(){
     const COUNTRY_RUSSIAN_ID = 643;

@@ -105,7 +105,7 @@
         $class = 'controls';
         $model->str_managing_persons = CJSON::encode(array());
     } else {
-        $p = Individuals::getValues();
+        $p = Individual::getValues();
         foreach ($model->managing_persons as $pid){
             if (!isset($p[$pid])){
                 $person .= $pid;
@@ -114,7 +114,7 @@
                         'class'     => 'managing_person',
                         'data-pid'  => $pid,
                     ),
-                    CHtml::link($p[$pid], $this->createUrl('individuals/view', array('id' => $pid))) .
+                    CHtml::link($p[$pid], $this->createUrl('Individual/view', array('id' => $pid))) .
                     '&nbsp;' .
                     CHtml::tag('span', array(
                         'class' => 'icon-trash',
@@ -238,7 +238,7 @@
 
                 var div_person = $(
                     '<div class="managing_person" data-pid="'+pid+'">' +
-                    '<a href="/legal/individuals/view/id/'+pid+'">'+name+'</a>&nbsp;' +
+                    '<a href="/legal/Individual/view/id/'+pid+'">'+name+'</a>&nbsp;' +
                     '<span class="icon-trash" style="cursor: pointer;"></span>' +
                     '</div>'
                 );

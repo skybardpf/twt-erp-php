@@ -2,7 +2,7 @@
 /**
  * Модель, реализующая сущность договора организации.
  *
- * @author Skibardin A.A. <skybardpf@artektiv.ru>
+ * @author Skibardin A.A. <webprofi1983@gmail.com>
  *
  * @property string     $id
  * @property string     $name
@@ -212,7 +212,7 @@ class Contract extends SOAPModel
             array('currency', 'in', 'range' => array_keys(Currencies::getValues())),
 
             array('responsible', 'required'),
-            array('responsible', 'in', 'range' => array_keys(Individuals::getValues())),
+            array('responsible', 'in', 'range' => array_keys(Individual::getValues())),
 
             array('dogovor_summ', 'required'),
             array('dogovor_summ', 'numerical', 'integerOnly' => true, 'min' => 0, 'max'=>'9999999999999'),
