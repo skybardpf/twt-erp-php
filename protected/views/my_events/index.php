@@ -33,7 +33,7 @@
     }
 ?>
     <div class="control-group ">
-        <label class="control-label" for="EventForm_for_organization">Фильтр</label>
+<!--        <label class="control-label" for="EventForm_for_organization">Фильтр</label>-->
         <div class="controls">
             <input id="ytEventForm_for_organization" type="hidden" value="" name="EventForm[for_organization]">
             <label class="radio inline">
