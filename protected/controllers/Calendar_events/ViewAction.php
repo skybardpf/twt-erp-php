@@ -15,15 +15,14 @@ class ViewAction extends CAction
     public function run($org_id, $id)
     {
         /**
-         * @var $controller Calendar_eventsController
+         * @var Calendar_eventsController $controller
          */
         $controller = $this->controller;
         $controller->pageTitle .= ' | Просмотр события';
 
         $force_cache = (isset($_GET['force_cache']) && $_GET['force_cache'] == 1) ? true : false;
-        $model = Event::model()->loadModel($id, $force_cache);
-        $model->setForceCached($force_cache);
-        $org = Organization::loadModel($org_id, $force_cache);
+        $model = Event::model()->findByPk($id, $force_cache);
+        $org = Organization::model()->findByPk($org_id, $force_cache);
 
         $controller->render('/organization/show', array(
             'content' => $controller->renderPartial('/my_events/view',

@@ -1,23 +1,27 @@
 <?php
 /**
- * Удаление события
+ * Удаление события.
  *
  * @author Skibardin A.A. <webprofi1983@gmail.com>
  */
 class DeleteAction extends CAction
 {
     /**
-     * Удаление события.
-     * @param  string $id
+     * Удаление события с идентификатором $id.
+     *
+     * @param string $org_id        Идентификатор организации.
+     * @param string $id            Идентификатор события.
+     * @throws CHttpException
      */
-    public function run($id)
+    public function run($org_id, $id)
     {
         /**
-         * @var $controller My_eventsController
+         * @var $controller Calendar_eventsController
          */
         $controller = $this->controller;
 
-        $model = $controller->loadModel($id);
+        $force_cache = (isset($_GET['force_cache']) && $_GET['force_cache'] == 1) ? true : false;
+        $model = Event::model()->findByPk($id, $force_cache);
 
         if (Yii::app()->request->isAjaxRequest) {
             $ret = array();
@@ -26,7 +30,7 @@ class DeleteAction extends CAction
                     throw new CException('Нельзя удалить событие, созданное администратором.');
                 }
                 $model->delete();
-            } catch (Exception $e) {
+            } catch (CException $e) {
                 $ret['error'] = $e->getMessage();
             }
             echo CJSON::encode($ret);
@@ -37,22 +41,30 @@ class DeleteAction extends CAction
             if (!$model->made_by_user){
                 throw new CHttpException(500, 'Нельзя удалить событие, созданное администратором.');
             }
+
+            $org = Organization::model()->findByPk($org_id, $force_cache);
             if (isset($_POST['result'])) {
                 switch ($_POST['result']) {
                     case 'yes':
                         if ($model->delete()) {
-                            $this->redirect($this->createUrl('index'));
+                            $controller->redirect($controller->createUrl("list", array("org_id" => $org->primaryKey, "id" => $model->primaryKey)));
                         } else {
                             throw new CHttpException(500, 'Не удалось удалить событие.');
                         }
                     break;
                     default:
-                        $this->redirect($this->createUrl('index'));
+                        $controller->redirect($controller->createUrl("view", array("org_id" => $org->primaryKey, "id" => $model->primaryKey)));
                     break;
                 }
             }
-            $this->render('/my_events/delete', array(
-                'model' => $model
+            $controller->render('/organization/show', array(
+                'content' => $controller->renderPartial('/my_events/delete',
+                    array(
+                        'organization' => $org,
+                        'model' => $model
+                    ), true),
+                'organization' => $org,
+                'cur_tab' => $controller->current_tab,
             ));
         }
     }

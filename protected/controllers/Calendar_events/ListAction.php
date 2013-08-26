@@ -14,7 +14,7 @@ class ListAction extends CAction
     public function run($org_id)
     {
         /**
-         * @var $controller Calendar_eventsController
+         * @var Calendar_eventsController $controller
          */
         $controller = $this->controller;
 
@@ -33,7 +33,7 @@ class ListAction extends CAction
         }
 
         $force_cache = (isset($_GET['force_cache']) && $_GET['force_cache'] == 1) ? true : false;
-        $org = Organization::loadModel($org_id, $force_cache);
+        $org = Organization::model()->findByPk($org_id, $force_cache);
 
         // TODO пока $force_cache = true
         $force_cache = true;

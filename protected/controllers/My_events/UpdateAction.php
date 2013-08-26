@@ -22,8 +22,7 @@ class UpdateAction extends CAction
         $controller->pageTitle .= ' | Редактирование события';
 
         $force_cache = (isset($_GET['force_cache']) && $_GET['force_cache'] == 1) ? true : false;
-        $model = Event::model()->loadModel($id, $force_cache);
-        $model->setForceCached($force_cache);
+        $model = Event::model()->findByPk($id, $force_cache);
         if (!$model->made_by_user){
             throw new CHttpException(500, 'Нельзя редактировать событие, созданное администратором.');
         }
@@ -31,7 +30,7 @@ class UpdateAction extends CAction
         if ($_POST && !empty($_POST['Event'])) {
             $model->setAttributes($_POST['Event']);
 
-            $model->countries = CJSON::decode($model->json_countries);
+            $model->list_countries = CJSON::decode($model->json_countries);
             if ($model->validate('json_exists_files')){
                 $model->list_files = CJSON::decode($model->json_exists_files);
             }
@@ -45,21 +44,21 @@ class UpdateAction extends CAction
                     $model->addError('id', $e->getMessage());
                 }
             }
-        } else {
-            $organizations = array();
-            $contractors = array();
-            foreach ($model->list_yur as $v){
-                if ($v['type_yur'] == 'Организации'){
-                    $organizations[] = $v['id_yur'];
-                } elseif ($v['type_yur'] == 'Контрагенты'){
-                    $contractors[] = $v['id_yur'];
-                }
-            }
-
-            $model->json_organizations = CJSON::encode($organizations);
-            $model->json_contractors = CJSON::encode($contractors);
-            $model->json_countries = CJSON::encode($model->countries);
         }
+
+        $organizations = array();
+        $contractors = array();
+        foreach ($model->list_yur as $v){
+            if ($v['type_yur'] == 'Организации'){
+                $organizations[] = $v['id_yur'];
+            } elseif ($v['type_yur'] == 'Контрагенты'){
+                $contractors[] = $v['id_yur'];
+            }
+        }
+
+        $model->json_organizations = CJSON::encode($organizations);
+        $model->json_contractors = CJSON::encode($contractors);
+        $model->json_countries = CJSON::encode($model->list_countries);
         $model->json_exists_files = CJSON::encode($model->list_files);
 
         $this->controller->render(

@@ -22,11 +22,7 @@ class DownloadAction extends CAction
             echo 'Файл не найден';
         } else {
             header('Set-Cookie: fileDownload=true; path=/');
-            header('Cache-Control: max-age=60, must-revalidate');
-            header('Content-type: application/*');
-            header('Content-Disposition: attachment; filename="'.$file.'"');
-            header('Content-Length: ' . filesize($filename));
-            readfile($filename);
+            Yii::app()->request->sendFile($file, file_get_contents($filename));
         }
     }
 }

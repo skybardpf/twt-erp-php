@@ -20,8 +20,6 @@ Yii::app()->clientScript->registerScriptFile($this->asset_static.'/js/legal/mana
 <h2>Событие "<?= CHtml::decode($model->name); ?>"</h2>
 
 <?php
-    Yii::app()->clientScript->registerScriptFile($this->asset_static.'/js/legal/show_manage_files.js');
-
     if ($this instanceof Calendar_eventsController){
         $url_redirect = $this->createUrl('list', array("org_id" => $organization->primaryKey, "id" => $model->primaryKey));
         $url_delete = $this->createUrl('delete', array("org_id" => $organization->primaryKey, "id" => $model->primaryKey));
@@ -67,8 +65,8 @@ Yii::app()->clientScript->registerScriptFile($this->asset_static.'/js/legal/mana
     $div = '';
     if ($model->for_yur){
         $label = 'Для юридических лиц';
-        $organizations = Organization::model()->getListNames($model->getForceCached());
-        $contractors = Contractor::model()->getListNames($model->getForceCached());
+        $organizations = Organization::model()->getListNames($model->forceCached);
+        $contractors = Contractor::model()->getListNames($model->forceCached);
         foreach ($model->list_yur as $list){
             if ($list['type_yur'] == 'Организации'){
                 if (isset($organizations[$list['id_yur']])){
@@ -77,7 +75,7 @@ Yii::app()->clientScript->registerScriptFile($this->asset_static.'/js/legal/mana
                         $this->createUrl('organization/view', array('id' => $list['id_yur']))
                     ).'<br/>';
                 }
-            } elseif($list[$type] == 'Контрагенты'){
+            } elseif($list['type_yur'] == 'Контрагенты'){
                 if (isset($contractors[$list['id_yur']])){
                     $div .= CHtml::link(
                         $contractors[$list['id_yur']],
@@ -88,8 +86,8 @@ Yii::app()->clientScript->registerScriptFile($this->asset_static.'/js/legal/mana
         }
     } else {
         $label = 'Для юрисдикций';
-        $countries = Country::model()->getDataNames($model->getForceCached());
-        foreach ($model->countries as $country){
+        $countries = Country::model()->listNames($model->forceCached);
+        foreach ($model->list_countries as $country){
             $div .= ((isset($countries[$country])) ? $countries[$country] : '---').'<br/>';
         }
     }

@@ -8,8 +8,8 @@ class DownloadController extends Controller {
 	public function actions()
     {
         return array(
-            'download' => 'application.modules.legal.controllers.Download.DownloadAction',
-            'delete' => 'application.modules.legal.controllers.Download.DeleteAction'
+            'download' => 'application.controllers.Download.DownloadAction',
+            'delete' => 'application.controllers.Download.DeleteAction'
         );
     }
 }

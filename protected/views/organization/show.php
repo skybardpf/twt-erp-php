@@ -37,13 +37,14 @@
                 'url'   => $this->createUrl('interested_persons/index', array('org_id' => $organization->primaryKey)),
                 'active' => ($cur_tab == 'interested_persons'),
                 'itemOptions' => array('class'=>'narrow')
-            ),
+            ),*/
             array(
                 'label' => 'Календарь событий',
                 'url'   => $this->createUrl('calendar_events/list', array('org_id' => $organization->primaryKey)),
                 'active'=> ($cur_tab == 'calendar_events'),
                 'itemOptions' => array('class'=>'narrow narrower')
             ),
+            /*
             array(
                 'label' => 'Договоры',
                 'url'   => $this->createUrl('contract/list', array('org_id' => $organization->primaryKey)),

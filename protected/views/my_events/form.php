@@ -15,11 +15,10 @@
 </script>
 
 <?php
-    Yii::app()->clientScript->registerScriptFile($this->asset_static.'/js/legal/form_manage_files.js');
-    Yii::app()->clientScript->registerScriptFile($this->asset_static.'/js/legal/my_events/form.js');
     Yii::app()->clientScript->registerScriptFile($this->asset_static.'/js/jquery.json-2.4.min.js');
     Yii::app()->clientScript->registerScriptFile($this->asset_static . '/js/jquery.fileDownload.js');
     Yii::app()->clientScript->registerScriptFile($this->asset_static . '/js/legal/manage_files.js');
+    Yii::app()->clientScript->registerScriptFile($this->asset_static.'/js/my_events/form.js');
 
     if ($this instanceof Calendar_eventsController){
         $url_list = $this->createUrl('list', array("org_id" => $organization->primaryKey, "id" => $model->primaryKey));
@@ -189,9 +188,9 @@
      */
     $div_countries = '';
     $data = array();
-    if (!empty($model->countries)){
-        $countries = Country::model()->getDataNames($model->getForceCached());
-        foreach($model->countries as $v){
+    if (!empty($model->list_countries)){
+        $countries = Country::model()->listNames($model->forceCached);
+        foreach($model->list_countries as $v){
             if (isset($countries[$v])){
                 $data[] = array(
                     'id' => $v,

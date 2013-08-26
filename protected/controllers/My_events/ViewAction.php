@@ -19,8 +19,7 @@ class ViewAction extends CAction
         $controller->pageTitle .= ' | Просмотр события';
 
         $force_cache = (isset($_GET['force_cache']) && $_GET['force_cache'] == 1) ? true : false;
-        $model = Event::model()->loadModel($id, $force_cache);
-        $model->setForceCached($force_cache);
+        $model = Event::model()->findByPk($id, $force_cache);
 
         $controller->render(
             'view',

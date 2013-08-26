@@ -36,9 +36,9 @@
 ?>
 <br/><br/>
 <?php
-    $countries = Country::model()->listNames($model->getForceCached());
-    $types = ContractorTypesActivities::model()->listNames($model->getForceCached());
-    $groups = ContractorGroup::model()->getInheritedGroupsData($model->group_id, $model->getForceCached());
+    $countries = Country::model()->listNames($model->forceCached);
+    $types = ContractorTypesActivities::model()->listNames($model->forceCached);
+    $groups = ContractorGroup::model()->getInheritedGroupsData($model->group_id, $model->forceCached);
 
     $attributes = array(
         array(

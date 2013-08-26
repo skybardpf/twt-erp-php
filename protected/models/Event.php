@@ -7,7 +7,8 @@
  * @property string $id
  * @property string $name
  * @property array  $list_yur
- * @property array  $countries
+ * @property array  $list_contractor
+ * @property array  $list_countries
  * @property array  $list_files
  * @property string $event_date
  * @property bool   $for_yur       если "true" для юр.лица, если "false", то для страны.
@@ -28,12 +29,13 @@ class Event extends SOAPModel {
     const PREFIX_CACHE_LIST_MODELS_BY_ORG = '_list_models_by_org_id_';
     const PREFIX_CACHE_LIST_MODELS_ALL_ORGANIZATION = '_list_models_all_organization';
     const PREFIX_CACHE_LIST_MODELS_ALL_COUNTRIES = '_list_models_all_countries';
-    const PREFIX_CACHE_LIST_MODELS_ALL_ORG = '_list_models_all_org';
-    const PREFIX_CACHE_LIST_MODELS_BY_COUNTRY = '_list_models_by_country_id_';
+//    const PREFIX_CACHE_LIST_MODELS_ALL_ORG = '_list_models_all_org';
+//    const PREFIX_CACHE_LIST_MODELS_BY_COUNTRY = '_list_models_by_country_id_';
 
     // Для внутренних нужд
     public $div_list_yur = '';
     public $upload_files = array();
+
     public $json_exists_files;
     public $json_organizations;
     public $json_contractors;
@@ -55,6 +57,18 @@ class Event extends SOAPModel {
     protected function afterConstruct()
     {
         $this->attachBehaviors($this->behaviors());
+//        $this->id_yur    = $org->primaryKey;
+//        $this->type_yur  = "Организации";
+//        $this->from_user = true;
+//        $this->user      = SOAPModel::USER_NAME;
+        $this->list_files = array();
+        $this->list_yur = array();
+        $this->list_contractor = array();
+        $this->list_countries = array();
+        $this->json_organizations = '[]';
+        $this->json_contractors = '[]';
+        $this->json_countries = '[]';
+
         parent::afterConstruct();
     }
 
@@ -77,7 +91,7 @@ class Event extends SOAPModel {
 	 *
 	 * @return Event[]
 	 */
-	public function findAll()
+	protected function findAll()
     {
 		$filters = SoapComponent::getStructureElement($this->where);
 		$ret = $this->SOAP->listEvents(array(
@@ -91,31 +105,29 @@ class Event extends SOAPModel {
 	/**
 	 * Мероприятие
 	 *
-	 * @param $id
-	 * @return bool|Event
-	 * @internal param array $filter
-	 */
-	public function findByPk($id)
-    {
-		$ret = $this->SOAP->getEvent(array('id' => $id));
-		$ret = SoapComponent::parseReturn($ret);
-		return $this->publish_elem(current($ret), __CLASS__);
-	}
-
-    /**
-     * @return Event
+	 * @param string $id
+	 * @param bool $force_cache
+	 * @return Event
      * @throws CHttpException
-     */
-    public function createModel()
+	 */
+	public function findByPk($id, $force_cache=false)
     {
-//        $this->id_yur    = $org->primaryKey;
-//        $this->type_yur  = "Организации";
-//        $this->from_user = true;
-//        $this->user      = SOAPModel::USER_NAME;
-        $this->list_files = array();
-//        $this->list_scans = array();
-        return $this;
-    }
+        $cache_id = __CLASS__.self::PREFIX_CACHE_MODEL_PK.$id;
+        if ($force_cache || ($model = Yii::app()->cache->get($cache_id)) === false){
+            $ret = $this->SOAP->getEvent(array('id' => $id));
+            $ret = SoapComponent::parseReturn($ret);
+            $model = $this->publish_elem(current($ret), __CLASS__);
+            if ($model === null) {
+                throw new CHttpException(404, 'Не найдено событие.');
+            }
+            $model->list_yur = $this->_parseListYur($model->list_yur);
+            Yii::app()->cache->set($cache_id, $model);
+        }
+        $model->forceCached = $force_cache;
+        return $model;
+
+
+	}
 
     /**
      *  Сохранение события.
@@ -138,7 +150,7 @@ class Event extends SOAPModel {
             $countries = array();
             $list_yur = $this->getStructureOrg($data['list_yur']);
         } else {
-            $countries = $data['countries'];
+            $countries = $data['list_countries'];
             $list_yur = array();
         }
 
@@ -163,7 +175,8 @@ class Event extends SOAPModel {
         unset($data['json_contractors']);
         unset($data['json_countries']);
         unset($data['list_yur']);
-        unset($data['countries']);
+        unset($data['list_countries']);
+        unset($data['list_contractor']);
 
         $send = array(
             'data' => SoapComponent::getStructureElement($data),
@@ -174,7 +187,6 @@ class Event extends SOAPModel {
         } else {
             $send['list_countries'] = $countries;
         }
-
         $ret = $this->SOAP->saveEvent($send);
         $ret = SoapComponent::parseReturn($ret, false);
 
@@ -229,11 +241,35 @@ class Event extends SOAPModel {
     {
         $class = get_class($this);
         if ($this->primaryKey){
-            Yii::app()->cache->delete($class . self::PREFIX_CACHE_MODEL_ID . $this->primaryKey);
+            Yii::app()->cache->delete($class . self::PREFIX_CACHE_MODEL_PK. $this->primaryKey);
         }
-//        if ($this->id_yur){
-//            Yii::app()->cache->delete($class . self::PREFIX_CACHE_ID_LIST_DATA . $this->id_yur);
-//        }
+        Yii::app()->cache->delete($class . self::PREFIX_CACHE_LIST_MODELS_ALL_COUNTRIES);
+        Yii::app()->cache->delete($class . self::PREFIX_CACHE_LIST_MODELS_ALL_ORGANIZATION);
+        Yii::app()->cache->delete($class . self::PREFIX_CACHE_LIST_MODELS);
+    }
+
+    /**
+     * @return array
+     */
+    public function attributeNames()
+    {
+        return array(
+            'id',               // string
+            'name',             // string
+
+            'list_contractor',  // array
+            'list_yur',         // array
+
+            'list_countries',   // array
+            'event_date',       // date
+            'notification_date',// date
+            'period',           // string
+            'description',      // string
+            'list_files',       // array
+            'deleted',          // bool
+            'made_by_user',     // bool
+            'for_yur',          // bool
+        );
     }
 
 	/**
@@ -245,9 +281,8 @@ class Event extends SOAPModel {
 		return array(
 			'id'                => '#',                   // +
 			'name'              => 'Название',            // +
-//			'id_yur'            => '',
 			'list_yur'          => 'Юр. лица',
-			'countries'         => 'Страны',
+			'list_countries'         => 'Страны',
 			'event_date'        => 'Первая дата наступления',
 			'notification_date' => 'Первая дата напоминания',
             'period'            => 'Периодичность',
@@ -390,26 +425,6 @@ class Event extends SOAPModel {
     }
 
     /**
-     * @param string $id Идентификатор события.
-     * @param bool $force_cache
-     * @return Event
-     * @throws CHttpException
-     */
-    public function loadModel($id, $force_cache=false)
-    {
-        $cache_id = __CLASS__.self::PREFIX_CACHE_MODEL_ID.$id;
-        if ($force_cache || ($model = Yii::app()->cache->get($cache_id)) === false){
-            $model = $this->findByPk($id);
-            if ($model === null) {
-                throw new CHttpException(404, 'Не найдено событие.');
-            }
-            $model->list_yur = $this->_parseListYur($model->list_yur);
-            Yii::app()->cache->set($cache_id, $model);
-        }
-        return $model;
-    }
-
-    /**
      * Получаем список событий.
      * @param bool $force_cache
      * @return Event[]
@@ -435,8 +450,8 @@ class Event extends SOAPModel {
      */
     public function listModelsByOrg($org_id, $filter, $force_cache=false)
     {
-        $cache_id = __CLASS__.self::PREFIX_CACHE_LIST_MODELS_BY_ORG.$org_id.'_'.$filter;
-        if ($force_cache || ($data = Yii::app()->cache->get($cache_id)) === false){
+//        $cache_id = __CLASS__.self::PREFIX_CACHE_LIST_MODELS_BY_ORG.$org_id.'_'.$filter;
+//        if ($force_cache || ($data = Yii::app()->cache->get($cache_id)) === false){
             $org = $this->listModelsByAllOrg($force_cache);
             $org = $org['Организации'];
             $tmp = (isset($org[$org_id])) ? $org[$org_id] : array();
@@ -469,8 +484,8 @@ class Event extends SOAPModel {
             } else {
                 $data = $tmp;
             }
-            Yii::app()->cache->set($cache_id, $data);
-        }
+//            Yii::app()->cache->set($cache_id, $data);
+//        }
         return $data;
     }
 
@@ -482,12 +497,23 @@ class Event extends SOAPModel {
      */
     public function listModelsByCountry($country_id, $force_cache=false)
     {
-        $cache_id = __CLASS__.self::PREFIX_CACHE_LIST_MODELS_BY_COUNTRY.$country_id;
-        if ($force_cache || ($data = Yii::app()->cache->get($cache_id)) === false){
-            $countries = $this->listModelsByAllCountries($force_cache);
-            $data = (isset($countries[$country_id])) ? $countries[$country_id] : array();
-            Yii::app()->cache->set($cache_id, $data);
-        }
+//        $cache_id = __CLASS__.self::PREFIX_CACHE_LIST_MODELS_BY_COUNTRY.$country_id;
+//        if ($force_cache || ($data = Yii::app()->cache->get($cache_id)) === false){
+            $models = $this->listModelsByAllCountries($force_cache);
+            $data = array();
+            $tmp = array();
+            foreach($models as $model){
+                foreach($model->list_countries as $cid){
+                    if ($cid == $country_id){
+                        $tmp[$model->primaryKey] = $model;
+                    }
+                }
+            }
+            foreach($tmp as $v){
+                $data[] = $v;
+            }
+//            Yii::app()->cache->set($cache_id, $data);
+//        }
         return $data;
     }
 
@@ -504,13 +530,7 @@ class Event extends SOAPModel {
             $data = array();
             foreach($models as $v){
                 if (!$v->for_yur){
-                    foreach($v->countries as $c){
-                        if (isset($data[$c])){
-                            $data[$c][] = $v;
-                        } else {
-                            $data[$c] = array($v);
-                        }
-                    }
+                    $data[] = $v;
                 }
             }
             Yii::app()->cache->set($cache_id, $data);
@@ -525,8 +545,8 @@ class Event extends SOAPModel {
      */
     public function listModelsByAllOrg($force_cache=false)
     {
-        $cache_id = __CLASS__.self::PREFIX_CACHE_LIST_MODELS_ALL_ORG;
-        if ($force_cache || ($data = Yii::app()->cache->get($cache_id)) === false){
+//        $cache_id = __CLASS__.self::PREFIX_CACHE_LIST_MODELS_ALL_ORG;
+//        if ($force_cache || ($data = Yii::app()->cache->get($cache_id)) === false){
             $models = $this->listModels($force_cache);
             $data = array(
                 'Организации' => array(),
@@ -544,8 +564,8 @@ class Event extends SOAPModel {
                     }
                 }
             }
-            Yii::app()->cache->set($cache_id, $data);
-        }
+//            Yii::app()->cache->set($cache_id, $data);
+//        }
         return $data;
     }
 

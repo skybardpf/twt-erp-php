@@ -17,11 +17,15 @@ class CreateAction extends CAction
         $controller = $this->controller;
         $controller->pageTitle .= ' | Добавить событие';
 
-        $model = $controller->createModel();
+        $model = new Event();
 
         if ($_POST && !empty($_POST['Event'])) {
             $model->setAttributes($_POST['Event']);
 
+            $model->list_countries = CJSON::decode($model->json_countries);
+            if ($model->validate('json_exists_files')){
+                $model->list_files = CJSON::decode($model->json_exists_files);
+            }
             $model->upload_files = CUploadedFile::getInstancesByName('upload_files');
             $model->list_yur = $model->getStructureOrg();
 
@@ -33,9 +37,23 @@ class CreateAction extends CAction
                     $model->addError('id', $e->getMessage());
                 }
             }
-        } else {
-            $model->json_organizations = $model->json_contractors = $model->json_countries = CJSON::encode(array());
         }
+
+        $organizations = array();
+        $contractors = array();
+        foreach ($model->list_yur as $v){
+            if ($v['type_yur'] == 'Организации'){
+                $organizations[] = $v['id_yur'];
+            } elseif ($v['type_yur'] == 'Контрагенты'){
+                $contractors[] = $v['id_yur'];
+            }
+        }
+
+        $model->json_organizations = CJSON::encode($organizations);
+        $model->json_contractors = CJSON::encode($contractors);
+        $model->json_countries = CJSON::encode($model->list_countries);
+        $model->json_exists_files = CJSON::encode($model->list_files);
+
         $controller->render(
             'form',
             array(

@@ -38,7 +38,7 @@ $(document).ready(function(){
         $.ajax({
             type: 'POST',
             dataType: "html",
-            url: "/legal/my_events/_html_row_element/",
+            url: "/my_events/_html_row_element/",
             cache: false,
             data: {
                 id: pid,
@@ -99,7 +99,7 @@ $(document).ready(function(){
                     button.attr('disabled', 'disabled');
                     Loading.show();
 
-                    var id = local.data('id');
+                    var id = local.data('id')+'';
                     var json, table;
                     if (type == 'organization'){
                         json = $('#Event_json_organizations');
@@ -161,7 +161,7 @@ $(document).ready(function(){
         $.ajax({
             type: 'POST',
             dataType: "json",
-            url: "/legal/my_events/_html_form_select_element/",
+            url: "/my_events/_html_form_select_element/",
             cache: false,
             data: {
                 ids: ids,

@@ -21,3 +21,4 @@ composer.phar
 protected/runtime/*
 public/assets/*
 protected/filestorage/*
+uploads/*

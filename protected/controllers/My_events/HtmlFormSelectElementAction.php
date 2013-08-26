@@ -20,7 +20,7 @@ class HtmlFormSelectElementAction extends CAction
                     $data = Organization::model()->getListNames();
                     $str = 'Выберите организацию';
                 } else {
-                    $data = Country::getValues();
+                    $data = Country::model()->listNames();
                     $str = 'Выберите страну';
                 }
                 if (isset($_POST['ids']) && !empty($_POST['ids'])){
@@ -33,7 +33,7 @@ class HtmlFormSelectElementAction extends CAction
                         }
                     }
                 }
-                $data = array_merge(array('' => $str), $data);
+                $data[''] = $str;
 
                 $html = $this->controller->renderPartial(
                     '/my_events/_html_form_select_element',
