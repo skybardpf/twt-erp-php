@@ -7,7 +7,7 @@ class UploadDocumentException extends CException{}
 /**
  * Поведение, реализующее загрузку файлов для различных моделей документов.
  *
- * @author Skibardin A.A. <skybardpf@artektiv.ru>
+ * @author Skibardin A.A. <webprofi1983@gmail.com>
  */
 class UploadDocument extends CModelBehavior
 {
@@ -19,6 +19,9 @@ class UploadDocument extends CModelBehavior
      */
     public function afterConstruct($event)
     {
+//        var_dump($this->uploadDir);
+//        var_dump(file_exists($this->uploadDir));
+//        die;
         if (!file_exists($this->uploadDir)){
             if (!mkdir($this->uploadDir, 0777, true)){
                 throw new CHttpException(500, 'Не удалось создать директорию для загрузки документов.');
@@ -42,15 +45,6 @@ class UploadDocument extends CModelBehavior
     public function upload($path, CUploadedFile $file)
     {
         try {
-           /* var_dump('upload');
-            var_dump(realpath($this->uploadDir));die;
-
-
-            var_dump(realpath($this->uploadDir));
-            var_dump($path);
-            var_dump(realpath(
-                $upload_dir
-            ));die;*/
             $upload_dir = $this->uploadDir . DIRECTORY_SEPARATOR . $path;
 
             if (is_dir($upload_dir)){
@@ -58,7 +52,6 @@ class UploadDocument extends CModelBehavior
                     throw new UploadDocumentException('Не доступна директория для загрузки документов.');
                 }
             } else {
-//                var_dump($upload_dir);die;
                 if (!mkdir($upload_dir, 0777, true)){
                     throw new UploadDocumentException('Не удалось создать директорию для загрузки документов.');
                 }
@@ -123,13 +116,4 @@ class UploadDocument extends CModelBehavior
             }
         }
     }
-}
-
-/**
- * Class MDocumentCategory
- * Категория документа.
- */
-class MDocumentCategory extends CEnumerable{
-    const SCAN = 'scan';
-    const FILE = 'file';
 }

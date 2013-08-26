@@ -47,25 +47,4 @@ class Controller extends CController
 
 		return parent::beforeAction($action);
 	}
-
-    /**
-     *  Получаем модель организации.
-     *
-     *  @param string $org_id
-     *  @param bool $force_cache
-     *  @return Organization
-     *  @throws CHttpException
-     */
-    public function loadOrganization($org_id, $force_cache = false)
-    {
-        $cache_id = get_class(Organization::model()).'_'.$org_id;
-        if ($force_cache || ($org = Yii::app()->cache->get($cache_id)) === false){
-            $org = Organization::model()->findByPk($org_id);
-            if ($org === null) {
-                throw new CHttpException(404, 'Не найдена организация.');
-            }
-            Yii::app()->cache->set($cache_id, $org);
-        }
-        return $org;
-    }
 }

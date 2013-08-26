@@ -2,7 +2,7 @@
 /**
  * Only Ajax. Возращает html форму для выбора подписанта договора.
  *
- * @author Skibardin A.A. <skybardpf@artektiv.ru>
+ * @author Skibardin A.A. <webprofi1983@gmail.com>
  */
 class HtmlModalSelectSignatoryAction extends CAction
 {
@@ -16,7 +16,7 @@ class HtmlModalSelectSignatoryAction extends CAction
                 echo 'Передан неизвестный тип подписанта';
                 Yii::app()->end();
             }
-            $data = Individuals::getValues();
+            $data = Individual::getValues();
             if (isset($_POST['ids']) && !empty($_POST['ids'])){
                 $sel = CJSON::decode($_POST['ids']);
                 if ($sel !== null){
