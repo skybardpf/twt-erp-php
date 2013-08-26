@@ -6,9 +6,9 @@
  *
  * @var My_eventsController $this
  * @var Event[]             $data
- * @var EventForm           $model
  * @var bool                $force_cache
- * @var bool                $for_yur
+ * @var int                 $for_yur
+ * @var string              $country_id
  */
 ?>
 <div class="pull-right" style="margin-top: 15px;">
@@ -24,48 +24,44 @@
 <?php
     Yii::app()->clientScript->registerScriptFile($this->asset_static.'/js/my_events/index.js');
 
-    /* @var $form MTbActiveForm */
-    $form = $this->beginWidget('bootstrap.widgets.MTbActiveForm', array(
-        'id'    => 'form-my-events',
-        'type'  => 'horizontal',
-        'enableAjaxValidation' => true,
-        'clientOptions' => array(
-            'validateOnChange' => true,
-        ),
-
-    ));
-    if ($model->hasErrors()) {
-        echo '<br/><br/>'. $form->errorSummary($model);
+    $checked_0 = '';
+    $checked_1 = '';
+    if ($for_yur == 1){
+        $checked_0 = 'checked="checked"';
+    } else {
+        $checked_1 = 'checked="checked"';
     }
-    echo $form->radioButtonListInlineRow($model, 'for_organization', array(
-        1 => 'По организациям',
-        2 => 'По странам'
-    ));
+?>
+    <div class="control-group ">
+        <label class="control-label" for="EventForm_for_organization">Фильтр</label>
+        <div class="controls">
+            <input id="ytEventForm_for_organization" type="hidden" value="" name="EventForm[for_organization]">
+            <label class="radio inline">
+                <input id="EventForm_for_organization_0" value="1" <?= $checked_0; ?> type="radio" name="EventForm[for_organization]">
+                <label for="EventForm_for_organization_0">По организациям</label>
+            </label>
+            <label class="radio inline">
+                <input id="EventForm_for_organization_1" value="2" <?= $checked_1; ?> type="radio" name="EventForm[for_organization]">
+                <label for="EventForm_for_organization_1">По странам</label>
+            </label>
+            <span class="help-inline error" id="EventForm_for_organization_em_" style="display: none"></span>
+        </div>
+    </div>
+<?php
     $countries = Country::model()->listNames($force_cache);
     $countries[''] = '--- Все ---';
     echo CHtml::tag('div',
         array(
-            'class' => 'block_countries' . ($model->for_organization == 1 ? ' hide' : '')
+            'class' => 'block_countries' . ($for_yur == 1 ? ' hide' : '')
         ),
-        $form->dropDownListRow($model, 'country_id', $countries)
+        Chtml::dropDownList('EventForm_countries', $country_id, $countries)
     );
-    $this->widget('bootstrap.widgets.TbButton', array(
-        'buttonType'=> 'submit',
-        'type'      => 'primary',
-        'label'     => 'Фильтр'
-    ));
-    $this->endWidget();
 
     /**
      * Заполнение грида
      */
-    $provider = new CArrayDataProvider($data,
-        array(
-        'pagination' => array(
-            'pageSize' => 10000,
-        ),
-    ));
-    if ($for_yur){
+    $provider = new CArrayDataProvider($data);
+    if ($for_yur == 1){
         $organizations = Organization::model()->getListNames($force_cache);
         $contractors = Contractor::model()->getListNames($force_cache);
 

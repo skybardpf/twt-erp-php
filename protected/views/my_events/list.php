@@ -14,10 +14,14 @@
 
 <?php
     echo CHtml::link(
+        'Все',
+        $this->createUrl('list', array('org_id' => $organization->primaryKey))) .
+    ' | '
+    . CHtml::link(
         'Ближайшие 10',
         $this->createUrl('list', array('org_id' => $organization->primaryKey)).'?ten=1') .
-        ' | '
-        . CHtml::link(
+    ' | '
+    . CHtml::link(
             'На год вперед',
             $this->createUrl('list', array('org_id' => $organization->primaryKey)).'?year=1'
     ) . '<br/><br/>';

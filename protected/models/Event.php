@@ -500,6 +500,7 @@ class Event extends SOAPModel {
 //        $cache_id = __CLASS__.self::PREFIX_CACHE_LIST_MODELS_BY_COUNTRY.$country_id;
 //        if ($force_cache || ($data = Yii::app()->cache->get($cache_id)) === false){
             $models = $this->listModelsByAllCountries($force_cache);
+//        var_dump($country_id);die;
             $data = array();
             $tmp = array();
             foreach($models as $model){

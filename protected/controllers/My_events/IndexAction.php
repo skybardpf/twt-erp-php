@@ -18,36 +18,25 @@ class IndexAction extends CAction
         $controller->pageTitle .= ' | Список событий';
 
         $force_cache = (isset($_GET['force_cache']) && $_GET['force_cache'] == 1) ? true : false;
-        $model = new EventForm();
-        $class = get_class($model);
-
-        $for_yur = true;
-        if ($_POST && !empty($_POST[$class])) {
-            $model->setAttributes($_POST[$class]);
-            $data = array();
-            if ($model->validate()) {
-                if ($model->for_organization == 1){
-                    $data = Event::model()->listModelsAllOrganization($force_cache);
-                } else {
-                    $for_yur = false;
-                    if (empty($model->country_id)){
-                        $data = Event::model()->listModelsByAllCountries($force_cache);
-                    } else {
-                        $data = Event::model()->listModelsByCountry($model->country_id, $force_cache);
-                    }
-                }
-            }
-        } else {
+        $for_yur = Yii::app()->request->getQuery('for_yur', 1);
+        $country_id = Yii::app()->request->getQuery('country_id', '');
+        if ($for_yur == 1){
             $data = Event::model()->listModelsAllOrganization($force_cache);
+        } else {
+            if (empty($country_id)){
+                $data = Event::model()->listModelsByAllCountries($force_cache);
+            } else {
+                $data = Event::model()->listModelsByCountry($country_id, $force_cache);
+            }
         }
 
         $controller->render(
             'index',
             array(
                 'data' => $data,
-                'model' => $model,
                 'for_yur' => $for_yur,
-                'force_cache' => $force_cache
+                'force_cache' => $force_cache,
+                'country_id' => $country_id
             )
         );
     }
