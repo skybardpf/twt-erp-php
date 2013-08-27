@@ -12,12 +12,14 @@ class IndexAction extends CAction
     public function run()
     {
         /**
-         * @var Settlement_accountsController $controller
+         * @var Settlement_accountController $controller
          */
         $controller = $this->controller;
         $controller->pageTitle .= ' | Список счетов';
 
-        $data = $controller->getDataProvider();
+        $force_cache = (Yii::app()->request->getQuery('force_cache') == 1);
+        $data = SettlementAccount::model()->listModels($force_cache);
+
         $controller->render(
             'index',
             array(

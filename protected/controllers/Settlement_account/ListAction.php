@@ -13,12 +13,13 @@ class ListAction extends CAction
     public function run($org_id)
     {
         /**
-         * @var Settlement_accountsController $controller
+         * @var Settlement_accountController $controller
          */
         $controller = $this->controller;
         $controller->pageTitle .= ' | Список банковских счетов';
 
-        $org = $controller->loadOrganization($org_id);
+        $force_cache = (Yii::app()->request->getQuery('force_cache') == 1);
+        $org = Organization::model()->findByPk($org_id, $force_cache);
         $data = $controller->getDataProviderForOrganization($org);
 
         $controller->render('/organization/show', array(
