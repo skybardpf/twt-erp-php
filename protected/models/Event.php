@@ -187,6 +187,12 @@ class Event extends SOAPModel {
         } else {
             $send['list_countries'] = $countries;
         }
+        ob_start();
+        debug_print_backtrace();
+        $b = ob_get_contents();
+        ob_end_clean();
+
+        file_put_contents('/tmp/save_event.txt', "\r\n----".$b, FILE_APPEND);
         $ret = $this->SOAP->saveEvent($send);
         $ret = SoapComponent::parseReturn($ret, false);
 

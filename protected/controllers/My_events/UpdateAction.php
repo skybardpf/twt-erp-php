@@ -23,12 +23,18 @@ class UpdateAction extends CAction
 
         $force_cache = (isset($_GET['force_cache']) && $_GET['force_cache'] == 1) ? true : false;
         $model = Event::model()->findByPk($id, $force_cache);
+
+        if(isset($_POST['ajax']) && $_POST['ajax']==='form-my-events') {
+            echo CActiveForm::validate($model);
+            Yii::app()->end();
+        }
+
         if (!$model->made_by_user){
             throw new CHttpException(500, 'Нельзя редактировать событие, созданное администратором.');
         }
-
-        if ($_POST && !empty($_POST['Event'])) {
-            $model->setAttributes($_POST['Event']);
+        $data = Yii::app()->request->getPost(get_class($model));
+        if ($data) {
+            $model->setAttributes($data);
 
             $model->list_countries = CJSON::decode($model->json_countries);
             if ($model->validate('json_exists_files')){
