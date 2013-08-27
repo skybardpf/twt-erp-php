@@ -2,7 +2,7 @@
 /**
  * Удаление банковского счет.
  *
- * @author Skibardin A.A. <skybardpf@artektiv.ru>
+ * @author Skibardin A.A. <webprofi1983@gmail.com>
  */
 class DeleteAction extends CAction
 {

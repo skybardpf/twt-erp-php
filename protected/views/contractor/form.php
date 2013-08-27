@@ -1,0 +1,246 @@
+<?php
+/**
+ * Форма редактирования данных о контрагенте.
+ *
+ * @author Skibardin A.A. <webprofi1983@gmail.com>
+ *
+ * @var ContractorController    $this
+ * @var Contractor              $model
+ */
+?>
+
+<?php
+    Yii::app()->clientScript->registerScriptFile($this->asset_static.'/js/jquery.json-2.4.min.js');
+    Yii::app()->clientScript->registerScriptFile($this->asset_static.'/js/legal/organization/form.js');
+    Yii::app()->clientScript->registerScriptFile($this->asset_static.'/js/legal/contractor/form.js');
+
+    echo '<h2>'.($model->primaryKey ? 'Редактирование' : 'Создание').' контрагента</h2>';
+
+    /* @var $form MTbActiveForm */
+    $form = $this->beginWidget('bootstrap.widgets.MTbActiveForm', array(
+        'id' => 'form-contractor',
+        'type' => 'horizontal',
+        'enableAjaxValidation' => true,
+//        'enableClientValidation'=>true,
+        'clientOptions' => array(
+//            'validateOnSubmit' => true,
+            'validateOnChange' => true,
+        ),
+    ));
+
+    $this->widget('bootstrap.widgets.TbButton', array(
+        'buttonType'=> 'submit',
+        'type'      => 'primary',
+        'label'     => 'Сохранить'
+    ));
+    echo '&nbsp;';
+    $this->widget('bootstrap.widgets.TbButton', array(
+        'buttonType' => 'link',
+        'label'      => 'Отмена',
+        'url' => $model->primaryKey
+            ? $this->createUrl('view', array('id' => $model->primaryKey))
+            : $this->createUrl('index')
+    ));
+
+    if ($model->hasErrors()) {
+        echo '<br/><br/>'. $form->errorSummary($model);
+    }
+?>
+
+<fieldset>
+<?php
+    // Опции для JUI селектора даты
+    $jui_date_options = array(
+        'language' => 'ru',
+        'options'=>array(
+            'showAnim' => 'fold',
+            'dateFormat' => 'yy-mm-dd',
+            'changeMonth' => true,
+            'changeYear' => true,
+            'showOn' => 'button',
+            'constrainInput' => 'true',
+            'yearRange' => '1950:2100',
+        ),
+        'htmlOptions'=>array(
+            'style' => 'height:20px;'
+        )
+    );
+
+    echo $form->dropDownListRow($model, 'group_id', ContractorGroup::model()->getDropDownData($model->forceCached));
+    echo $form->dropDownListRow($model, 'country', Country::model()->listNames($model->forceCached), array('class' => 'list-countries'));
+    echo $form->dropDownListRow($model, 'okopf', CodesOKOPF::model()->listNames($model->forceCached));
+    echo $form->textFieldRow($model, 'name');
+    echo $form->textFieldRow($model, 'full_name');
+?>
+
+<div class="control-group">
+    <?= $form->labelEx($model, 'sert_date', array('class' => 'control-label')); ?>
+    <div class="controls">
+    <?php
+        $this->widget('zii.widgets.jui.CJuiDatePicker',array_merge(
+            array(
+                'model'     => $model,
+                'attribute' => 'sert_date'
+            ), $jui_date_options
+        ));
+        echo $form->error($model, 'sert_date');
+    ?>
+    </div>
+</div>
+    <!-- НАЧАЛО поля для российских фирм -->
+    <div id="rus_fields">
+        <?php
+        echo $form->textFieldRow($model, 'inn');
+        echo $form->textFieldRow($model, 'kpp');
+        ?>
+    </div>
+    <!-- КОНЕЦ поля для российских фирм -->
+
+    <!-- НАЧАЛО поля для иностранных фирм -->
+    <div id="foreign_fields">
+        <?php
+        echo $form->textFieldRow($model, 'vat_nom');
+        echo $form->textFieldRow($model, 'reg_nom');
+        echo $form->textFieldRow($model, 'sert_nom');
+        ?>
+    </div>
+    <!-- КОНЕЦ поля для иностранных фирм -->
+
+<!--<div class="control-group">
+    <?/*= $form->labelEx($model, 'profile', array('class' => 'control-label')); */?>
+    <div class="controls">
+        <input class="input-profile"
+            id = '<?/*= get_class($model).'_profile'; */?>'
+            type="text"
+            name="<?/*= get_class($model).'[profile]'; */?>"
+            data-placeholder="Виды деятельности"
+            data-tnved="1"
+            data-minimum_input_length="4"
+            data-allow_clear="1"
+            data-ajax="1"
+            data-ajax_url="<?/*= $this->createUrl('get_activities_types'); */?>"
+            value="<?/*= $model->profile; */?>">
+        <?/*= $form->error($model, 'profile'); */?>
+    </div>
+</div>-->
+
+<?php
+    echo $form->dropDownListRow($model, 'profile', ContractorTypesActivities::model()->listNames($model->forceCached));
+    echo $form->textFieldRow($model, 'yur_address');
+    echo $form->textFieldRow($model, 'fact_address');
+    echo $form->dropDownListRow($model, 'gendirector', ContactPersonForContractors::model()->listNames($model->forceCached));
+    echo $form->textFieldRow($model, 'email');
+    echo $form->textFieldRow($model, 'phone');
+    echo $form->textFieldRow($model, 'fax');
+
+    $persons = Individual::model()->listNames($model->forceCached);
+    $docs = PowerAttorneyForContractor::model()->listNames($model->primaryKey, $model->forceCached);
+
+    $data_signatories = array();
+    foreach ($model->signatories as $v){
+        $data_signatories[] = array(
+            'id' => $v['id'].'_'.$v['doc_id'],
+            'fio' => (isset($persons[$v['id']])
+                ? CHtml::link($persons[$v['id']], $this->createUrl('Individual/view', array('id' => $v['id'])))
+                : '---'
+            ),
+            'doc' => (isset($docs[$v['doc_id']])
+                ? CHtml::link($docs[$v['doc_id']], $this->createUrl('power_attorney_contractor/view', array('id' => $v['doc_id'])))
+                : '---'
+            ),
+            'delete' => $this->widget('bootstrap.widgets.TbButton', array(
+                'buttonType' => 'button',
+                'type' => 'primary',
+                'label' => 'Удалить',
+                'htmlOptions' => array(
+                    'class' => 'del-signatory',
+                    'data-id' => $v['id'].'_'.$v['doc_id'],
+                )
+            ), true)
+        );
+    }
+    echo $form->hiddenField($model, 'json_signatories');
+?>
+    <div class="control-group">
+        <?= $form->labelEx($model, 'signatories', array('class' => 'control-label')); ?>
+        <div class="controls">
+        <?php
+            $this->widget('bootstrap.widgets.TbGridView',
+                array(
+                    'id' => 'grid-signatories',
+                    'type' => 'striped bordered condensed',
+                    'dataProvider' => new CArrayDataProvider($data_signatories),
+                    'template' => "{items}{pager}",
+                    'columns' => array(
+                        array(
+                            'name' => 'fio',
+                            'header' => 'ФИО',
+                            'type' => 'raw',
+                            'htmlOptions' => array(
+                                'style' => 'width: 45%',
+                            )
+                        ),
+                        array(
+                            'name' => 'doc',
+                            'header' => 'Тип',
+                            'type' => 'raw',
+                            'htmlOptions' => array(
+                                'style' => 'width: 45%',
+                            )
+                        ),
+//                        array(
+//                            'name' => 'delete',
+//                            'header' => '',
+//                            'type' => 'raw'
+//                        ),
+                    )
+                )
+            );
+
+//            $this->widget('bootstrap.widgets.TbButton', array(
+//                'buttonType'=> 'button',
+//                'type' => 'primary',
+//                'label' => 'Добавить',
+//                'htmlOptions' => array(
+//                    'class' => 'add-signatory',
+//                    'data-type' => 'signatory',
+//                )
+//            ));
+        ?>
+        </div>
+    </div>
+<?php
+    echo $form->textAreaRow($model, 'comment');
+?>
+
+</fieldset>
+
+<?php $this->endWidget(); ?>
+
+<?php
+/**
+ * Модальное окошко для подписанта
+ */
+$this->beginWidget('bootstrap.widgets.TbModal', array('id'=>'dataModalSignatory'));
+?>
+    <div class="modal-header">
+        <a class="close" data-dismiss="modal">×</a>
+        <h4><?=Yii::t("menu", "Выберите довереность")?></h4>
+    </div>
+    <div class="modal-body"></div>
+    <div class="modal-footer">
+        <?php
+        $this->widget('bootstrap.widgets.TbButton', array(
+            'label' => Yii::t("menu", "Сохранить"),
+            'url'   => '#',
+            'htmlOptions' => array('class'=>'button_save', 'data-dismiss'=>'modal'),
+        ));
+
+        $this->widget('bootstrap.widgets.TbButton', array(
+            'label' => Yii::t("menu", "Отмена"),
+            'url'   => '#',
+            'htmlOptions' => array('data-dismiss'=>'modal'),
+        ));
+        ?>
+    </div>
+<?php $this->endWidget(); ?>

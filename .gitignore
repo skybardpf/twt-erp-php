@@ -1,10 +1,24 @@
-.idea/*
-#protected/modules/admin/*
+# phpstorm project files
+.idea
+
+# netbeans project files
+nbproject
+
+# zend studio for eclipse project files
+.buildpath
+.project
+.settings
+
+# windows thumbnail cache
+Thumbs.db
+
+# composer vendor dir
+/yii/vendor
+
+# composer itself is not needed
+composer.phar
+
 protected/runtime/*
 public/assets/*
-uploads/*
-#assets/*
-#index.php
-public/ext4/*
-#protected/assets/js/*
 protected/filestorage/*
+uploads/*

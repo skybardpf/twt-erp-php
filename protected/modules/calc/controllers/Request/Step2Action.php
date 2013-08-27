@@ -2,7 +2,7 @@
 /**
  * Второй шаг - выбор компании и типа страхования (если ничего не выбрано - повторить с ошибкой)
  *
- * @author Skibardin A.A. <skybardpf@artektiv.ru>
+ * @author Skibardin A.A. <webprofi1983@gmail.com>
  */
 class Step2Action extends CAction
 {

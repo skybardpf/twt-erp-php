@@ -1,7 +1,7 @@
 <?php
 /**
  * Only Ajax. Управление менеджерами счета.
- * @author Skibardin A.A. <skybardpf@artektiv.ru>
+ * @author Skibardin A.A. <webprofi1983@gmail.com>
  */
 class SelectedManagingPersonsAction extends CAction
 {
@@ -14,7 +14,7 @@ class SelectedManagingPersonsAction extends CAction
         if (Yii::app()->request->isAjaxRequest) {
             try {
                 $selected_ids = CJSON::decode($selected_ids);
-                $data = Individuals::getValues();
+                $data = Individual::getValues();
                 foreach ($selected_ids as $pid){
                     if (isset($data[$pid])){
                         unset($data[$pid]);

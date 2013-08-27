@@ -15,13 +15,13 @@ class Corporatization_basketController extends Controller
 
     private $_titles = array(
             'organizations' => array(),
-            'individuals' => array(),
+            'Individual' => array(),
         );
 
     public function actionIndex()
     {
         $this->_titles['organizations'] = Organization::model()->getFullData();
-        $this->_titles['individuals'] = Individuals::getValues();
+        $this->_titles['individuals'] = Individual::getValues();
 
         /* --------- ДАННЫЕ*/
         $raw_data = '[

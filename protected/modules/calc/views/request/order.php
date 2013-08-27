@@ -13,7 +13,7 @@ Yii::app()->clientScript->registerScriptFile($this->module->baseAssets.'/js/Fram
 Yii::app()->clientScript->registerScriptFile($this->module->baseAssets.'/js/order.js');
 Yii::app()->clientScript->registerScriptFile($this->module->baseAssets.'/js/numeric.js');
 
-//$countries = Countries::model()->getDataNames();
+//$countries = Country::model()->getDataNames();
 ?>
 <h2 xmlns="http://www.w3.org/1999/html"><?=$this->controller_title?>. Шаг 3</h2>
 <?php

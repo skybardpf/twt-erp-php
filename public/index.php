@@ -15,6 +15,9 @@ if ($_SERVER['HTTP_HOST'] == 'twt-erp.twtconsult.ru') {
     $config = dirname(__FILE__).'/../protected/config/demo.php';
 
 } else {
+    ini_set('display_error', 1);
+    ini_set('error_reporting', E_ALL);
+
     defined('YII_DEBUG') or define('YII_DEBUG',true);
     defined('YII_TRACE_LEVEL') or define('YII_TRACE_LEVEL',3);
     $config = dirname(__FILE__).'/../protected/config/dev.php';

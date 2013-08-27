@@ -2,7 +2,7 @@
 /**
  * Форма редактирования договора.
  *
- * @author Skibardin A.A. <skybardpf@artektiv.ru>
+ * @author Skibardin A.A. <webprofi1983@gmail.com>
  *
  * @var ContractController  $this
  * @var Contract            $model
@@ -145,7 +145,7 @@
     echo $form->dropDownListRow($model, 'currency', Currencies::getValues());
     echo $form->textFieldRow($model, 'dogovor_summ');
     echo $form->textFieldRow($model, 'everymonth_summ');
-    echo $form->dropDownListRow($model, 'responsible', Individuals::getValues());
+    echo $form->dropDownListRow($model, 'responsible', Individual::getValues());
 
     $contractors = Contractor::model()->getListNames();
     $contractor = (isset($contractors[$model->le_id]) ? $contractors[$model->le_id] : '---');
@@ -161,9 +161,9 @@
 
 <?php
     /**
-     * @var Individuals $persons
+     * @var Individual $persons
      */
-    $persons = Individuals::getValues();
+    $persons = Individual::getValues();
     /**
      * Генерируем таблицу для отображения подписантов организации
      */
@@ -173,7 +173,7 @@
         $data[] = array(
             'id' => $id,
             'name' => (isset($persons[$id])
-                ? CHtml::link($persons[$id], $this->createUrl('individuals/view', array('id' => $id)))
+                ? CHtml::link($persons[$id], $this->createUrl('Individual/view', array('id' => $id)))
                 : '---'
             ),
             'delete' => $this->widget('bootstrap.widgets.TbButton', array(
@@ -231,7 +231,7 @@
         $data[] = array(
             'id' => $id,
             'name' => (isset($persons[$id])
-                ? CHtml::link($persons[$id], $this->createUrl('individuals/view', array('id' => $id)))
+                ? CHtml::link($persons[$id], $this->createUrl('Individual/view', array('id' => $id)))
                 : '---'
             ),
             'delete' => $this->widget('bootstrap.widgets.TbButton', array(

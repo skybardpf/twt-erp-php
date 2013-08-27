@@ -1,7 +1,7 @@
 /**
  * @global {Number | NULL} window.organization_id
  *
- * @author Skibardin A.A. <skybardpf@artektiv.ru>
+ * @author Skibardin A.A. <webprofi1983@gmail.com>
  */
 $(document).ready(function(){
     $('button.del-type-contract').on('click', del_type_contract);

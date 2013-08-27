@@ -2,7 +2,7 @@
 /**
  * Only Ajax. Возращает html. Новую строка для вставки в таблицу подписантов.
  *
- * @author Skibardin A.A. <skybardpf@artektiv.ru>
+ * @author Skibardin A.A. <webprofi1983@gmail.com>
  */
 class HtmlRowSignatoryAction extends CAction
 {
