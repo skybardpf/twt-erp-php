@@ -25,9 +25,9 @@ class Calendar_eventsController extends Controller{
             /**
              * Редирект на My_eventsController
              */
-            'delete_file' => 'application.controllers.My_events.Delete_fileAction',
-            'download_archive' => 'application.controllers.My_events.Download_archiveAction',
-            'download_file' => 'application.controllers.My_events.Download_fileAction',
+//            'delete_file' => 'application.controllers.My_events.Delete_fileAction',
+//            'download_archive' => 'application.controllers.My_events.Download_archiveAction',
+//            'download_file' => 'application.controllers.My_events.Download_fileAction',
 
         );
     }

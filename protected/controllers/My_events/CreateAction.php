@@ -19,8 +19,14 @@ class CreateAction extends CAction
 
         $model = new Event();
 
-        if ($_POST && !empty($_POST['Event'])) {
-            $model->setAttributes($_POST['Event']);
+        if(isset($_POST['ajax']) && $_POST['ajax']==='form-my-events') {
+            echo CActiveForm::validate($model);
+            Yii::app()->end();
+        }
+
+        $data = Yii::app()->request->getPost(get_class($model));
+        if ($data) {
+            $model->setAttributes($data);
 
             $model->list_countries = CJSON::decode($model->json_countries);
             if ($model->validate('json_exists_files')){
