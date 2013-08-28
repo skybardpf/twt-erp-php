@@ -17,6 +17,7 @@ return array(
 		'application.models.*',
 		'application.components.*',
 		'application.components.Enumerable.*',
+		'application.components.Validators.*',
 	),
 
     'defaultController' => 'organization',

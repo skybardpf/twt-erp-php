@@ -1,24 +1,25 @@
 <?php
 /**
- * Удаление банковского счет.
- *
+ * Удаление банковского счета.
  * @author Skibardin A.A. <webprofi1983@gmail.com>
  */
 class DeleteAction extends CAction
 {
     /**
-     * Удаление банковского счет.
+     * Удаление банковского счета.
      * @param string $id Идентификатор договора
+     * @throws CHttpException
      */
     public function run($id)
     {
         /**
-         * @var Settlement_accountsController $controller
+         * @var Settlement_accountController $controller
          */
         $controller = $this->controller;
 
-        $model = $controller->loadModel($id);
-        $org = $controller->loadOrganization($model->id_yur);
+        $forceCached = (Yii::app()->request->getQuery('force_cache') == 1);
+        $model = SettlementAccount::model()->findByPk($id, $forceCached);
+        $org = Organization::model()->findByPk($model->id_yur, $forceCached);
 
         if (Yii::app()->request->isAjaxRequest) {
             $ret = array();
@@ -53,7 +54,7 @@ class DeleteAction extends CAction
         }
 
         $controller->render('/organization/show', array(
-            'content' => $controller->renderPartial('/settlement_accounts/delete',
+            'content' => $controller->renderPartial('/settlement_account/delete',
                 array(
                     'model' => $model,
                     'organization' => $org

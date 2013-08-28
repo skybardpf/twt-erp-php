@@ -27,11 +27,12 @@
                 'url'   => $this->createUrl('documents/list', array('org_id' => $organization->primaryKey)),
                 'active'=> ($cur_tab == 'documents')
             ),
-            /*array(
+            array(
                 'label' => 'Банковские счета',
-                'url'   => $this->createUrl('settlement_accounts/list', array('org_id' => $organization->primaryKey)),
+                'url'   => $this->createUrl('settlement_account/list', array('org_id' => $organization->primaryKey)),
                 'active'=> ($cur_tab == 'settlements')
             ),
+            /*
             array(
                 'label' => 'Заинтересованные лица',
                 'url'   => $this->createUrl('interested_persons/index', array('org_id' => $organization->primaryKey)),

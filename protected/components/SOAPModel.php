@@ -84,6 +84,9 @@ abstract class SOAPModel extends CModel
     protected function afterConstruct()
 	{
 		$this->SOAP = Yii::app()->soap;
+        if ($this->SOAP === null){
+            throw new CHttpException(500, 'Не создан объект SOAP сервера');
+        }
 		parent::afterConstruct();
 	}
 

@@ -1,13 +1,12 @@
 <?php
 /**
- *  Банковские счета. Просмотр информации о банковском счете.
+ * Банковские счета. Просмотр информации о банковском счете.
  *
- *  User: Skibardin A.A.
- *  Date: 02.07.13
+ * @author Skibardin A.A. <webprofi1983@gmail.com>
  *
- *  @var $this          Settlement_accountsController
- *  @var $model         SettlementAccount
- *  @var $organization  Organization
+ * @var Settlement_accountController    $this
+ * @var SettlementAccount               $model
+ * @var Organization                    $organization
  */
 ?>
 
@@ -45,41 +44,77 @@
 
 <?php
     $person = '';
-    $p = Individual::getValues();
+    $p = Individual::model()->listNames($model->forceCached);
     foreach ($model->managing_persons as $pid){
         if (isset($p[$pid])){
-            $person .= CHtml::link($p[$pid], $this->createUrl('/legal/Individual/view/', array('id' => $pid)));
+            $person .= '&bull;&nbsp;'.CHtml::link($p[$pid], $this->createUrl('individual/view/', array('id' => $pid)));
         } else {
             $person .= $pid;
         }
         $person .= '<br/>';
     }
-
-    $cur = Currencies::getValues();
-    $cur = (isset($cur[$model->cur])) ? $cur[$model->cur] : 'Не указано';
+    $currencies = Currency::model()->listNames($model->forceCached);
+    $management_method = SettlementAccount::getManagementMethods();
+    $model->management_method = (isset($management_method[$model->management_method])) ? $management_method[$model->management_method] : '---';
 
 	$this->widget('bootstrap.widgets.TbDetailView', array(
 		'data' => $model,
 		'attributes' => array(
-            array('name' => 's_nom',        'label' => 'Номер счета'),
-            array('name' => 'iban',         'label' => 'IBAN'),
-            array('name' => 'cur_name',     'label' => 'Валюта', 'value' => $cur),
-            array('name' => 'bank_name',    'label' => 'Банк'),
-            array('name' => 'vid',          'label' => 'Вид счета'),
-            array('name' => 'service',      'label' => 'Вид обслуживания счета'),
-			array('name' => 'name',         'label' => 'Представление'),
-            array('name' => 'data_open',    'label' => 'Дата открытия'),
-//
-            array('name' => 'address',      'label' => 'Адрес отделения'),
-            array('name' => 'contact',      'label' => 'Контакты в отделении'),
-//
             array(
-                'name'  => 'list_managing_persons',
+                'name' => 's_nom',
+                'label' => 'Номер счета'
+            ),
+            array(
+                'name' => 'iban',
+                'label' => 'IBAN'
+            ),
+            array(
+                'name' => 'cur_name',
+                'label' => 'Валюта',
+                'value' => (isset($currencies[$model->currency])) ? $currencies[$model->currency] : '---'
+            ),
+            array(
+                'name' => 'bank_name',
+                'label' => 'Банк'
+            ),
+            array(
+                'name' => 'type_account',
+                'label' => 'Вид счета'
+            ),
+            array(
+                'name' => 'type_service',
+                'label' => 'Вид обслуживания счета'
+            ),
+			array(
+                'name' => 'typeView',
+                'label' => 'Представление'
+            ),
+            array(
+                'name' => 'data_open',
+                'label' => 'Дата открытия'
+            ),
+            array(
+                'name' => 'correspondent_bank_name',
+                'label' => 'Банк-корреспондент'
+            ),
+            array(
+                'name' => 'address',
+                'label' => 'Адрес отделения'
+            ),
+            array(
+                'name' => 'contact',
+                'label' => 'Контакты в отделении'
+            ),
+            array(
+                'name'  => 'managing_persons',
                 'type'  => 'raw',
                 'label' => 'Управляющие персоны',
                 'value' => $person
             ),
-            array('name' => 'management_method', 'label' => 'Метод управления'),
+            array(
+                'name' => 'management_method',
+                'label' => 'Метод управления',
+            ),
 		))
 	);
 ?>

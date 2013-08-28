@@ -22,11 +22,11 @@
             'url'   => $this->createUrl('my_events/'),
             'active'=> ($this->menu_current == 'my_events')
         ),
-//        array(
-//            'label' => 'Банковские счета',
-//            'url'   => $this->createUrl('settlement_account/'),
-//            'active'=> ($this->menu_current == 'settlements')
-//        ),
+        array(
+            'label' => 'Банковские счета',
+            'url'   => $this->createUrl('settlement_account/'),
+            'active'=> ($this->menu_current == 'settlements')
+        ),
         /*
         array(
             'label' => 'Корзина акционирования',

@@ -13,7 +13,7 @@ class GetBankNameAction extends CAction
     {
         if (Yii::app()->request->isAjaxRequest) {
             echo CJSON::encode(array(
-                'bank_name' => SettlementAccount::getBankName($bank)
+                'bank_name' => Bank::model()->getName($bank)
             ));
             Yii::app()->end();
         }

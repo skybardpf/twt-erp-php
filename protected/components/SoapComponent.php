@@ -1,5 +1,10 @@
 <?php
 /**
+ * Class SoapParseException
+ */
+class SoapParseException extends CException{}
+
+/**
  * Компонент SOAP для работы с ТВТ 1С
  *
  * @method array __getFunctions() standard soap WSDL __getFunctions method
@@ -34,8 +39,8 @@
  * @method mixed saveFreeDocument           Сохранение
  * @method mixed deleteFreeDocument         Удаление
  *
- * Банковские счета
- * @method mixed listSettlementAccounts     Список
+ * Банковские счета (@class SettlementAccount)
+ * @method mixed listSettlementAccount     Список
  * @method mixed getSettlementAccount       Просмотр
  * @method mixed saveSettlementAccount      Сохранение
  * @method mixed deleteSettlementAccount    Удаление
@@ -64,42 +69,47 @@
  * @method mixed saveBeneficiary            Сохранение
  * @method mixed deleteBeneficiary          Удаление
  *
- * Страны {@see Country}
+ * Страны {@class Country}
  * @method mixed listCountries
  *
- * Контактные лица для контрагентов {@see ContactPersonForContractors}
+ * Контактные лица для контрагентов {@class ContactPersonForContractors}
  * @method mixed listContactPersonsForContractors(array $data)
  *
- * Контактные лица для организаций {@see ContactPersonForOrganization}
+ * Контактные лица для организаций {@class ContactPersonForOrganization}
  * @method mixed listContactPersonsForOrganization(array $data)
  *
- * Коды ОКОПФ {@see CodesOKOPF}
+ * Коды ОКОПФ {@class CodesOKOPF}
  * @method mixed listOKOPF
  *
- * Виды договоров {@see ContractType}
+ * Виды договоров {@class ContractType}
  * @method mixed listTypesOfContract
  *
- * Договоры организации {@see Contract}
+ * Договоры организации {@class Contract}
  * @method mixed listContracts(array $data)
  * @method mixed getContract(array $data)
  * @method mixed saveContract(array $data)
  * @method mixed deleteContract(array $data)
  *
- * Виды деятельности контрагентов (@see ContractorTypesActivities)
+ * Виды деятельности контрагентов (@class ContractorTypesActivities)
  * @method mixed listTypeActContr           Список
  *
- * Место расположения суда. (@see CourtLocation)
+ * Место расположения суда. (@class CourtLocation)
  * @method mixed listCourtLocations(array $data)
  *
- * Место заключения контрактов. (@see ContractPlace)
+ * Место заключения контрактов. (@class ContractPlace)
  * @method mixed listContractPlaces(array $data)
  *
- * Группы контрагентов. (@see ContractorGroup)
+ * Группы контрагентов. (@class ContractorGroup)
  * @method mixed listContractorGroups(array $data)
  * @method mixed getContractorGroup(array $data)
  * @method mixed saveContractorGroup(array $data)
  * @method mixed deleteContractorGroup(array $data)
  *
+ * Валюты. (@class Currency)
+ * @method mixed listCurrencies(array $data)
+ *
+ * Банк. (@class Bank)
+ * @method mixed listBanks(array $data)
  */
 class SoapComponent extends CApplicationComponent
 {
@@ -153,7 +163,6 @@ class SoapComponent extends CApplicationComponent
 
 	/**
 	 * @static
-	 *
 	 * @param $data
 	 * @param bool $json
 	 *
@@ -163,10 +172,10 @@ class SoapComponent extends CApplicationComponent
 	 *
 	 * @return array
 	 */
-	static public function parseReturn($data, $json = true)
+	public static function parseReturn($data, $json = true)
     {
 		if (is_string($data->return) && stripos($data->return, 'error') === 0) {
-			throw new CException($data->return);
+			throw new SoapParseException($data->return);
 		} else {
 			if (is_string($data->return) && $json) {
                 $data = CJSON::decode($data->return);
@@ -190,7 +199,6 @@ class SoapComponent extends CApplicationComponent
 
 		$this->_connection_options = array_merge($this->_connection_options, $this->connection_options);
 
-		$time = microtime(true);
 		Yii::log('Connecting to '.$this->wsdl, CLogger::LEVEL_INFO, 'soap');
 		try {
 			$this->soap_client = new SoapClient($this->wsdl, $this->_connection_options);
@@ -250,6 +258,7 @@ class SoapComponent extends CApplicationComponent
             $this->delay_init();
         }
 
+        $time = microtime(true);
 		if ($this->soap_method_exists($name)) {
 			try {
 				if (method_exists($this->soap_client, $name)) {
@@ -257,17 +266,25 @@ class SoapComponent extends CApplicationComponent
 				} else {
 					$ret = $this->soap_client->__soapCall($name, $params);
 				}
+//                var_dump($ret);die;
 				if (YII_DEBUG) {
 					$time = microtime(true) - $time;
+//                    Yii::log(
+//						'function ' . $name . ' in '.$time.' seconds with data: ' .
+//							(defined('JSON_UNESCAPED_UNICODE')
+//								? json_encode($ret, JSON_UNESCAPED_UNICODE)
+//								: preg_replace('#\\\\u([0-9a-f]{4})#se','iconv("UTF-16BE","UTF-8",pack("H4","$1"))',json_encode($ret))
+//							),
+//						CLogger::LEVEL_INFO,
+//						'soap'
+//					);
+
                     Yii::log(
-						'function ' . $name . ' in '.$time.' seconds with data: ' .
-							(defined('JSON_UNESCAPED_UNICODE')
-								? json_encode($ret, JSON_UNESCAPED_UNICODE)
-								: preg_replace('#\\\\u([0-9a-f]{4})#se','iconv("UTF-16BE","UTF-8",pack("H4","$1"))',json_encode($ret))
-							),
-						CLogger::LEVEL_INFO,
-						'soap'
-					);
+                        'function ' . $name . ' in '.$time.' seconds with data: ' .
+                        CJSON::encode($ret),
+                        CLogger::LEVEL_INFO,
+                        'soap'
+                    );
 				}
 
 				return $ret;

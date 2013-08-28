@@ -17,13 +17,14 @@ class IndexAction extends CAction
         $controller = $this->controller;
         $controller->pageTitle .= ' | Список счетов';
 
-        $force_cache = (Yii::app()->request->getQuery('force_cache') == 1);
-        $data = SettlementAccount::model()->listModels($force_cache);
+        $forceCached = (Yii::app()->request->getQuery('force_cache') == 1);
+        $data = SettlementAccount::model()->listModels($forceCached);
 
         $controller->render(
             'index',
             array(
-                'data' => $data
+                'data' => $data,
+                'forceCached' => $forceCached
             )
         );
     }

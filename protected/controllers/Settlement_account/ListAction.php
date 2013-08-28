@@ -18,15 +18,16 @@ class ListAction extends CAction
         $controller = $this->controller;
         $controller->pageTitle .= ' | Список банковских счетов';
 
-        $force_cache = (Yii::app()->request->getQuery('force_cache') == 1);
-        $org = Organization::model()->findByPk($org_id, $force_cache);
-        $data = $controller->getDataProviderForOrganization($org);
+        $forceCache = (Yii::app()->request->getQuery('force_cache') == 1);
+        $org = Organization::model()->findByPk($org_id, $forceCache);
+        $data = SettlementAccount::model()->listModelsByOrganization($org, $forceCache);
 
         $controller->render('/organization/show', array(
-            'content' => $controller->renderPartial('/settlement_accounts/list',
+            'content' => $controller->renderPartial('/settlement_account/list',
                 array(
                     'organization' => $org,
-                    'data' => $data
+                    'data' => $data,
+                    'forceCache' => $forceCache
                 ), true),
             'organization' => $org,
             'cur_tab' => $controller->menu_current,

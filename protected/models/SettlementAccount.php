@@ -5,29 +5,37 @@
  * @author Skibardin A.A. <webprofi1983@gmail.com>
  *
  * @property string $bank          (БИК or СВИФТ)
+ *
  * @property string $bank_bik      идентификатор банка, в котором открыт счет (БИК)
  * @property string $bank_swift    идентификатор банка, в котором открыт счет (СВИФТ)
  * @property string $bank_name     название банка
+ *
+ * @property string $correspondent_bank_name
+ * @property string $correspondent_bank
+ * @property string $correspondent_bik
+ * @property string $correspondent_swift
+ *
  * @property string $name          наименование счета (представление)
  * @property string $id_yur        идентификатор юрлица-владельца счета
  * @property string $yur_name      название юр. лица
  * @property string $type_yur      Тип юрлица ("Контрагенты", "Организации")
  * @property bool   $deleted       признак пометки удаления (булево)
  * @property string $s_nom         номер счета (для российских счетов)
- * @property string $vid           вид счета
- * @property string $service       вид обслуживания счета
- * @property int    $cur           идентификатор валюты счета
+ *
+ * @property string $type_account  вид счета
+ * @property string $type_service  вид обслуживания счета
+ * @property string $currency      идентификатор валюты счета
  * @property array  $managing_persons  массив идентификаторов физических лиц – управляющих счетом персон
  * @property string $management_method  метод управления счетом управляющими персонами
  */
 class SettlementAccount extends SOAPModel
 {
     const PREFIX_CACHE_LIST_MODELS = '_lis_models';
+    const PREFIX_CACHE_LIST_MODELS_BY_ORG = '_lis_models_by_org_';
 
-    public $cur_name    = '';
-    public $yur_name    = '';
-    public $div_persons = '';
-    public $str_managing_persons = '';
+    public $typeView;   // отформатированное представление
+    public $json_managing_persons;
+
 	/**
 	 * @static
 	 *
@@ -41,10 +49,19 @@ class SettlementAccount extends SOAPModel
 	}
 
     /**
-     *  Список доступных видов счетов.
-     *
-     *  @static
-     *  @return  array
+     * После __construct
+     */
+    public function afterConstruct()
+    {
+        $this->bank = '';
+        $this->correspondent_bank = '';
+        parent::afterConstruct();
+    }
+
+    /**
+     * Список доступных видов счетов.
+     * @static
+     * @return  array
      */
     public static function getAccountTypes()
     {
@@ -58,17 +75,30 @@ class SettlementAccount extends SOAPModel
     }
 
     /**
-     *  Список доступных видов обслуживания счета.
-     *
-     *  @static
-     *  @return  array
+     * Список доступных видов обслуживания счета.
+     * @static
+     * @return array
      */
     public static function getServiceTypes()
     {
         return array(
-            'Самостоятельно'    => 'Самостоятельно',
+            'Самостоятельно' => 'Самостоятельно',
             'По доверению подписанту' => 'По доверению подписанту',
             'Обслуживание у нас' => 'Обслуживание у нас'
+        );
+    }
+
+    /**
+     *  Список доступных видов представление счета.
+     *  @static
+     *  @return  array
+     */
+    public static function getTypeView()
+    {
+        return array(
+            '<ВидСчета> в <Банк>' => '<Вид счета> в <Банк>',
+            '<НомерСчета>, <Банк>' => '<Номер счета>, <Банк>',
+            '<Банк> (<ВидСчета>)' => '<Банк> (<Вид счета>)'
         );
     }
 
@@ -81,46 +111,9 @@ class SettlementAccount extends SOAPModel
     public static function getManagementMethods()
     {
         return array(
-            'Все вместе'    => 'Все вместе',
-            'По одному'     => 'По одному',
+            'Все вместе' => 'Требуются подписи всех',
+            'По одному' => 'Требуется подпись любого',
         );
-    }
-
-    /**
-     *  Название банка по его идентификатору БИК или СВИФТ.
-     *
-     *  @static
-     *  @param      string $bank_id (BIK or SWIFT)
-     *  @return     string
-     */
-    public static function getBankName($bank_id)
-    {
-        $bank_name = '';
-        if (!empty($bank_id)){
-            $cache_id = __CLASS__.'_bank_'.$bank_id;
-            $bank_name = Yii::app()->cache->get($cache_id);
-            if ($bank_name === false) {
-                // BIK
-                if (strlen($bank_id) == 9 && ctype_digit($bank_id)){
-                    $banks = Banks::model()
-                        ->where('deleted', false)
-                        ->where('id', $bank_id)
-                        ->findAll();
-                } else {
-                    $banks = Banks::model()
-                        ->where('deleted', false)
-                        ->where('swift', $bank_id)
-                        ->findAll();
-                }
-                if (!empty($banks) && isset($banks[0]) && !empty($banks[0]->name)){
-                    $bank_name = $banks[0]->name;
-                    Yii::app()->cache->set($cache_id, $bank_name);
-                } else {
-                    $bank_name = '';
-                }
-            }
-        }
-        return $bank_name;
     }
 
 	/**
@@ -129,12 +122,13 @@ class SettlementAccount extends SOAPModel
 	 */
 	public function delete()
     {
-		if ($pk = $this->getprimaryKey()) {
-			$ret = $this->SOAP->deleteSettlementAccount(array('id' => $pk));
-            Yii::app()->cache->delete(__CLASS__.'_'.$this->primaryKey);
-            Yii::app()->cache->delete(__CLASS__.'_list_org_id_'.$this->id_yur);
-            Yii::app()->cache->delete(__CLASS__.'_list');
-			return $ret->return;
+		if ($this->primaryKey) {
+			$ret = $this->SOAP->deleteSettlementAccount(array('id' => $this->primaryKey));
+            $ret = SoapComponent::parseReturn($ret, false);
+            if ($ret){
+                $this->clearCache();
+            }
+            return $ret;
 		}
 		return false;
 	}
@@ -146,21 +140,29 @@ class SettlementAccount extends SOAPModel
 	public function save()
     {
 		$data = $this->getAttributes();
-        $data['type_yur'] = 'Организации';
-        $data['type_recomend'] = 'ФизическиеЛица';
-        $data['recomend'] = '';
-        $data['e_nom'] = '';
+//        $data['type_yur'] = 'Организации';
+//        $data['type_recomend'] = 'ФизическиеЛица';
+//        $data['recomend'] = '';
+//        $data['e_nom'] = '';
 
-		if (!$this->getprimaryKey()) {
+		if (!$this->primaryKey) {
             unset($data['id']);
         }
 		unset($data['deleted']);
         unset($data['managing_persons']);
+        unset($data['json_managing_persons']);
+
+
         unset($data['bank_bik']);
         unset($data['bank_swift']);
         unset($data['bank_name']);
-        unset($data['corrbank']);
-        unset($data['corr_account']);
+
+//        $data['correspondent_swift'] = 'WPACAU2SBRI';
+        unset($data['correspondent_swift']);
+        unset($data['correspondent_bik']);
+        unset($data['correspondent_bank_name']);
+//        unset($data['correspondent_bank']); // TODO вернуть
+//        unset($data['corr_account']);
 
         $management_method = array(
             'Все вместе' => 'ВсеВместе',
@@ -173,22 +175,30 @@ class SettlementAccount extends SOAPModel
             'По доверению подписанту' => 'ПоДоверениюПодписанту',
             'Обслуживание у нас' => 'ОбслуживаниеУНас'
         );
-        $data['service'] = isset($service[$data['service']]) ? $service[$data['service']] : $service['Самостоятельно'];
+        $data['type_service'] = isset($service[$data['type_service']]) ? $service[$data['type_service']] : $service['Самостоятельно'];
 
 		$ret = $this->SOAP->saveSettlementAccount(
             array(
                 'data' => SoapComponent::getStructureElement($data),
-                'managing_persons' => CJSON::decode($this->str_managing_persons)
+                'managing_persons' => $this->managing_persons
             )
         );
 		$ret = SoapComponent::parseReturn($ret, false);
-        if($this->primaryKey){
-            Yii::app()->cache->delete(__CLASS__.'_'.$this->primaryKey);
-        }
-        Yii::app()->cache->delete(__CLASS__.'_list_org_id_'.$this->id_yur);
-        Yii::app()->cache->delete(__CLASS__.'_list');
+        $this->clearCache();
 		return $ret;
 	}
+
+    /**
+     * Очищаем кэш.
+     */
+    public function clearCache()
+    {
+        if($this->primaryKey)
+            Yii::app()->cache->delete(__CLASS__.self::PREFIX_CACHE_MODEL_PK.$this->primaryKey);
+        if ($this->id_yur)
+            Yii::app()->cache->delete(__CLASS__.self::PREFIX_CACHE_LIST_MODELS_BY_ORG.$this->id_yur);
+        Yii::app()->cache->delete(__CLASS__.self::PREFIX_CACHE_LIST_MODELS);
+    }
 
 	/**
 	 * Список Расчетных счетов
@@ -208,13 +218,35 @@ class SettlementAccount extends SOAPModel
 	/**
 	 * Расчетный счет
 	 * @param string $id
+	 * @param bool $forceCache
 	 * @return SettlementAccount
+     * @throws CHttpException
 	 */
-	public function findByPk($id)
+	public function findByPk($id, $forceCache=false)
     {
-		$ret = $this->SOAP->getSettlementAccount(array('id' => $id));
-		$ret = SoapComponent::parseReturn($ret);
-		return $this->publish_elem(current($ret), __CLASS__);
+        $cache_id = __CLASS__ . self::PREFIX_CACHE_MODEL_PK . $id;
+        if ($forceCache || ($model = Yii::app()->cache->get($cache_id)) === false){
+            $ret = $this->SOAP->getSettlementAccount(array('id' => $id));
+            $ret = SoapComponent::parseReturn($ret);
+            /**
+             * @var SettlementAccount $model
+             */
+            $model = $this->publish_elem(current($ret), __CLASS__);
+            if ($model === null) {
+                throw new CHttpException(404, 'Не найден банковский счет.');
+            }
+            $model->_parseTypeView();
+
+            $model->correspondent_bank = ((int)$model->correspondent_bik > 0) ? $model->correspondent_bik : (!empty($model->correspondent_swift) ? $model->correspondent_swift : '');
+            $model->correspondent_bank_name = Bank::model()->getName($model->correspondent_bank, $forceCache);
+
+            $model->bank = ((int)$model->bank_bik > 0) ? $model->bank_bik : (!empty($model->bank_swift) ? $model->bank_swift : '');
+            $model->bank_name = Bank::model()->getName($model->bank);
+
+            Yii::app()->cache->set($cache_id, $model, 0);
+        }
+        $model->forceCached = $forceCache;
+        return $model;
 	}
 
     /**
@@ -235,11 +267,12 @@ class SettlementAccount extends SOAPModel
             'bank_bik',     // string
             'bank_swift',   // string
 
-            'service',      // string
+            'type_account', // string
+            'type_service', // string
+
             's_nom',        // string
             'iban',         // string
-            'cur',          // string
-            'vid',          // string
+            'currency',     // string
 
             'data_open',    // date
             'data_closed',  // date
@@ -248,9 +281,13 @@ class SettlementAccount extends SOAPModel
 
             'managing_persons', // array
             'management_method',// string
-            'corrbank',         // string
-            'recomend',         // string
-            'corr_account',     // string
+
+            'correspondent_bank_name',  // string
+            'correspondent_bank',       // string
+            'correspondent_bik',        // string
+            'correspondent_swift',      // string
+
+            'json_managing_persons',      // string
         );
     }
 
@@ -261,23 +298,21 @@ class SettlementAccount extends SOAPModel
 	public function attributeLabels()
     {
 		return array(
-			'id'            => '#',                                 // +
-			'name'          => 'Представление',                     //
-            'id_yur'        => 'Юр.лицо',                           // +
-            'type_yur'      => 'Тип юр.лица',                       //
-            'deleted'       => 'Помечен на удаление',               //
+			'name'          => 'Представление',
+            'id_yur'        => 'Юр.лицо',
+            'type_yur'      => 'Тип юр.лица',
 
-            'bank'          => 'БИК / SWIFT',                       //
-			'bank_name'     => 'Название банка',                    //
-			'bank_bik'      => 'БИК',
-			'bank_swift'    => 'SWIFT',
+            'bank'          => 'Банк БИК / SWIFT',
+			'bank_name'     => 'Название банка',
+            'correspondent_bank_name' => 'Банк-корреспондент',
+            'correspondent_bank'  => 'Банк-корреспондент. БИК / SWIFT',
 
-            'service'       => 'Вид обслуживания счета',
+            'type_service'  => 'Вид обслуживания счета',
+            'type_account'  => 'Вид счета',
 
             's_nom'         => 'Номер счета',
             'iban'          => 'IBAN',
-            'cur'           => 'Валюта',
-            'vid'           => 'Вид счета',
+            'currency'      => 'Валюта',
             'data_open'     => 'Дата открытия',
             'data_closed'   => 'Дата закрытия',
 
@@ -286,12 +321,6 @@ class SettlementAccount extends SOAPModel
 
             'managing_persons' => 'Управляющие персоны',
             'management_method' => 'Метод управления',
-
-            'corrbank'      => 'Банк-корреспондент',
-            'recomend'      => 'Рекомендатель',
-
-			'e_nom'         => '',
-			'corr_account'  => 'Счет банка-корреспондента'
 		);
 	}
 
@@ -304,23 +333,25 @@ class SettlementAccount extends SOAPModel
     {
         return array(
             array('s_nom', 'required'),
+//            array('s_nom', 'Number', 'integerOnly'=>true),
             array('s_nom', 'length', 'max' => 20),
 
             array('iban', 'length', 'max' => 33),
 
-            array('cur', 'required'),
-            array('cur', 'in', 'range'  => array_keys(Currencies::getValues())),
+            array('currency', 'required'),
+            array('currency', 'in', 'range'  => array_keys(Currency::model()->listNames($this->forceCached))),
 
-            array('bank', 'required'),
-            array('bank', 'isValidBank'),
+            array('bank, correspondent_bank', 'required'),
+            array('bank, correspondent_bank', 'isValidBank'),
 
-            array('vid', 'required'),
-            array('vid', 'in', 'range'  => array_keys(SettlementAccount::getAccountTypes())),
+            array('type_account', 'required'),
+            array('type_account', 'in', 'range'  => array_keys(SettlementAccount::getAccountTypes())),
 
-            array('service', 'required'),
-            array('service', 'in', 'range'  => array_keys(SettlementAccount::getServiceTypes())),
+            array('type_service', 'required'),
+            array('type_service', 'in', 'range'  => array_keys(SettlementAccount::getServiceTypes())),
 
-            array('name', 'length', 'max' => 50),
+            array('name', 'required'),
+            array('name', 'in', 'range' => array_keys(SettlementAccount::getTypeView())),
 
             array('data_open, data_closed', 'date', 'format' => 'yyyy-MM-dd'),
 
@@ -331,35 +362,60 @@ class SettlementAccount extends SOAPModel
             array('management_method', 'in', 'range'  => array_keys(SettlementAccount::getManagementMethods())),
 
             array('managing_persons', 'required'),
-//            array('managing_persons', 'emptyPersons'),
+            array('json_managing_persons', 'validJson'),
 
-            array('bank_name, str_managing_persons', 'safe'),
+            array('bank_name, correspondent_bank_name', 'safe'),
         );
     }
 
     /**
-     *  Проверка правильности введенного идентификатора банка.
-     *
-     *  @param $attribute
+     * Проверка правильности введенного идентификатора банка.
+     * @param string $attribute
      */
     public function isValidBank($attribute)
     {
-        if (!empty($this->$attribute)){
-            $name = SettlementAccount::getBankName($this->$attribute);
-            if (empty($name)){
-                $this->addError($attribute, 'Необходимо указать правильный БИК / SWIFT');
-            }
+        $name = Bank::model()->getName($this->$attribute, $this->forceCached);
+        if (empty($name)){
+            $this->addError($attribute, '{'.$this->getAttributeLabel($attribute).'} - Необходимо указать правильный БИК / SWIFT');
         }
     }
 
     /**
-     * @param bool $force_cache
+     * Приводим представление банка к нужному виду в зависимости от шаблону.
+     */
+    private function _parseTypeView()
+    {
+        $view = $this->name;
+        $view = str_replace('<ВидСчета>', $this->type_account, $view);
+        $view = str_replace('<Банк>', $this->bank_name, $view);
+        $view = str_replace('<НомерСчета>', $this->type_service, $view);
+        $this->typeView = $view;
+    }
+
+    /**
+     * Список всех счетов
+     * @param bool $forceCache
      * @return SettlementAccount[]
      */
-    public function listModels($force_cache=false){
+    public function listModels($forceCache=false){
         $cache_id = __CLASS__.self::PREFIX_CACHE_LIST_MODELS;
-        if ($force_cache || ($data = Yii::app()->cache->get($cache_id)) === false){
+        if ($forceCache || ($data = Yii::app()->cache->get($cache_id)) === false){
             $data = $this->where('deleted', false)->findAll();
+            Yii::app()->cache->set($cache_id, $data);
+        }
+        return $data;
+    }
+
+    /**
+     * Список счетов для указанной организации.
+     * @param Organization $org
+     * @param bool $forceCache
+     * @return SettlementAccount[]
+     */
+    public function listModelsByOrganization(Organization $org, $forceCache=false){
+        $cache_id = __CLASS__.self::PREFIX_CACHE_LIST_MODELS_BY_ORG.$org->primaryKey;
+        if ($forceCache || ($data = Yii::app()->cache->get($cache_id)) === false){
+            $data = $this->where('deleted', false)->where('id_yur', $org->primaryKey)->findAll();
             Yii::app()->cache->set($cache_id, $data);
         }
         return $data;
