@@ -18,8 +18,12 @@ echo '<h2>' . ($model->primaryKey ? 'Редактирование ' : 'Созд�
  * @var MTbActiveForm $form
  */
 $form = $this->beginWidget('bootstrap.widgets.MTbActiveForm', array(
-    'id' => 'horizontalForm',
+    'id' => 'form-account',
     'type' => 'horizontal',
+    'enableAjaxValidation' => true,
+    'clientOptions' => array(
+        'validateOnChange' => true,
+    ),
 ));
 
 // Опции для JUI селектора даты
@@ -68,7 +72,19 @@ if ($model->hasErrors()) {
 
     echo $form->dropDownListRow($model, 'type_account', SettlementAccount::getAccountTypes());
     echo $form->dropDownListRow($model, 'type_service', SettlementAccount::getServiceTypes());
-    echo $form->dropDownListRow($model, 'name', SettlementAccount::getTypeView(), array('class' => 'span6'));
+
+    $type_view = $model->getTypeView();
+    $type_view['---'] = '--- Шаблон не выбран ---';
+    if ($model->primaryKey){
+        $class = array('class' => 'span6');
+    } else {
+        $class = array('class' => 'span6', 'disabled'=>true);
+    }
+    echo CHtml::tag(
+        'div',
+        array('class' => 'block-type-view'),
+        $form->dropDownListRow($model, 'name', $type_view, $class)
+    );
     ?>
     <?php /** data_open */ ?>
     <div class="control-group">

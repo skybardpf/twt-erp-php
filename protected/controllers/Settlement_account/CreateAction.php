@@ -22,6 +22,10 @@ class CreateAction extends CAction
         $org = Organization::model()->findByPk($org_id, $forceCached);
         $model = new SettlementAccount();
         $model->id_yur = $org->primaryKey;
+        if(isset($_POST['ajax']) && $_POST['ajax']==='form-account') {
+            echo CActiveForm::validate($model);
+            Yii::app()->end();
+        }
 
         $data = Yii::app()->request->getPost(get_class($model));
         if ($data) {
