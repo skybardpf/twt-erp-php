@@ -34,7 +34,7 @@ class SettlementAccount extends SOAPModel
     const PREFIX_CACHE_LIST_MODELS_BY_ORG = '_lis_models_by_org_';
 
     public $typeView;   // отформатированное представление
-    public $json_managing_persons;
+    public $json_managing_persons = '[]';
 
 	/**
 	 * @static
@@ -54,7 +54,9 @@ class SettlementAccount extends SOAPModel
     public function afterConstruct()
     {
         $this->bank = '';
+        $this->type_yur = 'Организации';
         $this->correspondent_bank = '';
+        $this->managing_persons = array();
         parent::afterConstruct();
     }
 

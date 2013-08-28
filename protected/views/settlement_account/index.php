@@ -37,7 +37,6 @@ foreach ($provider->rawData as $k => $v) {
         ? CHtml::link($org[$v['id_yur']], $this->createUrl('organization/view/', array('id' => $v['id_yur'])))
         : '---';
 }
-
 $this->widget('bootstrap.widgets.TbGridView', array(
     'type' => 'striped bordered condensed',
     'dataProvider' => $provider,

@@ -39,8 +39,8 @@ class CreateAction extends CAction
 
             $model->correspondent_bank_name = Bank::model()->getName($model->correspondent_bank, $forceCached);
             $model->bank_name = Bank::model()->getName($model->bank);
+            $model->json_managing_persons = CJSON::encode($model->managing_persons);
         }
-        $model->json_managing_persons = CJSON::encode($model->managing_persons);
 
         $controller->render('/organization/show', array(
             'content' => $controller->renderPartial('/settlement_account/form',
