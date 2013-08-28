@@ -13,36 +13,40 @@ class CreateAction extends CAction
     public function run($org_id)
     {
         /**
-         * @var Settlement_accountsController $controller
+         * @var Settlement_accountController $controller
          */
         $controller = $this->controller;
         $controller->pageTitle .= ' | Добавление банковского счета';
 
-        $org = $controller->loadOrganization($org_id);
-        $model = $controller->createModel($org);
+        $forceCached = (Yii::app()->request->getQuery('force_cache') == 1);
+        $org = Organization::model()->findByPk($org_id, $forceCached);
+        $model = new SettlementAccount();
+        $model->id_yur = $org->primaryKey;
 
-        $error = '';
-        if ($_POST && !empty($_POST['SettlementAccount'])) {
-            $model->setAttributes($_POST['SettlementAccount']);
-            $model->str_managing_persons = $_POST['SettlementAccount']['str_managing_persons'];
-            $model->managing_persons = CJSON::decode($model->str_managing_persons);
+        $data = Yii::app()->request->getPost(get_class($model));
+        if ($data) {
+            $model->setAttributes($data);
+            $model->managing_persons = CJSON::decode($model->json_managing_persons);
+
             if ($model->validate()) {
                 try {
                     $model->save();
                     $controller->redirect($controller->createUrl('list', array('org_id' => $org->primaryKey)));
                 } catch (Exception $e) {
-                    $error = $e->getMessage();
+                    $model->addError('id', $e->getMessage());
                 }
             }
-            $model->bank_name = SettlementAccount::getBankName($model->bank);
+
+            $model->correspondent_bank_name = Bank::model()->getName($model->correspondent_bank, $forceCached);
+            $model->bank_name = Bank::model()->getName($model->bank);
         }
+        $model->json_managing_persons = CJSON::encode($model->managing_persons);
 
         $controller->render('/organization/show', array(
-            'content' => $controller->renderPartial('/settlement_accounts/form',
+            'content' => $controller->renderPartial('/settlement_account/form',
                 array(
                     'model'         => $model,
                     'organization'  => $org,
-                    'error'         => $error
                 ),
                 true
             ),

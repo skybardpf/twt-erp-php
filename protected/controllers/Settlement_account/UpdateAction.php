@@ -13,40 +13,38 @@ class UpdateAction extends CAction
     public function run($id)
     {
         /**
-         * @var Settlement_accountsController $controller
+         * @var Settlement_accountController $controller
          */
         $controller = $this->controller;
         $controller->pageTitle .= ' | Редактирование банковского счета';
 
-        $model = $controller->loadModel($id);
-        $org = $controller->loadOrganization($model->id_yur);
+        $forceCached = (Yii::app()->request->getQuery('force_cache') == 1);
+        $model = SettlementAccount::model()->findByPk($id, $forceCached);
+        $org = Organization::model()->findByPk($model->id_yur, $forceCached);
 
-        $error = '';
-        if ($_POST && !empty($_POST['SettlementAccount'])) {
-            $model->setAttributes($_POST['SettlementAccount']);
-            $model->str_managing_persons = $_POST['SettlementAccount']['str_managing_persons'];
-            $model->managing_persons = CJSON::decode($model->str_managing_persons);
+        $data = Yii::app()->request->getPost(get_class($model));
+        if ($data) {
+            $model->setAttributes($data);
+            $model->managing_persons = CJSON::decode($model->json_managing_persons);
 
             if ($model->validate()) {
                 try {
                     $model->save();
                     $controller->redirect($controller->createUrl('view', array('id' => $model->primaryKey)));
-                } catch (Exception $e) {
-                    $error = $e->getMessage();
+                } catch (SoapParseException $e) {
+                    $model->addError('id', $e->getMessage());
                 }
             }
-
-        } else {
-            $model->bank = ((int)$model->bank_bik > 0) ? $model->bank_bik : (!empty($model->bank_swift) ? $model->bank_swift : '');
+            $model->correspondent_bank_name = Bank::model()->getName($model->correspondent_bank, $forceCached);
+            $model->bank_name = Bank::model()->getName($model->bank);
         }
-        $model->bank_name = SettlementAccount::getBankName($model->bank);
+        $model->json_managing_persons = CJSON::encode($model->managing_persons);
 
         $controller->render('/organization/show', array(
-            'content' => $controller->renderPartial('/settlement_accounts/form',
+            'content' => $controller->renderPartial('/settlement_account/form',
                 array(
                     'model'         => $model,
                     'organization'  => $org,
-                    'error'         => $error
                 ),
                 true
             ),

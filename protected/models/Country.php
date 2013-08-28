@@ -27,7 +27,7 @@ class Country extends SOAPModel
 	 */
 	protected function findAll()
     {
-        $request = array('filters' => array(), 'sort' => array($this->order));
+        $request = array('filters' => array(array()), 'sort' => array($this->order));
 		$ret = $this->SOAP->listCountries($request);
 		$ret = SoapComponent::parseReturn($ret);
 		return $this->publish_list($ret, __CLASS__);
