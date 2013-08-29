@@ -9,8 +9,8 @@
  */
 
 $cs = Yii::app()->clientScript;
-$cs->registerCssFile($this->asset_static.'/js/ext4/resources/css/ext-all.css');
-$cs->registerScriptFile($this->asset_static.'/js/ext4/ext-all.js');
+$cs->registerCssFile($this->asset_static.'/js/libs/extjs4/resources/css/ext-all.css');
+$cs->registerScriptFile($this->asset_static.'/js/libs/extjs4/ext-all.js');
 $cs->registerScriptFile($this->asset_static.'/js/template_library/index.js');
 ?>
 <script>

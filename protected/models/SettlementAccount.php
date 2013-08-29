@@ -206,7 +206,7 @@ class SettlementAccount extends SOAPModel
     {
 		$filters = SoapComponent::getStructureElement($this->where);
 		if (!$filters) $filters = array(array());
-		$request = array('filters' => $filters, 'sort' => array($this->order));
+		$request = array('filters' => $filters, 'sort' => $this->order);
 
 		$ret = $this->SOAP->listSettlementAccount($request);
 		$ret = SoapComponent::parseReturn($ret);
