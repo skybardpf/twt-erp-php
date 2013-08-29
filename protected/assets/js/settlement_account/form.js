@@ -5,7 +5,7 @@ $(document).ready(function(){
     var el_number_account = $('#SettlementAccount_s_nom');
     var el_type_account = $('#SettlementAccount_type_account');
     var el_bank_name = $('#SettlementAccount_bank_name');
-    var el_type_view = $('.block-type-view');
+//    var el_type_view = $('.block-type-view');
 //    var select_type_view = $('#SettlementAccount_name');
 
     el_number_account.change(changeTypeView);
@@ -24,8 +24,9 @@ $(document).ready(function(){
         var type_account = el_type_account.val();
         var bank_name = el_bank_name.val();
 
+        var el_type_view = $('#SettlementAccount_name');
         if (number_account == '' || type_account == '' || bank_name == ''){
-            $('#SettlementAccount_name').val('---').prop('disabled', true);
+            el_type_view.val('---not_selected---').prop('disabled', true);
             return;
         }
 
@@ -39,19 +40,19 @@ $(document).ready(function(){
                 'number_account': number_account,
                 'type_account': type_account,
                 'bank_name': bank_name,
-                'type_view_id': $('#SettlementAccount_name').val()
+                'type_view_id': el_type_view.val()
             }
         })
         .done(function (data, ret) {
             if (ret == 'success') {
-                el_type_view.html(data.html);
                 $('#SettlementAccount_name').prop('disabled', false);
+                el_type_view.html(data.html);
             } else {
-                $('#SettlementAccount_name').val('---');
+                $('#SettlementAccount_name').val('---not_selected---');
             }
         })
-        .fail(function (a, ret, message) {
-            $('#SettlementAccount_name').val('---');
+        .fail(function () {
+            $('#SettlementAccount_name').val('---not_selected---');
         })
         .always(function () {
             Loading.hide();
@@ -88,7 +89,8 @@ $(document).ready(function(){
         })
         .always(function () {
             Loading.hide();
-            changeTypeView();
+            if (id == 'SettlementAccount_bank')
+                changeTypeView();
         });
     }
 

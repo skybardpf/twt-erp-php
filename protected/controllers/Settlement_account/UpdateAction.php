@@ -20,7 +20,6 @@ class UpdateAction extends CAction
 
         $forceCached = (Yii::app()->request->getQuery('force_cache') == 1);
         $model = SettlementAccount::model()->findByPk($id, $forceCached);
-
         if(isset($_POST['ajax']) && $_POST['ajax']==='form-account') {
             echo CActiveForm::validate($model);
             Yii::app()->end();
@@ -42,8 +41,8 @@ class UpdateAction extends CAction
             }
             $model->correspondent_bank_name = Bank::model()->getName($model->correspondent_bank, $forceCached);
             $model->bank_name = Bank::model()->getName($model->bank);
+            $model->json_managing_persons = CJSON::encode($model->managing_persons);
         }
-        $model->json_managing_persons = CJSON::encode($model->managing_persons);
 
         $controller->render('/organization/show', array(
             'content' => $controller->renderPartial('/settlement_account/form',

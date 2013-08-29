@@ -58,11 +58,9 @@
     $model->management_method = (isset($management_method[$model->management_method])) ? $management_method[$model->management_method] : '---';
 
     $data = $model->getTypeView();
-    $data['---'] = '--- Шаблон не выбран ---';
-    if (isset($data[$model->name]))
-        $model->name = $data[$model->name];
-    else
-        $model->name = $data['---'];
+    $data[SettlementAccount::TYPE_VIEW_NOT_SELECTED] = '';
+    if (!in_array($model->name, $data))
+        $model->name = $data[SettlementAccount::TYPE_VIEW_NOT_SELECTED];
 
 	$this->widget('bootstrap.widgets.TbDetailView', array(
 		'data' => $model,

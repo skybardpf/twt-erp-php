@@ -10,7 +10,7 @@
  */
 
 $data = $model->getTypeView();
-$data['---'] = '--- Шаблон не выбран ---';
+$data[SettlementAccount::TYPE_VIEW_NOT_SELECTED] = '--- Шаблон не выбран ---';
 ?>
 
 <div class="control-group ">

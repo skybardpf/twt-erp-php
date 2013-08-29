@@ -74,12 +74,14 @@ if ($model->hasErrors()) {
     echo $form->dropDownListRow($model, 'type_service', SettlementAccount::getServiceTypes());
 
     $type_view = $model->getTypeView();
-    $type_view['---'] = '--- Шаблон не выбран ---';
+    $type_view[SettlementAccount::TYPE_VIEW_NOT_SELECTED] = '--- Шаблон не выбран ---';
     if ($model->primaryKey){
         $class = array('class' => 'span6');
     } else {
         $class = array('class' => 'span6', 'disabled'=>true);
     }
+    $key = array_search($model->name, $type_view);
+    $model->name = ($key === false) ? SettlementAccount::TYPE_VIEW_NOT_SELECTED : $key;
     echo CHtml::tag(
         'div',
         array('class' => 'block-type-view'),

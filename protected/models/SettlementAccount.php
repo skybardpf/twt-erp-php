@@ -30,10 +30,11 @@
  */
 class SettlementAccount extends SOAPModel
 {
+    const TYPE_VIEW_NOT_SELECTED = '---not_selected---';
     const PREFIX_CACHE_LIST_MODELS = '_lis_models';
     const PREFIX_CACHE_LIST_MODELS_BY_ORG = '_lis_models_by_org_';
 
-    public $typeView;   // отформатированное представление
+//    public $typeView;   // отформатированное представление
     public $json_managing_persons = '[]';
 
 	/**
@@ -54,7 +55,7 @@ class SettlementAccount extends SOAPModel
     public function afterConstruct()
     {
         $this->bank = '';
-        $this->name = '---';
+        $this->name = self::TYPE_VIEW_NOT_SELECTED;
         $this->type_yur = 'Организации';
         $this->correspondent_bank = '';
         $this->managing_persons = array();
@@ -164,6 +165,9 @@ class SettlementAccount extends SOAPModel
         );
         $data['management_method'] = isset($management_method[$data['management_method']]) ? $management_method[$data['management_method']] : $management_method['Все вместе'];
 
+        $type_view = $this->getTypeView();
+        $data['name'] = $type_view[$data['name']];
+
         $service = array(
             'Самостоятельно' => 'Самостоятельно',
             'По доверению подписанту' => 'ПоДоверениюПодписанту',
@@ -229,7 +233,7 @@ class SettlementAccount extends SOAPModel
             if ($model === null) {
                 throw new CHttpException(404, 'Не найден банковский счет.');
             }
-//            $model->_parseTypeView();
+            $model->json_managing_persons = CJSON::encode($model->managing_persons);
 
             $model->correspondent_bank = ((int)$model->correspondent_bik > 0) ? $model->correspondent_bik : (!empty($model->correspondent_swift) ? $model->correspondent_swift : '');
             $model->correspondent_bank_name = Bank::model()->getName($model->correspondent_bank, $forceCache);
@@ -373,18 +377,6 @@ class SettlementAccount extends SOAPModel
             $this->addError($attribute, '{'.$this->getAttributeLabel($attribute).'} - Необходимо указать правильный БИК / SWIFT');
         }
     }
-
-    /**
-     * Приводим представление банка к нужному виду в зависимости от шаблону.
-     */
-//    private function _parseTypeView()
-//    {
-//        $view = $this->name;
-//        $view = str_replace('<ВидСчета>', $this->type_account, $view);
-//        $view = str_replace('<Банк>', $this->bank_name, $view);
-//        $view = str_replace('<НомерСчета>', $this->type_service, $view);
-//        $this->typeView = $view;
-//    }
 
     /**
      * Список всех счетов
