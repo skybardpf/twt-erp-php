@@ -13,6 +13,7 @@
 class TemplateLibrary extends SOAPModel
 {
     const PREFIX_CACHE_LIST_MODELS = '_list_models';
+    const PREFIX_CACHE_LIST_FULL_DATA_GROUP_BY = '_list_full_data';
 
 	/**
 	 * @static
@@ -77,7 +78,7 @@ class TemplateLibrary extends SOAPModel
      * @param bool $force_cache
      * @return array
      */
-    public function listModels($force_cache = false)
+    protected function listModels($force_cache = false)
     {
         $cache_id = __CLASS__ . self::PREFIX_CACHE_LIST_MODELS;
         if ($force_cache || ($data = Yii::app()->cache->get($cache_id)) === false) {
@@ -90,5 +91,31 @@ class TemplateLibrary extends SOAPModel
             Yii::app()->cache->set($cache_id, $data);
         }
         return $data;
+    }
+
+    /**
+     * @param bool $force_cache
+     * @return array
+     */
+    public function getDataGroupBy($force_cache = false)
+    {
+        $cache_id = __CLASS__ . self::PREFIX_CACHE_LIST_FULL_DATA_GROUP_BY;
+        if ($force_cache || ($groups = Yii::app()->cache->get($cache_id)) === false) {
+            $data = $this->listModels($force_cache);
+            $groups = array();
+            foreach($data as $v){
+                if (!empty($v->group_id)){
+                    if (isset($groups[$v->group_id])){
+                        $groups[$v->group_id][] = $v;
+                    } else {
+                        $groups[$v->group_id] = array($v);
+                    }
+                } else {
+                    $groups[ContractorGroup::GROUP_ID_UNCATEGORIZED][] = $v;
+                }
+            }
+            Yii::app()->cache->set($cache_id, $groups);
+        }
+        return $groups;
     }
 }

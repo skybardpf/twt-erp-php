@@ -7,7 +7,6 @@ Ext.require([
 Ext.onReady(function() {
     Ext.QuickTips.init();
 
-
     var store = Ext.create('Ext.data.TreeStore', {
         proxy: {
             data : global_data, // instead it goes here
@@ -15,12 +14,17 @@ Ext.onReady(function() {
             reader: {
                 type: 'json'
             }
+        },
+        root: {
+            text: 'Все шаблоны',
+            id: 'root',
+            expanded: true
         }
     });
 
     var tree = Ext.create('Ext.tree.Panel', {
         store: store,
-        rootVisible: false,
+        rootVisible: true,
         autoScroll: true
     });
 

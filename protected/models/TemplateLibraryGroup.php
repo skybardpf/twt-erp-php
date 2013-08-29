@@ -15,6 +15,8 @@ class TemplateLibraryGroup extends SOAPModel
     const PREFIX_CACHE_LIST_MODELS = '_list_models';
     const PREFIX_CACHE_LIST_ROOT_DATA = '_list_root_data';
 
+    public $children = array();
+
 	/**
 	 * @static
 	 * @param string $className
@@ -82,12 +84,7 @@ class TemplateLibraryGroup extends SOAPModel
     {
         $cache_id = __CLASS__ . self::PREFIX_CACHE_LIST_MODELS;
         if ($force_cache || ($data = Yii::app()->cache->get($cache_id)) === false) {
-//            $data = array();
             $data = $this->where('deleted', false)->findAll();
-//            foreach ($elements as $elem) {
-//                $data[] = $elem->name;
-//            }
-//            asort($data);
             Yii::app()->cache->set($cache_id, $data);
         }
         return $data;
@@ -111,111 +108,56 @@ class TemplateLibraryGroup extends SOAPModel
             );
         }
         if (isset($data[ContractorGroup::GROUP_ID_UNCATEGORIZED])){
-            $ret[] = array(
-                'text' => 'Список контрагентов' .
-                Yii::app()->controller->widget(
-                    'bootstrap.widgets.TbGridView',
-                    array(
-                        'type' => 'striped bordered condensed',
-                        'dataProvider' => new CArrayDataProvider(
-                            $data[ContractorGroup::GROUP_ID_UNCATEGORIZED],
-                            array(
-                                'pagination' => array(
-                                    'pageSize' => 10000,
-                                ),
-                            )
+            foreach($data[ContractorGroup::GROUP_ID_UNCATEGORIZED] as $template){
+                $ret[] = array(
+                    'text' => CHtml::link(
+                        CHtml::encode($template->name),
+                        Yii::app()->createUrl('site/download', array(
+                            'path' => $this->decodePath($template->path))
+//                            'path' => $this->decodePath('README.md'))
                         ),
-                        'template' => "{items} {pager}",
-                        'columns' => array(
-                            array(
-                                'name' => 'name',
-                                'header' => 'Название',
-                                'type' => 'raw',
-                                'value' => 'CHtml::link($data["name"], Yii::app()->getController()->createUrl("contractor/view", array("id" => $data["id"])))'
-                            ),
-                            array(
-                                'name' => 'country_name',
-                                'header' => 'Страна юрисдикции',
-                            ),
-                            array(
-                                'name' => 'creation_date',
-                                'header' => 'Дата добавления',
-                            ),
-                            array(
-                                'name' => 'creator',
-                                'header' => 'Пользователь, добавивший в систему',
-                            ),
-                        ),
+                        array(
+                            'target' => '_blank'
+                        )
                     ),
-                    true
-                ),
-                'expanded' => false,
-                'leaf' => true
-            );
+                    'expanded' => false,
+                    'leaf' => true
+                );
+            }
         }
         return $ret;
     }
 
     /**
      * @param TemplateLibraryGroup $group
-     * @param array $contractors
+     * @param array $templates
      * @return array
      */
-    private function _getChildren($group, array $contractors)
+    private function _getChildren($group, array $templates)
     {
         $ret = array();
-        if (isset($contractors[$group->primaryKey])){
-            $ret[] = array(
-                'text' => 'Список контрагентов' .
-                Yii::app()->controller->widget(
-                    'bootstrap.widgets.TbGridView',
-                    array(
-                        'type' => 'striped bordered condensed',
-                        'dataProvider' => new CArrayDataProvider(
-                            $contractors[$group->primaryKey],
-                            array(
-                                'pagination' => array(
-                                    'pageSize' => 10000,
-                                ),
-                            )
+        if (isset($templates[$group->primaryKey])){
+            foreach($templates[$group->primaryKey] as $template){
+                $ret[] = array(
+                    'text' => CHtml::link(
+                        CHtml::encode($template->name),
+                        Yii::app()->createUrl('site/download', array(
+                            'path' => $this->decodePath($template->path))
                         ),
-                        'template' => "{items} {pager}",
-                        'columns' => array(
-                            array(
-                                'name' => 'name',
-                                'header' => 'Название',
-                                'type' => 'raw',
-                                'value' => 'CHtml::link($data["name"], Yii::app()->getController()->createUrl("contractor/view", array("id" => $data["id"])))'
-                            ),
-                            array(
-                                'name' => 'country_name',
-                                'header' => 'Страна юрисдикции',
-                            ),
-                            array(
-                                'name' => 'creation_date',
-                                'header' => 'Дата добавления',
-                            ),
-                            array(
-                                'name' => 'creator',
-                                'header' => 'Пользователь, добавивший в систему',
-                            ),
-                        ),
+                        array(
+                            'target' => '_blank'
+                        )
                     ),
-                    true
-                ),
-                'expanded' => false,
-                'leaf' => true
-            );
+                    'expanded' => false,
+                    'leaf' => true
+                );
+            }
         }
-
         foreach($group->children as $child){
-            $children = $this->_getChildren($child, $contractors);
-
             $ret[] = array(
                 'id' => $child->id,
                 'text' => $child->name,
-                'children' => $children,
-//                'leaf' => (empty($children))
+                'children' => $this->_getChildren($child, $templates),
                 'leaf' => false
             );
         }
@@ -269,4 +211,15 @@ class TemplateLibraryGroup extends SOAPModel
         return $ret;
     }
 
+    /**
+     * Кодируем переданный путь по хитрому алгоритму. Для передачи в site/download.
+     * @param string $path
+     * @return string
+     */
+    private function decodePath($path)
+    {
+        if (empty($path))
+            return '';
+        return strtr(base64_encode(addslashes(gzcompress(serialize($path),9))), '+/=', '-_,');
+    }
 }
