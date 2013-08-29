@@ -12,14 +12,14 @@ class IndexAction extends CAction
     public function run()
     {
         /**
-         * @var ContractorController    $controller
+         * @var ContractorController $controller
          */
         $controller = $this->controller;
         $controller->pageTitle .= ' | Список контрагентов';
 
-        $force_cache = (isset($_GET['force_cache']) && $_GET['force_cache'] == 1) ? true : false;
-        $data = Contractor::model()->getDataGroupBy($force_cache);
-        $groups = ContractorGroup::model()->getTreeContractors($data, $force_cache);
+        $forceCached = (Yii::app()->request->getQuery('force_cache') == 1);
+        $data = Contractor::model()->getDataGroupBy($forceCached);
+        $groups = ContractorGroup::model()->getTreeContractors($data, $forceCached);
 
         $controller->render(
             'index_menu_tabs',
@@ -27,7 +27,8 @@ class IndexAction extends CAction
                 'content' => $controller->renderPartial(
                     'tab_index',
                     array(
-                        'data' => $groups
+                        'data' => $groups,
+                        'forceCached' => $forceCached
                     ),
                     true
                 ),

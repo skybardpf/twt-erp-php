@@ -32,17 +32,4 @@ class Settlement_accountController extends Controller {
             '_html_row_element' => 'application.controllers.Settlement_account.HtmlRowElementAction',
         );
     }
-
-//
-//    /**
-//     * Создаем новый банковский счет.
-//     * @param Organization $org
-//     * @return SettlementAccount
-//     */
-//    public function createModel(Organization $org)
-//    {
-//        $model = new SettlementAccount();
-//        $model->id_yur = $org->primaryKey;
-//        return $model;
-//    }
 }

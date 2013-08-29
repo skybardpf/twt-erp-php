@@ -1,20 +1,23 @@
 <?php
 /**
- * Модель: Страна.
+ * Модель: Библиотека шаблонов.
  *
  * @author Skibardin A.A. <webprofi1983@gmail.com>
  *
  * @property string $id
+ * @property string $group_id
  * @property string $name
+ * @property string $path
+ * @property bool   $deleted
 */
-class Country extends SOAPModel
+class TemplateLibrary extends SOAPModel
 {
-    const PREFIX_CACHE_LIST_NAMES = '_list_names';
+    const PREFIX_CACHE_LIST_MODELS = '_list_models';
 
 	/**
 	 * @static
 	 * @param string $className
-	 * @return Country
+	 * @return TemplateLibrary
 	 */
 	public static function model($className = __CLASS__)
     {
@@ -22,13 +25,13 @@ class Country extends SOAPModel
 	}
 
 	/**
-	 * Список стран
-	 * @return Country[]
+	 * Список шаблонов
+	 * @return TemplateLibrary[]
 	 */
 	protected function findAll()
     {
         $request = array('filters' => array(array()), 'sort' => array($this->order));
-		$ret = $this->SOAP->listCountries($request);
+		$ret = $this->SOAP->listLibraryTemplates($request);
 		$ret = SoapComponent::parseReturn($ret);
 		return $this->publish_list($ret, __CLASS__);
 	}
@@ -41,6 +44,9 @@ class Country extends SOAPModel
         return array(
             'id',            // string
             'name',          // string
+            'group_id',      // string
+            'path',          // string
+            'deleted',       // bool
         );
     }
 
@@ -67,21 +73,20 @@ class Country extends SOAPModel
 	}
 
     /**
-     * Список доступных значений Стран [id => name].
-     * Результат сохраняем в кеш.
+     * Список шаблонов. Результат сохраняем в кеш.
      * @param bool $force_cache
      * @return array
      */
-    public function listNames($force_cache = false)
+    public function listModels($force_cache = false)
     {
-        $cache_id = __CLASS__ . self::PREFIX_CACHE_LIST_NAMES;
+        $cache_id = __CLASS__ . self::PREFIX_CACHE_LIST_MODELS;
         if ($force_cache || ($data = Yii::app()->cache->get($cache_id)) === false) {
-            $data = array();
-            $elements = $this->where('deleted', false)->findAll();
-            foreach ($elements as $elem) {
-                $data[$elem->primaryKey] = $elem->name;
-            }
-            asort($data);
+//            $data = array();
+            $data = $this->where('deleted', false)->findAll();
+//            foreach ($elements as $elem) {
+//                $data[] = $elem->name;
+//            }
+//            asort($data);
             Yii::app()->cache->set($cache_id, $data);
         }
         return $data;

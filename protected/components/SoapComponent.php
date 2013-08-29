@@ -110,6 +110,12 @@ class SoapParseException extends CException{}
  *
  * Банк. (@class Bank)
  * @method mixed listBanks(array $data)
+ *
+ * Библиотека шаблонов. (@class TemplateLibrary)
+ * @method mixed listLibraryTemplates(array $data)
+ *
+ * Группы шаблонов в библиотеке шаблонов. (@class TemplateLibraryGroup)
+ * @method mixed listTemplateGroups(array $data)
  */
 class SoapComponent extends CApplicationComponent
 {
