@@ -34,7 +34,7 @@ class SettlementAccount extends SOAPModel
     const PREFIX_CACHE_LIST_MODELS_BY_ORG = '_lis_models_by_org_';
 
     public $typeView;   // отформатированное представление
-    public $json_managing_persons;
+    public $json_managing_persons = '[]';
 
 	/**
 	 * @static
@@ -54,7 +54,10 @@ class SettlementAccount extends SOAPModel
     public function afterConstruct()
     {
         $this->bank = '';
+        $this->name = '---';
+        $this->type_yur = 'Организации';
         $this->correspondent_bank = '';
+        $this->managing_persons = array();
         parent::afterConstruct();
     }
 
@@ -89,16 +92,15 @@ class SettlementAccount extends SOAPModel
     }
 
     /**
-     *  Список доступных видов представление счета.
-     *  @static
-     *  @return  array
+     * Список доступных видов представление счета.
+     * @return  array
      */
-    public static function getTypeView()
+    public function getTypeView()
     {
         return array(
-            '<ВидСчета> в <Банк>' => '<Вид счета> в <Банк>',
-            '<НомерСчета>, <Банк>' => '<Номер счета>, <Банк>',
-            '<Банк> (<ВидСчета>)' => '<Банк> (<Вид счета>)'
+            '<ВидСчета> в <Банк>' => $this->type_account.' в '.$this->bank_name,
+            '<НомерСчета>, <Банк>' => $this->s_nom.', '.$this->bank_name,
+            '<Банк> (<ВидСчета>)' => $this->bank_name.' ('.$this->type_account.')'
         );
     }
 
@@ -140,10 +142,6 @@ class SettlementAccount extends SOAPModel
 	public function save()
     {
 		$data = $this->getAttributes();
-//        $data['type_yur'] = 'Организации';
-//        $data['type_recomend'] = 'ФизическиеЛица';
-//        $data['recomend'] = '';
-//        $data['e_nom'] = '';
 
 		if (!$this->primaryKey) {
             unset($data['id']);
@@ -152,17 +150,13 @@ class SettlementAccount extends SOAPModel
         unset($data['managing_persons']);
         unset($data['json_managing_persons']);
 
-
         unset($data['bank_bik']);
         unset($data['bank_swift']);
         unset($data['bank_name']);
 
-//        $data['correspondent_swift'] = 'WPACAU2SBRI';
         unset($data['correspondent_swift']);
         unset($data['correspondent_bik']);
         unset($data['correspondent_bank_name']);
-//        unset($data['correspondent_bank']); // TODO вернуть
-//        unset($data['corr_account']);
 
         $management_method = array(
             'Все вместе' => 'ВсеВместе',
@@ -235,7 +229,7 @@ class SettlementAccount extends SOAPModel
             if ($model === null) {
                 throw new CHttpException(404, 'Не найден банковский счет.');
             }
-            $model->_parseTypeView();
+//            $model->_parseTypeView();
 
             $model->correspondent_bank = ((int)$model->correspondent_bik > 0) ? $model->correspondent_bik : (!empty($model->correspondent_swift) ? $model->correspondent_swift : '');
             $model->correspondent_bank_name = Bank::model()->getName($model->correspondent_bank, $forceCache);
@@ -351,7 +345,7 @@ class SettlementAccount extends SOAPModel
             array('type_service', 'in', 'range'  => array_keys(SettlementAccount::getServiceTypes())),
 
             array('name', 'required'),
-            array('name', 'in', 'range' => array_keys(SettlementAccount::getTypeView())),
+            array('name', 'in', 'range' => array_keys($this->getTypeView())),
 
             array('data_open, data_closed', 'date', 'format' => 'yyyy-MM-dd'),
 
@@ -383,14 +377,14 @@ class SettlementAccount extends SOAPModel
     /**
      * Приводим представление банка к нужному виду в зависимости от шаблону.
      */
-    private function _parseTypeView()
-    {
-        $view = $this->name;
-        $view = str_replace('<ВидСчета>', $this->type_account, $view);
-        $view = str_replace('<Банк>', $this->bank_name, $view);
-        $view = str_replace('<НомерСчета>', $this->type_service, $view);
-        $this->typeView = $view;
-    }
+//    private function _parseTypeView()
+//    {
+//        $view = $this->name;
+//        $view = str_replace('<ВидСчета>', $this->type_account, $view);
+//        $view = str_replace('<Банк>', $this->bank_name, $view);
+//        $view = str_replace('<НомерСчета>', $this->type_service, $view);
+//        $this->typeView = $view;
+//    }
 
     /**
      * Список всех счетов

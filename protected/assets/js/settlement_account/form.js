@@ -2,18 +2,71 @@
  *  Форма редактирование банковского счета.
  */
 $(document).ready(function(){
+    var el_number_account = $('#SettlementAccount_s_nom');
+    var el_type_account = $('#SettlementAccount_type_account');
+    var el_bank_name = $('#SettlementAccount_bank_name');
+    var el_type_view = $('.block-type-view');
+//    var select_type_view = $('#SettlementAccount_name');
+
+    el_number_account.change(changeTypeView);
+    el_type_account.change(changeTypeView);
+//    el_bank_name.change(changeTypeView);
+
     $('#SettlementAccount_bank').change(getBankName);
     $('#SettlementAccount_correspondent_bank').change(getBankName);
+
+    /**
+     * Изменяем список с видом представлений в зависимости от
+     * указанных номера счета, вида счета, названия банка.
+     */
+    function changeTypeView(){
+        var number_account = el_number_account.val();
+        var type_account = el_type_account.val();
+        var bank_name = el_bank_name.val();
+
+        if (number_account == '' || type_account == '' || bank_name == ''){
+            $('#SettlementAccount_name').val('---').prop('disabled', true);
+            return;
+        }
+
+        Loading.show();
+        $.ajax({
+            type: 'POST',
+            dataType: "json",
+            url: "/settlement_account/_get_type_view",
+            cache: false,
+            data: {
+                'number_account': number_account,
+                'type_account': type_account,
+                'bank_name': bank_name,
+                'type_view_id': $('#SettlementAccount_name').val()
+            }
+        })
+        .done(function (data, ret) {
+            if (ret == 'success') {
+                el_type_view.html(data.html);
+                $('#SettlementAccount_name').prop('disabled', false);
+            } else {
+                $('#SettlementAccount_name').val('---');
+            }
+        })
+        .fail(function (a, ret, message) {
+            $('#SettlementAccount_name').val('---');
+        })
+        .always(function () {
+            Loading.hide();
+        });
+    }
 
     /**
      *  Получаем название банка по его идентификатору (БИК или СВИФТ)
      */
     function getBankName() {
-        Loading.show();
-
         var local = $(this);
         var id = $(this)[0].id;
         var bank_name = $('#'+id+'_name');
+
+        Loading.show();
         $.ajax({
 //                type: 'POST',
             dataType: "json",
@@ -35,6 +88,7 @@ $(document).ready(function(){
         })
         .always(function () {
             Loading.hide();
+            changeTypeView();
         });
     }
 

@@ -119,6 +119,7 @@ class Bank extends SOAPModel
                 } else {
                     $banks = $this->where('deleted', false)->where('swift', $bank_id)->findAll();
                 }
+                $bank_name = '';
                 if (!empty($banks) && isset($banks[0]) && !empty($banks[0]->name)){
                     $bank_name = $banks[0]->name;
                     Yii::app()->cache->set($cache_id, $bank_name);

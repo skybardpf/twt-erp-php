@@ -1,28 +1,32 @@
 <?php
-    return CMap::mergeArray(
-        // наследуемся от main.php
-        require(dirname(__FILE__).'/main.php'),
+return CMap::mergeArray(
+    // наследуемся от main.php
+    require(dirname(__FILE__) . '/main.php'),
 
-        array(
-            'defaultController' => 'legal/organization',
+    array(
+        'defaultController' => 'legal/organization',
 
-            'components' => array(
-                'cache' => array('class'=>'system.caching.CFileCache'),
+        'components' => array(
+            'cache' => array('class' => 'system.caching.CFileCache'),
 
-                'soap' => array(
-                    'class' => 'SoapComponent',
-                    'wsdl' => 'http://144.76.90.162/twt_erp/ws/erp?wsdl',
-                    'connection_options' => array(
-                        'login'     => 'Site',
-                        'password'  => 'Site',
-                    )
+            'soap' => array(
+                'class' => 'SoapComponent',
+                'wsdl' => 'http://144.76.90.162/twt_erp/ws/erp?wsdl',
+                'connection_options' => array(
+                    'login' => 'Site',
+                    'password' => 'Site',
+                )
+            ),
+
+            'log' => array(
+                'class' => 'CLogRouter',
+                'routes' => array(
+                    array(
+                        'class' => 'ext.yii-debug-toolbar.YiiDebugToolbarRoute',
+                        'ipFilters' => array('127.0.0.1', '192.168.0.*'),
+                    ),
                 ),
             ),
-//            'params' => array(
-//                /**
-//                 * Директория для загрузки документов.
-//                 */
-//                'uploadDocumentDir' => dirname(__FILE__).DIRECTORY_SEPARATOR.'..'.DIRECTORY_SEPARATOR.'filestorage'.DIRECTORY_SEPARATOR.'uploads',
-//            ),
-        )
-    );
+        ),
+    )
+);

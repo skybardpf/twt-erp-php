@@ -27,6 +27,7 @@ class Settlement_accountController extends Controller {
             'delete' => 'application.controllers.Settlement_account.DeleteAction',
 
             '_get_bank_name' => 'application.controllers.Settlement_account.GetBankNameAction',
+            '_get_type_view' => 'application.controllers.Settlement_account.GetTypeViewAction',
             '_html_form_select_element' => 'application.controllers.Settlement_account.HtmlFormSelectElementAction',
             '_html_row_element' => 'application.controllers.Settlement_account.HtmlRowElementAction',
         );

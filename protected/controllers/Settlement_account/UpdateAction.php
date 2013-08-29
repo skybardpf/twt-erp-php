@@ -20,8 +20,13 @@ class UpdateAction extends CAction
 
         $forceCached = (Yii::app()->request->getQuery('force_cache') == 1);
         $model = SettlementAccount::model()->findByPk($id, $forceCached);
-        $org = Organization::model()->findByPk($model->id_yur, $forceCached);
 
+        if(isset($_POST['ajax']) && $_POST['ajax']==='form-account') {
+            echo CActiveForm::validate($model);
+            Yii::app()->end();
+        }
+
+        $org = Organization::model()->findByPk($model->id_yur, $forceCached);
         $data = Yii::app()->request->getPost(get_class($model));
         if ($data) {
             $model->setAttributes($data);

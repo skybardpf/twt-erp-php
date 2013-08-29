@@ -57,6 +57,13 @@
     $management_method = SettlementAccount::getManagementMethods();
     $model->management_method = (isset($management_method[$model->management_method])) ? $management_method[$model->management_method] : '---';
 
+    $data = $model->getTypeView();
+    $data[''] = '--- Шаблон не выбран ---';
+    if (isset($data[$model->name]))
+        $model->name = $data[$model->name];
+    else
+        $model->name = $data['---'];
+
 	$this->widget('bootstrap.widgets.TbDetailView', array(
 		'data' => $model,
 		'attributes' => array(
@@ -86,7 +93,7 @@
                 'label' => 'Вид обслуживания счета'
             ),
 			array(
-                'name' => 'typeView',
+                'name' => 'name',
                 'label' => 'Представление'
             ),
             array(

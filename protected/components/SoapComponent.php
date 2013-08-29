@@ -266,7 +266,6 @@ class SoapComponent extends CApplicationComponent
 				} else {
 					$ret = $this->soap_client->__soapCall($name, $params);
 				}
-//                var_dump($ret);die;
 				if (YII_DEBUG) {
 					$time = microtime(true) - $time;
 //                    Yii::log(
@@ -282,6 +281,7 @@ class SoapComponent extends CApplicationComponent
                     Yii::log(
                         'function ' . $name . ' in '.$time.' seconds with data: ' .
                         CJSON::encode($ret),
+//                        json_encode($ret, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES),
                         CLogger::LEVEL_INFO,
                         'soap'
                     );

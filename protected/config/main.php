@@ -78,10 +78,10 @@ return array(
                     'categories' => 'soap',
                     'logFile' => 'soap_log.log'
                 ),
-				array(
-					'class'     => 'ext.yii-debug-toolbar.YiiDebugToolbarRoute',
-					'ipFilters' => array('127.0.0.1','192.168.0.*', '83.229.142.164'),
-				),
+//				array(
+//					'class'     => 'ext.yii-debug-toolbar.YiiDebugToolbarRoute',
+//					'ipFilters' => array('127.0.0.1','192.168.0.*', '83.229.142.164'),
+//				),
 			),
 		),
 	),
