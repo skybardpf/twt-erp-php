@@ -31,11 +31,16 @@ foreach ($provider->rawData as $k => $v) {
             $person .= '<br/>';
         }
     }
+    if (isset($org[$v['id_yur']])){
+        $provider->rawData[$k]['id_yur'] = CHtml::link(CHtml::encode($org[$v['id_yur']]), $this->createUrl('organization/view/', array('id' => $v['id_yur'])));
+        $provider->rawData[$k]['s_nom'] = CHtml::link(CHtml::encode($v["s_nom"]), $this->createUrl("settlement_account/view", array("id" => $v["id"])));
+    } else {
+        $provider->rawData[$k]['id_yur'] = '---';
+        $provider->rawData[$k]['s_nom'] = CHtml::encode($v["s_nom"]);
+    }
     $provider->rawData[$k]['managing_persons'] = $person;
     $provider->rawData[$k]['currency'] = (isset($cur[$v['currency']])) ? $cur[$v['currency']] : '---';
-    $provider->rawData[$k]['id_yur'] = (isset($org[$v['id_yur']]))
-        ? CHtml::link($org[$v['id_yur']], $this->createUrl('organization/view/', array('id' => $v['id_yur'])))
-        : '---';
+
 }
 $this->widget('bootstrap.widgets.TbGridView', array(
     'type' => 'striped bordered condensed',
@@ -46,7 +51,7 @@ $this->widget('bootstrap.widgets.TbGridView', array(
             'name' => 's_nom',
             'header' => 'Номер',
             'type' => 'raw',
-            'value' => 'CHtml::link($data["s_nom"], Yii::app()->getController()->createUrl("settlement_account/view", array("id" => $data["id"])))'
+
         ),
         array(
             'name' => 'id_yur',

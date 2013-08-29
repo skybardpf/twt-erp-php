@@ -56,13 +56,10 @@ class CreateAction extends CAction
             }
         }
 
-        $controller->render('/organization/show', array(
-            'content' => $controller->renderPartial('/organization/form',
-                array(
-                    'model' => $model,
-                ), true),
-            'organization' => $model,
-            'cur_tab' => 'info',
-        ));
+        $controller->render('/organization/form',
+            array(
+                'model' => $model,
+            ), false
+        );
     }
 }
