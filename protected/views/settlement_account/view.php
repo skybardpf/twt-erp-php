@@ -58,7 +58,7 @@
     $model->management_method = (isset($management_method[$model->management_method])) ? $management_method[$model->management_method] : '---';
 
     $data = $model->getTypeView();
-    $data[''] = '--- Шаблон не выбран ---';
+    $data['---'] = '--- Шаблон не выбран ---';
     if (isset($data[$model->name]))
         $model->name = $data[$model->name];
     else
