@@ -284,7 +284,7 @@ class ContractorGroup extends SOAPModel
      * @param array $data
      * @return array
      */
-    function _getChildrenByLevel($tmp_index, $parent_id, $data){
+    private function _getChildrenByLevel($tmp_index, $parent_id, $data){
         $ret = array();
         foreach($data as $k=>$pid){
             if ($pid == $parent_id){

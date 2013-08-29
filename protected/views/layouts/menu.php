@@ -27,6 +27,11 @@
             'url'   => $this->createUrl('settlement_account/'),
             'active'=> ($this->menu_current == 'settlements')
         ),
+        array(
+            'label' => 'Библиотека шаблонов',
+            'url'   => $this->createUrl('template_library/'),
+            'active'=> ($this->menu_current == 'template_library')
+        ),
         /*
         array(
             'label' => 'Корзина акционирования',
@@ -38,11 +43,7 @@
             'url'   => $this->createUrl('#'),
             'active'=> ($this->menu_current == 'contract_types')
         ),
-        array(
-            'label' => 'Библиотека шаблонов',
-            'url'   => $this->createUrl('#'),
-            'active'=> ($this->menu_current == 'template_library')
-        ),*/
+        ,*/
     );
     $this->widget('bootstrap.widgets.TbMenu', array(
         'type' => 'list', // '', 'tabs', 'pills' (or 'list')

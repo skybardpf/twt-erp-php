@@ -77,7 +77,7 @@ class Country extends SOAPModel
         $cache_id = __CLASS__ . self::PREFIX_CACHE_LIST_NAMES;
         if ($force_cache || ($data = Yii::app()->cache->get($cache_id)) === false) {
             $data = array();
-            $elements = $this->where('deleted', true)->findAll();
+            $elements = $this->where('deleted', false)->findAll();
             foreach ($elements as $elem) {
                 $data[$elem->primaryKey] = $elem->name;
             }
