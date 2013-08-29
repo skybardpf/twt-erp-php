@@ -6,16 +6,19 @@ class DownloadAction extends CAction
 {
     public function run($path)
     {
-//        $path = strtr(base64_encode(addslashes(gzcompress(serialize('Прототипы.Организации.Календарь событий.Общий.pdf'),9))), '+/=', '-_,');
-        $this->controller->disableProfilers();
+        if (empty($path)){
+            echo 'Bad path';
+            Yii::app()->end(400);
+        }
+        $this->controller->disableProfile();
 
         $path = unserialize(gzuncompress(stripslashes(base64_decode(strtr($path, '-_,', '+/=')))));
         $path = str_replace('\\', '/', $path);
         $path = Yii::getPathOfAlias('filestorage').DIRECTORY_SEPARATOR.$path;
         if (!file_exists($path)){
             echo 'NotFound';
-            die;
+            Yii::app()->end(404);
         }
-        Yii::app()->request->sendFile(time().'.pdf', file_get_contents($path));
+        Yii::app()->request->sendFile(basename($path), file_get_contents($path));
     }
 }

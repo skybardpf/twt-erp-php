@@ -11,8 +11,8 @@
 ?>
 <div class="pull-right" style="margin-top: 15px;">
 <?php
-    Yii::app()->clientScript->registerCssFile($this->asset_static.'/js/ext4/resources/css/ext-all.css');
-    Yii::app()->clientScript->registerScriptFile($this->asset_static.'/js/ext4/ext-all.js');
+    Yii::app()->clientScript->registerCssFile($this->asset_static.'/js/libs/extjs4/resources/css/ext-all.css');
+    Yii::app()->clientScript->registerScriptFile($this->asset_static.'/js/libs/extjs4/ext-all.js');
     Yii::app()->clientScript->registerScriptFile($this->asset_static.'/js/legal/contractor/index.js');
 
     $this->widget('bootstrap.widgets.TbButton', array(
