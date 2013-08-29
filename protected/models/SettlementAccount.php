@@ -401,7 +401,12 @@ class SettlementAccount extends SOAPModel
     public function listModelsByOrganization(Organization $org, $forceCache=false){
         $cache_id = __CLASS__.self::PREFIX_CACHE_LIST_MODELS_BY_ORG.$org->primaryKey;
         if ($forceCache || ($data = Yii::app()->cache->get($cache_id)) === false){
-            $data = $this->where('deleted', false)->where('id_yur', $org->primaryKey)->findAll();
+            $data = $this
+                ->order('bank', 'asc')
+                ->order('currency', 'asc')
+                ->where('deleted', false)
+                ->where('id_yur', $org->primaryKey)
+                ->findAll();
             Yii::app()->cache->set($cache_id, $data);
         }
         return $data;
