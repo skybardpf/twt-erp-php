@@ -23,13 +23,13 @@ class IndexAction extends CAction
 
         switch ($type){
             case 'leader': {
-
+                $controller->pageTitle .= ' | Список руководителей';
             } break;
             case 'manager': {
-
+                $controller->pageTitle .= ' | Список менеджеров';
             } break;
             case 'secretary': {
-
+                $controller->pageTitle .= ' | Список секретарей';
             } break;
             // По-умолчанию "Номинальный акционер"
             case 'shareholder': {}
@@ -48,6 +48,7 @@ class IndexAction extends CAction
                     'data' => array(),
                     'organization' => $org,
                     'menu_tab' => $type,
+                    'content' => 'AD'
                 ), true),
             'organization' => $org,
             'cur_tab' => $controller->current_tab,
