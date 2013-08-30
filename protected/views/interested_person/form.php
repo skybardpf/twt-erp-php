@@ -144,7 +144,7 @@
        0 => 'Недействителен',
     ));
 
-    $class_hide = ($model->role == InterestedPerson::ROLE_DIRECTOR) ? '' : 'hide';
+    $class_hide = ($model->role == InterestedPerson::ROLE_LEADER) ? '' : 'hide';
 ?>
 
 <div class="control-group job-title <?= $class_hide; ?>">

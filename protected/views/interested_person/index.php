@@ -22,22 +22,46 @@ $this->widget('bootstrap.widgets.TbMenu', array(
     'items' => array(
         array(
             'label' => 'Номинальные акционеры',
-            'url' => $this->createUrl('interested_person/index', array('id' => $organization->primaryKey)),
+            'url' => $this->createUrl(
+                'interested_person/index',
+                array(
+                    'org_id' => $organization->primaryKey,
+                    'type' => 'shareholder',
+                )
+            ),
             'active' => ($menu_tab == 'shareholder')
         ),
         array(
             'label' => 'Руководители',
-            'url' => $this->createUrl('documents/list', array('org_id' => $organization->primaryKey)),
+            'url' => $this->createUrl(
+                'interested_person/index',
+                array(
+                    'org_id' => $organization->primaryKey,
+                    'type' => 'leader',
+                )
+            ),
             'active' => ($menu_tab == 'leader')
         ),
         array(
             'label' => 'Менеджеры',
-            'url' => $this->createUrl('settlement_account/list', array('org_id' => $organization->primaryKey)),
+            'url' => $this->createUrl(
+                'interested_person/index',
+                array(
+                    'org_id' => $organization->primaryKey,
+                    'type' => 'manager',
+                )
+            ),
             'active' => ($menu_tab == 'manager')
         ),
         array(
             'label' => 'Секретари',
-            'url' => $this->createUrl('interested_person/index', array('org_id' => $organization->primaryKey)),
+            'url' => $this->createUrl(
+                'interested_person/index',
+                array(
+                    'org_id' => $organization->primaryKey,
+                    'type' => 'secretary',
+                )
+            ),
             'active' => ($menu_tab == 'secretary'),
         ),
     )

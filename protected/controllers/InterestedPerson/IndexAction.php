@@ -24,18 +24,22 @@ class IndexAction extends CAction
         switch ($type){
             case 'leader': {
                 $controller->pageTitle .= ' | Список руководителей';
+                $page = 'list_leader';
             } break;
             case 'manager': {
                 $controller->pageTitle .= ' | Список менеджеров';
+                $page = 'list_manager';
             } break;
             case 'secretary': {
                 $controller->pageTitle .= ' | Список секретарей';
+                $page = 'list_secretary';
             } break;
             // По-умолчанию "Номинальный акционер"
             case 'shareholder': {}
             default: {
                 $controller->pageTitle .= ' | Список номинальный акционеров';
                 $type = 'shareholder';
+                $page = 'list_shareholder';
             }
         }
         $forceCached = (Yii::app()->request->getQuery('force_cache') == 1);
@@ -45,10 +49,13 @@ class IndexAction extends CAction
         $controller->render('/organization/show', array(
             'content' => $controller->renderPartial('/interested_person/index',
                 array(
-                    'data' => array(),
                     'organization' => $org,
                     'menu_tab' => $type,
-                    'content' => 'AD'
+                    'content' => $controller->renderPartial('/interested_person/'.$page,
+                        array(
+                            'data' => array(),
+                            'organization' => $org,
+                        ), true)
                 ), true),
             'organization' => $org,
             'cur_tab' => $controller->current_tab,

@@ -57,11 +57,14 @@ class SoapParseException extends CException{}
  * @method mixed saveContragent             Сохранение
  * @method mixed deleteContragent           Удаление
  *
- * Заинтересованные лица
- * @method mixed listInterestedPersons      Список
+ * Заинтересованные лица (@see InterestedPersonAbstract)
+ * @method mixed listInterestedPersons(array $data)      Список лиц
+ * @method mixed listRevisionHistory(array $data)        Список истории изменений
+ * @method mixed deleteInterestedPersons(array $data)    Удаление
+ *
  * @method mixed getInterestedPerson        Просмотр
- * @method mixed saveInterestedPerson      Сохранение
- * @method mixed deleteInterestedPersons    Удаление
+ * @method mixed saveInterestedPerson       Сохранение
+ *
  *
  * Заинтересованные лица - бенефициары
  * @method mixed listBeneficiary            Список

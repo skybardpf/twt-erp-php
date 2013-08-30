@@ -1,20 +1,15 @@
 <?php
 /**
- * Список заинтересованных лиц. Разбито на 4 вкладки:
- * - Номинальные акционеры
- * - Руководители
- * - Менеджеры
- * - Секретари
+ * Список заинтересованных лиц: Номинальные акционеры
  *
  * @author Skibardin A.A. <webprofi1983@gmail.com>
  *
- * @var $this           Interested_personController
- * @var $data           InterestedPerson[]
- * @var $organization   Organization
+ * @var Interested_personController $this
+ * @var InterestedPerson[]  $data
+ * @var Organization $organization
  */
 ?>
-
-
+<h3>Номинальные акционеры</h3>
 <div class="row-fluid">
     <div class="span12">
         <div class="pull-right" style="margin-top: 15px;">
@@ -26,62 +21,62 @@
                 'url' => $this->createUrl(
                     "add",
                     array(
-                        "id_yur" => $organization->primaryKey,
-                        "role" => InterestedPerson::ROLE_SHAREHOLDER,
+                        "org_id" => $organization->primaryKey,
+                        "type" => MViewInterestedPerson::SHAREHOLDER,
                     )
                 )
             ));
         ?>
         </div>
-        <h3>Номинальные акционеры</h3>
+
         <?php
-            $provider = (isset($data[InterestedPerson::ROLE_SHAREHOLDER])) ? $data[InterestedPerson::ROLE_SHAREHOLDER] : array();
-            $provider = new CArrayDataProvider($provider);
-            if (!empty($provider)){
-                foreach($provider->rawData as $k=>$v){
-                    $provider->rawData[$k]['yur_url'] = CHtml::link(
-                        $v['lico'],
-                        $this->createUrl(
-                            'view',
-                            array(
-                                'id' => $v['id'],
-                                'id_yur' => $v['id_yur'],
-                                'role' => $v['role'],
-                            )
-                        )
-                    );
-                    $provider->rawData[$k]['nominal'] = $v["nominal"] . " " . $v["currency"];
-                }
-            }
-            $this->widget('bootstrap.widgets.TbGridView', array(
-                'type'=>'striped bordered condensed',
-                'dataProvider'  => $provider,
-                'template'      => "{items} {pager}",
-                'columns'       => array(
-                    array(
-                        'name' => 'yur_url',
-                        'type' => 'raw',
-                        'header' => 'Лицо'
-                    ),
-                    array(
-                        'name' => 'nominal',
-                        'header' => 'Номинал акции',
-                    ),
-                    array(
-                        'name' => 'quantStock',
-                        'header' => 'Кол-во акций',
-                    ),
-                )
-            ));
+//            $provider = (isset($data[InterestedPerson::ROLE_SHAREHOLDER])) ? $data[InterestedPerson::ROLE_SHAREHOLDER] : array();
+//            $provider = new CArrayDataProvider($provider);
+//            if (!empty($provider)){
+//                foreach($provider->rawData as $k=>$v){
+//                    $provider->rawData[$k]['yur_url'] = CHtml::link(
+//                        $v['lico'],
+//                        $this->createUrl(
+//                            'view',
+//                            array(
+//                                'id' => $v['id'],
+//                                'id_yur' => $v['id_yur'],
+//                                'role' => $v['role'],
+//                            )
+//                        )
+//                    );
+//                    $provider->rawData[$k]['nominal'] = $v["nominal"] . " " . $v["currency"];
+//                }
+//            }
+//            $this->widget('bootstrap.widgets.TbGridView', array(
+//                'type'=>'striped bordered condensed',
+//                'dataProvider'  => $provider,
+//                'template'      => "{items} {pager}",
+//                'columns'       => array(
+//                    array(
+//                        'name' => 'yur_url',
+//                        'type' => 'raw',
+//                        'header' => 'Лицо'
+//                    ),
+//                    array(
+//                        'name' => 'nominal',
+//                        'header' => 'Номинал акции',
+//                    ),
+//                    array(
+//                        'name' => 'quantStock',
+//                        'header' => 'Кол-во акций',
+//                    ),
+//                )
+//            ));
         ?>
     </div>
 </div>
-
+<!--
 <div class="row-fluid">
     <div class="span12">
         <div class="pull-right" style="margin-top: 15px;">
             <?php
-            $this->widget('bootstrap.widgets.TbButton', array(
+/*            $this->widget('bootstrap.widgets.TbButton', array(
                 'label' => 'Новый бенефициар',
                 'type' => 'success',
                 'size' => 'normal',
@@ -93,11 +88,11 @@
                     )
                 )
             ));
-            ?>
+            */?>
         </div>
         <h3>Бенефициар</h3>
         <?php
-        $provider = (isset($data[InterestedPerson::ROLE_BENEFICIARY])) ? $data[InterestedPerson::ROLE_BENEFICIARY] : array();
+/*        $provider = (isset($data[InterestedPerson::ROLE_BENEFICIARY])) ? $data[InterestedPerson::ROLE_BENEFICIARY] : array();
         $provider = new CArrayDataProvider($provider);
         if (!empty($provider)){
             foreach($provider->rawData as $k=>$v){
@@ -136,7 +131,7 @@
                 ),
             )
         ));
-        ?>
+        */?>
     </div>
 </div>
 
@@ -144,7 +139,7 @@
     <div class="span12">
         <div class="pull-right" style="margin-top: 15px;">
             <?php
-            $this->widget('bootstrap.widgets.TbButton', array(
+/*            $this->widget('bootstrap.widgets.TbButton', array(
                 'label' => 'Новый директор',
                 'type' => 'success',
                 'size' => 'normal',
@@ -152,15 +147,15 @@
                     "add",
                     array(
                         "id_yur" => $organization->primaryKey,
-                        "role" => InterestedPerson::ROLE_DIRECTOR,
+                        "role" => InterestedPerson::ROLE_LEADER,
                     )
                 )
             ));
-            ?>
+            */?>
         </div>
         <h3>Директор</h3>
         <?php
-        $provider = (isset($data[InterestedPerson::ROLE_DIRECTOR])) ? $data[InterestedPerson::ROLE_DIRECTOR] : array();
+/*        $provider = (isset($data[InterestedPerson::ROLE_LEADER])) ? $data[InterestedPerson::ROLE_LEADER] : array();
         $provider = new CArrayDataProvider($provider);
         if (!empty($provider)){
             foreach($provider->rawData as $k=>$v){
@@ -197,7 +192,7 @@
                 ),
             )
         ));
-        ?>
+        */?>
     </div>
 </div>
 
@@ -205,7 +200,7 @@
     <div class="span12">
         <div class="pull-right" style="margin-top: 15px;">
             <?php
-            $this->widget('bootstrap.widgets.TbButton', array(
+/*            $this->widget('bootstrap.widgets.TbButton', array(
                 'label' => 'Новый секретарь',
                 'type' => 'success',
                 'size' => 'normal',
@@ -217,11 +212,11 @@
                     )
                 )
             ));
-            ?>
+            */?>
         </div>
         <h3>Секретари</h3>
         <?php
-        $provider = (isset($data[InterestedPerson::ROLE_SECRETARY])) ? $data[InterestedPerson::ROLE_SECRETARY] : array();
+/*        $provider = (isset($data[InterestedPerson::ROLE_SECRETARY])) ? $data[InterestedPerson::ROLE_SECRETARY] : array();
         $provider = new CArrayDataProvider($provider);
         if (!empty($provider)){
             foreach($provider->rawData as $k=>$v){
@@ -254,7 +249,7 @@
                 ),
             )
         ));
-        ?>
+        */?>
     </div>
 </div>
 
@@ -262,7 +257,7 @@
     <div class="span12">
         <div class="pull-right" style="margin-top: 15px;">
             <?php
-            $this->widget('bootstrap.widgets.TbButton', array(
+/*            $this->widget('bootstrap.widgets.TbButton', array(
                 'label' => 'Новый менеджер',
                 'type' => 'success',
                 'size' => 'normal',
@@ -274,11 +269,11 @@
                     )
                 )
             ));
-            ?>
+            */?>
         </div>
         <h3>Менеджеры</h3>
         <?php
-        $provider = (isset($data[InterestedPerson::ROLE_MANAGER])) ? $data[InterestedPerson::ROLE_MANAGER] : array();
+/*        $provider = (isset($data[InterestedPerson::ROLE_MANAGER])) ? $data[InterestedPerson::ROLE_MANAGER] : array();
         $provider = new CArrayDataProvider($provider);
         if (!empty($provider)){
             foreach($provider->rawData as $k=>$v){
@@ -311,6 +306,6 @@
                 ),
             )
         ));
-        ?>
+        */?>
     </div>
-</div>
+</div>-->

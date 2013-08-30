@@ -5,7 +5,7 @@ $(document).ready(function(){
 
     const ROLE_SHAREHOLDER = 'Номинальный акционер';
     const ROLE_BENEFICIARY = 'Бенефициар';
-    const ROLE_DIRECTOR = 'Директор';
+    const ROLE_LEADER = 'Директор';
 //    const ROLE_SECRETARY = 'Секретарь';
 //    const ROLE_MANAGER = 'Менеджер';
 
@@ -32,7 +32,7 @@ $(document).ready(function(){
 
     $('#InterestedPerson_role').change(function(){
         var role = $(this).find('option:selected').val();
-        if (role == ROLE_DIRECTOR){
+        if (role == ROLE_LEADER){
             div_job_title.removeClass('hide');
 
             div_percent.addClass('hide');
