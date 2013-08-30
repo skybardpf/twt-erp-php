@@ -205,8 +205,10 @@ class SettlementAccount extends SOAPModel
 	protected function findAll()
     {
 		$filters = SoapComponent::getStructureElement($this->where);
-		if (!$filters) $filters = array(array());
-		$request = array('filters' => $filters, 'sort' => $this->order);
+		$request = array(
+            'filters' => ($filters == array()) ? array(array()) : $filters,
+            'sort' => ($this->order == array()) ? array(array()) : $this->order
+        );
 
 		$ret = $this->SOAP->listSettlementAccount($request);
 		$ret = SoapComponent::parseReturn($ret);
