@@ -19,7 +19,6 @@ class IndexAction extends CAction
 
         $forceCached = (Yii::app()->request->getQuery('force_cache') == 1);
         $templates = TemplateLibrary::model()->getDataGroupBy($forceCached);
-//        var_dump($templates);die;
         $groups = TemplateLibraryGroup::model()->getTreeTemplates($templates, $forceCached);
 
         $controller->render(

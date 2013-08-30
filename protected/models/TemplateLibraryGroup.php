@@ -9,7 +9,7 @@
  * @property string $name
  * @property int    $level
  * @property bool   $deleted
-*/
+ */
 class TemplateLibraryGroup extends SOAPModel
 {
     const PREFIX_CACHE_LIST_MODELS = '_list_models';
@@ -17,27 +17,27 @@ class TemplateLibraryGroup extends SOAPModel
 
     public $children = array();
 
-	/**
-	 * @static
-	 * @param string $className
-	 * @return TemplateLibraryGroup
-	 */
-	public static function model($className = __CLASS__)
+    /**
+     * @static
+     * @param string $className
+     * @return TemplateLibraryGroup
+     */
+    public static function model($className = __CLASS__)
     {
-		return parent::model($className);
-	}
+        return parent::model($className);
+    }
 
-	/**
-	 * Список групп шаблонов
-	 * @return TemplateLibraryGroup[]
-	 */
-	protected function findAll()
+    /**
+     * Список групп шаблонов
+     * @return TemplateLibraryGroup[]
+     */
+    protected function findAll()
     {
         $request = array('filters' => array(array()), 'sort' => array($this->order));
-		$ret = $this->SOAP->listTemplateGroups($request);
-		$ret = SoapComponent::parseReturn($ret);
-		return $this->publish_list($ret, __CLASS__);
-	}
+        $ret = $this->SOAP->listTemplateGroups($request);
+        $ret = SoapComponent::parseReturn($ret);
+        return $this->publish_list($ret, __CLASS__);
+    }
 
     /**
      * @return array
@@ -53,27 +53,27 @@ class TemplateLibraryGroup extends SOAPModel
         );
     }
 
-	/**
-	 * Returns the list of attribute names of the model.
-	 * @return array list of attribute names.
-	 */
-	public function attributeLabels()
+    /**
+     * Returns the list of attribute names of the model.
+     * @return array list of attribute names.
+     */
+    public function attributeLabels()
     {
-		return array(
-			'id' => '#',
-			'name' => 'Название',
-		);
-	}
+        return array(
+            'id' => '#',
+            'name' => 'Название',
+        );
+    }
 
-	/**
-	 * @return array validation rules for model attributes.
-	 */
-	public function rules()
+    /**
+     * @return array validation rules for model attributes.
+     */
+    public function rules()
     {
-		return array(
-			array('name', 'required'),
-		);
-	}
+        return array(
+            array('name', 'required'),
+        );
+    }
 
     /**
      * Список групп шаблонов. Результат сохраняем в кеш.
@@ -113,8 +113,7 @@ class TemplateLibraryGroup extends SOAPModel
                     'text' => CHtml::link(
                         CHtml::encode($template->name),
                         Yii::app()->createUrl('site/download', array(
-                            'path' => $this->decodePath($template->path))
-//                            'path' => $this->decodePath('README.md'))
+                                'path' => $this->decodePath($template->path))
                         ),
                         array(
                             'target' => '_blank'
@@ -142,7 +141,7 @@ class TemplateLibraryGroup extends SOAPModel
                     'text' => CHtml::link(
                         CHtml::encode($template->name),
                         Yii::app()->createUrl('site/download', array(
-                            'path' => $this->decodePath($template->path))
+                                'path' => $this->decodePath($template->path))
                         ),
                         array(
                             'target' => '_blank'
@@ -180,14 +179,17 @@ class TemplateLibraryGroup extends SOAPModel
                 $tmp[$elem->level][$elem->id] = $elem->group_id;
                 $tmp_index[$elem->id] = $elem;
             }
+
             // TODO все переписать. Делал на коленке. Skibardin A.A.
             $data = array();
-            for($i=0,$l=count($tmp)-1; $i<$l; $i++){
+            for($i=0,$l=count($tmp)-1; $i<=$l; $i++){
                 foreach($tmp[$i] as $k=>$name){
-                    $tmp_index[$k]->children = $this->_getChildrenByLevel($tmp_index, $k, $tmp[$i+1]);
-                    if ($i == 0){
+                    if (isset($tmp[$i+1]))
+                        $tmp_index[$k]->children = $this->_getChildrenByLevel($tmp_index, $k, $tmp[$i+1]);
+                    else
+                        $tmp_index[$k]->children = array();
+                    if ($i == 0)
                         $data[$k] = $tmp_index[$k];
-                    }
                 }
             }
             Yii::app()->cache->set($cache_id, $data);
