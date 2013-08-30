@@ -10,7 +10,7 @@
  * @var string                      $cur_tab
  */
 ?>
-<h1><?= Chtml::encode($organization->name); ?></h1>
+<h1><?= CHtml::encode($organization->name); ?></h1>
 <div class="yur-tabs">
 <?php
     $this->widget('bootstrap.widgets.TbMenu', array(
@@ -32,13 +32,12 @@
                 'url'   => $this->createUrl('settlement_account/list', array('org_id' => $organization->primaryKey)),
                 'active'=> ($cur_tab == 'settlements')
             ),
-            /*
             array(
                 'label' => 'Заинтересованные лица',
-                'url'   => $this->createUrl('interested_persons/index', array('org_id' => $organization->primaryKey)),
-                'active' => ($cur_tab == 'interested_persons'),
+                'url'   => $this->createUrl('interested_person/index', array('org_id' => $organization->primaryKey)),
+                'active' => ($cur_tab == 'interested_person'),
                 'itemOptions' => array('class'=>'narrow')
-            ),*/
+            ),
             array(
                 'label' => 'Календарь событий',
                 'url'   => $this->createUrl('calendar_events/list', array('org_id' => $organization->primaryKey)),

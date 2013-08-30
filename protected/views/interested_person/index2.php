@@ -1,10 +1,14 @@
 <?php
 /**
- * Вывод списка заитересованных лиц.
+ * Список заинтересованных лиц. Разбито на 4 вкладки:
+ * - Номинальные акционеры
+ * - Руководители
+ * - Менеджеры
+ * - Секретари
  *
  * @author Skibardin A.A. <webprofi1983@gmail.com>
  *
- * @var $this           Interested_personsController
+ * @var $this           Interested_personController
  * @var $data           InterestedPerson[]
  * @var $organization   Organization
  */
