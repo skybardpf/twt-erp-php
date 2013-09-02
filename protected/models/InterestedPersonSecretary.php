@@ -1,18 +1,12 @@
 <?php
 /**
- * Модель: "Заинтересованные персоны" -> Номинальные акционеры.
+ * Модель: "Заинтересованные персоны" -> Секретарь.
  *
  * @author Skibardin A.A. <webprofi1983@gmail.com>
  *
- * @property int    $value_stake
- * @property string $date_issue_stake
- * @property int    $number_stake
- * @property string $type_stake
- * @property int    $count_stake
- * @property int    $nominal_stake
- * @property string $currency_nominal_stake
+ * @property string $job_title
  */
-class InterestedPersonShareholder extends InterestedPersonAbstract
+class InterestedPersonSecretary extends InterestedPersonAbstract
 {
     /**
      * Возвращает тип заинтересованного лица.
@@ -20,46 +14,31 @@ class InterestedPersonShareholder extends InterestedPersonAbstract
      */
     public function getViewPerson()
     {
-        return MViewInterestedPerson::SHAREHOLDER;
+        return MViewInterestedPerson::LEADER;
     }
 
 	/**
 	 * @static
 	 * @param string $className
-	 * @return InterestedPersonShareholder
+	 * @return InterestedPersonSecretary
 	 */
 	public static function model($className = __CLASS__)
     {
 		return parent::model($className);
 	}
 
-
-
-    /**
-     * Список доступных тип акций.
-     * @static
-     * @return array
-     */
-    public static function getStockTypes()
-    {
-        return array(
-            'Обыкновенные' => 'Обыкновенные',
-            'Привилегированные' => 'Привилегированные',
-        );
-    }
-
 	/**
-	 * Получение номинального акционера.
+	 * Получение руководителя.
 	 * @param string $id
 	 * @param string $typeLico
 	 * @param string $orgId
 	 * @param string $orgType
 	 * @param string $date
-	 * @return InterestedPersonShareholder
+	 * @return InterestedPersonSecretary
 	 */
 	public function findByPk($id, $typeLico, $orgId, $orgType, $date)
     {
-		$ret = $this->SOAP->getPersonShareHolder(
+		$ret = $this->SOAP->getPersonSecretary(
             array(
                 'id' => $id,
                 'type_lico' => $typeLico,
@@ -116,13 +95,7 @@ class InterestedPersonShareholder extends InterestedPersonAbstract
         return array_merge(
             parent::attributeNames(),
             array(
-                'value_stake',
-                'date_issue_stake',
-                'number_stake',
-                'type_stake',
-                'count_stake',
-                'nominal_stake',
-                'currency_nominal_stake',
+                'job_title',
             )
         );
     }
@@ -136,13 +109,7 @@ class InterestedPersonShareholder extends InterestedPersonAbstract
         return array_merge(
             parent::attributeLabels(),
             array(
-                'value_stake' => 'Величина пакета акций',
-                'date_issue_stake' => 'Дата выпуска пакета акций',
-                'number_stake' => 'Номер пакета акций',
-                'type_stake' => 'Тип акций',
-                'count_stake' => 'Кол-во акций',
-                'nominal_stake' => 'Номинал акций',
-                'currency_nominal_stake' => 'Валюта номинала акций',
+                'job_title' => 'Наименование должности',
             )
         );
 	}
@@ -152,26 +119,8 @@ class InterestedPersonShareholder extends InterestedPersonAbstract
         return array_merge(
             parent::rules(),
             array(
-                array('value_stake', 'required'),
-                array('value_stake', 'numerical', 'integerOnly' => true, 'min'=> 0, 'max' => 100),
-
-                array('date_issue_stake', 'required'),
-                array('date_issue_stake', 'date', 'format' => 'yyyy-MM-dd'),
-
-                array('number_stake', 'required'),
-                array('number_stake', 'numerical', 'integerOnly' => true, 'min'=> 0),
-
-                array('count_stake', 'required'),
-                array('count_stake', 'numerical', 'integerOnly' => true, 'min'=> 0),
-
-                array('nominal_stake', 'required'),
-                array('nominal_stake', 'numerical', 'integerOnly' => true, 'min'=> 0),
-
-                array('type_stake', 'required'),
-                array('type_stake', 'in', 'range' => array_keys(self::getStockTypes())),
-
-                array('currency_nominal_stake', 'required'),
-                array('currency_nominal_stake', 'in', 'range' => array_keys(Currency::model()->listNames($this->forceCached))),
+                array('job_title', 'required'),
+                array('job_title', 'length', 'max' => 100),
             )
 		);
 	}
