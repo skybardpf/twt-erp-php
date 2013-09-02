@@ -5,8 +5,8 @@
  */
 class MViewInterestedPerson extends CEnumerable
 {
-    const SHAREHOLDER = 'Номинальный акционер';
-    const LEADER = 'Руководитель';
+    const SHAREHOLDER = 'НоминальныйАкционер';
+    const LEADER = 'Директор';
     const SECRETARY = 'Секретарь';
     const MANAGER = 'Менеджер';
 }

@@ -57,6 +57,7 @@ class IndexAction extends CAction
          * @var InterestedPersonAbstract $model
          */
         $model = SOAPModel::model($model_class);
+
 //        $history = $model->listRevisionHistory($org->primaryKey, MTypeOrganization::ORGANIZATION, $forceCached);
 //        $last_date = $model->getLastDate($org->primaryKey, MTypeOrganization::ORGANIZATION, $forceCached);
 

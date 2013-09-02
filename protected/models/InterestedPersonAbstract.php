@@ -7,12 +7,13 @@
  * @property string     $viewPerson
  * @property string     $pageTypePerson
  *
- * @property string     $person_name
+ * @property string     $person_name        // list
+ * @property string     $date               // list
  *
  * @property string     $type_yur
  * @property string     $id_yur
  * @property string     $type_lico
- * @property string     $date_inauguration
+ * @property string     $date_inaguration
  * @property string     $description
  * @property bool       $deleted
  * @property bool       $current_state
@@ -54,7 +55,7 @@ abstract class InterestedPersonAbstract extends SOAPModel
             'sort' => ($this->order == array()) ? array(array()) : $this->order
         ));
         $ret = SoapComponent::parseReturn($ret);
-        return $this->publish_list($ret, __CLASS__);
+        return $this->publish_list($ret, get_class($this));
 	}
 
     /**
@@ -67,13 +68,8 @@ abstract class InterestedPersonAbstract extends SOAPModel
      */
     public function listModels($orgId, $orgType, $date, $forceCache=false)
     {
-        $cache_id = __CLASS__ . self::PREFIX_CACHE_MODELS_BY_ORG . $orgId .'_' . $orgType . '_' . $date;
+        $cache_id = __CLASS__ . self::PREFIX_CACHE_MODELS_BY_ORG.$orgId.'_'.$orgType.'_'.$date.'_'.$this->pageTypePerson;
         if ($forceCache || ($data = Yii::app()->cache->get($cache_id)) === false){
-            /*var_dump('id_yur', $orgId);
-            var_dump('type_yur', $orgType);
-            var_dump('date', $date);
-            var_dump('type_person', $this->viewPerson);
-            die;*/
             $data = $this->where('id_yur', $orgId)
                 ->where('type_yur', $orgType)
                 ->where('date', $date)
@@ -203,6 +199,7 @@ abstract class InterestedPersonAbstract extends SOAPModel
         return array(
             'id',
             'person_name',
+            'date',
 
             'type_yur',
             'id_yur',
@@ -221,34 +218,10 @@ abstract class InterestedPersonAbstract extends SOAPModel
 	public function attributeLabels()
     {
 		return array(
-//			'id'            => 'Лицо',
-//			'role'          => 'Роль',
-
-//			'cost'          => 'Номинальная стоимость пакета акций',
-////			'vid'           => 'Вид лица', // (выбор из справочника юр. лиц или физ. лиц, обязательное); Физические лица
-////			'cur'           => 'Валюта номинальной стоимости',
-//			'deleted'       => 'Текущее состояние',
-//			'id_yur'        => 'Юр.Лицо',
-////			'name'          => 'Название',
-//
-//            'yur_url'       => '',
-//            'type_yur'      => '',
-//            'lico'          => 'Лицо',
             'type_lico' => 'Тип',
             'date_inaguration' => 'Дата вступления в должность',
             'current_state' => 'Текущее состояние',
             'description' => 'Дополнительные сведения',
-//            'nominal'       => 'Номинал акции',
-//            'currency'      => 'Валюта',
-//            'quantStock'    => 'Кол-во акций',
-//            'date'          => 'Дата вступления в должность',
-//            'dateIssue'     => 'Дата выпуска пакета акций',
-//            'numPack'       => 'Номер пакета акций',
-//            'typeStock'     => 'Вид акций',
-//            'job_title'     => 'Наименование должности',
-//
-//            'list_individuals'     => 'Список физ. лиц',
-//            'list_organizations'   => 'Список юр. лиц',
         );
 	}
 

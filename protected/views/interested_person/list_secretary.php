@@ -5,8 +5,10 @@
  * @author Skibardin A.A. <webprofi1983@gmail.com>
  *
  * @var Interested_personController $this
- * @var InterestedPerson[]  $data
+ * @var InterestedPersonSecretary[] $data
  * @var Organization $organization
+ * @var array $history
+ * @var string $last_date
  */
 ?>
 <h3>Секретари</h3>
@@ -19,10 +21,9 @@
                 'type' => 'success',
                 'size' => 'normal',
                 'url' => $this->createUrl(
-                    "add",
+                    "interested_person_secretary/add",
                     array(
                         "org_id" => $organization->primaryKey,
-                        "type" => MViewInterestedPerson::SECRETARY,
                     )
                 )
             ));
@@ -30,44 +31,39 @@
         </div>
 
         <?php
-//            $provider = (isset($data[InterestedPerson::ROLE_SHAREHOLDER])) ? $data[InterestedPerson::ROLE_SHAREHOLDER] : array();
-//            $provider = new CArrayDataProvider($provider);
-//            if (!empty($provider)){
-//                foreach($provider->rawData as $k=>$v){
-//                    $provider->rawData[$k]['yur_url'] = CHtml::link(
-//                        $v['lico'],
-//                        $this->createUrl(
-//                            'view',
-//                            array(
-//                                'id' => $v['id'],
-//                                'id_yur' => $v['id_yur'],
-//                                'role' => $v['role'],
-//                            )
-//                        )
-//                    );
-//                    $provider->rawData[$k]['nominal'] = $v["nominal"] . " " . $v["currency"];
-//                }
-//            }
-//            $this->widget('bootstrap.widgets.TbGridView', array(
-//                'type'=>'striped bordered condensed',
-//                'dataProvider'  => $provider,
-//                'template'      => "{items} {pager}",
-//                'columns'       => array(
-//                    array(
-//                        'name' => 'yur_url',
-//                        'type' => 'raw',
-//                        'header' => 'Лицо'
-//                    ),
-//                    array(
-//                        'name' => 'nominal',
-//                        'header' => 'Номинал акции',
-//                    ),
-//                    array(
-//                        'name' => 'quantStock',
-//                        'header' => 'Кол-во акций',
-//                    ),
-//                )
-//            ));
+        $provider = new CArrayDataProvider($data);
+        foreach ($provider->rawData as $k => $v) {
+            $provider->rawData[$k]['person_name'] = CHtml::link(
+                CHtml::encode($v['person_name']),
+                $this->createUrl(
+                    'interested_person_secretary/view',
+                    array(
+                        'id' => $v['id'],
+                        'type_lico' => $v['type_lico'],
+                        'id_yur' => $organization->primaryKey,
+                        'type_yur' => MTypeOrganization::ORGANIZATION,
+                        'date' => $v['date'],
+                    )
+                )
+            );
+        }
+        echo CHtml::tag('div', array(), 'На '.CHtml::encode($last_date));
+        $this->widget('bootstrap.widgets.TbGridView', array(
+            'type' => 'striped bordered condensed',
+            'dataProvider' => $provider,
+            'template' => "{items} {pager}",
+            'columns' => array(
+                array(
+                    'name' => 'person_name',
+                    'type' => 'raw',
+                    'header' => 'Лицо'
+                ),
+                array(
+                    'name' => 'percent',
+                    'header' => '%, акций',
+                ),
+            )
+        ));
         ?>
     </div>
 </div>
