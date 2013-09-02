@@ -11,6 +11,8 @@
  * @property int    $count_stake
  * @property int    $nominal_stake
  * @property string $currency_nominal_stake
+ *
+ * @property string $percent
  */
 class InterestedPersonShareholder extends InterestedPersonAbstract
 {
@@ -23,6 +25,27 @@ class InterestedPersonShareholder extends InterestedPersonAbstract
         return MViewInterestedPerson::SHAREHOLDER;
     }
 
+    /**
+     * Возвращает тип заинтересованного лица для страницы.
+     * @return string
+     */
+    public function getPageTypePerson()
+    {
+        return MPageTypeInterestedPerson::SHAREHOLDER;
+    }
+
+    /**
+     * @return array
+     */
+    public function listPersonTypes()
+    {
+        return array(
+            MTypeInterestedPerson::ORGANIZATION => 'Организация',
+            MTypeInterestedPerson::CONTRACTOR => 'Контрагент',
+            MTypeInterestedPerson::INDIVIDUAL => 'Физ. лицо',
+        );
+    }
+
 	/**
 	 * @static
 	 * @param string $className
@@ -33,14 +56,20 @@ class InterestedPersonShareholder extends InterestedPersonAbstract
 		return parent::model($className);
 	}
 
-
+    /**
+     * Инициализация перенменных.
+     */
+    public function afterConstruct()
+    {
+        $this->type_yur = MTypeOrganization::ORGANIZATION;
+        parent::afterConstruct();
+    }
 
     /**
      * Список доступных тип акций.
-     * @static
      * @return array
      */
-    public static function getStockTypes()
+    public function getStockTypes()
     {
         return array(
             'Обыкновенные' => 'Обыкновенные',
@@ -116,6 +145,7 @@ class InterestedPersonShareholder extends InterestedPersonAbstract
         return array_merge(
             parent::attributeNames(),
             array(
+                'percent',
                 'value_stake',
                 'date_issue_stake',
                 'number_stake',
@@ -123,6 +153,10 @@ class InterestedPersonShareholder extends InterestedPersonAbstract
                 'count_stake',
                 'nominal_stake',
                 'currency_nominal_stake',
+
+                'individual_id',
+                'organization_id',
+                'contractor_id',
             )
         );
     }
@@ -136,13 +170,17 @@ class InterestedPersonShareholder extends InterestedPersonAbstract
         return array_merge(
             parent::attributeLabels(),
             array(
-                'value_stake' => 'Величина пакета акций',
+                'value_stake' => 'Величина пакета акций, %',
                 'date_issue_stake' => 'Дата выпуска пакета акций',
                 'number_stake' => 'Номер пакета акций',
                 'type_stake' => 'Тип акций',
                 'count_stake' => 'Кол-во акций',
                 'nominal_stake' => 'Номинал акций',
                 'currency_nominal_stake' => 'Валюта номинала акций',
+
+                'individual_id' => 'Физическое лицо',
+                'organization_id' => 'Организация',
+                'contractor_id' => 'Контрагент',
             )
         );
 	}
@@ -172,6 +210,15 @@ class InterestedPersonShareholder extends InterestedPersonAbstract
 
                 array('currency_nominal_stake', 'required'),
                 array('currency_nominal_stake', 'in', 'range' => array_keys(Currency::model()->listNames($this->forceCached))),
+
+                array('individual_id', 'required'),
+                array('individual_id', 'in', 'range' => array_keys(Individual::model()->listNames($this->forceCached)), 'on' => 'typeIndividual'),
+
+                array('organization_id', 'required'),
+                array('organization_id', 'in', 'range' => array_keys(Organization::model()->getListNames($this->forceCached)), 'on' => 'typeOrganization'),
+
+                array('contractor_id', 'required'),
+                array('contractor_id', 'in', 'range' => array_keys(Contractor::model()->getListNames($this->forceCached)), 'on' => 'typeContractor'),
             )
 		);
 	}

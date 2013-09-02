@@ -14,7 +14,26 @@ class InterestedPersonManager extends InterestedPersonAbstract
      */
     public function getViewPerson()
     {
-        return MViewInterestedPerson::LEADER;
+        return MViewInterestedPerson::MANAGER;
+    }
+
+    /**
+     * Возвращает тип заинтересованного лица для страницы.
+     * @return string
+     */
+    public function getPageTypePerson()
+    {
+        return MPageTypeInterestedPerson::MANAGER;
+    }
+
+    /**
+     * @return array
+     */
+    public function listPersonTypes()
+    {
+        return array(
+            MTypeInterestedPerson::INDIVIDUAL => 'Физ. лицо',
+        );
     }
 
 	/**
@@ -96,6 +115,7 @@ class InterestedPersonManager extends InterestedPersonAbstract
             parent::attributeNames(),
             array(
                 'job_title',
+                'individual_id'
             )
         );
     }
@@ -110,6 +130,7 @@ class InterestedPersonManager extends InterestedPersonAbstract
             parent::attributeLabels(),
             array(
                 'job_title' => 'Наименование должности',
+                'individual_id' => 'Физическое лицо',
             )
         );
 	}

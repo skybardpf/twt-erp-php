@@ -26,10 +26,10 @@ $this->widget('bootstrap.widgets.TbMenu', array(
                 'interested_person/index',
                 array(
                     'org_id' => $organization->primaryKey,
-                    'type' => 'shareholder',
+                    'type' => MPageTypeInterestedPerson::SHAREHOLDER,
                 )
             ),
-            'active' => ($menu_tab == 'shareholder')
+            'active' => ($menu_tab == MPageTypeInterestedPerson::SHAREHOLDER)
         ),
         array(
             'label' => 'Руководители',
@@ -37,10 +37,10 @@ $this->widget('bootstrap.widgets.TbMenu', array(
                 'interested_person/index',
                 array(
                     'org_id' => $organization->primaryKey,
-                    'type' => 'leader',
+                    'type' => MPageTypeInterestedPerson::LEADER,
                 )
             ),
-            'active' => ($menu_tab == 'leader')
+            'active' => ($menu_tab == MPageTypeInterestedPerson::LEADER)
         ),
         array(
             'label' => 'Менеджеры',
@@ -48,10 +48,10 @@ $this->widget('bootstrap.widgets.TbMenu', array(
                 'interested_person/index',
                 array(
                     'org_id' => $organization->primaryKey,
-                    'type' => 'manager',
+                    'type' => MPageTypeInterestedPerson::MANAGER,
                 )
             ),
-            'active' => ($menu_tab == 'manager')
+            'active' => ($menu_tab == MPageTypeInterestedPerson::MANAGER)
         ),
         array(
             'label' => 'Секретари',
@@ -59,10 +59,10 @@ $this->widget('bootstrap.widgets.TbMenu', array(
                 'interested_person/index',
                 array(
                     'org_id' => $organization->primaryKey,
-                    'type' => 'secretary',
+                    'type' => MPageTypeInterestedPerson::SECRETARY,
                 )
             ),
-            'active' => ($menu_tab == 'secretary'),
+            'active' => ($menu_tab == MPageTypeInterestedPerson::SECRETARY),
         ),
     )
 ));

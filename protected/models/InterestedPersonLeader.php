@@ -5,6 +5,7 @@
  * @author Skibardin A.A. <webprofi1983@gmail.com>
  *
  * @property string $job_title
+ * @property string $role
  * @property string $document_base
  */
 class InterestedPersonLeader extends InterestedPersonAbstract
@@ -16,6 +17,26 @@ class InterestedPersonLeader extends InterestedPersonAbstract
     public function getViewPerson()
     {
         return MViewInterestedPerson::LEADER;
+    }
+
+    /**
+     * Возвращает тип заинтересованного лица для страницы.
+     * @return string
+     */
+    public function getPageTypePerson()
+    {
+        return MPageTypeInterestedPerson::LEADER;
+    }
+
+    /**
+     * @return array
+     */
+    public function listPersonTypes()
+    {
+        return array(
+            MTypeInterestedPerson::CONTRACTOR => 'Контрагент',
+            MTypeInterestedPerson::INDIVIDUAL => 'Физ. лицо',
+        );
     }
 
 	/**
@@ -96,8 +117,12 @@ class InterestedPersonLeader extends InterestedPersonAbstract
         return array_merge(
             parent::attributeNames(),
             array(
+                'role',
                 'job_title',
                 'document_base',
+
+                'individual_id',
+                'contractor_id',
             )
         );
     }
@@ -113,6 +138,9 @@ class InterestedPersonLeader extends InterestedPersonAbstract
             array(
                 'job_title' => 'Наименование должности',
                 'document_base' => 'Документ основание',
+
+                'individual_id' => 'Физическое лицо',
+                'contractor_id' => 'Контрагент',
             )
         );
 	}

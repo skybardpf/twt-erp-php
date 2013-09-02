@@ -5,6 +5,9 @@
  * @author Skibardin A.A. <webprofi1983@gmail.com>
  *
  * @property string     $viewPerson
+ * @property string     $pageTypePerson
+ *
+ * @property string     $person_name
  *
  * @property string     $type_yur
  * @property string     $id_yur
@@ -18,6 +21,7 @@ abstract class InterestedPersonAbstract extends SOAPModel
 {
     const PREFIX_CACHE_MODELS_BY_ORG = '_models_by_org_';
     const PREFIX_CACHE_REVISION_HISTORY_BY_ORG = '_revision_history_by_org_';
+    const PREFIX_CACHE_LAST_HISTORY_DATE_BY_ORG = '_last_history_date_by_org_';
 
     /**
      * Возвращает тип заинтересованного лица.
@@ -25,6 +29,18 @@ abstract class InterestedPersonAbstract extends SOAPModel
      * @return string
      */
     abstract public function getViewPerson();
+
+    /**
+     * Возвращает тип заинтересованного лица для страницы.
+     * @see MPageTypeInterestedPerson
+     * @return string
+     */
+    abstract public function getPageTypePerson();
+
+    /**
+     * @return array
+     */
+    abstract public function listPersonTypes();
 
 	/**
 	 * Список заинтересованных лиц
@@ -53,6 +69,11 @@ abstract class InterestedPersonAbstract extends SOAPModel
     {
         $cache_id = __CLASS__ . self::PREFIX_CACHE_MODELS_BY_ORG . $orgId .'_' . $orgType . '_' . $date;
         if ($forceCache || ($data = Yii::app()->cache->get($cache_id)) === false){
+            /*var_dump('id_yur', $orgId);
+            var_dump('type_yur', $orgType);
+            var_dump('date', $date);
+            var_dump('type_person', $this->viewPerson);
+            die;*/
             $data = $this->where('id_yur', $orgId)
                 ->where('type_yur', $orgType)
                 ->where('date', $date)
@@ -92,22 +113,63 @@ abstract class InterestedPersonAbstract extends SOAPModel
                 ->where('type_yur', $orgType)
                 ->where('type_person', $this->viewPerson)
                 ->findAllRevisionHistory();
+
+            usort($data, function($a, $b){
+                $ad = new DateTime($a);
+                $bd = new DateTime($b);
+                if ($ad == $bd) {
+                    return 0;
+                }
+                return ($ad < $bd) ? -1 : 1;
+            });
             Yii::app()->cache->set($cache_id, $data);
         }
         return $data;
     }
 
     /**
+     * @param string $orgId
+     * @param string $orgType
+     * @param bool $forceCache
+     * @return string
+     */
+    public function getLastDate($orgId, $orgType, $forceCache=false)
+    {
+        $cache_id = __CLASS__ . self::PREFIX_CACHE_LAST_HISTORY_DATE_BY_ORG . $orgId .'_' . $orgType;
+        if ($forceCache || ($date = Yii::app()->cache->get($cache_id)) === false){
+            $list_date = $this->listRevisionHistory($orgId, $orgType, $forceCache);
+            $date = array_pop($list_date);
+            if ($date === null){
+                $date = new DateTime();
+            }
+            $date = $date->format('Y-m-d');
+            Yii::app()->cache->set($cache_id, $date);
+        }
+        return $date;
+    }
+
+    /**
      * Список доступных типов заинтересованных лиц.
-     * @static
      * @return array
      */
-    public static function getPersonTypes()
+    public function getPersonTypes()
     {
         return array(
             MTypeInterestedPerson::ORGANIZATION => 'Организация',
             MTypeInterestedPerson::CONTRACTOR => 'Контрагент',
             MTypeInterestedPerson::INDIVIDUAL => 'Физическое лицо',
+        );
+    }
+
+    /**
+     * Список состояний заинтересованного лица.
+     * @return array
+     */
+    public function getStatuses()
+    {
+        return array(
+            1 => 'Действителен',
+            0 => 'Недействителен',
         );
     }
 
@@ -124,7 +186,7 @@ abstract class InterestedPersonAbstract extends SOAPModel
                     'type_lico' => $this->type_lico,
                     'id_yur' => $this->id_yur,
                     'type_yur' => $this->type_yur,
-                    'date' => $this->date_inauguration,
+                    'date' => $this->date_inaguration,
                     'type_person' => $this->viewPerson
                 )
             );
@@ -139,10 +201,13 @@ abstract class InterestedPersonAbstract extends SOAPModel
     public function attributeNames()
     {
         return array(
+            'id',
+            'person_name',
+
             'type_yur',
             'id_yur',
             'type_lico',
-            'date_inauguration',
+            'date_inaguration',
             'description',
             'deleted',
             'current_state',
@@ -158,9 +223,8 @@ abstract class InterestedPersonAbstract extends SOAPModel
 		return array(
 //			'id'            => 'Лицо',
 //			'role'          => 'Роль',
-//			'add_info'      => 'Дополнительные сведения',
+
 //			'cost'          => 'Номинальная стоимость пакета акций',
-//			'percent'       => 'Величина пакета акций, %',
 ////			'vid'           => 'Вид лица', // (выбор из справочника юр. лиц или физ. лиц, обязательное); Физические лица
 ////			'cur'           => 'Валюта номинальной стоимости',
 //			'deleted'       => 'Текущее состояние',
@@ -170,7 +234,10 @@ abstract class InterestedPersonAbstract extends SOAPModel
 //            'yur_url'       => '',
 //            'type_yur'      => '',
 //            'lico'          => 'Лицо',
-//            'type_lico'     => 'Тип лица',
+            'type_lico' => 'Тип',
+            'date_inaguration' => 'Дата вступления в должность',
+            'current_state' => 'Текущее состояние',
+            'description' => 'Дополнительные сведения',
 //            'nominal'       => 'Номинал акции',
 //            'currency'      => 'Валюта',
 //            'quantStock'    => 'Кол-во акций',
@@ -197,8 +264,8 @@ abstract class InterestedPersonAbstract extends SOAPModel
 
 			array('current_state', 'required'),
 
-            array('date_inauguration', 'required'),
-            array('date_inauguration', 'date', 'format' => 'yyyy-MM-dd'),
+            array('date_inaguration', 'required'),
+            array('date_inaguration', 'date', 'format' => 'yyyy-MM-dd'),
 
             array('description', 'length', 'max' => 200),
 		);

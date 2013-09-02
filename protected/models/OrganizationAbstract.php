@@ -8,6 +8,9 @@ class OrganizationException extends CException{}
  * Общие методы и свойства для организаций и контрагентов.
  *
  * @author Skibardin A.A. <webprofi1983@gmail.com>
+ *
+ * @property array  $signatories
+ * @property string $json_signatories
  */
 abstract class OrganizationAbstract extends SOAPModel
 {

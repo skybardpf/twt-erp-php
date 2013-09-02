@@ -235,7 +235,7 @@ class Organization extends OrganizationAbstract
             array('ogrn', 'validateOgrn', 'on' => 'russianCountry'),
             array('kpp', 'length', 'max' => 9, 'on' => 'russianCountry'),
 
-            /**modules.legal.
+            /**
              * Foreign country
              */
             array('reg_nom, sert_nom, vat_nom', 'safe', 'on' => 'russianCountry'),

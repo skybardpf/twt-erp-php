@@ -14,7 +14,28 @@ class InterestedPersonSecretary extends InterestedPersonAbstract
      */
     public function getViewPerson()
     {
-        return MViewInterestedPerson::LEADER;
+        return MViewInterestedPerson::SECRETARY;
+    }
+
+    /**
+     * Возвращает тип заинтересованного лица для страницы.
+     * @return string
+     */
+    public function getPageTypePerson()
+    {
+        return MPageTypeInterestedPerson::SECRETARY;
+    }
+
+    /**
+     * @return array
+     */
+    public function listPersonTypes()
+    {
+        return array(
+            MTypeInterestedPerson::ORGANIZATION => 'Организация',
+            MTypeInterestedPerson::CONTRACTOR => 'Контрагент',
+            MTypeInterestedPerson::INDIVIDUAL => 'Физ. лицо',
+        );
     }
 
 	/**
@@ -96,6 +117,9 @@ class InterestedPersonSecretary extends InterestedPersonAbstract
             parent::attributeNames(),
             array(
                 'job_title',
+                'individual_id',
+                'organization_id',
+                'contractor_id',
             )
         );
     }
@@ -110,6 +134,10 @@ class InterestedPersonSecretary extends InterestedPersonAbstract
             parent::attributeLabels(),
             array(
                 'job_title' => 'Наименование должности',
+
+                'individual_id' => 'Физическое лицо',
+                'organization_id' => 'Организация',
+                'contractor_id' => 'Контрагент',
             )
         );
 	}
