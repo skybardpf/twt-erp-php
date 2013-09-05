@@ -125,12 +125,11 @@ $jui_date_options = array(
     </div>
 
     <?php
-    //    if (is_bool($model->deleted)) {
-    //        $model->deleted = $model->deleted ? 0 : 1;
-    //    } else {
-    //        $model->deleted = 1;
-    //    }
-    //
+    if (is_bool($model->deleted)) {
+        $model->deleted = $model->deleted ? 1 : 0;
+    } else {
+        $model->deleted = 0;
+    }
     echo $form->radioButtonListInlineRow($model, 'current_state', $model->getStatuses());
     echo $form->textFieldRow($model, 'job_title');
     echo $form->textAreaRow($model, 'description');

@@ -24,6 +24,7 @@ class CreateAction extends CAction
 
         $model = new InterestedPersonShareholder();
         $model->id_yur = $org->primaryKey;
+        $model->type_yur = MTypeOrganization::ORGANIZATION;
         $model->forceCached = $forceCached;
 
         $data = Yii::app()->request->getPost(get_class($model));

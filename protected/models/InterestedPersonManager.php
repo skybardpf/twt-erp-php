@@ -47,40 +47,32 @@ class InterestedPersonManager extends InterestedPersonAbstract
 	}
 
     /**
-     * Сохранение заинтересованного лица.
-     *
-     * @return string Если успешно, сохранилось, возвращает id записи.
-     * @throws CHttpException
+     * Сохранение номинального акционера.
+     * @param InterestedPersonManager $old_model
+     * @return array Если успешно, сохранилось, возвращает массив со значениями:
+     * [id, type_lico, id_yur, type_yur, date, number_stake],
+     * иначе возвращает NULL.
+     * @throws CException
      */
-//    public function save()
-//    {
-//        $data = $this->getAttributes();
-//
+    public function save(InterestedPersonManager $old_model = null)
+    {
+        $data = $this->getAttributes();
+
 //        if (!$this->primaryKey){
 //            unset($data['id']);
 //        }
-//        $data['deleted'] = ($data['deleted'] == 1) ? false : true;
-//
-////        if ($data['type_lico'] == self::TYPE_LICO_INDIVIDUAL){
-////            $data['id'] = $data['list_individuals'];
-////        } elseif ($data['type_lico'] == self::TYPE_LICO_ORGANIZATION){
-////            $data['id'] = $data['list_organizations'];
-////        } else {
-////            throw new CHttpException(500, 'Неизвестный тип лица.');
-////        }
-//        unset($data['list_organizations']);
-//        unset($data['list_individuals']);
-//        unset($data['yur_url']);
-//        unset($data['type_lico']);
-//
-//        $data['type_lico'] = "Организации";
-////        $data['role'] = "НоминальныйАкционер";
-//
-//        $ret = $this->SOAP->saveInterestedPerson(array(
-//            'data' => SoapComponent::getStructureElement($data),
-//        ));
-//        return SoapComponent::parseReturn($ret, false);
-//    }
+        if ($this->type_lico != MTypeInterestedPerson::INDIVIDUAL)
+            throw new CException('Указан неизвестный тип заинтересованного лица.');
+
+        $data['id'] = $data['individual_id'];
+        $data['deleted'] = ($data['deleted'] == 1) ? true : false;
+        $data['type_person'] = $this->viewPerson;
+
+        unset($data['individual_id']);
+        unset($data['person_name']);
+
+        return $this->saveData($data, $old_model);
+    }
 
     /**
      * @return array
@@ -118,6 +110,9 @@ class InterestedPersonManager extends InterestedPersonAbstract
             array(
                 array('job_title', 'required'),
                 array('job_title', 'length', 'max' => 100),
+
+                array('individual_id', 'required'),
+                array('individual_id', 'in', 'range' => array_keys(Individual::model()->listNames($this->forceCached)), 'on' => 'typeIndividual'),
             )
 		);
 	}

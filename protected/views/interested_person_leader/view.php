@@ -1,11 +1,11 @@
 <?php
 /**
- * Просмотр номинального акционера.
+ * Просмотр руководителя.
  *
  * @author Skibardin A.A. <webprofi1983@gmail.com>
  *
  * @var Interested_person_shareholderController $this
- * @var InterestedPersonShareholder $model
+ * @var InterestedPersonLeader $model
  * @var Organization $organization
  */
 ?>
@@ -39,8 +39,8 @@
             'type'          => 'danger',
             'label'         => 'Удалить',
             'htmlOptions'   => array(
-                'data-question' => 'Вы уверены, что хотите удалить номинального акционера?',
-                'data-title' => 'Удаление номинального акционера',
+                'data-question' => 'Вы уверены, что хотите удалить руководителя?',
+                'data-title' => 'Удаление руководителя',
                 'data-url' => $this->createUrl(
                     'delete',
                     array(
@@ -67,9 +67,7 @@
 <br/><br/>
 <div>
 <?php
-    $currency = Currency::model()->listNames($model->forceCached);
     $model->deleted = $model->deleted ? "Недействителен" : "Действителен";
-
 	$this->widget('bootstrap.widgets.TbDetailView', array(
 		'data' => $model,
 		'attributes' => array(
@@ -81,34 +79,9 @@
                 'name' => 'deleted',
                 'label' => 'Текущее состояние',
             ),
-			array(
-                'name' => 'value_stake',
-                'label' => 'Величина пакета акций'
-            ),
-			array(
-                'name' => 'date_issue_stake',
-                'label' => 'Дата выпуска пакета акций'
-            ),
             array(
-                'name' => 'number_stake',
-                'label' => 'Номер пакета акций'
-            ),
-            array(
-                'name' => 'type_stake',
-                'label' => 'Вид акций'
-            ),
-            array(
-                'name' => 'count_stake',
-                'label' => 'Кол-во акций'
-            ),
-            array(
-                'name' => 'nominal_stake',
-                'label' => 'Номинальная стоимость пакета акций'
-            ),
-            array(
-                'name' => 'currency',
-                'label' => 'Валюта номинала акций',
-                'value' => (isset($currency[$model->currency])) ? $currency[$model->currency] : '---'
+                'name' => 'job_title',
+                'label' => 'Наименование должности',
             ),
             array(
                 'name' => 'description',

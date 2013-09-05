@@ -1,13 +1,13 @@
 <?php
 /**
- * Редактирование "Номинального акционера".
+ * Редактирование "Руководителя".
  *
  * @author Skibardin A.A. <webprofi1983@gmail.com>
  */
 class UpdateAction extends CAction
 {
     /**
-     * Редактирование "Номинального акционера".
+     * Редактирование "Руководителя".
      * @param string $id        Идентификатор лица
      * @param string $type_lico Тип лица
      * @param string $id_yur    Идентификатор организации
@@ -19,7 +19,7 @@ class UpdateAction extends CAction
     public function run($id, $type_lico, $id_yur, $type_yur, $date, $number_stake)
     {
         /**
-         * @var Interested_person_shareholderController $controller
+         * @var Interested_person_leaderController $controller
          */
         $controller = $this->controller;
         $controller->pageTitle .= ' | Редактирование номинального акционера';
@@ -27,10 +27,10 @@ class UpdateAction extends CAction
         $forceCached = (Yii::app()->request->getQuery('force_cache') == 1);
         $org = Organization::model()->findByPk($id_yur, $forceCached);
         /**
-         * @var InterestedPersonShareholder $model
+         * @var InterestedPersonLeader $model
          */
-        $model = InterestedPersonShareholder::model()->findByPk($id, $type_lico, $id_yur, $type_yur, $date, $number_stake, $forceCached);
-        $model->individual_id = $model->organization_id = $model->contractor_id = $model->primaryKey;
+        $model = InterestedPersonLeader::model()->findByPk($id, $type_lico, $id_yur, $type_yur, $date, $number_stake, $forceCached);
+        $model->individual_id = $model->contractor_id = $model->primaryKey;
 
         if(isset($_POST['ajax']) && $_POST['ajax'] === 'form-person') {
             echo CActiveForm::validate($model);
@@ -49,7 +49,7 @@ class UpdateAction extends CAction
                 try {
                     $ret = $model->save($old_model);
                     if ($ret === null)
-                        throw new CException('Ошибка при сохранении номинального акционера');
+                        throw new CException('Ошибка при сохранении руководителя');
 
                     $controller->redirect($controller->createUrl(
                         'view',
@@ -59,6 +59,7 @@ class UpdateAction extends CAction
                             'id_yur' => $ret['id_yur'],
                             'type_yur' => $ret['type_yur'],
                             'date' => $ret['date'],
+                            'number_stake' => $ret['number_stake'],
                         )
                     ));
                 } catch (CException $e) {
@@ -68,7 +69,7 @@ class UpdateAction extends CAction
         }
 
         $controller->render('/organization/show', array(
-            'content' => $controller->renderPartial('/interested_person_shareholder/form',
+            'content' => $controller->renderPartial('/interested_person_leader/form',
                 array(
                     'model' => $model,
                     'organization' => $org,

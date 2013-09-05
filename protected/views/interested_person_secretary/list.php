@@ -11,6 +11,8 @@
  * @var string $last_date
  * @var string $type_person
  */
+
+Yii::app()->clientScript->registerScriptFile($this->asset_static . '/js/interested_person/list.js');
 ?>
     <h3>Секретари</h3>
     <div class="pull-right" style="margin-top: 15px;">

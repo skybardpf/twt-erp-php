@@ -21,7 +21,6 @@ abstract class InterestedPersonAbstract extends SOAPModel
     const PREFIX_CACHE_MODELS_BY_ORG = '_models_by_org_';
     const PREFIX_CACHE_ALL_DATA_BY_ORG = '_all_data_by_org_';
     const PREFIX_CACHE_LIST_HISTORY_BY_ORG = '_list_history_by_org_';
-//    const PREFIX_CACHE_REVISION_HISTORY_BY_ORG = '_revision_history_by_org_';
     const PREFIX_CACHE_LAST_HISTORY_DATE_BY_ORG = '_last_history_date_by_org_';
 
     /**
@@ -42,6 +41,12 @@ abstract class InterestedPersonAbstract extends SOAPModel
      * @return array
      */
     abstract public function listPersonTypes();
+
+    public function afterConstruct()
+    {
+        $this->type_lico = MTypeInterestedPerson::INDIVIDUAL;
+        parent::afterConstruct();
+    }
 
 	/**
 	 * Список заинтересованных лиц
@@ -65,14 +70,15 @@ abstract class InterestedPersonAbstract extends SOAPModel
      * @param string $orgId
      * @param string $orgType
      * @param string $date
+     * @param string $number_stake
      * @param bool   $forceCached
      * @return InterestedPersonAbstract
      * @throws CHttpException
      */
-    public function findByPk($id, $typeLico, $orgId, $orgType, $date, $forceCached=false)
+    public function findByPk($id, $typeLico, $orgId, $orgType, $date, $number_stake, $forceCached=false)
     {
         $class = get_class($this);
-        $cache_id = $class.self::PREFIX_CACHE_MODEL_PK.$id.'_'.$typeLico.'_'.$orgId.'_'.$orgType.'_'.$date;
+        $cache_id = $class.self::PREFIX_CACHE_MODEL_PK.$id.'_'.$typeLico.'_'.$orgId.'_'.$orgType.'_'.$date.'_'.$number_stake;
         if ($forceCached || ($model = Yii::app()->cache->get($cache_id)) === false){
             $model = $this->SOAP->getInterestedPerson(
                 array(
@@ -81,6 +87,7 @@ abstract class InterestedPersonAbstract extends SOAPModel
                     'id_yur' => $orgId,
                     'type_yur' => $orgType,
                     'date' => $date,
+                    'number_stake' => $number_stake,
                     'type_person' => $this->viewPerson,
                 )
             );
@@ -180,6 +187,7 @@ abstract class InterestedPersonAbstract extends SOAPModel
                             'id_yur' => $model->id_yur,
                             'type_yur' => $model->type_yur,
                             'date' => $model->date,
+                            'number_stake' => $model->number_stake,
                         )
                     )
                 );
@@ -239,27 +247,28 @@ abstract class InterestedPersonAbstract extends SOAPModel
 
     /**
      * Чистим кеш.
-     * @param InterestedPersonShareholder $model
+     * @param InterestedPersonAbstract $model
      */
-    public function clearCache(InterestedPersonShareholder $model)
+    public function clearCache(InterestedPersonAbstract $model)
     {
         $class = get_class($model);
         $cache = Yii::app()->cache;
-        $cache->delete($class.self::PREFIX_CACHE_MODEL_PK.$model->primaryKey.'_'.$model->type_lico.'_'.$model->id_yur.'_'.$model->type_yur.'_'.$model->date);
+        $cache->delete($class.self::PREFIX_CACHE_MODEL_PK.$model->primaryKey.'_'.$model->type_lico.'_'.$model->id_yur.'_'.$model->type_yur.'_'.$model->date.'_'.$model->number_stake);
         $cache->delete($class.self::PREFIX_CACHE_MODELS_BY_ORG.$model->id_yur.'_'.$model->type_yur.'_'.$model->date);
-        $cache->delete($class.self::PREFIX_CACHE_REVISION_HISTORY_BY_ORG.$model->id_yur.'_'.$model->type_yur);
+        $cache->delete($class.self::PREFIX_CACHE_ALL_DATA_BY_ORG.$model->id_yur.'_'.$model->type_yur);
         $cache->delete($class.self::PREFIX_CACHE_LAST_HISTORY_DATE_BY_ORG.$model->id_yur.'_'.$model->type_yur);
+        $cache->delete($class.self::PREFIX_CACHE_LIST_HISTORY_BY_ORG.$model->id_yur.'_'.$model->type_yur);
     }
 
     /**
      * Сохранение заинтересованного лица.
      * @param array $data
-     * @param InterestedPersonShareholder $old_model
+     * @param InterestedPersonAbstract $old_model
      * @return array Если успешно, сохранилось, возвращает массив со значениями:
      * [id, type_lico, id_yur, type_yur, date],
      * иначе возвращает NULL.
      */
-    public function saveData(array $data, InterestedPersonShareholder $old_model)
+    public function saveData(array $data, InterestedPersonAbstract $old_model = null)
     {
         $ret = $this->SOAP->saveInterestedPerson(array(
             'data' => SoapComponent::getStructureElement($data),
@@ -290,6 +299,7 @@ abstract class InterestedPersonAbstract extends SOAPModel
                     'id_yur' => $this->id_yur,
                     'type_yur' => $this->type_yur,
                     'date' => $this->date,
+                    'number_stake' => $this->number_stake,
                     'type_person' => $this->viewPerson
                 )
             );

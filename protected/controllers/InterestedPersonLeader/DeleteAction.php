@@ -1,12 +1,12 @@
 <?php
 /**
- * Удаление номинального акционера.
+ * Удаление руководителя.
  * @author Skibardin A.A. <webprofi1983@gmail.com>
  */
 class DeleteAction extends CAction
 {
     /**
-     * Удаление номинального акционера.
+     * Удаление руководителя.
      * @param string $id        Идентификатор лица
      * @param string $type_lico Тип лица
      * @param string $id_yur    Идентификатор организации
@@ -21,11 +21,11 @@ class DeleteAction extends CAction
          * @var Interested_person_shareholderController $controller
          */
         $controller = $this->controller;
-        $controller->pageTitle .= ' | Удаление номинального акционера';
+        $controller->pageTitle .= ' | Удаление руководителя';
 
         $forceCached = (Yii::app()->request->getQuery('force_cache') == 1);
         $org = Organization::model()->findByPk($id_yur, $forceCached);
-        $model = InterestedPersonShareholder::model()->findByPk($id, $type_lico, $id_yur, $type_yur, $date, $number_stake, $forceCached);
+        $model = InterestedPersonLeader::model()->findByPk($id, $type_lico, $id_yur, $type_yur, $date, $number_stake, $forceCached);
 
         if (Yii::app()->request->isAjaxRequest) {
             $ret = array();
@@ -46,7 +46,7 @@ class DeleteAction extends CAction
                             'type' => $model->pageTypePerson
                         )));
                     } else {
-                        throw new CHttpException(500, 'Не удалось удалить номинального акционера.');
+                        throw new CHttpException(500, 'Не удалось удалить руководителя.');
                     }
                 break;
                 default:

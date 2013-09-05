@@ -100,12 +100,12 @@ $jui_date_options = array(
     </div>
 
     <div class="control-group">
-        <?= $form->labelEx($model, 'date_inaguration', array('class' => 'control-label')); ?>
+        <?= $form->labelEx($model, 'date', array('class' => 'control-label')); ?>
         <div class="controls">
             <?php $this->widget('zii.widgets.jui.CJuiDatePicker', array_merge(
                 array(
                     'model' => $model,
-                    'attribute' => 'date_inaguration'
+                    'attribute' => 'date'
                 ), $jui_date_options
             ));
             ?>
@@ -113,13 +113,12 @@ $jui_date_options = array(
     </div>
 
     <?php
-    //    if (is_bool($model->deleted)) {
-    //        $model->deleted = $model->deleted ? 0 : 1;
-    //    } else {
-    //        $model->deleted = 1;
-    //    }
-    //
-    echo $form->radioButtonListInlineRow($model, 'current_state', $model->getStatuses());
+    if (is_bool($model->deleted)) {
+        $model->deleted = $model->deleted ? 1 : 0;
+    } else {
+        $model->deleted = 0;
+    }
+    echo $form->radioButtonListInlineRow($model, 'deleted', $model->getStatuses());
 
     echo $form->textFieldRow($model, 'job_title');
     echo $form->textAreaRow($model, 'description');

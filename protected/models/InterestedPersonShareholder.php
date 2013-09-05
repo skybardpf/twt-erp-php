@@ -83,11 +83,11 @@ class InterestedPersonShareholder extends InterestedPersonAbstract
      * Сохранение номинального акционера.
      * @param InterestedPersonShareholder $old_model
      * @return array Если успешно, сохранилось, возвращает массив со значениями:
-     * [id, type_lico, id_yur, type_yur, date],
+     * [id, type_lico, id_yur, type_yur, date, number_stake],
      * иначе возвращает NULL.
      * @throws CException
      */
-    public function save(InterestedPersonShareholder $old_model)
+    public function save(InterestedPersonShareholder $old_model = null)
     {
         $data = $this->getAttributes();
 
@@ -104,13 +104,12 @@ class InterestedPersonShareholder extends InterestedPersonAbstract
             throw new CException('Указан неизвестный тип заинтересованного лица.');
 
         $data['deleted'] = ($data['deleted'] == 1) ? true : false;
+        $data['type_person'] = $this->viewPerson;
 
         unset($data['individual_id']);
         unset($data['organization_id']);
         unset($data['contractor_id']);
         unset($data['person_name']);
-
-        $data['type_person'] = $this->viewPerson;
 
         return $this->saveData($data, $old_model);
     }

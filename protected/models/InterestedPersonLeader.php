@@ -6,7 +6,8 @@
  *
  * @property string $job_title
  * @property string $role
- * @property string $document_base
+ * @property string $individual_id
+ * @property string $contractor_id
  */
 class InterestedPersonLeader extends InterestedPersonAbstract
 {
@@ -50,40 +51,37 @@ class InterestedPersonLeader extends InterestedPersonAbstract
 	}
 
     /**
-     * Сохранение заинтересованного лица.
-     *
-     * @return string Если успешно, сохранилось, возвращает id записи.
-     * @throws CHttpException
+     * Сохранение номинального акционера.
+     * @param InterestedPersonLeader $old_model
+     * @return array Если успешно, сохранилось, возвращает массив со значениями:
+     * [id, type_lico, id_yur, type_yur, date, number_stake],
+     * иначе возвращает NULL.
+     * @throws CException
      */
-//    public function save()
-//    {
-//        $data = $this->getAttributes();
-//
+    public function save(InterestedPersonLeader $old_model = null)
+    {
+        $data = $this->getAttributes();
+
 //        if (!$this->primaryKey){
 //            unset($data['id']);
 //        }
-//        $data['deleted'] = ($data['deleted'] == 1) ? false : true;
-//
-////        if ($data['type_lico'] == self::TYPE_LICO_INDIVIDUAL){
-////            $data['id'] = $data['list_individuals'];
-////        } elseif ($data['type_lico'] == self::TYPE_LICO_ORGANIZATION){
-////            $data['id'] = $data['list_organizations'];
-////        } else {
-////            throw new CHttpException(500, 'Неизвестный тип лица.');
-////        }
-//        unset($data['list_organizations']);
-//        unset($data['list_individuals']);
-//        unset($data['yur_url']);
-//        unset($data['type_lico']);
-//
-//        $data['type_lico'] = "Организации";
-////        $data['role'] = "НоминальныйАкционер";
-//
-//        $ret = $this->SOAP->saveInterestedPerson(array(
-//            'data' => SoapComponent::getStructureElement($data),
-//        ));
-//        return SoapComponent::parseReturn($ret, false);
-//    }
+        if ($this->type_lico == MTypeInterestedPerson::INDIVIDUAL)
+            $data['id'] = $data['individual_id'];
+        elseif($this->type_lico == MTypeInterestedPerson::CONTRACTOR)
+            $data['id'] = $data['contractor_id'];
+        else
+            throw new CException('Указан неизвестный тип заинтересованного лица.');
+
+        $data['deleted'] = ($data['deleted'] == 1) ? true : false;
+
+        unset($data['individual_id']);
+        unset($data['contractor_id']);
+        unset($data['person_name']);
+
+        $data['type_person'] = $this->viewPerson;
+
+        return $this->saveData($data, $old_model);
+    }
 
     /**
      * @return array
@@ -95,8 +93,6 @@ class InterestedPersonLeader extends InterestedPersonAbstract
             array(
                 'role',
                 'job_title',
-                'document_base',
-
                 'individual_id',
                 'contractor_id',
             )
@@ -113,8 +109,6 @@ class InterestedPersonLeader extends InterestedPersonAbstract
             parent::attributeLabels(),
             array(
                 'job_title' => 'Наименование должности',
-                'document_base' => 'Документ основание',
-
                 'individual_id' => 'Физическое лицо',
                 'contractor_id' => 'Контрагент',
             )
@@ -129,8 +123,11 @@ class InterestedPersonLeader extends InterestedPersonAbstract
                 array('job_title', 'required'),
                 array('job_title', 'length', 'max' => 100),
 
-                array('document_base', 'required'),
-//                array('document_base', 'date', 'format' => 'yyyy-MM-dd'),
+                array('individual_id', 'required'),
+                array('individual_id', 'in', 'range' => array_keys(Individual::model()->listNames($this->forceCached)), 'on' => 'typeIndividual'),
+
+                array('contractor_id', 'required'),
+                array('contractor_id', 'in', 'range' => array_keys(Contractor::model()->getListNames($this->forceCached)), 'on' => 'typeContractor'),
             )
 		);
 	}
