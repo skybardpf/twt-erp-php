@@ -1,0 +1,80 @@
+<?php
+/**
+ * Редактирование "Номинального акционера".
+ *
+ * @author Skibardin A.A. <webprofi1983@gmail.com>
+ */
+class UpdateAction extends CAction
+{
+    /**
+     * Редактирование "Номинального акционера".
+     * @param string $id        Идентификатор лица
+     * @param string $type_lico Тип лица
+     * @param string $id_yur    Идентификатор организации
+     * @param string $type_yur  Тип организации
+     * @param string $date      Дата
+     * @throws CHttpException
+     */
+    public function run($id, $type_lico, $id_yur, $type_yur, $date)
+    {
+        /**
+         * @var Interested_person_shareholderController $controller
+         */
+        $controller = $this->controller;
+        $controller->pageTitle .= ' | Редактирование номинального акционера';
+
+        $forceCached = (Yii::app()->request->getQuery('force_cache') == 1);
+        $org = Organization::model()->findByPk($id_yur, $forceCached);
+        /**
+         * @var InterestedPersonShareholder $model
+         */
+        $model = InterestedPersonShareholder::model()->findByPk($id, $type_lico, $id_yur, $type_yur, $date, $forceCached);
+        $model->individual_id = $model->organization_id = $model->contractor_id = $model->primaryKey;
+
+        if(isset($_POST['ajax']) && $_POST['ajax'] === 'form-person') {
+            echo CActiveForm::validate($model);
+            Yii::app()->end();
+        }
+
+        /**
+         * Сохраняем для правильной очистки кеша.
+         */
+        $old_model = clone $model;
+
+        $data = Yii::app()->request->getPost(get_class($model));
+        if ($data) {
+            $model->setAttributes($data);
+            if ($model->validate()) {
+                try {
+                    $ret = $model->save($old_model);
+                    if ($ret === null)
+                        throw new CException('Ошибка при сохранении номинального акционера');
+
+                    $controller->redirect($controller->createUrl(
+                        'view',
+                        array(
+                            'id' => $ret['id'],
+                            'type_lico' => $ret['type_lico'],
+                            'id_yur' => $ret['id_yur'],
+                            'type_yur' => $ret['type_yur'],
+                            'date' => $ret['date'],
+                        )
+                    ));
+                } catch (CException $e) {
+                    $model->addError('id', $e->getMessage());
+                }
+            }
+        }
+
+        $controller->render('/organization/show', array(
+            'content' => $controller->renderPartial('/interested_person_shareholder/form',
+                array(
+                    'model' => $model,
+                    'organization' => $org,
+                ), true
+            ),
+            'organization' => $org,
+            'cur_tab' => $controller->current_tab,
+        ));
+    }
+}

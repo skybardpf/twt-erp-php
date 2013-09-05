@@ -17,8 +17,12 @@ Yii::app()->clientScript->registerScriptFile($this->asset_static . '/js/interest
 <?php
 /** @var $form MTbActiveForm */
 $form = $this->beginWidget('bootstrap.widgets.MTbActiveForm', array(
-    'id' => 'horizontalForm',
+    'id' => 'form-person',
     'type' => 'horizontal',
+    'enableAjaxValidation' => true,
+    'clientOptions' => array(
+        'validateOnChange' => true,
+    ),
 ));
 
 $this->widget('bootstrap.widgets.TbButton', array(
@@ -37,7 +41,10 @@ $this->widget('bootstrap.widgets.TbButton', array(
             'view',
             array(
                 'id' => $model->primaryKey,
+                'type_lico' => $model->type_lico,
                 'id_yur' => $model->id_yur,
+                'type_yur' => $model->type_yur,
+                'date' => $model->date,
             )
         )
         : $this->createUrl(
@@ -92,7 +99,21 @@ $jui_date_options = array(
         $class_person = 'hide';
         $class_cont = 'hide';
     }
+    $link = 'aaa';
     ?>
+    <div class="control-group ">
+        <div class="controls">
+            <div class="add-individual <?= $class_person; ?>">
+                <?= CHtml::link('Создать новое физическое лицо', $this->createUrl('individual/add')); ?>
+            </div>
+            <div class="add-organization <?= $class_org; ?>">
+                <?= CHtml::link('Создать новую организацию', $this->createUrl('organization/add')); ?>
+            </div>
+            <div class="add-contractor <?= $class_cont; ?>">
+                <?= CHtml::link('Создать нового контрагента', $this->createUrl('contractor/add')); ?>
+            </div>
+        </div>
+    </div>
     <div class="control-group list-individuals <?= $class_person; ?>">
         <?= $form->labelEx($model, 'individual_id', array('class' => 'control-label')); ?>
         <div class="controls">
@@ -113,12 +134,12 @@ $jui_date_options = array(
     </div>
 
     <div class="control-group">
-        <?= $form->labelEx($model, 'date_inaguration', array('class' => 'control-label')); ?>
+        <?= $form->labelEx($model, 'date', array('class' => 'control-label')); ?>
         <div class="controls">
             <?php $this->widget('zii.widgets.jui.CJuiDatePicker', array_merge(
                 array(
                     'model' => $model,
-                    'attribute' => 'date_inaguration'
+                    'attribute' => 'date'
                 ), $jui_date_options
             ));
             ?>
@@ -126,13 +147,12 @@ $jui_date_options = array(
     </div>
 
     <?php
-    //    if (is_bool($model->deleted)) {
-    //        $model->deleted = $model->deleted ? 0 : 1;
-    //    } else {
-    //        $model->deleted = 1;
-    //    }
-    //
-    echo $form->radioButtonListInlineRow($model, 'current_state', $model->getStatuses());
+    if (is_bool($model->deleted)) {
+        $model->deleted = $model->deleted ? 1 : 0;
+    } else {
+        $model->deleted = 0;
+    }
+    echo $form->radioButtonListInlineRow($model, 'deleted', $model->getStatuses());
     echo $form->textFieldRow($model, 'value_stake');
     ?>
 
@@ -156,7 +176,7 @@ $jui_date_options = array(
     echo $form->radioButtonListInlineRow($model, 'type_stake', $model->getStockTypes());
     echo $form->textFieldRow($model, 'count_stake');
     echo $form->textFieldRow($model, 'nominal_stake');
-    echo $form->dropDownListRow($model, 'currency_nominal_stake', Currency::model()->listNames($model->forceCached));
+    echo $form->dropDownListRow($model, 'currency', Currency::model()->listNames($model->forceCached));
     echo $form->textAreaRow($model, 'description');
     ?>
 </fieldset>

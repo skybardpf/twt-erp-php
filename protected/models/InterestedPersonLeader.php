@@ -49,30 +49,6 @@ class InterestedPersonLeader extends InterestedPersonAbstract
 		return parent::model($className);
 	}
 
-	/**
-	 * Получение руководителя.
-	 * @param string $id
-	 * @param string $typeLico
-	 * @param string $orgId
-	 * @param string $orgType
-	 * @param string $date
-	 * @return InterestedPersonLeader
-	 */
-	public function findByPk($id, $typeLico, $orgId, $orgType, $date)
-    {
-		$ret = $this->SOAP->getPersonLeader(
-            array(
-                'id' => $id,
-                'type_lico' => $typeLico,
-                'id_yur' => $orgId,
-                'type_yur' => $orgType,
-                'date' => $date
-            )
-        );
-		$ret = SoapComponent::parseReturn($ret);
-		return $this->publish_elem(current($ret), __CLASS__);
-	}
-
     /**
      * Сохранение заинтересованного лица.
      *

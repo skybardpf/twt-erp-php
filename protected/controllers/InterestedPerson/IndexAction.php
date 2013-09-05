@@ -25,26 +25,22 @@ class IndexAction extends CAction
         switch ($type){
             case MPageTypeInterestedPerson::LEADER: {
                 $controller->pageTitle .= ' | Список руководителей';
-                $page = 'list_leader';
-                $model_class = 'InterestedPersonLeader';
+                $model = new InterestedPersonLeader();
             } break;
             case MPageTypeInterestedPerson::MANAGER: {
                 $controller->pageTitle .= ' | Список менеджеров';
-                $page = 'list_manager';
-                $model_class = 'InterestedPersonManager';
+                $model = new InterestedPersonManager();
             } break;
             case MPageTypeInterestedPerson::SECRETARY: {
                 $controller->pageTitle .= ' | Список секретарей';
-                $page = 'list_secretary';
-                $model_class = 'InterestedPersonSecretary';
+                $model = new InterestedPersonSecretary();
             } break;
             // По-умолчанию "Номинальный акционер"
             case MPageTypeInterestedPerson::SHAREHOLDER: {}
             case null: {
                 $controller->pageTitle .= ' | Список номинальный акционеров';
                 $type = 'shareholder';
-                $page = 'list_shareholder';
-                $model_class = 'InterestedPersonShareholder';
+                $model = new InterestedPersonShareholder();
             } break;
             default: {
                 throw new CHttpException(404, 'Неизвестный тип заинтересованного лица');
@@ -53,19 +49,8 @@ class IndexAction extends CAction
         $forceCached = (Yii::app()->request->getQuery('force_cache') == 1);
         $org = Organization::model()->findByPk($org_id, $forceCached);
 
-        /**
-         * @var InterestedPersonAbstract $model
-         */
-        $model = SOAPModel::model($model_class);
-
-//        $history = $model->listRevisionHistory($org->primaryKey, MTypeOrganization::ORGANIZATION, $forceCached);
-//        $last_date = $model->getLastDate($org->primaryKey, MTypeOrganization::ORGANIZATION, $forceCached);
-
-        $history = array();
-
-        $last_date = new DateTime();
-        $last_date = $last_date->format('Y-m-d');
-
+        $history = $model->listHistory($org->primaryKey, MTypeOrganization::ORGANIZATION, $forceCached);
+        $last_date = $model->getLastDate($org->primaryKey, MTypeOrganization::ORGANIZATION, $forceCached);
         $data = $model->listModels($org_id, MTypeOrganization::ORGANIZATION, $last_date, $forceCached);
 
         $controller->render('/organization/show', array(
@@ -73,12 +58,13 @@ class IndexAction extends CAction
                 array(
                     'organization' => $org,
                     'menu_tab' => $type,
-                    'content' => $controller->renderPartial('/interested_person/'.$page,
+                    'content' => $controller->renderPartial('/interested_person_'.$type.'/list',
                         array(
                             'data' => $data,
                             'last_date' => $last_date,
                             'history' => $history,
                             'organization' => $org,
+                            'type_person' => $type
                         ), true)
                 ), true),
             'organization' => $org,

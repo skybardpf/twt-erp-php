@@ -10,9 +10,11 @@
  * @property string $type_stake
  * @property int    $count_stake
  * @property int    $nominal_stake
- * @property string $currency_nominal_stake
+ * @property string $currency
  *
- * @property string $percent
+ * @property string $individual_id
+ * @property string $organization_id
+ * @property string $contractor_id
  */
 class InterestedPersonShareholder extends InterestedPersonAbstract
 {
@@ -77,65 +79,41 @@ class InterestedPersonShareholder extends InterestedPersonAbstract
         );
     }
 
-	/**
-	 * Получение номинального акционера.
-	 * @param string $id
-	 * @param string $typeLico
-	 * @param string $orgId
-	 * @param string $orgType
-	 * @param string $date
-	 * @return InterestedPersonShareholder
-	 */
-	public function findByPk($id, $typeLico, $orgId, $orgType, $date)
-    {
-		$ret = $this->SOAP->getPersonShareHolder(
-            array(
-                'id' => $id,
-                'type_lico' => $typeLico,
-                'id_yur' => $orgId,
-                'type_yur' => $orgType,
-                'date' => $date
-            )
-        );
-		$ret = SoapComponent::parseReturn($ret);
-		return $this->publish_elem(current($ret), __CLASS__);
-	}
-
     /**
-     * Сохранение заинтересованного лица.
-     *
-     * @return string Если успешно, сохранилось, возвращает id записи.
-     * @throws CHttpException
+     * Сохранение номинального акционера.
+     * @param InterestedPersonShareholder $old_model
+     * @return array Если успешно, сохранилось, возвращает массив со значениями:
+     * [id, type_lico, id_yur, type_yur, date],
+     * иначе возвращает NULL.
+     * @throws CException
      */
-//    public function save()
-//    {
-//        $data = $this->getAttributes();
-//
+    public function save(InterestedPersonShareholder $old_model)
+    {
+        $data = $this->getAttributes();
+
 //        if (!$this->primaryKey){
 //            unset($data['id']);
 //        }
-//        $data['deleted'] = ($data['deleted'] == 1) ? false : true;
-//
-////        if ($data['type_lico'] == self::TYPE_LICO_INDIVIDUAL){
-////            $data['id'] = $data['list_individuals'];
-////        } elseif ($data['type_lico'] == self::TYPE_LICO_ORGANIZATION){
-////            $data['id'] = $data['list_organizations'];
-////        } else {
-////            throw new CHttpException(500, 'Неизвестный тип лица.');
-////        }
-//        unset($data['list_organizations']);
-//        unset($data['list_individuals']);
-//        unset($data['yur_url']);
-//        unset($data['type_lico']);
-//
-//        $data['type_lico'] = "Организации";
-////        $data['role'] = "НоминальныйАкционер";
-//
-//        $ret = $this->SOAP->saveInterestedPerson(array(
-//            'data' => SoapComponent::getStructureElement($data),
-//        ));
-//        return SoapComponent::parseReturn($ret, false);
-//    }
+        if ($this->type_lico == MTypeInterestedPerson::INDIVIDUAL)
+            $data['id'] = $data['individual_id'];
+        elseif($this->type_lico == MTypeInterestedPerson::ORGANIZATION)
+            $data['id'] = $data['organization_id'];
+        elseif($this->type_lico == MTypeInterestedPerson::CONTRACTOR)
+            $data['id'] = $data['contractor_id'];
+        else
+            throw new CException('Указан неизвестный тип заинтересованного лица.');
+
+        $data['deleted'] = ($data['deleted'] == 1) ? true : false;
+
+        unset($data['individual_id']);
+        unset($data['organization_id']);
+        unset($data['contractor_id']);
+        unset($data['person_name']);
+
+        $data['type_person'] = $this->viewPerson;
+
+        return $this->saveData($data, $old_model);
+    }
 
     /**
      * @return array
@@ -145,14 +123,13 @@ class InterestedPersonShareholder extends InterestedPersonAbstract
         return array_merge(
             parent::attributeNames(),
             array(
-                'percent',
+//                'percent',
                 'value_stake',
                 'date_issue_stake',
-                'number_stake',
                 'type_stake',
                 'count_stake',
                 'nominal_stake',
-                'currency_nominal_stake',
+                'currency',
 
                 'individual_id',
                 'organization_id',
@@ -172,11 +149,10 @@ class InterestedPersonShareholder extends InterestedPersonAbstract
             array(
                 'value_stake' => 'Величина пакета акций, %',
                 'date_issue_stake' => 'Дата выпуска пакета акций',
-                'number_stake' => 'Номер пакета акций',
                 'type_stake' => 'Тип акций',
                 'count_stake' => 'Кол-во акций',
                 'nominal_stake' => 'Номинал акций',
-                'currency_nominal_stake' => 'Валюта номинала акций',
+                'currency' => 'Валюта номинала акций',
 
                 'individual_id' => 'Физическое лицо',
                 'organization_id' => 'Организация',
@@ -197,7 +173,6 @@ class InterestedPersonShareholder extends InterestedPersonAbstract
                 array('date_issue_stake', 'date', 'format' => 'yyyy-MM-dd'),
 
                 array('number_stake', 'required'),
-                array('number_stake', 'numerical', 'integerOnly' => true, 'min'=> 0),
 
                 array('count_stake', 'required'),
                 array('count_stake', 'numerical', 'integerOnly' => true, 'min'=> 0),
@@ -208,8 +183,8 @@ class InterestedPersonShareholder extends InterestedPersonAbstract
                 array('type_stake', 'required'),
                 array('type_stake', 'in', 'range' => array_keys(self::getStockTypes())),
 
-                array('currency_nominal_stake', 'required'),
-                array('currency_nominal_stake', 'in', 'range' => array_keys(Currency::model()->listNames($this->forceCached))),
+                array('currency', 'required'),
+                array('currency', 'in', 'range' => array_keys(Currency::model()->listNames($this->forceCached))),
 
                 array('individual_id', 'required'),
                 array('individual_id', 'in', 'range' => array_keys(Individual::model()->listNames($this->forceCached)), 'on' => 'typeIndividual'),
