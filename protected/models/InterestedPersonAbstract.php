@@ -92,9 +92,15 @@ abstract class InterestedPersonAbstract extends SOAPModel
                 )
             );
             $model = SoapComponent::parseReturn($model);
+            /**
+             * @var InterestedPersonAbstract $model
+             */
             $model = $this->publish_elem(current($model), $class);
             if ($model === null)
                 throw new CHttpException(404, 'Не найдено заинтересованное лицо');
+
+            $model->id_yur = $orgId;
+            $model->type_yur = $orgType;
 
             Yii::app()->cache->set($cache_id, $model);
         }
@@ -171,6 +177,9 @@ abstract class InterestedPersonAbstract extends SOAPModel
                 'sort' => array(array())
             ));
             $models = SoapComponent::parseReturn($models);
+            /**
+             * @var InterestedPersonAbstract[] $models
+             */
             $models = $this->publish_list($models, $class);
 
             $data = array();
@@ -184,8 +193,8 @@ abstract class InterestedPersonAbstract extends SOAPModel
                         array(
                             'id' => $model->id,
                             'type_lico' => $model->type_lico,
-                            'id_yur' => $model->id_yur,
-                            'type_yur' => $model->type_yur,
+                            'org_id' => $model->id_yur,
+                            'org_type' => $model->type_yur,
                             'date' => $model->date,
                             'number_stake' => $model->number_stake,
                         )

@@ -1,13 +1,13 @@
 <?php
 /**
- * Просмотр Номинального акционера
+ * Просмотр бенефициара.
  *
  * @author Skibardin A.A. <webprofi1983@gmail.com>
  */
 class ViewAction extends CAction
 {
     /**
-     * Просмотр Номинального акционера
+     * Просмотр бенефициара
      * @param string $id                Идентификатор лица
      * @param string $type_lico         Тип лица
      * @param string $org_id            Идентификатор организации
@@ -19,10 +19,10 @@ class ViewAction extends CAction
     public function run($id, $type_lico, $org_id, $org_type, $date, $number_stake)
     {
         /**
-         * @var Interested_person_shareholderController $controller
+         * @var Interested_person_beneficiaryController $controller
          */
         $controller = $this->controller;
-        $controller->pageTitle .= ' | Просмотр номинального акционера';
+        $controller->pageTitle .= ' | Просмотр бенефициара';
 
         $forceCached = (Yii::app()->request->getQuery('force_cache') == 1);
         if ($org_type === MTypeOrganization::ORGANIZATION)
@@ -32,19 +32,15 @@ class ViewAction extends CAction
         else
             throw new CHttpException(500, 'Указан неизвестный тип организации');
 
-        $model = InterestedPersonShareholder::model()->findByPk($id, $type_lico, $org_id, $org_type, $date, $number_stake, $forceCached);
+        $model = InterestedPersonBeneficiary::model()->findByPk($id, $type_lico, $org_id, $org_type, $date, $number_stake, $forceCached);
 
         $controller->render('/organization/show', array(
-            'content' => $controller->renderPartial('/interested_person/index',
+            'content' => $controller->renderPartial('/interested_person_beneficiary/view',
                 array(
+                    'model' => $model,
                     'organization' => $org,
-                    'menu_tab' => $model->pageTypePerson,
-                    'content' => $controller->renderPartial('/interested_person_shareholder/view',
-                        array(
-                            'model' => $model,
-                            'organization' => $org,
-                        ), true)
-                ), true),
+                ), true
+            ),
             'organization' => $org,
             'cur_tab' => $controller->current_tab,
         ));

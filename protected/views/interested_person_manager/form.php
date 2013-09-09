@@ -36,7 +36,11 @@ $this->widget('bootstrap.widgets.TbButton', array(
             'view',
             array(
                 'id' => $model->primaryKey,
-                'id_yur' => $model->id_yur,
+                'type_lico' => $model->type_lico,
+                'org_id' => $model->id_yur,
+                'org_type' => $model->type_yur,
+                'date' => $model->date,
+                'number_stake' => $model->number_stake,
             )
         )
         : $this->createUrl(

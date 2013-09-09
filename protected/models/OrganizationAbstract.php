@@ -11,6 +11,8 @@ class OrganizationException extends CException{}
  *
  * @property array  $signatories
  * @property string $json_signatories
+ *
+ * @property string $type
  */
 abstract class OrganizationAbstract extends SOAPModel
 {
@@ -20,6 +22,13 @@ abstract class OrganizationAbstract extends SOAPModel
     const PREFIX_CACHE_ID_LIST_OGRN = '_list_ogrn';
     const PREFIX_CACHE_ID_LIST_FULL_DATA = '_list_full_data';
     const PREFIX_CACHE_ID_LIST_NAMES = '_list_names';
+
+    /**
+     * Тип организации.
+     * @see MTypeOrganization
+     * @return string
+     */
+    abstract public function getType();
 
     /**
      * Действия, которые можно произвести после создания объекта SOAPModel.
