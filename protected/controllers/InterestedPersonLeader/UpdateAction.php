@@ -56,8 +56,8 @@ class UpdateAction extends CAction
                         array(
                             'id' => $ret['id'],
                             'type_lico' => $ret['type_lico'],
-                            'id_yur' => $ret['id_yur'],
-                            'type_yur' => $ret['type_yur'],
+                            'org_id' => $ret['id_yur'],
+                            'org_type' => $ret['type_yur'],
                             'date' => $ret['date'],
                             'number_stake' => $ret['number_stake'],
                         )
