@@ -1,16 +1,15 @@
 <?php
 /**
- * Просмотр Юр.Лица
+ * Просмотр Организации.
  *
- * User: Forgon
- * Date: 23.04.2013 от рождества Христова
+ * @author Skibardin A.A. <webprofi1983@gmail.com>
  *
  * @var OrganizationController      $this
  * @var Organization                $organization
  * @var string                      $cur_tab
  */
 ?>
-<h1><?= Chtml::encode($organization->name); ?></h1>
+<h1><?= CHtml::encode($organization->name); ?></h1>
 <div class="yur-tabs">
 <?php
     $this->widget('bootstrap.widgets.TbMenu', array(
@@ -32,18 +31,23 @@
                 'url'   => $this->createUrl('settlement_account/list', array('org_id' => $organization->primaryKey)),
                 'active'=> ($cur_tab == 'settlements')
             ),
-            /*
             array(
                 'label' => 'Заинтересованные лица',
-                'url'   => $this->createUrl('interested_persons/index', array('org_id' => $organization->primaryKey)),
-                'active' => ($cur_tab == 'interested_persons'),
-                'itemOptions' => array('class'=>'narrow')
-            ),*/
+                'url'   => $this->createUrl('interested_person/index', array('org_id' => $organization->primaryKey)),
+                'active' => ($cur_tab == 'interested_person'),
+//                'itemOptions' => array('class'=>'narrow')
+            ),
+//            array(
+//                'label' => 'Бенефициары',
+//                'url'   => $this->createUrl('interested_person_beneficiary/index', array('org_id' => $organization->primaryKey, 'org_type' => $organization->type)),
+//                'active' => ($cur_tab == 'beneficiary'),
+////                'itemOptions' => array('class'=>'narrow')
+//            ),
             array(
                 'label' => 'Календарь событий',
                 'url'   => $this->createUrl('calendar_events/list', array('org_id' => $organization->primaryKey)),
                 'active'=> ($cur_tab == 'calendar_events'),
-                'itemOptions' => array('class'=>'narrow narrower')
+//                'itemOptions' => array('class'=>'narrow narrower')
             ),
             /*
             array(

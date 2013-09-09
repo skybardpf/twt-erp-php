@@ -13,10 +13,14 @@ class DownloadAction extends CAction
         $this->controller->disableProfile();
 
         $path = unserialize(gzuncompress(stripslashes(base64_decode(strtr($path, '-_,', '+/=')))));
+        if (empty($path)){
+            echo 'Empty path';
+            Yii::app()->end(400);
+        }
         $path = str_replace('\\', '/', $path);
         $path = Yii::getPathOfAlias('filestorage').DIRECTORY_SEPARATOR.$path;
         if (!file_exists($path)){
-            echo 'NotFound';
+            echo 'Not found';
             Yii::app()->end(404);
         }
         Yii::app()->request->sendFile(basename($path), file_get_contents($path));
