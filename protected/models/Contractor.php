@@ -18,7 +18,13 @@
  */
 class Contractor extends OrganizationAbstract
 {
-//    const TYPE = 'Контрагенты';
+    /**
+     * @return string
+     */
+    public function getType()
+    {
+        return MTypeOrganization::CONTRACTOR;
+    }
 
     const PREFIX_CACHE_ID_LIST_FULL_DATA_GROUP_BY = '_list_full_data_group_by';
 
