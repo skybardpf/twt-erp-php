@@ -29,6 +29,7 @@ Yii::app()->clientScript->registerScriptFile($this->asset_static . '/js/interest
         ));
         ?>
     </div>
+
 <h3>Руководители</h3>
 <?php
 echo CHtml::tag('div', array(), 'На ' . CHtml::encode($last_date));

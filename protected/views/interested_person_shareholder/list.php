@@ -30,7 +30,6 @@ Yii::app()->clientScript->registerScriptFile($this->asset_static . '/js/interest
         ?>
     </div>
 <h3>Номинальные акционеры</h3>
-
 <?php
 echo CHtml::tag('div', array(), 'На ' . CHtml::encode($last_date));
 echo $this->renderPartial('/interested_person_shareholder/_list_grid_view', array(

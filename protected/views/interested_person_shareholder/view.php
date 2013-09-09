@@ -62,7 +62,6 @@
         ));
     }
 ?>
-
 <h2><?= CHtml::encode($model->person_name); ?></h2>
 <br/><br/>
 <div>

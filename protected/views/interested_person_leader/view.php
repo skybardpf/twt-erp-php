@@ -27,7 +27,6 @@ $this->widget('bootstrap.widgets.TbButton', array(
 		)
 	)
 ));
-
 if (!$model->deleted) {
 	echo "&nbsp;";
 	Yii::app()->clientScript->registerScriptFile($this->asset_static.'/js/legal/delete_item.js');

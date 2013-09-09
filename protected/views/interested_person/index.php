@@ -15,6 +15,7 @@
  */
 ?>
 <div class="yur-tabs">
+
 <?php
 $this->widget('bootstrap.widgets.TbMenu', array(
     'type' => 'tabs',
