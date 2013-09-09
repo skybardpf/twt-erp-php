@@ -73,7 +73,6 @@ $jui_date_options = array(
 
 <fieldset>
     <?php
-
     echo $form->radioButtonListInlineRow($model, 'type_lico', $model->listPersonTypes(), array('class' => 'type_lico'));
     if ($model->type_lico == MTypeInterestedPerson::INDIVIDUAL) {
         $class_person = '';
@@ -85,17 +84,33 @@ $jui_date_options = array(
         $class_person = 'hide';
         $class_cont = 'hide';
     }
+
+    $contractors = Contractor::model()->getListNames($model->forceCached);
+    if ($model->type_yur == MTypeInterestedPerson::CONTRACTOR){
+        if (isset($contractors[$model->id_yur]))
+            unset($contractors[$model->id_yur]);
+    }
     ?>
+    <div class="control-group ">
+        <div class="controls">
+            <div class="add-individual <?= $class_person; ?>">
+                <?= CHtml::link('Создать новое физическое лицо', $this->createUrl('individual/add')); ?>
+            </div>
+            <div class="add-contractor <?= $class_cont; ?>">
+                <?= CHtml::link('Создать нового контрагента', $this->createUrl('contractor/add')); ?>
+            </div>
+        </div>
+    </div>
     <div class="control-group list-individuals <?= $class_person; ?>">
         <?= $form->labelEx($model, 'individual_id', array('class' => 'control-label')); ?>
         <div class="controls">
-            <?= CHtml::activeDropDownList($model, 'individual_id', Individual::model()->listNames()); ?>
+            <?= CHtml::activeDropDownList($model, 'individual_id', Individual::model()->listNames($model->forceCached)); ?>
         </div>
     </div>
     <div class="control-group list-contractors <?= $class_cont; ?>">
         <?= $form->labelEx($model, 'contractor_id', array('class' => 'control-label')); ?>
         <div class="controls">
-            <?= CHtml::activeDropDownList($model, 'contractor_id', Contractor::model()->getListNames()); ?>
+            <?= CHtml::activeDropDownList($model, 'contractor_id', $contractors); ?>
         </div>
     </div>
 

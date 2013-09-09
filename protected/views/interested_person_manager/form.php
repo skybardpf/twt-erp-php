@@ -71,6 +71,13 @@ $jui_date_options = array(
 ?>
 
 <fieldset>
+    <div class="control-group ">
+        <div class="controls">
+            <div class="add-individual">
+                <?= CHtml::link('Создать новое физическое лицо', $this->createUrl('individual/add')); ?>
+            </div>
+        </div>
+    </div>
     <div class="control-group list-individuals">
         <?= $form->labelEx($model, 'individual_id', array('class' => 'control-label')); ?>
         <div class="controls">
