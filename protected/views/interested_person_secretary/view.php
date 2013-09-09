@@ -1,11 +1,11 @@
 <?php
 /**
- * Просмотр менеджера.
+ * Просмотр секретаря.
  *
  * @author Skibardin A.A. <webprofi1983@gmail.com>
  *
- * @var Interested_person_managerController $this
- * @var InterestedPersonManager $model
+ * @var Interested_person_secretaryController $this
+ * @var InterestedPersonSecretary $model
  * @var Organization $organization
  */
 ?>
@@ -39,7 +39,7 @@
             'type'          => 'danger',
             'label'         => 'Удалить',
             'htmlOptions'   => array(
-                'data-question' => 'Вы уверены, что хотите удалить менеджера?',
+                'data-question' => 'Вы уверены, что хотите удалить секретаря?',
                 'data-title' => 'Удаление менеджера',
                 'data-url' => $this->createUrl(
                     'delete',

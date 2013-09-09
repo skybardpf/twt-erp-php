@@ -91,9 +91,6 @@ class InterestedPersonShareholder extends InterestedPersonAbstract
     {
         $data = $this->getAttributes();
 
-//        if (!$this->primaryKey){
-//            unset($data['id']);
-//        }
         if ($this->type_lico == MTypeInterestedPerson::INDIVIDUAL)
             $data['id'] = $data['individual_id'];
         elseif($this->type_lico == MTypeInterestedPerson::ORGANIZATION)
@@ -122,7 +119,6 @@ class InterestedPersonShareholder extends InterestedPersonAbstract
         return array_merge(
             parent::attributeNames(),
             array(
-//                'percent',
                 'value_stake',
                 'date_issue_stake',
                 'type_stake',

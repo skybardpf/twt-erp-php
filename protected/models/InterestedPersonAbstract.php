@@ -253,7 +253,9 @@ abstract class InterestedPersonAbstract extends SOAPModel
     {
         $class = get_class($model);
         $cache = Yii::app()->cache;
-        $cache->delete($class.self::PREFIX_CACHE_MODEL_PK.$model->primaryKey.'_'.$model->type_lico.'_'.$model->id_yur.'_'.$model->type_yur.'_'.$model->date.'_'.$model->number_stake);
+        if ($model->primaryKey)
+            $cache->delete($class.self::PREFIX_CACHE_MODEL_PK.$model->primaryKey.'_'.$model->type_lico.'_'.$model->id_yur.'_'.$model->type_yur.'_'.$model->date.'_'.$model->number_stake);
+
         $cache->delete($class.self::PREFIX_CACHE_MODELS_BY_ORG.$model->id_yur.'_'.$model->type_yur.'_'.$model->date);
         $cache->delete($class.self::PREFIX_CACHE_ALL_DATA_BY_ORG.$model->id_yur.'_'.$model->type_yur);
         $cache->delete($class.self::PREFIX_CACHE_LAST_HISTORY_DATE_BY_ORG.$model->id_yur.'_'.$model->type_yur);
@@ -277,6 +279,7 @@ abstract class InterestedPersonAbstract extends SOAPModel
         if ($tmp === null)
             return $tmp;
 
+        $old_model = ($old_model === null) ? $this : $old_model;
         $this->clearCache($old_model);
         $ret = array();
         foreach($tmp as $v){

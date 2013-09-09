@@ -34,7 +34,7 @@ class CreateAction extends CAction
                 try {
                     $model->save();
                     $controller->redirect($controller->createUrl(
-                        'index',
+                        'interested_person/index',
                         array(
                             'org_id' => $org->primaryKey,
                             'type' => $model->pageTypePerson
@@ -47,12 +47,17 @@ class CreateAction extends CAction
         }
 
         $controller->render('/organization/show', array(
-            'content' => $controller->renderPartial('/interested_person_shareholder/form',
+            'content' => $controller->renderPartial('/interested_person/index',
                 array(
-                    'model' => $model,
                     'organization' => $org,
-                ), true
-            ),
+                    'menu_tab' => $model->pageTypePerson,
+                    'content' => $controller->renderPartial('/interested_person_shareholder/form',
+                        array(
+                            'model' => $model,
+                            'organization' => $org,
+                        ), true
+                    ),
+                ), true),
             'organization' => $org,
             'cur_tab' => $controller->current_tab,
         ));

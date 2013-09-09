@@ -59,6 +59,7 @@ class UpdateAction extends CAction
                             'id_yur' => $ret['id_yur'],
                             'type_yur' => $ret['type_yur'],
                             'date' => $ret['date'],
+                            'number_stake' => $ret['number_stake'],
                         )
                     ));
                 } catch (CException $e) {
@@ -68,12 +69,17 @@ class UpdateAction extends CAction
         }
 
         $controller->render('/organization/show', array(
-            'content' => $controller->renderPartial('/interested_person_shareholder/form',
+            'content' => $controller->renderPartial('/interested_person/index',
                 array(
-                    'model' => $model,
                     'organization' => $org,
-                ), true
-            ),
+                    'menu_tab' => $model->pageTypePerson,
+                    'content' => $controller->renderPartial('/interested_person_shareholder/form',
+                        array(
+                            'model' => $model,
+                            'organization' => $org,
+                        ), true
+                    ),
+                ), true),
             'organization' => $org,
             'cur_tab' => $controller->current_tab,
         ));

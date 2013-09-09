@@ -5,6 +5,10 @@
  * @author Skibardin A.A. <webprofi1983@gmail.com>
  *
  * @property string $job_title
+ *
+ * @property string $individual_id
+ * @property string $organization_id
+ * @property string $contractor_id
  */
 class InterestedPersonSecretary extends InterestedPersonAbstract
 {
@@ -49,40 +53,36 @@ class InterestedPersonSecretary extends InterestedPersonAbstract
 	}
 
     /**
-     * Сохранение заинтересованного лица.
-     *
-     * @return string Если успешно, сохранилось, возвращает id записи.
-     * @throws CHttpException
+     * Сохранение секретаря.
+     * @param InterestedPersonSecretary $old_model
+     * @return array Если успешно, сохранилось, возвращает массив со значениями:
+     * [id, type_lico, id_yur, type_yur, date, number_stake],
+     * иначе возвращает NULL.
+     * @throws CException
      */
-//    public function save()
-//    {
-//        $data = $this->getAttributes();
-//
-//        if (!$this->primaryKey){
-//            unset($data['id']);
-//        }
-//        $data['deleted'] = ($data['deleted'] == 1) ? false : true;
-//
-////        if ($data['type_lico'] == self::TYPE_LICO_INDIVIDUAL){
-////            $data['id'] = $data['list_individuals'];
-////        } elseif ($data['type_lico'] == self::TYPE_LICO_ORGANIZATION){
-////            $data['id'] = $data['list_organizations'];
-////        } else {
-////            throw new CHttpException(500, 'Неизвестный тип лица.');
-////        }
-//        unset($data['list_organizations']);
-//        unset($data['list_individuals']);
-//        unset($data['yur_url']);
-//        unset($data['type_lico']);
-//
-//        $data['type_lico'] = "Организации";
-////        $data['role'] = "НоминальныйАкционер";
-//
-//        $ret = $this->SOAP->saveInterestedPerson(array(
-//            'data' => SoapComponent::getStructureElement($data),
-//        ));
-//        return SoapComponent::parseReturn($ret, false);
-//    }
+    public function save(InterestedPersonSecretary $old_model = null)
+    {
+        $data = $this->getAttributes();
+
+        if ($this->type_lico == MTypeInterestedPerson::INDIVIDUAL)
+            $data['id'] = $data['individual_id'];
+        elseif($this->type_lico == MTypeInterestedPerson::ORGANIZATION)
+            $data['id'] = $data['organization_id'];
+        elseif($this->type_lico == MTypeInterestedPerson::CONTRACTOR)
+            $data['id'] = $data['contractor_id'];
+        else
+            throw new CException('Указан неизвестный тип заинтересованного лица.');
+
+        $data['deleted'] = ($data['deleted'] == 1) ? true : false;
+        $data['type_person'] = $this->viewPerson;
+
+        unset($data['individual_id']);
+        unset($data['organization_id']);
+        unset($data['contractor_id']);
+        unset($data['person_name']);
+
+        return $this->saveData($data, $old_model);
+    }
 
     /**
      * @return array
@@ -125,6 +125,15 @@ class InterestedPersonSecretary extends InterestedPersonAbstract
             array(
                 array('job_title', 'required'),
                 array('job_title', 'length', 'max' => 100),
+
+                array('individual_id', 'required'),
+                array('individual_id', 'in', 'range' => array_keys(Individual::model()->listNames($this->forceCached)), 'on' => 'typeIndividual'),
+
+                array('organization_id', 'required'),
+                array('organization_id', 'in', 'range' => array_keys(Organization::model()->getListNames($this->forceCached)), 'on' => 'typeOrganization'),
+
+                array('contractor_id', 'required'),
+                array('contractor_id', 'in', 'range' => array_keys(Contractor::model()->getListNames($this->forceCached)), 'on' => 'typeContractor'),
             )
 		);
 	}

@@ -33,22 +33,9 @@ Yii::app()->clientScript->registerScriptFile($this->asset_static . '/js/interest
 
 <?php
 echo CHtml::tag('div', array(), 'На ' . CHtml::encode($last_date));
-$this->widget('bootstrap.widgets.TbGridView', array(
-    'type' => 'striped bordered condensed',
-    'dataProvider' => new CArrayDataProvider($data),
-    'template' => "{items} {pager}",
-    'columns' => array(
-        array(
-            'name' => 'person_name',
-            'type' => 'raw',
-            'header' => 'Лицо'
-        ),
-        array(
-            'name' => 'percent',
-            'header' => '%, акций',
-        ),
-    )
-));
+echo $this->renderPartial('/interested_person_leader/_list_grid_view', array(
+    'data' => $data
+), true);
 ?>
 <fieldset class="scheduler-border">
     <legend class="scheduler-border">История изменений</legend>

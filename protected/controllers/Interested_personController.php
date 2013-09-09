@@ -19,10 +19,7 @@ class Interested_personController extends Controller {
     {
         return array(
             'index' => 'application.controllers.InterestedPerson.IndexAction',
-//            'view' => 'application.controllers.InterestedPerson.ViewAction',
             '_get_history_models' => 'application.controllers.InterestedPerson.GetHistoryModelsAction',
-//            'edit' => 'application.controllers.InterestedPerson.UpdateAction',
-//            'delete' => 'application.controllers.InterestedPerson.DeleteAction',
         );
     }
 }

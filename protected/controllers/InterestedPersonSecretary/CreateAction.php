@@ -24,6 +24,7 @@ class CreateAction extends CAction
 
         $model = new InterestedPersonSecretary();
         $model->id_yur = $org->primaryKey;
+        $model->type_yur = MTypeOrganization::ORGANIZATION;
         $model->forceCached = $forceCached;
 
         $data = Yii::app()->request->getPost(get_class($model));
@@ -33,7 +34,7 @@ class CreateAction extends CAction
                 try {
                     $model->save();
                     $controller->redirect($controller->createUrl(
-                        'index',
+                        'interested_person/index',
                         array(
                             'org_id' => $org->primaryKey,
                             'type' => $model->pageTypePerson

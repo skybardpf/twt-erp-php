@@ -9,24 +9,6 @@
  * @var Organization $organization
  * @var string $type_person
  */
-$this->widget('bootstrap.widgets.TbGridView', array(
-    'type' => 'striped bordered condensed',
-    'dataProvider' => new CArrayDataProvider($data),
-    'template' => "{items} {pager}",
-    'columns' => array(
-        array(
-            'name' => 'person_name',
-            'type' => 'raw',
-            'header' => 'Лицо'
-        ),
-        array(
-            'name' => 'number_stake',
-            'header' => 'Номер пакета акций',
-        ),
-        array(
-            'name' => 'value_stake',
-            'header' => '%, акций',
-        ),
-    )
-));
-?>
+echo $this->renderPartial('/interested_person_'.$type_person.'/_list_grid_view', array(
+    'data' => $data
+), true);

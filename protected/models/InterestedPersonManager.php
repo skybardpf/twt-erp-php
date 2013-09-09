@@ -5,6 +5,7 @@
  * @author Skibardin A.A. <webprofi1983@gmail.com>
  *
  * @property string $job_title
+ * @property string $individual_id
  */
 class InterestedPersonManager extends InterestedPersonAbstract
 {
@@ -47,7 +48,7 @@ class InterestedPersonManager extends InterestedPersonAbstract
 	}
 
     /**
-     * Сохранение номинального акционера.
+     * Сохранение менеджера.
      * @param InterestedPersonManager $old_model
      * @return array Если успешно, сохранилось, возвращает массив со значениями:
      * [id, type_lico, id_yur, type_yur, date, number_stake],
@@ -56,13 +57,10 @@ class InterestedPersonManager extends InterestedPersonAbstract
      */
     public function save(InterestedPersonManager $old_model = null)
     {
-        $data = $this->getAttributes();
-
-//        if (!$this->primaryKey){
-//            unset($data['id']);
-//        }
         if ($this->type_lico != MTypeInterestedPerson::INDIVIDUAL)
             throw new CException('Указан неизвестный тип заинтересованного лица.');
+
+        $data = $this->getAttributes();
 
         $data['id'] = $data['individual_id'];
         $data['deleted'] = ($data['deleted'] == 1) ? true : false;
