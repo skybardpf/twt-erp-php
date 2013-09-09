@@ -14,7 +14,6 @@
 
 Yii::app()->clientScript->registerScriptFile($this->asset_static . '/js/interested_person/list.js');
 ?>
-    <h3>Менеджеры</h3>
     <div class="pull-right" style="margin-top: 15px;">
         <?php
         $this->widget('bootstrap.widgets.TbButton', array(
@@ -30,6 +29,7 @@ Yii::app()->clientScript->registerScriptFile($this->asset_static . '/js/interest
         ));
         ?>
     </div>
+<h3>Менеджеры</h3>
 
 <?php
 echo CHtml::tag('div', array(), 'На ' . CHtml::encode($last_date));
