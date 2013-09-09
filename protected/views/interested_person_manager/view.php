@@ -10,8 +10,6 @@
  */
 ?>
 
-<h2><?= CHtml::encode($model->person_name); ?></h2>
-
 <?php
     $this->widget('bootstrap.widgets.TbButton', array(
         'buttonType' => 'link',
@@ -64,6 +62,7 @@
         ));
     }
 ?>
+<h2><?= CHtml::encode($model->person_name); ?></h2>
 <br/><br/>
 <div>
 <?php
