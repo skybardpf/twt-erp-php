@@ -177,7 +177,7 @@ abstract class OrganizationAbstract extends SOAPModel
     {
         $class = get_class($this);
         if ($this->primaryKey){
-            Yii::app()->cache->delete($class.'_'.$this->primaryKey);
+            Yii::app()->cache->delete( $class.self::PREFIX_CACHE_MODEL_PK.$this->primaryKey);
         }
         Yii::app()->cache->delete($class.self::PREFIX_CACHE_ID_LIST_FULL_DATA);
         Yii::app()->cache->delete($class.self::PREFIX_CACHE_ID_LIST_NAMES);
