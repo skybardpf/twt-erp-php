@@ -20,13 +20,12 @@ class CreateAction extends CAction
         $controller = $this->controller;
         $controller->pageTitle .= ' | Создание номинального акционера';
 
-        $forceCached = (Yii::app()->request->getQuery('force_cache') == 1);
         if ($org_type === MTypeOrganization::ORGANIZATION){
-            $org = Organization::model()->findByPk($org_id, $forceCached);
+            $org = Organization::model()->findByPk($org_id, $controller->getForceCached());
             $render_page = '/organization/show';
             $controller->menu_current = 'legal';
         } elseif ($org_type === MTypeOrganization::CONTRACTOR){
-            $org = Contractor::model()->findByPk($org_id, $forceCached);
+            $org = Contractor::model()->findByPk($org_id, $controller->getForceCached());
             $render_page = '/contractor/menu_tabs';
             $controller->menu_current = 'contractors';
         } else
@@ -35,7 +34,7 @@ class CreateAction extends CAction
         $model = new InterestedPersonBeneficiary();
         $model->id_yur = $org->primaryKey;
         $model->type_yur = $org_type;
-        $model->forceCached = $forceCached;
+        $model->forceCached = $controller->getForceCached();
 
         $data = Yii::app()->request->getPost(get_class($model));
         if ($data) {

@@ -24,13 +24,12 @@ class UpdateAction extends CAction
         $controller = $this->controller;
         $controller->pageTitle .= ' | Редактирование бенефициара';
 
-        $forceCached = (Yii::app()->request->getQuery('force_cache') == 1);
         if ($org_type === MTypeOrganization::ORGANIZATION){
-            $org = Organization::model()->findByPk($org_id, $forceCached);
+            $org = Organization::model()->findByPk($org_id, $controller->getForceCached());
             $render_page = '/organization/show';
             $controller->menu_current = 'legal';
         } elseif ($org_type === MTypeOrganization::CONTRACTOR){
-            $org = Contractor::model()->findByPk($org_id, $forceCached);
+            $org = Contractor::model()->findByPk($org_id, $controller->getForceCached());
             $render_page = '/contractor/menu_tabs';
             $controller->menu_current = 'contractors';
         } else
@@ -39,7 +38,7 @@ class UpdateAction extends CAction
         /**
          * @var InterestedPersonBeneficiary $model
          */
-        $model = InterestedPersonBeneficiary::model()->findByPk($id, $type_lico, $org_id, $org_type, $date, $number_stake, $forceCached);
+        $model = InterestedPersonBeneficiary::model()->findByPk($id, $type_lico, $org_id, $org_type, $date, $number_stake, $controller->getForceCached());
         $model->individual_id = $model->organization_id = $model->contractor_id = $model->primaryKey;
 
         if(isset($_POST['ajax']) && $_POST['ajax'] === 'form-person') {

@@ -24,12 +24,11 @@ class UpdateAction extends CAction
         $controller = $this->controller;
         $controller->pageTitle .= ' | Редактирование номинального акционера';
 
-        $forceCached = (Yii::app()->request->getQuery('force_cache') == 1);
-        $org = Organization::model()->findByPk($id_yur, $forceCached);
+        $org = Organization::model()->findByPk($id_yur, $controller->getForceCached());
         /**
          * @var InterestedPersonShareholder $model
          */
-        $model = InterestedPersonShareholder::model()->findByPk($id, $type_lico, $id_yur, $type_yur, $date, $number_stake, $forceCached);
+        $model = InterestedPersonShareholder::model()->findByPk($id, $type_lico, $id_yur, $type_yur, $date, $number_stake, $controller->getForceCached());
         $model->individual_id = $model->organization_id = $model->contractor_id = $model->primaryKey;
 
         if(isset($_POST['ajax']) && $_POST['ajax'] === 'form-person') {

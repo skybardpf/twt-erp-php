@@ -24,12 +24,11 @@ class UpdateAction extends CAction
         $controller = $this->controller;
         $controller->pageTitle .= ' | Редактирование менеджера';
 
-        $forceCached = (Yii::app()->request->getQuery('force_cache') == 1);
-        $org = Organization::model()->findByPk($id_yur, $forceCached);
+        $org = Organization::model()->findByPk($id_yur, $controller->getForceCached());
         /**
          * @var InterestedPersonManager $model
          */
-        $model = InterestedPersonManager::model()->findByPk($id, $type_lico, $id_yur, $type_yur, $date, $number_stake, $forceCached);
+        $model = InterestedPersonManager::model()->findByPk($id, $type_lico, $id_yur, $type_yur, $date, $number_stake, $controller->getForceCached());
         $model->individual_id = $model->primaryKey;
 
         if(isset($_POST['ajax']) && $_POST['ajax'] === 'form-person') {

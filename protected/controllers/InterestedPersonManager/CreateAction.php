@@ -20,13 +20,12 @@ class CreateAction extends CAction
         $controller = $this->controller;
         $controller->pageTitle .= ' | Создание менеджера';
 
-        $forceCached = (Yii::app()->request->getQuery('force_cache') == 1);
-        $org = Organization::model()->findByPk($org_id, $forceCached);
+        $org = Organization::model()->findByPk($org_id, $controller->getForceCached());
 
         $model = new InterestedPersonManager();
         $model->id_yur = $org->primaryKey;
         $model->type_yur = MTypeOrganization::ORGANIZATION;
-        $model->forceCached = $forceCached;
+        $model->forceCached = $controller->getForceCached();
 
         $data = Yii::app()->request->getPost(get_class($model));
         if ($data) {

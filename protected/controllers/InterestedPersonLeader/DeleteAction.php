@@ -23,9 +23,8 @@ class DeleteAction extends CAction
         $controller = $this->controller;
         $controller->pageTitle .= ' | Удаление руководителя';
 
-        $forceCached = (Yii::app()->request->getQuery('force_cache') == 1);
-        $org = Organization::model()->findByPk($id_yur, $forceCached);
-        $model = InterestedPersonLeader::model()->findByPk($id, $type_lico, $id_yur, $type_yur, $date, $number_stake, $forceCached);
+        $org = Organization::model()->findByPk($id_yur, $controller->getForceCached());
+        $model = InterestedPersonLeader::model()->findByPk($id, $type_lico, $id_yur, $type_yur, $date, $number_stake, $controller->getForceCached());
 
         if (Yii::app()->request->isAjaxRequest) {
             $ret = array();

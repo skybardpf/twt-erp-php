@@ -4,7 +4,7 @@
  *
  * @author Skibardin A.A. <webprofi1983@gmail.com>
  */
-class   Interested_person_beneficiaryController extends Controller {
+class Interested_person_beneficiaryController extends Controller {
     public $layout = 'inner';
     public $menu_current = 'legal';
     public $current_tab = 'beneficiary';
