@@ -30,6 +30,14 @@
                 'url'   => $this->createUrl('power_attorney_contractor/list', array('cid' => $model->primaryKey)),
                 'active'=> ($current_tab_menu == 'power_attorney')
             ),
+            array(
+                'label' => 'Бенефициары',
+                'url' => $this->createUrl('interested_person_beneficiary/index', array(
+                    'org_id' => $model->primaryKey,
+                    'org_type' => $model->type,
+                )),
+                'active' => ($current_tab_menu == 'beneficiary')
+            ),
         ),
     ));
 ?>

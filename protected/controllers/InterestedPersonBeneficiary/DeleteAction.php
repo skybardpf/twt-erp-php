@@ -31,7 +31,7 @@ class DeleteAction extends CAction
         else
             throw new CHttpException(500, 'Указан неизвестный тип организации');
 
-        $model = InterestedPersonShareholder::model()->findByPk($id, $type_lico, $org_id, $org_type, $date, $number_stake, $forceCached);
+        $model = InterestedPersonBeneficiary::model()->findByPk($id, $type_lico, $org_id, $org_type, $date, $number_stake, $forceCached);
 
         if (Yii::app()->request->isAjaxRequest) {
             $ret = array();
@@ -72,16 +72,12 @@ class DeleteAction extends CAction
         }
 
         $controller->render('/organization/show', array(
-            'content' => $controller->renderPartial('/interested_person/index',
+            'content' => $controller->renderPartial('/interested_person/delete',
                 array(
+                    'model' => $model,
                     'organization' => $org,
-                    'menu_tab' => $model->pageTypePerson,
-                    'content' => $controller->renderPartial('/interested_person/delete',
-                        array(
-                            'model' => $model,
-                            'organization' => $org,
-                        ), true)
-                ), true),
+                ), true
+            ),
             'organization' => $org,
             'cur_tab' => $controller->current_tab,
         ));
