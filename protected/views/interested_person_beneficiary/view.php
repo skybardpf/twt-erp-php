@@ -114,6 +114,11 @@
                 'name' => 'description',
                 'label' => 'Дополнительные сведения'
             ),
+
+            array(
+                'name' => 'total_count_stake',
+                'label' => 'Общее кол-во акций, %'
+            ),
 		)
 	));
 ?>

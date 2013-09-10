@@ -8,9 +8,10 @@
  * @var InterestedPersonBeneficiary[] $data
  */
 
+$currency = Currency::model()->listNames();
 $provider = new CArrayDataProvider($data);
 foreach($provider->rawData as $k=>$v)
-    $provider->rawData[$k]['nominal_stake'] = $v['nominal_stake'] . ' ' . $v['currency'];
+    $provider->rawData[$k]['nominal_stake'] = $v['nominal_stake'] . ' ' . (isset($currency[$v['currency']]) ? $currency[$v['currency']] : '');
 
 $this->widget('bootstrap.widgets.TbGridView', array(
     'type' => 'striped bordered condensed',
