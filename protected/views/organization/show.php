@@ -37,12 +37,12 @@
                 'active' => ($cur_tab == 'interested_person'),
 //                'itemOptions' => array('class'=>'narrow')
             ),
-//            array(
-//                'label' => 'Бенефициары',
-//                'url'   => $this->createUrl('interested_person_beneficiary/index', array('org_id' => $organization->primaryKey, 'org_type' => $organization->type)),
-//                'active' => ($cur_tab == 'beneficiary'),
-////                'itemOptions' => array('class'=>'narrow')
-//            ),
+            array(
+                'label' => 'Бенефициары',
+                'url'   => $this->createUrl('interested_person_beneficiary/index', array('org_id' => $organization->primaryKey, 'org_type' => $organization->type)),
+                'active' => ($cur_tab == 'beneficiary'),
+//                'itemOptions' => array('class'=>'narrow')
+            ),
             array(
                 'label' => 'Календарь событий',
                 'url'   => $this->createUrl('calendar_events/list', array('org_id' => $organization->primaryKey)),

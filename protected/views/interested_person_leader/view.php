@@ -9,8 +9,9 @@
  * @var Organization $organization
  */
 ?>
-
+<h2><?= CHtml::encode($model->person_name); ?></h2>
 <?php
+
 $this->widget('bootstrap.widgets.TbButton', array(
 	'buttonType' => 'link',
 	'type'       => 'success',
@@ -61,9 +62,6 @@ if (!$model->deleted) {
 	));
 }
 ?>
-
-<h2><?= CHtml::encode($model->person_name); ?></h2>
-
 <br/><br/>
 <div>
 <?php

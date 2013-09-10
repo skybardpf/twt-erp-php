@@ -46,12 +46,11 @@ class IndexAction extends CAction
                 throw new CHttpException(404, 'Неизвестный тип заинтересованного лица');
             }
         }
-        $forceCached = (Yii::app()->request->getQuery('force_cache') == 1);
-        $org = Organization::model()->findByPk($org_id, $forceCached);
+        $org = Organization::model()->findByPk($org_id, $controller->getForceCached());
 
-        $history = $model->listHistory($org->primaryKey, MTypeOrganization::ORGANIZATION, $forceCached);
-        $last_date = $model->getLastDate($org->primaryKey, MTypeOrganization::ORGANIZATION, $forceCached);
-        $data = $model->listModels($org_id, MTypeOrganization::ORGANIZATION, $last_date, $forceCached);
+        $history = $model->listHistory($org->primaryKey, MTypeOrganization::ORGANIZATION, $controller->getForceCached());
+        $last_date = $model->getLastDate($org->primaryKey, MTypeOrganization::ORGANIZATION, $controller->getForceCached());
+        $data = $model->listModels($org_id, MTypeOrganization::ORGANIZATION, $last_date, $controller->getForceCached());
 
         $controller->render('/organization/show', array(
             'content' => $controller->renderPartial('/interested_person/index',

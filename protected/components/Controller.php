@@ -5,7 +5,9 @@
  */
 class Controller extends CController
 {
-	/**
+	private $_forceCached = false; // Принудительный сброс кешей.
+
+    /**
 	 * @var string the default layout for the controller view. Defaults to '//layouts/column1',
 	 * meaning using a single column layout. See 'protected/views/layouts/column1.php'.
 	 */
@@ -27,7 +29,11 @@ class Controller extends CController
 
 	public $asset_static = '';
 
-	protected function beforeAction($action)
+    /**
+     * @param CAction $action
+     * @return bool
+     */
+    protected function beforeAction($action)
 	{
 		if (!$this->asset_static) {
             $this->asset_static = Yii::app()->assetManager->publish(
@@ -45,6 +51,16 @@ class Controller extends CController
             echo $identity->errorMessage;
         }
 
+        $this->_forceCached = (Yii::app()->request->getQuery('force_cache') == 1);
+
 		return parent::beforeAction($action);
 	}
+
+    /**
+     * @return bool
+     */
+    public function getForceCached()
+    {
+        return $this->_forceCached;
+    }
 }

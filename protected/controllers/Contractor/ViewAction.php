@@ -31,8 +31,8 @@ class ViewAction extends CAction
                     ),
                     true
                 ),
-                'model' => $model,
-                'current_tab_menu' => 'info'
+                'organization' => $model,
+                'cur_tab' => 'info'
             )
         );
     }

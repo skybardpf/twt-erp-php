@@ -3,12 +3,12 @@
  * Валюты
  * @author Skibardin A.A. <webprofi1983@gmail.com>
  *
- * @property int    $id
+ * @property string $id
  * @property string $name
  */
 class Currency extends SOAPModel
 {
-    const PREFIX_CACHE_LIST_MODELS = '_lis_models';
+    const PREFIX_CACHE_LIST_MODELS = '_list_models';
 
 	/**
 	 * @static

@@ -24,17 +24,20 @@ class ViewAction extends CAction
         $controller = $this->controller;
         $controller->pageTitle .= ' | Просмотр бенефициара';
 
-        $forceCached = (Yii::app()->request->getQuery('force_cache') == 1);
-        if ($org_type === MTypeOrganization::ORGANIZATION)
-            $org = Organization::model()->findByPk($org_id, $forceCached);
-        elseif ($org_type === MTypeOrganization::CONTRACTOR)
-            $org = Contractor::model()->findByPk($org_id, $forceCached);
-        else
+        if ($org_type === MTypeOrganization::ORGANIZATION){
+            $org = Organization::model()->findByPk($org_id, $controller->getForceCached());
+            $render_page = '/organization/show';
+            $controller->menu_current = 'legal';
+        } elseif ($org_type === MTypeOrganization::CONTRACTOR){
+            $org = Contractor::model()->findByPk($org_id, $controller->getForceCached());
+            $render_page = '/contractor/menu_tabs';
+            $controller->menu_current = 'contractors';
+        } else
             throw new CHttpException(500, 'Указан неизвестный тип организации');
 
-        $model = InterestedPersonBeneficiary::model()->findByPk($id, $type_lico, $org_id, $org_type, $date, $number_stake, $forceCached);
+        $model = InterestedPersonBeneficiary::model()->findByPk($id, $type_lico, $org_id, $org_type, $date, $number_stake, $controller->getForceCached());
 
-        $controller->render('/organization/show', array(
+        $controller->render($render_page, array(
             'content' => $controller->renderPartial('/interested_person_beneficiary/view',
                 array(
                     'model' => $model,

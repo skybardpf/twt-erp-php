@@ -1,13 +1,12 @@
 <?php
 /**
- * Редактирование "Бенефициара".
- *
+ * Удаление бенефициара.
  * @author Skibardin A.A. <webprofi1983@gmail.com>
  */
-class UpdateAction extends CAction
+class DeleteAction extends CAction
 {
     /**
-     * Редактирование "Бенефициара".
+     * Удаление бенефициара.
      * @param string $id                Идентификатор лица
      * @param string $type_lico         Тип лица
      * @param string $org_id            Идентификатор организации
@@ -22,7 +21,7 @@ class UpdateAction extends CAction
          * @var Interested_person_beneficiaryController $controller
          */
         $controller = $this->controller;
-        $controller->pageTitle .= ' | Редактирование бенефициара';
+        $controller->pageTitle .= ' | Удаление бенефициара';
 
         if ($org_type === MTypeOrganization::ORGANIZATION){
             $org = Organization::model()->findByPk($org_id, $controller->getForceCached());
@@ -35,50 +34,48 @@ class UpdateAction extends CAction
         } else
             throw new CHttpException(500, 'Указан неизвестный тип организации');
 
-        /**
-         * @var InterestedPersonBeneficiary $model
-         */
         $model = InterestedPersonBeneficiary::model()->findByPk($id, $type_lico, $org_id, $org_type, $date, $number_stake, $controller->getForceCached());
-        $model->individual_id = $model->organization_id = $model->contractor_id = $model->primaryKey;
 
-        if(isset($_POST['ajax']) && $_POST['ajax'] === 'form-person') {
-            echo CActiveForm::validate($model);
+        if (Yii::app()->request->isAjaxRequest) {
+            $ret = array();
+            try {
+                $model->delete();
+            } catch (Exception $e) {
+                $ret['error'] = $e->getMessage();
+            }
+            echo CJSON::encode($ret);
             Yii::app()->end();
         }
-
-        /**
-         * Сохраняем для правильной очистки кеша.
-         */
-        $old_model = clone $model;
-
-        $data = Yii::app()->request->getPost(get_class($model));
-        if ($data) {
-            $model->setAttributes($data);
-            if ($model->validate()) {
-                try {
-                    $ret = $model->save($old_model);
-                    if ($ret === null)
-                        throw new CException('Ошибка при сохранении бенефициара');
-
+        if (isset($_POST['result'])) {
+            switch ($_POST['result']) {
+                case 'yes':
+                    if ($model->delete()) {
+                        $controller->redirect($controller->createUrl('interested_person_beneficiary/index', array(
+                            'org_id' => $org->primaryKey,
+                            'org_type' => $org->type,
+                        )));
+                    } else {
+                        throw new CHttpException(500, 'Не удалось удалить бенефициара.');
+                    }
+                break;
+                default:
                     $controller->redirect($controller->createUrl(
                         'view',
                         array(
-                            'id' => $ret['id'],
-                            'type_lico' => $ret['type_lico'],
-                            'org_id' => $ret['id_yur'],
-                            'org_type' => $ret['type_yur'],
-                            'date' => $ret['date'],
-                            'number_stake' => $ret['number_stake'],
+                            'id' => $model->primaryKey,
+                            'type_lico' => $model->type_lico,
+                            'org_id' => $model->id_yur,
+                            'org_type' => $model->type_yur,
+                            'date' => $model->date,
+                            'number_stake' => $model->number_stake,
                         )
                     ));
-                } catch (CException $e) {
-                    $model->addError('id', $e->getMessage());
-                }
+                break;
             }
         }
 
         $controller->render($render_page, array(
-            'content' => $controller->renderPartial('/interested_person_beneficiary/form',
+            'content' => $controller->renderPartial('/interested_person/delete',
                 array(
                     'model' => $model,
                     'organization' => $org,

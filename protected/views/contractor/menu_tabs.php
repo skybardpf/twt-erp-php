@@ -5,14 +5,14 @@
  * @author Skibardin A.A. <webprofi1983@gmail.com>
  *
  * @var Controller    $this
- * @var Contractor    $model
+ * @var Contractor    $organization
  * @var string        $content
- * @var string        $current_tab_menu
+ * @var string        $cur_tab
  */
 ?>
 
 <?php
-    echo '<h2>'.$model->name.'</h2>';
+    echo '<h2>'.$organization->name.'</h2>';
 ?>
 <div class="yur-tabs">
 <?php
@@ -22,13 +22,21 @@
         'items' => array(
             array(
                 'label' => 'Информация',
-                'url'   => $this->createUrl('contractor/view', array('id' => $model->primaryKey)),
-                'active'=> ($current_tab_menu == 'info')
+                'url'   => $this->createUrl('contractor/view', array('id' => $organization->primaryKey)),
+                'active'=> ($cur_tab == 'info')
             ),
             array(
                 'label' => 'Доверенности',
-                'url'   => $this->createUrl('power_attorney_contractor/list', array('cid' => $model->primaryKey)),
-                'active'=> ($current_tab_menu == 'power_attorney')
+                'url'   => $this->createUrl('power_attorney_contractor/list', array('cid' => $organization->primaryKey)),
+                'active'=> ($cur_tab == 'power_attorney')
+            ),
+            array(
+                'label' => 'Бенефициары',
+                'url' => $this->createUrl('interested_person_beneficiary/index', array(
+                    'org_id' => $organization->primaryKey,
+                    'org_type' => $organization->type,
+                )),
+                'active' => ($cur_tab == 'beneficiary')
             ),
         ),
     ));

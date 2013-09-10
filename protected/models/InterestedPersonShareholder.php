@@ -98,6 +98,7 @@ class InterestedPersonShareholder extends InterestedPersonAbstract
         unset($data['organization_id']);
         unset($data['contractor_id']);
         unset($data['person_name']);
+        unset($data['total_count_stake']);
 
         return $this->saveData($data, $old_model);
     }

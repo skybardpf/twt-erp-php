@@ -14,7 +14,6 @@
 
 Yii::app()->clientScript->registerScriptFile($this->asset_static . '/js/interested_person/list.js');
 ?>
-<h3>Номинальные акционеры</h3>
 <div class="pull-right" style="margin-top: 15px;">
     <?php
     $this->widget('bootstrap.widgets.TbButton', array(
@@ -31,9 +30,10 @@ Yii::app()->clientScript->registerScriptFile($this->asset_static . '/js/interest
     ));
     ?>
 </div>
+<h3>Бенефициары</h3>
 
 <?php
-echo CHtml::tag('div', array(), 'На ' . CHtml::encode($last_date));
+echo CHtml::tag('div', array(), 'На ' . $last_date);
 echo $this->renderPartial('/interested_person_beneficiary/_list_grid_view', array(
     'data' => $data
 ), true);
@@ -44,7 +44,7 @@ echo $this->renderPartial('/interested_person_beneficiary/_list_grid_view', arra
     echo CHtml::tag('div', array(
         'class' => 'org-info',
         'data-org-id' => $organization->primaryKey,
-        'data-org-type' => MTypeOrganization::ORGANIZATION,
+        'data-org-type' => $organization->type,
         'data-type-person' => $type_person,
     ));
     $history = array_reverse($history);

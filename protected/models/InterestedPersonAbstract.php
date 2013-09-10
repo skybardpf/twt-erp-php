@@ -24,6 +24,13 @@ abstract class InterestedPersonAbstract extends SOAPModel
     const PREFIX_CACHE_LAST_HISTORY_DATE_BY_ORG = '_last_history_date_by_org_';
 
     /**
+     * @var string $_cacheFindByPkDate
+     * Сохранение даты при обращении по findByPk. Для правильного сбрасывания кеша.
+     * Т.к. дата с которой пытаемся получить модель, может отличаться от фактической.
+     */
+    private $_cacheFindByPkDate = '';
+
+    /**
      * Возвращает тип заинтересованного лица.
      * @see MViewInterestedPerson
      * @return string
@@ -101,6 +108,7 @@ abstract class InterestedPersonAbstract extends SOAPModel
 
             $model->id_yur = $orgId;
             $model->type_yur = $orgType;
+            $model->_cacheFindByPkDate = $date;
 
             Yii::app()->cache->set($cache_id, $model);
         }
@@ -186,6 +194,7 @@ abstract class InterestedPersonAbstract extends SOAPModel
             foreach($models as $model){
                 $model->id_yur = $orgId;
                 $model->type_yur = $orgType;
+                $model->_cacheFindByPkDate = $model->date;
                 $model->person_name = CHtml::link(
                     CHtml::encode($model->person_name),
                     Yii::app()->createUrl(
@@ -263,7 +272,7 @@ abstract class InterestedPersonAbstract extends SOAPModel
         $class = get_class($model);
         $cache = Yii::app()->cache;
         if ($model->primaryKey)
-            $cache->delete($class.self::PREFIX_CACHE_MODEL_PK.$model->primaryKey.'_'.$model->type_lico.'_'.$model->id_yur.'_'.$model->type_yur.'_'.$model->date.'_'.$model->number_stake);
+            $cache->delete($class.self::PREFIX_CACHE_MODEL_PK.$model->primaryKey.'_'.$model->type_lico.'_'.$model->id_yur.'_'.$model->type_yur.'_'.$model->_cacheFindByPkDate.'_'.$model->number_stake);
 
         $cache->delete($class.self::PREFIX_CACHE_MODELS_BY_ORG.$model->id_yur.'_'.$model->type_yur.'_'.$model->date);
         $cache->delete($class.self::PREFIX_CACHE_ALL_DATA_BY_ORG.$model->id_yur.'_'.$model->type_yur);
@@ -291,9 +300,8 @@ abstract class InterestedPersonAbstract extends SOAPModel
         $old_model = ($old_model === null) ? $this : $old_model;
         $this->clearCache($old_model);
         $ret = array();
-        foreach($tmp as $v){
+        foreach($tmp as $v)
             $ret[key($v)] = current($v);
-        }
         return $ret;
     }
 
