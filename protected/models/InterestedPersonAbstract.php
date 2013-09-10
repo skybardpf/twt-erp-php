@@ -176,6 +176,7 @@ abstract class InterestedPersonAbstract extends SOAPModel
         $cache_id = $class.self::PREFIX_CACHE_ALL_DATA_BY_ORG.$orgId.'_'.$orgType;
         if ($forceCached || ($data = Yii::app()->cache->get($cache_id)) === false){
             $filters = SoapComponent::getStructureElement(array(
+//                'deleted' => false,
                 'id_yur' => $orgId,
                 'type_yur' => $orgType,
                 'type_person' => $this->viewPerson,

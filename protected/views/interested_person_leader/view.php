@@ -21,8 +21,8 @@ $this->widget('bootstrap.widgets.TbButton', array(
 		array(
 			'id' => $model->primaryKey,
 			'type_lico' => $model->type_lico,
-			'id_yur' => $model->id_yur,
-			'type_yur' => $model->type_yur,
+			'org_id' => $model->id_yur,
+			'org_type' => $model->type_yur,
 			'date' => $model->date,
 			'number_stake' => $model->number_stake,
 		)
@@ -41,14 +41,14 @@ if (!$model->deleted) {
 			'data-title' => 'Удаление руководителя',
 			'data-url' => $this->createUrl(
 				'delete',
-				array(
-					'id' => $model->primaryKey,
-					'type_lico' => $model->type_lico,
-					'id_yur' => $model->id_yur,
-					'type_yur' => $model->type_yur,
-					'date' => $model->date,
-					'number_stake' => $model->number_stake,
-				)
+                array(
+                    'id' => $model->primaryKey,
+                    'type_lico' => $model->type_lico,
+                    'org_id' => $model->id_yur,
+                    'org_type' => $model->type_yur,
+                    'date' => $model->date,
+                    'number_stake' => $model->number_stake,
+                )
 			),
 			'data-redirect_url' => $this->createUrl(
 				'interested_person/index',

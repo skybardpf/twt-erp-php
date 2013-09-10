@@ -20,8 +20,8 @@
             array(
                 'id' => $model->primaryKey,
                 'type_lico' => $model->type_lico,
-                'id_yur' => $model->id_yur,
-                'type_yur' => $model->type_yur,
+                'org_id' => $model->id_yur,
+                'org_type' => $model->type_yur,
                 'date' => $model->date,
                 'number_stake' => $model->number_stake,
             )
@@ -44,8 +44,8 @@
                     array(
                         'id' => $model->primaryKey,
                         'type_lico' => $model->type_lico,
-                        'id_yur' => $model->id_yur,
-                        'type_yur' => $model->type_yur,
+                        'org_id' => $model->id_yur,
+                        'org_type' => $model->type_yur,
                         'date' => $model->date,
                         'number_stake' => $model->number_stake,
                     )
