@@ -1,13 +1,13 @@
 <?php
 /**
- * Создание "Менеджера".
+ * Создание "Бенефициара".
  *
  * @author Skibardin A.A. <webprofi1983@gmail.com>
  */
 class CreateAction extends CAction
 {
     /**
-     * Создание "Менеджера".
+     * Создание "Бенефициара".
      * @param string $org_id    Идентификатор организации
      * @param string $org_type  Тип организации
      * @throws CHttpException
@@ -15,17 +15,22 @@ class CreateAction extends CAction
     public function run($org_id, $org_type)
     {
         /**
-         * @var Interested_person_leaderController $controller
+         * @var Interested_person_shareholderController $controller
          */
         $controller = $this->controller;
-        $controller->pageTitle .= ' | Создание менеджера';
+        $controller->pageTitle .= ' | Создание номинального акционера';
 
         $forceCached = (Yii::app()->request->getQuery('force_cache') == 1);
-        $org = Organization::model()->findByPk($org_id, $forceCached);
+        if ($org_type === MTypeOrganization::ORGANIZATION)
+            $org = Organization::model()->findByPk($org_id, $forceCached);
+        elseif ($org_type === MTypeOrganization::CONTRACTOR)
+            $org = Contractor::model()->findByPk($org_id, $forceCached);
+        else
+            throw new CHttpException(500, 'Указан неизвестный тип организации');
 
-        $model = new InterestedPersonManager();
+        $model = new InterestedPersonBeneficiary();
         $model->id_yur = $org->primaryKey;
-        $model->type_yur = MTypeOrganization::ORGANIZATION;
+        $model->type_yur = $org_type;
         $model->forceCached = $forceCached;
 
         $data = Yii::app()->request->getPost(get_class($model));
@@ -35,10 +40,10 @@ class CreateAction extends CAction
                 try {
                     $model->save();
                     $controller->redirect($controller->createUrl(
-                        'interested_person/index',
+                        'interested_person_beneficiary/index',
                         array(
                             'org_id' => $org->primaryKey,
-                            'type' => $model->pageTypePerson
+                            'org_type' => $org->type,
                         )
                     ));
                 } catch (CException $e) {
@@ -48,17 +53,12 @@ class CreateAction extends CAction
         }
 
         $controller->render('/organization/show', array(
-            'content' => $controller->renderPartial('/interested_person/index',
+            'content' => $controller->renderPartial('/interested_person_beneficiary/form',
                 array(
+                    'model' => $model,
                     'organization' => $org,
-                    'menu_tab' => $model->pageTypePerson,
-                    'content' => $controller->renderPartial('/interested_person_manager/form',
-                        array(
-                            'model' => $model,
-                            'organization' => $org,
-                        ), true
-                    ),
-                ), true),
+                ), true
+            ),
             'organization' => $org,
             'cur_tab' => $controller->current_tab,
         ));

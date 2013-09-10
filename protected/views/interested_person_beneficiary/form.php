@@ -1,18 +1,18 @@
 <?php
 /**
- * Форма добавления/редактирования номинального акционера.
+ * Форма добавления/редактирования бенефициара.
  *
  * @author Skibardin A.A. <webprofi1983@gmail.com>
  *
- * @var Interested_person_shareholderController $this
- * @var InterestedPersonShareholder $model
+ * @var Interested_person_beneficiaryController $this
+ * @var InterestedPersonBeneficiary $model
  * @var Organization $organization
  */
 
 Yii::app()->clientScript->registerScriptFile($this->asset_static . '/js/interested_person/form.js');
 ?>
 
-<h2><?= ($model->primaryKey ? 'Редактирование' : 'Создание') . ' номинального акционера' ?></h2>
+<h2><?= ($model->primaryKey ? 'Редактирование' : 'Создание') . ' бенефициара' ?></h2>
 
 <?php
 /** @var $form MTbActiveForm */
@@ -45,14 +45,13 @@ $this->widget('bootstrap.widgets.TbButton', array(
                 'org_id' => $model->id_yur,
                 'org_type' => $model->type_yur,
                 'date' => $model->date,
-                'number_stake' => $model->number_stake,
             )
         )
         : $this->createUrl(
-            'interested_person/index',
+            'interested_person_beneficiary/index',
             array(
                 'org_id' => $organization->primaryKey,
-                'type' => $model->pageTypePerson
+                'org_type' => $organization->type,
             )
         )
 ));

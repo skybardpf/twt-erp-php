@@ -9,4 +9,5 @@ class MViewInterestedPerson extends CEnumerable
     const LEADER = 'Директор';
     const SECRETARY = 'Секретарь';
     const MANAGER = 'Менеджер';
+    const BENEFICIARY = 'Бенефициар';
 }

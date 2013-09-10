@@ -37,17 +37,22 @@ class GetHistoryModelsAction extends CAction
                     case MPageTypeInterestedPerson::SHAREHOLDER: {
                         $model = new InterestedPersonShareholder();
                     } break;
+                    case MPageTypeInterestedPerson::BENEFICIARY: {
+                        $model = new InterestedPersonBeneficiary();
+                    } break;
                     default: {
                         throw new CHttpException(404, 'Неизвестный тип заинтересованного лица');
                     }
                 }
 
-                $data = $model->listModels($org_id, $org_type, $date);
-                $html = $this->controller->renderPartial('_get_history_models', array(
-                    'organization' => $org,
-                    'data' => $data,
-                    'type_person' => $type_person
-                ), true);
+                $data = $model->listModels($org->primaryKey, $org->type, $date);
+                $html = $this->controller->renderPartial(
+                    '/interested_person_'.$type_person.'/_list_grid_view',
+                    array(
+                        'data' => $data
+                    ),
+                    true
+                );
 
                 echo CJSON::encode(array(
                     'success' => true,

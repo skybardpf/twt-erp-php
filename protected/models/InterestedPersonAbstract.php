@@ -79,6 +79,10 @@ abstract class InterestedPersonAbstract extends SOAPModel
     {
         $class = get_class($this);
         $cache_id = $class.self::PREFIX_CACHE_MODEL_PK.$id.'_'.$typeLico.'_'.$orgId.'_'.$orgType.'_'.$date.'_'.$number_stake;
+
+//        var_dump($cache_id);
+//        var_dump(Yii::app()->cache->get($cache_id));
+//        die;
         if ($forceCached || ($model = Yii::app()->cache->get($cache_id)) === false){
             $model = $this->SOAP->getInterestedPerson(
                 array(
@@ -92,9 +96,15 @@ abstract class InterestedPersonAbstract extends SOAPModel
                 )
             );
             $model = SoapComponent::parseReturn($model);
+            /**
+             * @var InterestedPersonAbstract $model
+             */
             $model = $this->publish_elem(current($model), $class);
             if ($model === null)
                 throw new CHttpException(404, 'Не найдено заинтересованное лицо');
+
+            $model->id_yur = $orgId;
+            $model->type_yur = $orgType;
 
             Yii::app()->cache->set($cache_id, $model);
         }
@@ -171,6 +181,9 @@ abstract class InterestedPersonAbstract extends SOAPModel
                 'sort' => array(array())
             ));
             $models = SoapComponent::parseReturn($models);
+            /**
+             * @var InterestedPersonAbstract[] $models
+             */
             $models = $this->publish_list($models, $class);
 
             $data = array();
@@ -184,8 +197,8 @@ abstract class InterestedPersonAbstract extends SOAPModel
                         array(
                             'id' => $model->id,
                             'type_lico' => $model->type_lico,
-                            'id_yur' => $model->id_yur,
-                            'type_yur' => $model->type_yur,
+                            'org_id' => $model->id_yur,
+                            'org_type' => $model->type_yur,
                             'date' => $model->date,
                             'number_stake' => $model->number_stake,
                         )
@@ -252,6 +265,9 @@ abstract class InterestedPersonAbstract extends SOAPModel
     public function clearCache(InterestedPersonAbstract $model)
     {
         $class = get_class($model);
+//        var_dump($class.self::PREFIX_CACHE_MODEL_PK.$model->primaryKey.'_'.$model->type_lico.'_'.$model->id_yur.'_'.$model->type_yur.'_'.$model->date.'_'.$model->number_stake);
+//        var_dump($model);
+//        die;
         $cache = Yii::app()->cache;
         if ($model->primaryKey)
             $cache->delete($class.self::PREFIX_CACHE_MODEL_PK.$model->primaryKey.'_'.$model->type_lico.'_'.$model->id_yur.'_'.$model->type_yur.'_'.$model->date.'_'.$model->number_stake);

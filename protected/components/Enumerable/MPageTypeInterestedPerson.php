@@ -9,4 +9,5 @@ class MPageTypeInterestedPerson extends CEnumerable
     const LEADER = 'leader';
     const SECRETARY = 'secretary';
     const MANAGER = 'manager';
+    const BENEFICIARY = 'beneficiary';
 }

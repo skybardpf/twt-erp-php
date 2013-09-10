@@ -59,15 +59,6 @@ class InterestedPersonShareholder extends InterestedPersonAbstract
 	}
 
     /**
-     * Инициализация перенменных.
-     */
-    public function afterConstruct()
-    {
-        $this->type_yur = MTypeOrganization::ORGANIZATION;
-        parent::afterConstruct();
-    }
-
-    /**
      * Список доступных тип акций.
      * @return array
      */
@@ -107,6 +98,7 @@ class InterestedPersonShareholder extends InterestedPersonAbstract
         unset($data['organization_id']);
         unset($data['contractor_id']);
         unset($data['person_name']);
+        unset($data['total_count_stake']);
 
         return $this->saveData($data, $old_model);
     }

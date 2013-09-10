@@ -26,6 +26,14 @@
  */
 class Organization extends OrganizationAbstract
 {
+    /**
+     * @return string
+     */
+    public function getType()
+    {
+        return MTypeOrganization::ORGANIZATION;
+    }
+
 	/**
 	 * @static
 	 * @param string $className

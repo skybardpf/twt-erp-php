@@ -1,9 +1,8 @@
 <?php
 /**
- * Просмотр Юр.Лица
+ * Просмотр Организации.
  *
- * User: Forgon
- * Date: 23.04.2013 от рождества Христова
+ * @author Skibardin A.A. <webprofi1983@gmail.com>
  *
  * @var OrganizationController      $this
  * @var Organization                $organization
@@ -36,13 +35,19 @@
                 'label' => 'Заинтересованные лица',
                 'url'   => $this->createUrl('interested_person/index', array('org_id' => $organization->primaryKey)),
                 'active' => ($cur_tab == 'interested_person'),
-                'itemOptions' => array('class'=>'narrow')
+//                'itemOptions' => array('class'=>'narrow')
+            ),
+            array(
+                'label' => 'Бенефициары',
+                'url'   => $this->createUrl('interested_person_beneficiary/index', array('org_id' => $organization->primaryKey, 'org_type' => $organization->type)),
+                'active' => ($cur_tab == 'beneficiary'),
+//                'itemOptions' => array('class'=>'narrow')
             ),
             array(
                 'label' => 'Календарь событий',
                 'url'   => $this->createUrl('calendar_events/list', array('org_id' => $organization->primaryKey)),
                 'active'=> ($cur_tab == 'calendar_events'),
-                'itemOptions' => array('class'=>'narrow narrower')
+//                'itemOptions' => array('class'=>'narrow narrower')
             ),
             /*
             array(

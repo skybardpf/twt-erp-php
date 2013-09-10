@@ -8,10 +8,11 @@ class CreateAction extends CAction
 {
     /**
      * Создание "Секретаря".
-     * @param $org_id   Идентификатор организации
+     * @param string $org_id    Идентификатор организации
+     * @param string $org_type  Тип организации
      * @throws CHttpException
      */
-    public function run($org_id)
+    public function run($org_id, $org_type)
     {
         /**
          * @var Interested_person_secretaryController $controller

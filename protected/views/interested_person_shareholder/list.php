@@ -23,7 +23,8 @@ Yii::app()->clientScript->registerScriptFile($this->asset_static . '/js/interest
             'url' => $this->createUrl(
                 "interested_person_shareholder/add",
                 array(
-                    "org_id" => $organization->primaryKey,
+                    'org_id' => $organization->primaryKey,
+                    'org_type' => $organization->type
                 )
             )
         ));
