@@ -33,8 +33,8 @@ class ListAction extends CAction
                     ),
                     true
                 ),
-                'model' => $org,
-                'current_tab_menu' => 'power_attorney'
+                'organization' => $org,
+                'cur_tab' => 'power_attorney'
             )
         );
     }

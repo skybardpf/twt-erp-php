@@ -17,9 +17,9 @@ class GetHistoryModelsAction extends CAction
     {
         if (Yii::app()->request->isAjaxRequest){
             try {
-                if ($org_type == MTypeOrganization::ORGANIZATION)
+                if ($org_type === MTypeOrganization::ORGANIZATION)
                     $org = Organization::model()->findByPk($org_id);
-                elseif ($org_type == MTypeOrganization::CONTRACTOR)
+                elseif ($org_type === MTypeOrganization::CONTRACTOR)
                     $org = Contractor::model()->findByPk($org_id);
                 else
                     throw new CException('Указан неизвестный тип организации.');
@@ -53,7 +53,6 @@ class GetHistoryModelsAction extends CAction
                     ),
                     true
                 );
-
                 echo CJSON::encode(array(
                     'success' => true,
                     'html' => $html

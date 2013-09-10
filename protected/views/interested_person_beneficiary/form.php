@@ -45,6 +45,7 @@ $this->widget('bootstrap.widgets.TbButton', array(
                 'org_id' => $model->id_yur,
                 'org_type' => $model->type_yur,
                 'date' => $model->date,
+                'number_stake' => $model->number_stake,
             )
         )
         : $this->createUrl(
