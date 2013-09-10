@@ -33,7 +33,7 @@ Yii::app()->clientScript->registerScriptFile($this->asset_static . '/js/interest
 <h3>Бенефициары</h3>
 
 <?php
-echo CHtml::tag('div', array(), 'На ' . CHtml::encode($last_date));
+echo CHtml::tag('div', array(), 'На ' . $last_date);
 echo $this->renderPartial('/interested_person_beneficiary/_list_grid_view', array(
     'data' => $data
 ), true);

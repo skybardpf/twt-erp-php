@@ -27,7 +27,7 @@ class ViewAction extends CAction
         $forceCached = (Yii::app()->request->getQuery('force_cache') == 1);
         if ($org_type === MTypeOrganization::ORGANIZATION){
             $org = Organization::model()->findByPk($org_id, $forceCached);
-            $render_page = '/interested_person_beneficiary/index';
+            $render_page = '/organization/show';
             $controller->menu_current = 'legal';
         } elseif ($org_type === MTypeOrganization::CONTRACTOR){
             $org = Contractor::model()->findByPk($org_id, $forceCached);
