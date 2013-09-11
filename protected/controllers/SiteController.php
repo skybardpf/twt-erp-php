@@ -48,4 +48,14 @@ class SiteController extends Controller
             }
         }
     }
+
+    /**
+     * Глобальный сброс кеша.
+     * @return array
+     */
+    public function actionCache_clean()
+    {
+        Yii::app()->cache->flush();
+        echo 'The cache was successfully cleared';
+    }
 }
