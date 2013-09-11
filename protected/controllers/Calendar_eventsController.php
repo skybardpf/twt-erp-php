@@ -4,7 +4,8 @@
  *
  * @author Skibardin A.A. <webprofi1983@gmail.com>
  */
-class Calendar_eventsController extends Controller{
+class Calendar_eventsController extends Controller
+{
     public $layout = 'inner';
     public $menu_current = 'legal';
     public $current_tab = 'calendar_events';

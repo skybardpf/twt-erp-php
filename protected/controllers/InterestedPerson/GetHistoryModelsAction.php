@@ -45,7 +45,7 @@ class GetHistoryModelsAction extends CAction
                     }
                 }
 
-                $data = $model->listModels($org->primaryKey, $org->type, $date);
+                $data = $model->listModels($org->primaryKey, $org->type, $date, $this->controller->getForceCached());
                 $html = $this->controller->renderPartial(
                     '/interested_person_'.$type_person.'/_list_grid_view',
                     array(
