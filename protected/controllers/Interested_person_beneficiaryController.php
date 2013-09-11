@@ -10,9 +10,6 @@ class Interested_person_beneficiaryController extends Controller {
     public $current_tab = 'beneficiary';
 	public $pageTitle = 'TWT Consult | Организации | Бенефициары';
 
-    /**
-     * @return array
-     */
     public function actions()
     {
         return array(
