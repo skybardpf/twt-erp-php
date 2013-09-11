@@ -9,7 +9,7 @@ class IndexAction extends CAction
     /**
      * @throws CHttpException
      */
-    public function run($type = MTypeOrganization::ORGANIZATION, $scheme = 'direct')
+    public function run($type = MTypeOrganization::ORGANIZATION, $scheme = 'direct', $oid='', $iid='')
     {
         /**
          * @var Cart_corporatizationController $controller
@@ -20,25 +20,40 @@ class IndexAction extends CAction
         if (!in_array($scheme, array('direct', 'indirect')))
             throw new CHttpException(500, 'Указан неправильный тип схемы');
 
+        $org_id = '';
+        $individual_id = '';
+        $individuals = array();
         if ($type === MTypeOrganization::ORGANIZATION){
-//            $org = Organization::model()->findByPk($org_id, $controller->getForceCached());
-//            $render_page = '/organization/show';
+            if (!empty($oid)){
+                $org = Organization::model()->findByPk($oid, $controller->getForceCached());
+                $org_id = $org->primaryKey;
+            }
             $currentTab = 'organization';
+            $organizations = Organization::model()->getListNames($controller->getForceCached());
         } elseif ($type === MTypeOrganization::CONTRACTOR){
-//            $org = Contractor::model()->findByPk($org_id, $controller->getForceCached());
-//            $render_page = '/contractor/menu_tabs';
+            if (!empty($oid)){
+                $org = Contractor::model()->findByPk($oid, $controller->getForceCached());
+                $org_id = $org->primaryKey;
+            }
             $currentTab = 'contractor';
+            $organizations = Contractor::model()->getListNames($controller->getForceCached());
         } else
             throw new CHttpException(500, 'Указан неизвестный тип организации');
 
-//        $model = InterestedPersonBeneficiary::model();
-//        $history = $model->listHistory($org->primaryKey, $org_type, $controller->getForceCached());
-//        $last_date = $model->getLastDate($org->primaryKey, $org_type, $controller->getForceCached());
-//        $data = $model->listModels($org_id, $org_type, $last_date, $controller->getForceCached());
-
         $controller->render('/cart_corporatization/index',
             array(
-                'content' => 'adojnv',
+                'content' => $controller->renderPartial(
+                    '/cart_corporatization/cart_'.$scheme,
+                    array(
+                        'data' => array(),
+                    ),
+                    true
+                ),
+                'org_type' => $type,
+                'organization_id' => $org_id,
+                'individual_id' => $individual_id,
+                'organizations' => $organizations,
+                'individuals' => $individuals,
                 'cur_tab' => $currentTab,
                 'scheme' => $scheme,
             )

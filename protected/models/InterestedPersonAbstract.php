@@ -14,14 +14,12 @@
  * @property string     $type_lico
  * @property string     $description
  * @property bool       $deleted
- * @property bool       $current_state
  * @property int        $number_stake
  */
 abstract class InterestedPersonAbstract extends SOAPModel
 {
     const PREFIX_CACHE_MODELS_BY_ORG = '_models_by_org_';
     const PREFIX_CACHE_ALL_DATA_BY_ORG = '_all_data_by_org_';
-    const PREFIX_CACHE_MODELS_BY_DATE = '_all_data_by_date_';
     const PREFIX_CACHE_LIST_HISTORY_BY_ORG = '_list_history_by_org_';
     const PREFIX_CACHE_LAST_HISTORY_DATE_BY_ORG = '_last_history_date_by_org_';
 
@@ -133,47 +131,6 @@ abstract class InterestedPersonAbstract extends SOAPModel
             $models = $this->listAllData($orgId, $orgType, $forceCached);
             $data = (isset($models[$date])) ? $models[$date] : array();
 
-            Yii::app()->cache->set($cache_id, $data);
-        }
-        return $data;
-    }
-
-    /**
-     * Список заинтересованных лиц на дату
-     * @param string $orgId
-     * @param string $orgType
-     * @param string $date
-     * @param bool $forceCached
-     * @return array
-     */
-    public function listModelsByDate($orgId, $orgType, $date, $forceCached=false)
-    {
-        $cache_id = get_class($this).self::PREFIX_CACHE_MODELS_BY_DATE.$orgId.'_'.$orgType.'_'.$date;
-        if ($forceCached || ($data = Yii::app()->cache->get($cache_id)) === false){
-            $data = $this->where('id_yur', $orgId)
-                ->where('type_yur', $orgType)
-                ->where('type_person', $this->viewPerson)
-                ->where('date', $date)
-                ->findAll();
-            foreach($data as $k=>$model){
-                $data[$k]->id_yur = $orgId;
-                $data[$k]->type_yur = $orgType;
-                $data[$k]->_cacheFindByPkDate = $model->date;
-                $data[$k]->person_name = CHtml::link(
-                    CHtml::encode($model->person_name),
-                    Yii::app()->createUrl(
-                        'interested_person_'.$this->pageTypePerson.'/view',
-                        array(
-                            'id' => $model->id,
-                            'type_lico' => $model->type_lico,
-                            'org_id' => $orgId,
-                            'org_type' => $orgType,
-                            'date' => $model->date,
-                            'number_stake' => $model->number_stake,
-                        )
-                    )
-                );
-            }
             Yii::app()->cache->set($cache_id, $data);
         }
         return $data;
@@ -318,7 +275,6 @@ abstract class InterestedPersonAbstract extends SOAPModel
             $cache->delete($class.self::PREFIX_CACHE_MODEL_PK.$model->primaryKey.'_'.$model->type_lico.'_'.$model->id_yur.'_'.$model->type_yur.'_'.$model->_cacheFindByPkDate.'_'.$model->number_stake);
 
         $cache->delete($class.self::PREFIX_CACHE_MODELS_BY_ORG.$model->id_yur.'_'.$model->type_yur.'_'.$model->date);
-        $cache->delete($class.self::PREFIX_CACHE_MODELS_BY_DATE.$model->id_yur.'_'.$model->type_yur.'_'.$model->date);
         $cache->delete($class.self::PREFIX_CACHE_ALL_DATA_BY_ORG.$model->id_yur.'_'.$model->type_yur);
         $cache->delete($class.self::PREFIX_CACHE_LAST_HISTORY_DATE_BY_ORG.$model->id_yur.'_'.$model->type_yur);
         $cache->delete($class.self::PREFIX_CACHE_LIST_HISTORY_BY_ORG.$model->id_yur.'_'.$model->type_yur);
@@ -390,7 +346,6 @@ abstract class InterestedPersonAbstract extends SOAPModel
             'type_lico',
             'description',
             'deleted',
-            'current_state',
             'number_stake',
         );
     }
@@ -405,7 +360,6 @@ abstract class InterestedPersonAbstract extends SOAPModel
             'type_lico' => 'Тип',
             'date' => 'Дата вступления в должность',
             'deleted' => 'Текущее состояние',
-            'current_state' => 'Текущее состояние',
             'description' => 'Дополнительные сведения',
             'number_stake' => 'Номер пакета акций',
         );
@@ -423,9 +377,6 @@ abstract class InterestedPersonAbstract extends SOAPModel
 
 			array('deleted', 'required'),
 			array('deleted', 'in', 'range' => array(0,1)),
-
-//            array('current_state', 'required'),
-//            array('current_state', 'in', 'range' => array(0,1)),
 
             array('date', 'required'),
             array('date', 'date', 'format' => 'yyyy-MM-dd'),

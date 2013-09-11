@@ -7,15 +7,15 @@ class DeleteAction extends CAction
 {
     /**
      * Удаление руководителя.
-     * @param string $id                Идентификатор лица
-     * @param string $type_lico         Тип лица
-     * @param string $org_id            Идентификатор организации
-     * @param string $org_type          Тип организации
-     * @param string $date              Дата
-     * @param string $number_stake      Номер пакета акций
+     * @param string $id        Идентификатор лица
+     * @param string $type_lico Тип лица
+     * @param string $id_yur    Идентификатор организации
+     * @param string $type_yur  Тип организации
+     * @param string $date      Дата
+     * @param string $number_stake Номер пакета акций
      * @throws CHttpException
      */
-    public function run($id, $type_lico, $org_id, $org_type, $date, $number_stake)
+    public function run($id, $type_lico, $id_yur, $type_yur, $date, $number_stake='')
     {
         /**
          * @var Interested_person_shareholderController $controller
@@ -23,14 +23,8 @@ class DeleteAction extends CAction
         $controller = $this->controller;
         $controller->pageTitle .= ' | Удаление руководителя';
 
-        if ($org_type === MTypeOrganization::ORGANIZATION)
-            $org = Organization::model()->findByPk($org_id, $controller->getForceCached());
-        elseif ($org_type === MTypeOrganization::CONTRACTOR)
-            $org = Contractor::model()->findByPk($org_id, $controller->getForceCached());
-        else
-            throw new CHttpException(500, 'Указан неизвестный тип организации');
-
-        $model = InterestedPersonLeader::model()->findByPk($id, $type_lico, $org_id, $org_type, $date, $number_stake, $controller->getForceCached());
+        $org = Organization::model()->findByPk($id_yur, $controller->getForceCached());
+        $model = InterestedPersonLeader::model()->findByPk($id, $type_lico, $id_yur, $type_yur, $date, $number_stake, $controller->getForceCached());
 
         if (Yii::app()->request->isAjaxRequest) {
             $ret = array();

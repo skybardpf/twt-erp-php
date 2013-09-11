@@ -7,14 +7,23 @@
  * @var Cart_corporatizationController $this
  * @var string $cur_tab
  * @var string $scheme
+ * @var string $org_type
+ *
+ * @var array $organizations
+ * @var array $individuals
+ * @var string $organization_id
+ * @var string $individual_id
  */
+
+Yii::import('bootstrap.widgets.TbMenu');
+$options = (empty($organization_id) || empty($individuals)) ? array('disabled' => true) : array();
 ?>
 <h2>Корзина акционирования</h2>
 <div class="yur-tabs">
     <?php
     $this->widget('bootstrap.widgets.TbMenu', array(
-        'type' => 'tabs', // '', 'tabs', 'pills' (or 'list')
-        'stacked' => false, // whether this is a stacked menu
+        'type' => TbMenu::TYPE_PILLS,
+        'stacked' => false,
         'items' => array(
             array(
                 'label' => 'Организации',
@@ -30,26 +39,31 @@
                     'type' => MTypeOrganization::CONTRACTOR,
                     'scheme' => 'direct'
                 )),
-                'active' => ($cur_tab == 'contractor')
+                'active' => ($cur_tab == 'contractor'),
             ),
         )
     ));
     ?>
 </div>
-<div class="yur-content">
+<!--<div class="yur-content">-->
     <?php
-    echo CHtml::label('Организация', 'organization_id');
-    echo CHtml::dropDownList('organization_id', '', array());
+    $org_name = ($org_type === MTypeOrganization::ORGANIZATION) ? 'Организации' : 'Контрагенты';
+
+    $organizations[''] = 'Все';
+    $individuals[''] = 'Все';
+
+    echo CHtml::label($org_name, 'organization_id');
+    echo CHtml::dropDownList('organization_id', $organization_id, $organizations);
     echo CHtml::label('Физическое лицо', 'individual_id');
-    echo CHtml::dropDownList('individual_id', '', array());
+    echo CHtml::dropDownList('individual_id', $individual_id, $individuals, $options);
     ?>
 
 
     <div class="yur-tabs">
         <?php
         $this->widget('bootstrap.widgets.TbMenu', array(
-            'type' => 'tabs', // '', 'tabs', 'pills' (or 'list')
-            'stacked' => false, // whether this is a stacked menu
+            'type' => TbMenu::TYPE_TABS,
+            'stacked' => false,
             'items' => array(
                 array(
                     'label' => 'Прямая схема',
@@ -65,7 +79,10 @@
                         'type' => MTypeOrganization::CONTRACTOR,
                         'scheme' => 'indirect'
                     )),
-                    'active' => ($scheme == 'indirect')
+                    'active' => ($scheme == 'indirect'),
+                    'itemOptions' => array(
+                        'disabled' => true
+                    )
                 ),
             )
         ));
@@ -74,4 +91,4 @@
     <div class="yur-content">
         <?= $content; ?>
     </div>
-</div>
+<!--</div>-->

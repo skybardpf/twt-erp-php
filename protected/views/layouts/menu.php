@@ -32,12 +32,13 @@
             'url'   => $this->createUrl('template_library/'),
             'active'=> ($this->menu_current == 'template_library')
         ),
-        /*
         array(
             'label' => 'Корзина акционирования',
-            'url'   => $this->createUrl('corporatization_basket/'),
-            'active'=> ($this->menu_current == 'corporatization_basket')
+            'url'   => $this->createUrl('cart_corporatization/'),
+            'active'=> ($this->menu_current == 'cart_corporatization')
         ),
+        /*
+
         array(
             'label' => 'Виды договоров',
             'url'   => $this->createUrl('#'),

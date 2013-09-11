@@ -8,36 +8,17 @@
  * @var InterestedPersonBeneficiary $model
  * @var Organization $organization
  */
+?>
 
-Yii::app()->clientScript->registerScriptFile($this->asset_static . '/js/legal/delete_item.js');
+<h2><?= CHtml::encode($model->person_name); ?></h2>
 
-echo '<h2>' . CHtml::encode($model->person_name) . '</h2>';
-$this->widget('bootstrap.widgets.TbButton', array(
-    'buttonType' => 'link',
-    'type' => 'success',
-    'label' => 'Редактировать',
-    'url' => $this->createUrl(
-        "edit",
-        array(
-            'id' => $model->primaryKey,
-            'type_lico' => $model->type_lico,
-            'org_id' => $model->id_yur,
-            'org_type' => $model->type_yur,
-            'date' => $model->date,
-            'number_stake' => $model->number_stake,
-        )
-    )
-));
-echo "&nbsp;";
-$this->widget('bootstrap.widgets.TbButton', array(
-    'buttonType' => 'submit',
-    'type' => 'danger',
-    'label' => 'Удалить',
-    'htmlOptions' => array(
-        'data-question' => 'Вы уверены, что хотите удалить бенефициара?',
-        'data-title' => 'Удаление номинального бенефициара',
-        'data-url' => $this->createUrl(
-            'delete',
+<?php
+    $this->widget('bootstrap.widgets.TbButton', array(
+        'buttonType' => 'link',
+        'type'       => 'success',
+        'label'      => 'Редактировать',
+        'url'        => $this->createUrl(
+            "edit",
             array(
                 'id' => $model->primaryKey,
                 'type_lico' => $model->type_lico,
@@ -46,40 +27,65 @@ $this->widget('bootstrap.widgets.TbButton', array(
                 'date' => $model->date,
                 'number_stake' => $model->number_stake,
             )
-        ),
-        'data-redirect_url' => $this->createUrl(
-            'interested_person/index',
-            array(
-                'org_id' => $organization->primaryKey,
-                'org_type' => $organization->type,
+        )
+    ));
+
+    if (!$model->deleted) {
+        echo "&nbsp;";
+        Yii::app()->clientScript->registerScriptFile($this->asset_static.'/js/legal/delete_item.js');
+
+        $this->widget('bootstrap.widgets.TbButton', array(
+            'buttonType'    => 'submit',
+            'type'          => 'danger',
+            'label'         => 'Удалить',
+            'htmlOptions'   => array(
+                'data-question' => 'Вы уверены, что хотите удалить бенефициара?',
+                'data-title' => 'Удаление номинального бенефициара',
+                'data-url' => $this->createUrl(
+                    'delete',
+                    array(
+                        'id' => $model->primaryKey,
+                        'type_lico' => $model->type_lico,
+                        'org_id' => $model->id_yur,
+                        'org_type' => $model->type_yur,
+                        'date' => $model->date,
+                        'number_stake' => $model->number_stake,
+                    )
+                ),
+                'data-redirect_url' => $this->createUrl(
+                    'interested_person/index',
+                    array(
+                        'org_id' => $organization->primaryKey,
+                        'org_type' => $organization->type,
+                    )
+                ),
+                'data-delete_item_element' => '1'
             )
-        ),
-        'data-delete_item_element' => '1'
-    )
-));
+        ));
+    }
 ?>
 <br/><br/>
 <div>
-    <?php
+<?php
     $currency = Currency::model()->listNames($model->forceCached);
     $model->deleted = $model->deleted ? "Недействителен" : "Действителен";
 
-    $this->widget('bootstrap.widgets.TbDetailView', array(
-        'data' => $model,
-        'attributes' => array(
-            array(
+	$this->widget('bootstrap.widgets.TbDetailView', array(
+		'data' => $model,
+		'attributes' => array(
+			array(
                 'name' => 'date',
                 'label' => 'Дата вступления в должность'
             ),
-            array(
+			array(
                 'name' => 'deleted',
                 'label' => 'Текущее состояние',
             ),
-            array(
+			array(
                 'name' => 'value_stake',
                 'label' => 'Величина пакета акций'
             ),
-            array(
+			array(
                 'name' => 'date_issue_stake',
                 'label' => 'Дата выпуска пакета акций'
             ),
@@ -113,7 +119,7 @@ $this->widget('bootstrap.widgets.TbButton', array(
                 'name' => 'total_count_stake',
                 'label' => 'Общее кол-во акций, %'
             ),
-        )
-    ));
-    ?>
+		)
+	));
+?>
 </div>

@@ -49,10 +49,8 @@ class IndexAction extends CAction
         $org = Organization::model()->findByPk($org_id, $controller->getForceCached());
 
         $history = $model->listHistory($org->primaryKey, MTypeOrganization::ORGANIZATION, $controller->getForceCached());
-        $last_date = new DateTime();
-        $last_date = $last_date->format('Y-m-d');
-//        $last_date = $model->getLastDate($org->primaryKey, MTypeOrganization::ORGANIZATION, $controller->getForceCached());
-        $data = $model->listModelsByDate($org_id, MTypeOrganization::ORGANIZATION, $last_date, $controller->getForceCached());
+        $last_date = $model->getLastDate($org->primaryKey, MTypeOrganization::ORGANIZATION, $controller->getForceCached());
+        $data = $model->listModels($org_id, MTypeOrganization::ORGANIZATION, $last_date, $controller->getForceCached());
 
         $controller->render('/organization/show', array(
             'content' => $controller->renderPartial('/interested_person/index',
