@@ -24,6 +24,10 @@ $this->widget('bootstrap.widgets.TbGridView', array(
             'header' => 'Лицо'
         ),
         array(
+            'name' => 'number_stake',
+            'header' => 'Номер пакета акций',
+        ),
+        array(
             'name' => 'nominal_stake',
             'header' => 'Номинал акции',
         ),
@@ -32,8 +36,8 @@ $this->widget('bootstrap.widgets.TbGridView', array(
             'header' => 'Кол-во акций',
         ),
         array(
-            'name' => 'total_count_stake',
-            'header' => 'Общее кол-во, %',
+            'name' => 'value_stake',
+            'header' => '%, акций',
         ),
     )
 ));

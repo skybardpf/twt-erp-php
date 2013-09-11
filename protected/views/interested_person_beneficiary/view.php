@@ -108,11 +108,10 @@ $this->widget('bootstrap.widgets.TbButton', array(
                 'name' => 'description',
                 'label' => 'Дополнительные сведения'
             ),
-
-            array(
-                'name' => 'total_count_stake',
-                'label' => 'Общее кол-во акций, %'
-            ),
+//            array(
+//                'name' => 'total_count_stake',
+//                'label' => 'Общее кол-во акций, %'
+//            ),
         )
     ));
     ?>

@@ -22,6 +22,14 @@ $this->widget('bootstrap.widgets.TbGridView', array(
             'header' => 'Номер пакета акций',
         ),
         array(
+            'name' => 'nominal_stake',
+            'header' => 'Номинал акции',
+        ),
+        array(
+            'name' => 'count_stake',
+            'header' => 'Кол-во акций',
+        ),
+        array(
             'name' => 'value_stake',
             'header' => '%, акций',
         ),
