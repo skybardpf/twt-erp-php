@@ -32,8 +32,10 @@ class IndexAction extends CAction
 
         $model = InterestedPersonBeneficiary::model();
         $history = $model->listHistory($org->primaryKey, $org_type, $controller->getForceCached());
-        $last_date = $model->getLastDate($org->primaryKey, $org_type, $controller->getForceCached());
-        $data = $model->listModels($org_id, $org_type, $last_date, $controller->getForceCached());
+        $last_date = new DateTime();
+        $last_date = $last_date->format('Y-m-d');
+//        $last_date = $model->getLastDate($org->primaryKey, MTypeOrganization::ORGANIZATION, $controller->getForceCached());
+        $data = $model->listModelsByDate($org->primaryKey, $org->type, $last_date, $controller->getForceCached());
 
         $controller->render($render_page,
             array(
