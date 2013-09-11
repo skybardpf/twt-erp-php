@@ -319,6 +319,11 @@ abstract class InterestedPersonAbstract extends SOAPModel
 
         $cache->delete($class.self::PREFIX_CACHE_MODELS_BY_ORG.$model->id_yur.'_'.$model->type_yur.'_'.$model->date);
         $cache->delete($class.self::PREFIX_CACHE_MODELS_BY_DATE.$model->id_yur.'_'.$model->type_yur.'_'.$model->date);
+
+        $current = new DateTime();
+        $current = $current->format('Y-m-d');
+        $cache->delete($class.self::PREFIX_CACHE_MODELS_BY_DATE.$model->id_yur.'_'.$model->type_yur.'_'.$current);
+
         $cache->delete($class.self::PREFIX_CACHE_ALL_DATA_BY_ORG.$model->id_yur.'_'.$model->type_yur);
         $cache->delete($class.self::PREFIX_CACHE_LAST_HISTORY_DATE_BY_ORG.$model->id_yur.'_'.$model->type_yur);
         $cache->delete($class.self::PREFIX_CACHE_LIST_HISTORY_BY_ORG.$model->id_yur.'_'.$model->type_yur);

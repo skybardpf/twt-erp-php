@@ -15,7 +15,7 @@ class CreateAction extends CAction
     public function run($org_id, $org_type)
     {
         /**
-         * @var Interested_person_shareholderController $controller
+         * @var Interested_person_beneficiaryController $controller
          */
         $controller = $this->controller;
         $controller->pageTitle .= ' | Создание номинального акционера';
