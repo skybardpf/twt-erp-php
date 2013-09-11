@@ -5,15 +5,7 @@
  * @author Skibardin A.A. <webprofi1983@gmail.com>
  *
  * @property string $id
- * @property string $phone
- * @property string $swift
- * @property string $country
- * @property string $address
- * @property string $bik
- * @property string $city
- * @property string $cor_sh
  * @property string $name
- *
  * @property string $deleted
  */
 class Bank extends SOAPModel
@@ -78,14 +70,6 @@ class Bank extends SOAPModel
 		return array(
 			'id'            => '#',
 			'name'          => 'Название',
-//			'country'       => 'Страна юрисдикции',
-//			'city'          => 'Город',
-//			'address'       => 'Адрес',
-//			'phone'         => 'Телефон',
-//			'bik'           => 'БИК код',
-//			'cor_sh'        => 'Корр. счет',
-//			'swift'         => 'SWIFT код',
-//			'deleted'       => 'Помечен на удаление'
 		);
 	}
 
@@ -96,8 +80,6 @@ class Bank extends SOAPModel
     {
 		return array(
 			array('name', 'required'),
-//			array('name, country, city, address, phone, cor_sh, swift', 'required'),
-//			array('id, name, show', 'safe', 'on'=>'search'),
 		);
 	}
 

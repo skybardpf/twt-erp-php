@@ -16,13 +16,14 @@
  */
 
 Yii::import('bootstrap.widgets.TbMenu');
-$options = (empty($organization_id) || empty($individuals)) ? array('disabled' => true) : array();
+
+Yii::app()->clientScript->registerScriptFile($this->asset_static . '/js/cart_corporatization/index.js');
 ?>
 <h2>Корзина акционирования</h2>
 <div class="yur-tabs">
     <?php
     $this->widget('bootstrap.widgets.TbMenu', array(
-        'type' => TbMenu::TYPE_PILLS,
+        'type' => TbMenu::TYPE_TABS,
         'stacked' => false,
         'items' => array(
             array(
@@ -45,10 +46,21 @@ $options = (empty($organization_id) || empty($individuals)) ? array('disabled' =
     ));
     ?>
 </div>
-<!--<div class="yur-content">-->
+<div class="yur-content">
     <?php
+    if (empty($organization_id) || empty($individuals)){
+        $options = array('disabled' => true);
+        $disabled = true;
+        $schema_url = '';
+    } else {
+        $options = array();
+        $disabled = false;
+        $schema_url = $this->createUrl('index', array(
+            'type' => $org_type,
+            'scheme' => 'indirect'
+        ));
+    }
     $org_name = ($org_type === MTypeOrganization::ORGANIZATION) ? 'Организации' : 'Контрагенты';
-
     $organizations[''] = 'Все';
     $individuals[''] = 'Все';
 
@@ -68,21 +80,16 @@ $options = (empty($organization_id) || empty($individuals)) ? array('disabled' =
                 array(
                     'label' => 'Прямая схема',
                     'url' => $this->createUrl('index', array(
-                        'type' => MTypeOrganization::ORGANIZATION,
+                        'type' => $org_type,
                         'scheme' => 'direct'
                     )),
                     'active' => ($scheme == 'direct')
                 ),
                 array(
                     'label' => 'Косвенная схема',
-                    'url' => $this->createUrl('index', array(
-                        'type' => MTypeOrganization::CONTRACTOR,
-                        'scheme' => 'indirect'
-                    )),
+                    'url' => $schema_url,
                     'active' => ($scheme == 'indirect'),
-                    'itemOptions' => array(
-                        'disabled' => true
-                    )
+                    'disabled' => $disabled
                 ),
             )
         ));
@@ -91,4 +98,4 @@ $options = (empty($organization_id) || empty($individuals)) ? array('disabled' =
     <div class="yur-content">
         <?= $content; ?>
     </div>
-<!--</div>-->
+</div>

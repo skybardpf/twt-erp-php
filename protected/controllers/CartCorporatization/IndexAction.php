@@ -17,16 +17,29 @@ class IndexAction extends CAction
         $controller = $this->controller;
         $controller->pageTitle .= ' | Просмотр';
 
-        if (!in_array($scheme, array('direct', 'indirect')))
-            throw new CHttpException(500, 'Указан неправильный тип схемы');
-
         $org_id = '';
         $individual_id = '';
         $individuals = array();
+        $data = array();
+
+        if ($scheme == 'indirect'){
+            if (empty($oid))
+                throw new CHttpException(500, 'Для косвенной схемы не указана организация');
+            if (empty($iid))
+                throw new CHttpException(500, 'Для косвенной схемы не указано физическое лицо');
+            $individual = Individual::model()->findByPk($iid);
+            $individual_id = $individual->primaryKey;
+        } elseif ($scheme == 'direct'){
+
+        } else
+            throw new CHttpException(500, 'Указан неправильный тип схемы');
+
         if ($type === MTypeOrganization::ORGANIZATION){
             if (!empty($oid)){
                 $org = Organization::model()->findByPk($oid, $controller->getForceCached());
                 $org_id = $org->primaryKey;
+
+                $data = DirectShareholding::model()->listModels($org->primaryKey, $org->type, $controller->getForceCached());
             }
             $currentTab = 'organization';
             $organizations = Organization::model()->getListNames($controller->getForceCached());
@@ -34,6 +47,8 @@ class IndexAction extends CAction
             if (!empty($oid)){
                 $org = Contractor::model()->findByPk($oid, $controller->getForceCached());
                 $org_id = $org->primaryKey;
+
+                $data = DirectShareholding::model()->listModels($org->primaryKey, $org->type, $controller->getForceCached());
             }
             $currentTab = 'contractor';
             $organizations = Contractor::model()->getListNames($controller->getForceCached());
@@ -45,7 +60,7 @@ class IndexAction extends CAction
                 'content' => $controller->renderPartial(
                     '/cart_corporatization/cart_'.$scheme,
                     array(
-                        'data' => array(),
+                        'data' => $data,
                     ),
                     true
                 ),

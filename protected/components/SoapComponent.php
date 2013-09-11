@@ -80,7 +80,7 @@ class SoapParseException extends CException{}
  * @method mixed listContactPersonsForOrganization(array $data)
  *
  * Коды ОКОПФ {@class CodesOKOPF}
- * @method mixed listOKOPF
+ * listInDirectShareHolding@method mixed listOKOPF
  *
  * Виды договоров {@class ContractType}
  * @method mixed listTypesOfContract
@@ -117,6 +117,10 @@ class SoapParseException extends CException{}
  *
  * Группы шаблонов в библиотеке шаблонов. (@class TemplateLibraryGroup)
  * @method mixed listTemplateGroups(array $data)
+ *
+ * Корзина акционирования. Прямая схема (@class TemplateLibraryGroup)
+ * @method mixed listDirectShareHolding(array $data)
+ *
  */
 class SoapComponent extends CApplicationComponent
 {
