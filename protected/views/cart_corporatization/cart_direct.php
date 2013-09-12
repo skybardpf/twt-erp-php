@@ -39,12 +39,14 @@ $this->widget('bootstrap.widgets.TbGridView', array(
     'template' => "{items} {pager}",
     'columns' => array(
         array(
-            'name' => 'name_subject',
+            'name' => 'url_subject',
             'header' => 'Объект владения',
+            'type' => 'raw',
         ),
         array(
-            'name' => 'name_object',
-            'header' => 'Владелец'
+            'name' => 'url_object',
+            'header' => 'Владелец',
+            'type' => 'raw',
         ),
         array(
             'name' => 'percent',

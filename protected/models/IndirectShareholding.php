@@ -14,6 +14,7 @@ class IndirectShareholding extends SOAPModel
     const PREFIX_CACHE_LIST_INDIVIDUALS_FOR_ORG = '_list_individuals_for_org_';
 
     public $name_subject = '';
+    public $url_subject = '';
 
     /**
      * @return void
@@ -89,15 +90,20 @@ class IndirectShareholding extends SOAPModel
 
         $contractors = Contractor::model()->getListNames($this->getForceCached());
         $organizations = Organization::model()->getListNames($this->getForceCached());
-//        $individuals = Individual::model()->listNames($this->getForceCached());
         foreach ($data as $k => $v) {
             if ($v->type_subject == 'Организация') {
-                $data[$k]['name_subject'] = (isset($organizations[$v->id_subject])) ? $organizations[$v->id_subject] : '';
+                $data[$k]['name_subject'] = (isset($organizations[$v->id_subject])) ? CHtml::encode($organizations[$v->id_subject]) : '';
+                $data[$k]['url_subject'] = CHtml::link(
+                    $data[$k]['name_subject'],
+                    $data[$k]['url_subject'] = Yii::app()->createUrl('organization/view', array('id' => $v->id_subject))
+                );
             } elseif ($v->type_subject == 'Контрагент') {
-                $data[$k]['name_subject'] = (isset($contractors[$v->id_subject])) ? $contractors[$v->id_subject] : '';
-            } /*elseif ($v->type_subject == 'Физические лица') {
-                $data[$k]['name_subject'] = (isset($individuals[$v->id_subject])) ? $individuals[$v->id_subject] : '';
-            }*/
+                $data[$k]['name_subject'] = (isset($contractors[$v->id_subject])) ? CHtml::encode($contractors[$v->id_subject]) : '';
+                $data[$k]['url_subject'] = CHtml::link(
+                    $data[$k]['name_subject'],
+                    $data[$k]['url_subject'] = Yii::app()->createUrl('contractor/view', array('id' => $v->id_subject))
+                );
+            }
         }
 //            Yii::app()->cache->set($cache_id, $data);
 //        }

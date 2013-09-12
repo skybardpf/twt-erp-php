@@ -43,8 +43,9 @@ if (!empty($basketData)) {
     'template' => "{items} {pager}",
     'columns' => array(
         array(
-            'name' => 'name_subject',
+            'name' => 'url_subject',
             'header' => 'Объект владения',
+            'type' => 'raw'
         ),
         array(
             'name' => 'percent',
