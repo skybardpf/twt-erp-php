@@ -84,12 +84,21 @@ Yii::app()->clientScript->registerScriptFile($this->asset_static . '/js/cart_cor
     $organizations[''] = '--- Все ---';
     $individuals[''] = '--- Все ---';
 
-    echo CHtml::label($org_name, 'organization_id');
-    echo CHtml::dropDownList('organization_id', $organization_id, $organizations);
-    echo CHtml::label('Физическое лицо', 'individual_id');
-    echo CHtml::dropDownList('individual_id', $individual_id, $individuals, $options);
-    ?>
+	?>
+	<div class="pull-left" style="margin-right: 20px;">
+		<?php
+		echo CHtml::label($org_name, 'organization_id');
+		echo CHtml::dropDownList('organization_id', $organization_id, $organizations);
+		?>
+	</div>
+	<div class="pull-left">
+		<?php
+		echo CHtml::label('Физическое лицо', 'individual_id');
+		echo CHtml::dropDownList('individual_id', $individual_id, $individuals, $options);
+		?>
+	</div>
 
+	<div class="clearfix"></div>
 
     <div class="yur-tabs">
         <?php
