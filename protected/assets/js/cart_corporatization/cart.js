@@ -207,7 +207,9 @@
 
         var sys = arbor.ParticleSystem();
         sys.parameters({stiffness:900, repulsion:1000, gravity:true, dt:0.015});
-        sys.renderer = Renderer("#viewport");
+        var vp = $('#viewport');
+        vp.attr('width', vp.parent().width());
+        sys.renderer = Renderer(vp);
         sys.graft(data)
     });
 })(this.jQuery);

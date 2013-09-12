@@ -32,7 +32,7 @@ if (!empty($basketData)) {
     Yii::app()->clientScript->registerScriptFile($this->asset_static . '/js/cart_corporatization/cart.js');
     $basketData = CJSON::encode($basketData);
     ?>
-    <canvas id="viewport" width="800" height="600"></canvas>
+    <canvas id="viewport" height="600"></canvas>
     <script type="text/javascript">
         var raw_data = <?= $basketData; ?>;
     </script>
