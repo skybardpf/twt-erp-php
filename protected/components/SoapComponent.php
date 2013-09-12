@@ -118,9 +118,11 @@ class SoapParseException extends CException{}
  * Группы шаблонов в библиотеке шаблонов. (@class TemplateLibraryGroup)
  * @method mixed listTemplateGroups(array $data)
  *
- * Корзина акционирования. Прямая схема (@class TemplateLibraryGroup)
+ * Корзина акционирования. Прямая схема (@class DirectShareholding)
  * @method mixed listDirectShareHolding(array $data)
  *
+ * Корзина акционирования. Косвенная схема (@class IndirectShareholding)
+ * @method mixed listInDirectShareHolding(array $data)
  */
 class SoapComponent extends CApplicationComponent
 {

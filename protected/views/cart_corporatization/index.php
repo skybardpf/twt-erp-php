@@ -19,6 +19,10 @@ Yii::import('bootstrap.widgets.TbMenu');
 
 Yii::app()->clientScript->registerScriptFile($this->asset_static . '/js/cart_corporatization/index.js');
 ?>
+<script>
+    <?= 'window.orgType="'.$org_type.'";'; ?>
+    <?= 'window.scheme="'.$scheme.'";'; ?>
+</script>
 <h2>Корзина акционирования</h2>
 <div class="yur-tabs">
     <?php
@@ -28,17 +32,15 @@ Yii::app()->clientScript->registerScriptFile($this->asset_static . '/js/cart_cor
         'items' => array(
             array(
                 'label' => 'Организации',
-                'url' => $this->createUrl('index', array(
+                'url' => $this->createUrl('direct', array(
                     'type' => MTypeOrganization::ORGANIZATION,
-                    'scheme' => 'direct'
                 )),
                 'active' => ($cur_tab == 'organization')
             ),
             array(
                 'label' => 'Контрагенты',
-                'url' => $this->createUrl('index', array(
+                'url' => $this->createUrl('direct', array(
                     'type' => MTypeOrganization::CONTRACTOR,
-                    'scheme' => 'direct'
                 )),
                 'active' => ($cur_tab == 'contractor'),
             ),
@@ -48,21 +50,39 @@ Yii::app()->clientScript->registerScriptFile($this->asset_static . '/js/cart_cor
 </div>
 <div class="yur-content">
     <?php
-    if (empty($organization_id) || empty($individuals)){
-        $options = array('disabled' => true);
-        $disabled = true;
-        $schema_url = '';
-    } else {
+    if (!empty($organization_id) && !empty($individuals)){
         $options = array();
-        $disabled = false;
-        $schema_url = $this->createUrl('index', array(
-            'type' => $org_type,
-            'scheme' => 'indirect'
-        ));
+        if ($scheme == 'indirect'){
+            $tab_indirect = array(
+                'label' => 'Косвенная схема',
+                'url' => $this->createUrl('indirect', array(
+                    'type' => $org_type,
+                    'oid' => $organization_id,
+                    'iid' => $individual_id,
+                )),
+                'active' => ($scheme == 'indirect'),
+            );
+        } else {
+            $tab_indirect = array(
+                'label' => 'Косвенная схема',
+                'url' => '',
+                'active' => false,
+                'disabled' => true
+            );
+        }
+
+    } else {
+        $options = array('disabled' => true);
+        $tab_indirect = array(
+            'label' => 'Косвенная схема',
+            'url' => '',
+            'active' => ($scheme == 'indirect'),
+            'disabled' => true
+        );
     }
     $org_name = ($org_type === MTypeOrganization::ORGANIZATION) ? 'Организации' : 'Контрагенты';
-    $organizations[''] = 'Все';
-    $individuals[''] = 'Все';
+    $organizations[''] = '--- Все ---';
+    $individuals[''] = '--- Все ---';
 
     echo CHtml::label($org_name, 'organization_id');
     echo CHtml::dropDownList('organization_id', $organization_id, $organizations);
@@ -79,18 +99,13 @@ Yii::app()->clientScript->registerScriptFile($this->asset_static . '/js/cart_cor
             'items' => array(
                 array(
                     'label' => 'Прямая схема',
-                    'url' => $this->createUrl('index', array(
+                    'url' => $this->createUrl('direct', array(
                         'type' => $org_type,
-                        'scheme' => 'direct'
+                        'oid' => $organization_id,
                     )),
                     'active' => ($scheme == 'direct')
                 ),
-                array(
-                    'label' => 'Косвенная схема',
-                    'url' => $schema_url,
-                    'active' => ($scheme == 'indirect'),
-                    'disabled' => $disabled
-                ),
+                $tab_indirect,
             )
         ));
         ?>
