@@ -16,17 +16,15 @@ $this->widget('ext.widgets.loading.LoadingWidget');
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="<?=Yii::app()->language?>" lang="<?=Yii::app()->language?>">
 <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <meta name="language" content="<?=Yii::app()->language?>" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <meta name="language" content="<?=Yii::app()->language?>">
 
     <title><?php echo CHtml::encode($this->pageTitle); ?></title>
 </head>
 
 <body style="padding-top: 50px;">
     <div class="container">
-        <?php
-            $this->renderPartial('/layouts/head');
-        ?>
+        <?php $this->renderPartial('/layouts/head'); ?>
     </div>
     <div class="container">
         <?=$content?>
