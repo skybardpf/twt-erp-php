@@ -53,7 +53,8 @@
                         ctx.font = "12px Helvetica";
                         ctx.textAlign = "center";
                         ctx.fillStyle = "white";
-                        if (node.data.color=='none') ctx.fillStyle = '#333333';
+                        if (node.data.color=='none')
+                            ctx.fillStyle = '#333333';
                         ctx.fillText(label||"", pt.x, pt.y+4);
                         ctx.fillText(label||"", pt.x, pt.y+4);
                     }
