@@ -18,9 +18,6 @@ class UpdateAction extends CAction
         $controller->pageTitle .= ' | Редактирование вида договора';
 
         $model = ContractType::model()->findByPk($id, $controller->getForceCached());
-        if ($model->is_standart)
-            throw new CHttpException(403, 'Нельзя редактировать стандартный вид договора');
-
         if(isset($_POST['ajax']) && $_POST['ajax']==='form-type-contract') {
             echo CActiveForm::validate($model);
             Yii::app()->end();
@@ -28,6 +25,9 @@ class UpdateAction extends CAction
 
         $data = Yii::app()->request->getPost(get_class($model));
         if ($data) {
+            if ($model->is_standart)
+                throw new CHttpException(403, 'Нельзя редактировать стандартный вид договора');
+
             $model->setAttributes($data);
             if ($model->validate()) {
                 try {
