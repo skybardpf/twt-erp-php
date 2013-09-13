@@ -86,6 +86,7 @@ class SoapParseException extends CException{}
  * @method mixed listContractTypes(array $data)
  * @method mixed getContractTypes(array $data)
  * @method mixed saveContractTypes(array $data)
+ * @method mixed deleteContractTypes(array $data)
  *
  * Договоры организации {@class Contract}
  * @method mixed listContracts(array $data)

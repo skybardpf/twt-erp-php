@@ -5,6 +5,7 @@
  *
  * @property string $name
  * @property bool   $is_standart
+ * @property bool   $deleted
  *
  * @property string $contractor
  * @property string $title
@@ -33,6 +34,10 @@ class ContractType extends SOAPModel
     const  PREFIX_CACHE_LIST_NAMES = '_list_names';
     const  PREFIX_CACHE_LIST_MODELS = '_list_models';
 
+    const STATUS_REQUIRED = 'Обязательное';
+    const STATUS_SHOW = 'Присутствует';
+    const STATUS_NO_SHOW = 'Отсутствует';
+
     /**
      * @static
      * @param string $className
@@ -50,15 +55,37 @@ class ContractType extends SOAPModel
     public static function getStatuses()
     {
         return array(
-            'Обязательное' => 'Обязательное',
-            'Присутствует' => 'Присутствует',
-            'Отсутствует' => 'Отсутствует',
+            self::STATUS_REQUIRED => self::STATUS_REQUIRED,
+            self::STATUS_SHOW => self::STATUS_SHOW,
+            self::STATUS_NO_SHOW => self::STATUS_NO_SHOW,
         );
     }
 
     public function afterConstruct()
     {
         $this->is_standart = false;
+        $this->contractor = self::STATUS_SHOW;
+        $this->title = self::STATUS_SHOW;
+        $this->number  = self::STATUS_SHOW;
+        $this->date = self::STATUS_SHOW;
+        $this->date_expire = self::STATUS_SHOW;
+        $this->contract_status = self::STATUS_SHOW;
+        $this->place_of_contract = self::STATUS_SHOW;
+        $this->type_of_prolongation = self::STATUS_SHOW;
+        $this->notice_end_of_contract = self::STATUS_SHOW;
+        $this->currency = self::STATUS_SHOW;
+        $this->sum_contract = self::STATUS_SHOW;
+        $this->sum_month = self::STATUS_SHOW;
+        $this->responsible_contract = self::STATUS_SHOW;
+        $this->role = self::STATUS_SHOW;
+        $this->organization_signatories = self::STATUS_SHOW;
+        $this->contractor_signatories = self::STATUS_SHOW;
+        $this->third_parties_signatories = self::STATUS_SHOW;
+        $this->place_of_court = self::STATUS_SHOW;
+        $this->comment = self::STATUS_SHOW;
+        $this->scans = self::STATUS_SHOW;
+        $this->original_documents = self::STATUS_SHOW;
+
         parent::afterConstruct();
     }
 
@@ -128,6 +155,23 @@ class ContractType extends SOAPModel
     }
 
     /**
+     * Удаляем организацию.
+     * @return bool
+     */
+    public function delete()
+    {
+        if ($this->primaryKey) {
+            $ret = $this->SOAP->deleteContractTypes(array('id' => $this->primaryKey));
+            $ret = SoapComponent::parseReturn($ret, false);
+            if ($ret){
+                $this->clearCache();
+            }
+            return $ret;
+        }
+        return false;
+    }
+
+    /**
      * @return array
      */
     public function attributeNames()
@@ -136,6 +180,7 @@ class ContractType extends SOAPModel
             'id', // string
             'name', // string
             'is_standart', // bool
+            'deleted', // bool
 
             'contractor', // string
             'title', // string
