@@ -33,18 +33,15 @@
             'active'=> ($this->menu_current == 'template_library')
         ),
         array(
+            'label' => 'Виды договоров',
+            'url'   => $this->createUrl('contract_type/'),
+            'active'=> ($this->menu_current == 'contract_types')
+        ),
+        array(
             'label' => 'Корзина акционирования',
             'url'   => $this->createUrl('cart_corporatization/'),
             'active'=> ($this->menu_current == 'cart_corporatization')
         ),
-        /*
-
-        array(
-            'label' => 'Виды договоров',
-            'url'   => $this->createUrl('#'),
-            'active'=> ($this->menu_current == 'contract_types')
-        ),
-        ,*/
     );
     $this->widget('bootstrap.widgets.TbMenu', array(
         'type' => 'list', // '', 'tabs', 'pills' (or 'list')
