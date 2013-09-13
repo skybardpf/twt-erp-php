@@ -35,26 +35,22 @@
                 'label' => 'Заинтересованные лица',
                 'url'   => $this->createUrl('interested_person/index', array('org_id' => $organization->primaryKey)),
                 'active' => ($cur_tab == 'interested_person'),
-//                'itemOptions' => array('class'=>'narrow')
             ),
             array(
                 'label' => 'Бенефициары',
                 'url'   => $this->createUrl('interested_person_beneficiary/index', array('org_id' => $organization->primaryKey, 'org_type' => $organization->type)),
                 'active' => ($cur_tab == 'beneficiary'),
-//                'itemOptions' => array('class'=>'narrow')
             ),
             array(
                 'label' => 'Календарь событий',
                 'url'   => $this->createUrl('calendar_events/list', array('org_id' => $organization->primaryKey)),
                 'active'=> ($cur_tab == 'calendar_events'),
-//                'itemOptions' => array('class'=>'narrow narrower')
             ),
-            /*
             array(
                 'label' => 'Договоры',
                 'url'   => $this->createUrl('contract/list', array('org_id' => $organization->primaryKey)),
                 'active'=> ($cur_tab == 'contract')
-            ),*/
+            ),
         )
     ));
 ?>
