@@ -28,7 +28,7 @@ $this->widget('bootstrap.widgets.TbGridView', array(
             'name' => 'name',
             'header' => 'Название',
             'type' => 'raw',
-            'value' => 'CHtml::link(CHtml::encode($data["name"]), Yii::app()->getController()->createUrl("edit", array("id" => $data["id"])))'
+            'value' => 'CHtml::link(CHtml::encode($data["name"]), Yii::app()->getController()->createUrl("view", array("id" => $data["id"])))'
         ),
     )
 ));
