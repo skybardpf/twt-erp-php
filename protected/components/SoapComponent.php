@@ -83,7 +83,9 @@ class SoapParseException extends CException{}
  * listInDirectShareHolding@method mixed listOKOPF
  *
  * Виды договоров {@class ContractType}
- * @method mixed listTypesOfContract
+ * @method mixed listContractTypes(array $data)
+ * @method mixed getContractTypes(array $data)
+ * @method mixed saveContractTypes(array $data)
  *
  * Договоры организации {@class Contract}
  * @method mixed listContracts(array $data)

@@ -30,9 +30,7 @@ $this->widget('bootstrap.widgets.TbButton', array(
     'type' => 'primary',
     'label' => 'Сохранить'
 ));
-
 echo '&nbsp;';
-
 $this->widget('bootstrap.widgets.TbButton', array(
     'buttonType' => 'link',
     'label' => 'Отмена',
