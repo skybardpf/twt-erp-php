@@ -92,15 +92,15 @@ class IndirectShareholding extends SOAPModel
         $organizations = Organization::model()->getListNames($this->getForceCached());
         foreach ($data as $k => $v) {
             if ($v->type_subject == 'Организация') {
-                $data[$k]['name_subject'] = (isset($organizations[$v->id_subject])) ? CHtml::encode($organizations[$v->id_subject]) : '';
+                $data[$k]['name_subject'] = (isset($organizations[$v->id_subject])) ? $organizations[$v->id_subject] : '';
                 $data[$k]['url_subject'] = CHtml::link(
-                    $data[$k]['name_subject'],
+                    CHtml::encode($data[$k]['name_subject']),
                     $data[$k]['url_subject'] = Yii::app()->createUrl('organization/view', array('id' => $v->id_subject))
                 );
             } elseif ($v->type_subject == 'Контрагент') {
-                $data[$k]['name_subject'] = (isset($contractors[$v->id_subject])) ? CHtml::encode($contractors[$v->id_subject]) : '';
+                $data[$k]['name_subject'] = (isset($contractors[$v->id_subject])) ? $contractors[$v->id_subject] : '';
                 $data[$k]['url_subject'] = CHtml::link(
-                    $data[$k]['name_subject'],
+                    CHtml::encode($data[$k]['name_subject']),
                     $data[$k]['url_subject'] = Yii::app()->createUrl('contractor/view', array('id' => $v->id_subject))
                 );
             }

@@ -209,7 +209,7 @@
 //        sys.parameters({gravity:true})
 
         var sys = arbor.ParticleSystem();
-        sys.parameters({stiffness: 900, precision: 1, friction: 0.5, repulsion: 1000, gravity: true, dt: 0.0001});
+        sys.parameters({stiffness: 900, precision: 1, friction: 0.5, repulsion: 1000, gravity: true, dt: 0.0});
 
         var vp = $('#viewport');
         vp.attr('width', vp.parent().width());

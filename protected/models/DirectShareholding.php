@@ -97,42 +97,42 @@ class DirectShareholding extends SOAPModel
             $individuals = Individual::model()->listNames($this->getForceCached());
             foreach ($data as $k => $v) {
                 if ($v->type_subject == 'Организация') {
-                    $data[$k]['name_subject'] = (isset($organizations[$v->id_subject])) ? CHtml::encode($organizations[$v->id_subject]) : '';
+                    $data[$k]['name_subject'] = (isset($organizations[$v->id_subject])) ? $organizations[$v->id_subject] : '';
                     $data[$k]['url_subject'] = CHtml::link(
-                        $data[$k]['name_subject'],
+                        CHtml::encode($data[$k]['name_subject']),
                         Yii::app()->createUrl('organization/view', array('id' => $v->id_subject))
                     );
 
                 } elseif ($v->type_subject == 'Контрагент') {
-                    $data[$k]['name_subject'] = (isset($contractors[$v->id_subject])) ? CHtml::encode($contractors[$v->id_subject]) : '';
+                    $data[$k]['name_subject'] = (isset($contractors[$v->id_subject])) ? $contractors[$v->id_subject] : '';
                     $data[$k]['url_subject'] = CHtml::link(
-                        $data[$k]['name_subject'],
+                        CHtml::encode($data[$k]['name_subject']),
                         $data[$k]['url_subject'] = Yii::app()->createUrl('contractor/view', array('id' => $v->id_subject))
                     );
                 } elseif ($v->type_subject == 'Физические лица') {
-                    $data[$k]['name_subject'] = (isset($individuals[$v->id_subject])) ? CHtml::encode($individuals[$v->id_subject]) : '';
+                    $data[$k]['name_subject'] = (isset($individuals[$v->id_subject])) ? $individuals[$v->id_subject] : '';
                     $data[$k]['url_subject'] = CHtml::link(
-                        $data[$k]['name_subject'],
+                        CHtml::encode($data[$k]['name_subject']),
                         $data[$k]['url_subject'] = Yii::app()->createUrl('individual/view', array('id' => $v->id_subject))
                     );
                 }
 
                 if ($v->type_object == 'Организация') {
-                    $data[$k]['name_object'] = (isset($organizations[$v->id_object])) ? CHtml::encode($organizations[$v->id_object]) : '';
+                    $data[$k]['name_object'] = (isset($organizations[$v->id_object])) ? $organizations[$v->id_object] : '';
                     $data[$k]['url_object'] = CHtml::link(
-                        $data[$k]['name_object'],
+                        CHtml::encode($data[$k]['name_object']),
                         $data[$k]['url_object'] = Yii::app()->createUrl('organization/view', array('id' => $v->id_object))
                     );
                 } elseif ($v->type_object == 'Контрагент') {
-                    $data[$k]['name_object'] = (isset($contractors[$v->id_object])) ? CHtml::encode($contractors[$v->id_object]) : '';
+                    $data[$k]['name_object'] = (isset($contractors[$v->id_object])) ? $contractors[$v->id_object] : '';
                     $data[$k]['url_object'] = CHtml::link(
-                        $data[$k]['name_object'],
+                        CHtml::encode($data[$k]['name_object']),
                         $data[$k]['url_object'] = Yii::app()->createUrl('contractor/view', array('id' => $v->id_object))
                     );
                 } elseif ($v->type_object == 'Физические лица') {
-                    $data[$k]['name_object'] = (isset($individuals[$v->id_object])) ? CHtml::encode($individuals[$v->id_object]) : '';
+                    $data[$k]['name_object'] = (isset($individuals[$v->id_object])) ? $individuals[$v->id_object] : '';
                     $data[$k]['url_object'] = CHtml::link(
-                        $data[$k]['name_object'],
+                        CHtml::encode($data[$k]['name_object']),
                         $data[$k]['url_object'] = Yii::app()->createUrl('individual/view', array('id' => $v->id_object))
                     );
                 }
