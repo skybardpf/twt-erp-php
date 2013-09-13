@@ -21,8 +21,9 @@ $this->widget('bootstrap.widgets.TbGridView', array(
     'template' => "{items} {pager}",
     'columns' => array(
         array(
-            'name' => 'id',
-            'header' => 'Номер',
+            'name' => 'is_standart',
+            'header' => 'Системный',
+            'value' => '$data["is_standart"] ? "Да" : "Нет"',
         ),
         array(
             'name' => 'name',
