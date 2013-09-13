@@ -1,29 +1,27 @@
 <?php
 /**
- * Редактирование данных о свободном документе.
+ * Добавление свободного документа.
  *
  * @author Skibardin A.A. <webprofi1983@gmail.com>
  */
-class UpdateAction extends CAction
+class CreateAction extends CAction
 {
     /**
-     * Редактирование данных о свободном документе.
-     * @param string $id
+     * Добавление свободного документа.
+     * @param string $org_id
      * @throws CHttpException
      */
-    public function run($id)
+    public function run($org_id)
     {
         /**
          * @var Free_documentController $controller
          */
         $controller = $this->controller;
-        $controller->pageTitle .= ' | Редактирование документа';
+        $controller->pageTitle .= ' | Добавление документа';
 
-        $force_cache = (isset($_GET['force_cache']) && $_GET['force_cache'] == 1) ? true : false;
-
-        $model = FreeDocument::model()->loadModel($id, $force_cache);
-        $model->setForceCached($force_cache);
-        $org = Organization::loadModel($model->id_yur, $force_cache);
+        $org = Organization::model()->findByPk($org_id, $controller->getForceCached());
+        $model = FreeDocument::model()->createModel($org);
+        $model->forceCached = $controller->getForceCached();
 
         $class = get_class($model);
         if ($_POST && !empty($_POST[$class])) {
@@ -42,7 +40,7 @@ class UpdateAction extends CAction
             if ($model->validate()) {
                 try {
                     $model->save();
-                    $controller->redirect($controller->createUrl('view', array('id' => $id)));
+                    $controller->redirect($controller->createUrl('documents/list', array('org_id' => $org_id)));
                 } catch (Exception $e) {
                     $model->addError('id', $e->getMessage());
                 }

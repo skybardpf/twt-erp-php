@@ -16,10 +16,10 @@ class Free_documentController extends Controller {
     public function actions()
     {
         return array(
-            'view' => 'application.modules.legal.controllers.FreeDocument.ViewAction',
-            'edit' => 'application.modules.legal.controllers.FreeDocument.UpdateAction',
-            'add' => 'application.modules.legal.controllers.FreeDocument.CreateAction',
-            'delete' => 'application.modules.legal.controllers.FreeDocument.DeleteAction',
+            'view' => 'application.controllers.FreeDocument.ViewAction',
+            'edit' => 'application.controllers.FreeDocument.UpdateAction',
+            'add' => 'application.controllers.FreeDocument.CreateAction',
+            'delete' => 'application.controllers.FreeDocument.DeleteAction',
         );
     }
 }

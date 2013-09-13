@@ -90,6 +90,7 @@ class FreeDocument extends SOAPModel
             }
             Yii::app()->cache->set($cache_id, $model);
         }
+        $model->forceCached = $force_cache;
         return $model;
     }
 
@@ -259,6 +260,9 @@ class FreeDocument extends SOAPModel
     {
         return array(
             'id',           // string
+            'deleted',      // bool
+            'from_user',    // bool
+            'user',         // string
             'name',         // string
             'id_yur',       // string
             'type_yur',     // string

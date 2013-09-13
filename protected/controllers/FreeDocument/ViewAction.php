@@ -18,10 +18,8 @@ class ViewAction extends CAction
         $controller = $this->controller;
         $controller->pageTitle .= ' | Просмотр документа';
 
-        $force_cache = (isset($_GET['force_cache']) && $_GET['force_cache'] == 1) ? true : false;
-        $model = FreeDocument::model()->loadModel($id, $force_cache);
-        $model->setForceCached($force_cache);
-        $org = Organization::loadModel($model->id_yur, $force_cache);
+        $model = FreeDocument::model()->loadModel($id, $controller->getForceCached());
+        $org = Organization::model()->findByPk($model->id_yur, $controller->getForceCached());
 
         $controller->render('/organization/show', array(
             'content' => $controller->renderPartial('/free_document/view',
