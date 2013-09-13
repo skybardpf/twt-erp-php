@@ -13,11 +13,15 @@ $provider = new CArrayDataProvider($data);
 foreach ($provider->rawData as $v) {
     $basketData[] = array(
         'id1' => $v->id_subject,
-        'type1' => $v->type_subject,
+        'type1' => 'rectangle',
         'title1' => $v->name_subject,
+        'color1' => ($v->type_subject == 'Физические лица') ? '#c0c0c0' : '#ff3030',
+
         'id2' => $v->id_object,
-        'type2' => $v->id_object,
+        'type2' => 'rectangle',
         'title2' => $v->name_object,
+        'color2' => ($v->type_object == 'Физические лица') ? '#c0c0c0' : '#ff3030',
+
         'percent' => $v->percent,
     );
 }

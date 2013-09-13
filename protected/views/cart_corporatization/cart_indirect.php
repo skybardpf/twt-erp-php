@@ -18,10 +18,12 @@ foreach ($provider->rawData as $v) {
         'id1' => $v->id_subject,
         'type1' => $v->id_subject,
         'title1' => $v->name_subject,
+        'color1' => ($v->type_subject == 'Физические лица') ? '#c0c0c0' : '#ff3030',
 
         'id2' => $individual->primaryKey,
         'type2' => 'Физические лица',
         'title2' => $name,
+        'color2' => '#c0c0c0',
 
         'percent' => $v->percent,
     );
