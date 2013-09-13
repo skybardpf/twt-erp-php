@@ -21,7 +21,7 @@ $this->widget('bootstrap.widgets.TbGridView', array(
     'template' => "{items} {pager}",
     'columns' => array(
         array(
-            'name' => 'number',
+            'name' => 'id',
             'header' => 'Номер',
         ),
         array(

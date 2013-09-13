@@ -17,6 +17,7 @@ class Contract_typeController extends Controller
         return array(
             'index' => 'application.controllers.ContractType.IndexAction',
             'edit' => 'application.controllers.ContractType.UpdateAction',
+            'add' => 'application.controllers.ContractType.CreateAction',
         );
     }
 }

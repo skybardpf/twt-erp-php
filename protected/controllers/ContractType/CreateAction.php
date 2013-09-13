@@ -1,25 +1,20 @@
 <?php
 /**
- * Редактирование вида договора
+ * Добавление вида договора
  * @author Skibardin A.A. <webprofi1983@gmail.com>
  */
-class UpdateAction extends CAction
+class CreateAction extends CAction
 {
-    /**
-     * @param string $id
-     * @throws CHttpException
-     */
-    public function run($id)
+    public function run()
     {
         /**
          * @var Contract_typeController $controller
          */
         $controller = $this->controller;
-        $controller->pageTitle .= ' | Редактирование вида договора';
+        $controller->pageTitle .= ' | Добавление вида договора';
 
-        $model = ContractType::model()->findByPk($id, $controller->getForceCached());
-        if ($model->is_standart)
-            throw new CHttpException(403, 'Нельзя редактировать стандартный вид договора');
+        $model = new ContractType();
+        $model->forceCached = $controller->getForceCached();
 
         if(isset($_POST['ajax']) && $_POST['ajax']==='form-type-contract') {
             echo CActiveForm::validate($model);
