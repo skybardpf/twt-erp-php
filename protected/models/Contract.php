@@ -211,7 +211,7 @@ class Contract extends SOAPModel
         $data['invalid'] = $data['invalid'] == 1 ? true : false;
         $data['signatory_contr'] = implode(',', $data['signatory_contr']);
         $data['signatory'] = implode(',', $data['signatory']);
-        $data['role_ur_face'] = ($data['role_ur_face'] == self::ROLE_CONTRACTOR) ? Contractor::TYPE : Organization::TYPE;
+        $data['role_ur_face'] = ($data['role_ur_face'] == self::ROLE_CONTRACTOR) ? MTypeOrganization::CONTRACTOR : MTypeOrganization::ORGANIZATION;
 
         $ret = $this->SOAP->saveContract(array(
             'data' => SoapComponent::getStructureElement($data)

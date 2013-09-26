@@ -50,6 +50,7 @@
     );
 
     $this->widget('bootstrap.widgets.TbDetailView', array(
+        'htmlOptions'=>array('style'=>'width:100%;'),
         'data' => $model,
         'attributes'=> $attributes
     ));
