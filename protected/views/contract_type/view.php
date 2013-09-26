@@ -42,32 +42,17 @@
 ?>
 <div>
 <?php
-    $this->widget('bootstrap.widgets.TbDetailView', array(
-        'data' => $model,
-        'attributes'=>array(
+    $attributes = array_merge(
+        array(
             'name',
-            'contractor', // string
-            'title', // string
-            'number', // string
-            'date', // string
-            'date_expire', // string
-            'contract_status', // string
-            'place_of_contract', // string
-            'type_of_prolongation', // string
-            'notice_end_of_contract', // string
-            'currency', // string
-            'sum_contract', // string
-            'sum_month', // string
-            'responsible_contract', // string
-            'role', // string
-            'organization_signatories', // string
-            'contractor_signatories', // string
-            'third_parties_signatories', // string
-            'place_of_court', // string
-            'comment', // string
-            'scans', // string
-            'original_documents', // string
-        )
+        ),
+        $model->listAttributes()
+    );
+
+    $this->widget('bootstrap.widgets.TbDetailView', array(
+        'htmlOptions'=>array('style'=>'width:100%;'),
+        'data' => $model,
+        'attributes'=> $attributes
     ));
 ?>
 </div>

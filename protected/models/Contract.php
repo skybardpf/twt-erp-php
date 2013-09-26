@@ -1,11 +1,12 @@
 <?php
 /**
- * Вид договора.
+ * Модель, реализующая сущность договора организации.
+ *
  * @author Skibardin A.A. <webprofi1983@gmail.com>
  *
- * @property bool   $is_standart
- * @property bool   $deleted
- * @property string $name
+ * @property string     $id
+ * @property string     $name
+ * @property boolean    $deleted
  *
  * @property string $account_counterparty
  * @property string $account_payment_contract
@@ -95,19 +96,23 @@
  * @property string $view_one_shares
  * @property string $view_two_shares
  */
-class ContractType extends SOAPModel
+class Contract extends SOAPModel
 {
-    const  PREFIX_CACHE_LIST_NAMES = '_list_names';
-    const  PREFIX_CACHE_LIST_MODELS = '_list_models';
+    const PREFIX_CACHE_LIST_MODELS = '_list_models_';
 
-    const STATUS_REQUIRED = 'Обязательное';
-    const STATUS_SHOW = 'Присутствует';
-    const STATUS_NO_SHOW = 'Отсутствует';
+    const STATUS_INVALID = 1;
+    const STATUS_VALID = 2;
+
+    const ROLE_BUYER = 'Продавец';
+    const ROLE_CONTRACTOR = 'Поставщик';
+
+    public $json_organization_signatories;
+    public $json_contractor_signatories;
 
     /**
      * @static
      * @param string $className
-     * @return ContractType
+     * @return Contract
      */
     public static function model($className = __CLASS__)
     {
@@ -115,194 +120,124 @@ class ContractType extends SOAPModel
     }
 
     /**
-     * @static
-     * @return array
+     * @param string $organizationId
+     * @param bool $forceCached
+     * @return Contract[]
+     * @throws CHttpException
      */
-    public static function getStatuses()
+    public function listModels($organizationId, $forceCached = false)
     {
-        return array(
-            self::STATUS_REQUIRED => self::STATUS_REQUIRED,
-            self::STATUS_SHOW => self::STATUS_SHOW,
-            self::STATUS_NO_SHOW => self::STATUS_NO_SHOW,
-        );
-    }
-
-    public function afterConstruct()
-    {
-        $this->is_standart = false;
-
-        $this->account_counterparty = self::STATUS_SHOW;
-        $this->account_payment_contract = self::STATUS_SHOW;
-        $this->additional_charge_contract = self::STATUS_SHOW;
-        $this->additional_project = self::STATUS_SHOW;
-        $this->additional_third_party = self::STATUS_SHOW;
-        $this->additional_type_contract = self::STATUS_SHOW;
-        $this->address_object = self::STATUS_SHOW;
-        $this->address_warehouse = self::STATUS_SHOW;
-        $this->allowable_amount_of_debt = self::STATUS_SHOW;
-        $this->allowable_number_of_days = self::STATUS_SHOW;
-        $this->amount_charges = self::STATUS_SHOW;
-        $this->amount_contract = self::STATUS_SHOW;
-        $this->amount_insurance = self::STATUS_SHOW;
-        $this->amount_liability = self::STATUS_SHOW;
-        $this->amount_marketing_support = self::STATUS_SHOW;
-        $this->amount_other_services = self::STATUS_SHOW;
-        $this->amount_property_insurance = self::STATUS_SHOW;
-        $this->amount_security_deposit = self::STATUS_SHOW;
-        $this->amount_transportation = self::STATUS_SHOW;
-        $this->calculated_third = self::STATUS_SHOW;
-        $this->comment = self::STATUS_SHOW;
-        $this->commission = self::STATUS_SHOW;
-        $this->contractor_id = self::STATUS_SHOW;
-        $this->contractor_signatories = self::STATUS_SHOW;
-        $this->control_amount_debt = self::STATUS_SHOW;
-        $this->control_number_days = self::STATUS_SHOW;
-        $this->country_applicable_law = self::STATUS_SHOW;
-        $this->country_exportation = self::STATUS_SHOW;
-        $this->country_imports = self::STATUS_SHOW;
-        $this->country_service_product = self::STATUS_SHOW;
-        $this->currency_id = self::STATUS_SHOW;
-        $this->currency_payment_contract = self::STATUS_SHOW;
-        $this->date = self::STATUS_SHOW;
-        $this->description_goods = self::STATUS_SHOW;
-        $this->description_leased = self::STATUS_SHOW;
-        $this->description_work = self::STATUS_SHOW;
-        $this->destination = self::STATUS_SHOW;
-        $this->guarantee_period = self::STATUS_SHOW;
-        $this->incoterm = self::STATUS_SHOW;
-        $this->interest_book_value = self::STATUS_SHOW;
-        $this->interest_guarantee = self::STATUS_SHOW;
-        $this->interest_loan = self::STATUS_SHOW;
-        $this->invalid = self::STATUS_SHOW;
-        $this->keep_reserve_without_paying = self::STATUS_SHOW;
-        $this->kind_of_contract = self::STATUS_SHOW;
-        $this->list_documents = self::STATUS_SHOW;
-        $this->list_scans = self::STATUS_SHOW;
-        $this->list_templates = self::STATUS_SHOW;
-        $this->location_court = self::STATUS_SHOW;
-        $this->maintaining_mutual = self::STATUS_SHOW;
-        $this->maturity_date_loan = self::STATUS_SHOW;
-        $this->method_providing = self::STATUS_SHOW;
-        $this->name_title_deed = self::STATUS_SHOW;
-        $this->notice_period_contract = self::STATUS_SHOW;
-        $this->number = self::STATUS_SHOW;
-        $this->number_days_without_payment = self::STATUS_SHOW;
-        $this->number_hours_services = self::STATUS_SHOW;
-        $this->number_locations = self::STATUS_SHOW;
-        $this->number_of_months = self::STATUS_SHOW;
-        $this->number_right_property = self::STATUS_SHOW;
-        $this->number_specialists = self::STATUS_SHOW;
-        $this->object_address_leased = self::STATUS_SHOW;
-        $this->one_number_shares = self::STATUS_SHOW;
-        $this->organization_signatories = self::STATUS_SHOW;
-        $this->pay_day = self::STATUS_SHOW;
-        $this->paying_storage_month = self::STATUS_SHOW;
-        $this->payment_loading = self::STATUS_SHOW;
-        $this->percentage_liability = self::STATUS_SHOW;
-        $this->percentage_turnover = self::STATUS_SHOW;
-        $this->period_of_notice = self::STATUS_SHOW;
-        $this->place_of_contract = self::STATUS_SHOW;
-        $this->point_departure = self::STATUS_SHOW;
-        $this->prolongation_a_treaty = self::STATUS_SHOW;
-        $this->purpose_use = self::STATUS_SHOW;
-        $this->registration_number_mortgage = self::STATUS_SHOW;
-        $this->separat_records_goods = self::STATUS_SHOW;
-        $this->signatory_contractor = self::STATUS_SHOW;
-        $this->sum_payments_per_month = self::STATUS_SHOW;
-        $this->two_number_of_shares = self::STATUS_SHOW;
-        $this->type_extension = self::STATUS_SHOW;
-        $this->type_contract = self::STATUS_SHOW;
-        $this->unit_storage = self::STATUS_SHOW;
-        $this->usage_purpose = self::STATUS_SHOW;
-        $this->validity = self::STATUS_SHOW;
-        $this->view_buyer = self::STATUS_SHOW;
-        $this->view_one_shares = self::STATUS_SHOW;
-        $this->view_two_shares = self::STATUS_SHOW;
-
-        parent::afterConstruct();
+        $cache_id = __CLASS__ . self::PREFIX_CACHE_LIST_MODELS. $organizationId;
+        if ($forceCached || ($data = Yii::app()->cache->get($cache_id)) === false){
+            $data = $this->where('contractor_id', $organizationId)->findAll();
+            Yii::app()->cache->set($cache_id, $data);
+        }
+        return $data;
     }
 
     /**
-     * Список моделей "Вид договора".
-     * @return ContractType[]
+     * Список договоров.
+     * @return Contract[]
      */
     protected function findAll()
     {
-        $ret = $this->SOAP->listContractTypes(array(
-            'filters' => array(array()),
-            'sort' => array(array())
-        ));
+        $filters = SoapComponent::getStructureElement($this->where);
+        if (!$filters)
+            $filters = array(array());
+        $request = array('filters' => $filters, 'sort' => array(array()));
+        $ret = $this->SOAP->listContracts($request);
         $ret = SoapComponent::parseReturn($ret);
         return $this->publish_list($ret, __CLASS__);
     }
 
     /**
-     * Получение вида договора
+     * Получить договор по его номеру.
+     *
      * @param string $id
      * @param bool $forceCached
-     * @return ContractType
-     * @throws CHttpException
+     * @return Contract
      */
     public function findByPk($id, $forceCached = false)
     {
-        $cache_id = __CLASS__ . self::PREFIX_CACHE_MODEL_PK . $id;
-        if ($forceCached || ($model = Yii::app()->cache->get($cache_id)) === false) {
-            $model = $this->SOAP->getContractTypes(
-                array('id' => $id)
-            );
-            $model = SoapComponent::parseReturn($model);
-            $model = $this->publish_elem(current($model), __CLASS__);
-            if ($model === null)
-                throw new CHttpException(404, 'Не найден вид договора');
+        $cache_id = __CLASS__ . self::PREFIX_CACHE_MODEL_PK. $id;
+        if ($forceCached || ($model = Yii::app()->cache->get($cache_id)) === false){
+            $ret = $this->SOAP->getContracts(array('id' => $id));
+            $ret = SoapComponent::parseReturn($ret);
+            $model = $this->publish_elem(current($ret), __CLASS__);
             Yii::app()->cache->set($cache_id, $model);
         }
-        $model->forceCached = $forceCached;
         return $model;
     }
 
-    public function clearCache()
+    /**
+     * Удаление договора
+     * @return bool Успешность операции удаления
+     */
+    public function delete()
     {
-        $cache = Yii::app()->cache;
-        if ($this->primaryKey)
-            $cache->delete(__CLASS__ . self::PREFIX_CACHE_MODEL_PK . $this->primaryKey);
-        $cache->delete(__CLASS__ . self::PREFIX_CACHE_LIST_MODELS);
-        $cache->delete(__CLASS__ . self::PREFIX_CACHE_LIST_NAMES);
+        if ($pk = $this->getprimaryKey()) {
+            $ret = $this->SOAP->deleteContract(array('id' => $pk));
+
+            /**
+             * Сбрасываем кеш.
+             */
+            $this->clearCache();
+
+            return $ret->return;
+        }
+        return false;
     }
 
     /**
-     * Сохранение
+     *  Редактирование/создание договора.
+     * @return string Идентификатор созданой/отредактированой записи
+     * @throws CHttpException
      */
     public function save()
     {
         $data = $this->getAttributes();
-        if (!$this->primaryKey)
+
+        if (!$this->primaryKey) {
             unset($data['id']);
-
+        }
         unset($data['deleted']);
-        unset($data['is_standart']);
+        unset($data['character']);
+        unset($data['json_signatory']);
+        unset($data['json_signatory_contractor']);
 
-        $ret = $this->SOAP->saveContractTypes(array(
-            'data' => SoapComponent::getStructureElement($data),
+        unset($data['scan']);
+        unset($data['orig_doc']);
+
+        $data['invalid'] = $data['invalid'] == 1 ? true : false;
+        $data['signatory_contr'] = implode(',', $data['signatory_contr']);
+        $data['signatory'] = implode(',', $data['signatory']);
+        $data['role_ur_face'] = ($data['role_ur_face'] == self::ROLE_CONTRACTOR) ? MTypeOrganization::CONTRACTOR : MTypeOrganization::ORGANIZATION;
+
+        $ret = $this->SOAP->saveContract(array(
+            'data' => SoapComponent::getStructureElement($data)
         ));
+        $ret = SoapComponent::parseReturn($ret, false);
+        if (!ctype_digit($ret)) {
+            throw new CHttpException(500, 'Ошибка при сохранении договора.');
+        }
+
+        /**
+         * Сбрасываем кеш.
+         */
         $this->clearCache();
-        return SoapComponent::parseReturn($ret, true);
+
+        return $ret;
     }
 
     /**
-     * Удаляем организацию.
-     * @return bool
+     * Сбрасываем кеш по данному договору и для списка договоров.
      */
-    public function delete()
+    public function clearCache()
     {
         if ($this->primaryKey) {
-            $ret = $this->SOAP->deleteContractTypes(array('id' => $this->primaryKey));
-            $ret = SoapComponent::parseReturn($ret, false);
-            if ($ret) {
-                $this->clearCache();
-            }
-            return $ret;
+            Yii::app()->cache->delete(__CLASS__ . '_' . $this->primaryKey);
         }
-        return false;
+        Yii::app()->cache->delete(__CLASS__ . '_list_org_id_' . $this->contractor_id);
     }
 
     /**
@@ -410,7 +345,6 @@ class ContractType extends SOAPModel
         return array_merge(
             array(
                 'id', // string
-                'is_standart', // bool
                 'deleted', // bool
                 'name',
             ),
@@ -425,8 +359,9 @@ class ContractType extends SOAPModel
     public function attributeLabels()
     {
         return array(
-            'id' => 'Номер',
-            'name' => 'Название',
+            'id' => '#',
+            'name' => 'Наименование',
+//            'deleted' => 'Удален',
 
             'account_counterparty' => 'Расчетный счет контрагента',
             'account_payment_contract' => 'Расчетный счет платежа по договору',
@@ -524,207 +459,66 @@ class ContractType extends SOAPModel
     public function rules()
     {
         return array(
-            array('name', 'length', 'max' => '100'),
+            array('name', 'required'),
+//            array('name', 'length', 'max' => 25),
 
-            array(
-                'account_counterparty,
-                account_payment_contract,
-                additional_charge_contract,
-                additional_project,
-                additional_third_party,
-                additional_type_contract,
-                address_object,
-                address_warehouse,
-                allowable_amount_of_debt,
-                allowable_number_of_days,
-                amount_charges,
-                amount_contract,
-                amount_insurance,
-                amount_liability,
-                amount_marketing_support,
-                amount_other_services,
-                amount_property_insurance,
-                amount_security_deposit,
-                amount_transportation,
-                calculated_third,
-                comment,
-                commission,
-                contractor_id,
-                contractor_signatories,
-                control_amount_debt,
-                control_number_days,
-                country_applicable_law,
-                country_exportation,
-                country_imports,
-                country_service_product,
-                currency_id,
-                currency_payment_contract,
-                date,
-                description_goods,
-                description_leased,
-                description_work,
-                destination,
-                guarantee_period,
-                incoterm,
-                interest_book_value,
-                interest_guarantee,
-                interest_loan,
-                invalid,
-                keep_reserve_without_paying,
-                kind_of_contract,
-                list_documents,
-                list_scans,
-                list_templates,
-                location_court,
-                maintaining_mutual,
-                maturity_date_loan,
-                method_providing,
-                name,
-                name_title_deed,
-                notice_period_contract,
-                number,
-                number_days_without_payment,
-                number_hours_services,
-                number_locations,
-                number_of_months,
-                number_right_property,
-                number_specialists,
-                object_address_leased,
-                one_number_shares,
-                organization_signatories,
-                pay_day,
-                paying_storage_month,
-                payment_loading,
-                percentage_liability,
-                percentage_turnover,
-                period_of_notice,
-                place_of_contract,
-                point_departure,
-                prolongation_a_treaty,
-                purpose_use,
-                registration_number_mortgage,
-                separat_records_goods,
-                signatory_contractor,
-                sum_payments_per_month,
-                two_number_of_shares,
-                type_extension,
-                type_contract,
-                unit_storage,
-                usage_purpose,
-                validity,
-                view_buyer,
-                view_one_shares,
-                view_two_shares',
+            array('number', 'required'),
+//            array('name', 'length', 'max' => 25),
 
-                'required'
-            ),
+            array('contract_type_id', 'required'),
+            array('contract_type_id', 'in', 'range' => array_keys(self::getTypes())),
 
-            array(
-                'account_counterparty,
-                account_payment_contract,
-                additional_charge_contract,
-                additional_project,
-                additional_third_party,
-                additional_type_contract,
-                address_object,
-                address_warehouse,
-                allowable_amount_of_debt,
-                allowable_number_of_days,
-                amount_charges,
-                amount_contract,
-                amount_insurance,
-                amount_liability,
-                amount_marketing_support,
-                amount_other_services,
-                amount_property_insurance,
-                amount_security_deposit,
-                amount_transportation,
-                calculated_third,
-                comment,
-                commission,
-                contractor_id,
-                contractor_signatories,
-                control_amount_debt,
-                control_number_days,
-                country_applicable_law,
-                country_exportation,
-                country_imports,
-                country_service_product,
-                currency_id,
-                currency_payment_contract,
-                date,
-                description_goods,
-                description_leased,
-                description_work,
-                destination,
-                guarantee_period,
-                incoterm,
-                interest_book_value,
-                interest_guarantee,
-                interest_loan,
-                invalid,
-                keep_reserve_without_paying,
-                kind_of_contract,
-                list_documents,
-                list_scans,
-                list_templates,
-                location_court,
-                maintaining_mutual,
-                maturity_date_loan,
-                method_providing,
-                name_title_deed,
-                notice_period_contract,
-                number,
-                number_days_without_payment,
-                number_hours_services,
-                number_locations,
-                number_of_months,
-                number_right_property,
-                number_specialists,
-                object_address_leased,
-                one_number_shares,
-                organization_signatories,
-                pay_day,
-                paying_storage_month,
-                payment_loading,
-                percentage_liability,
-                percentage_turnover,
-                period_of_notice,
-                place_of_contract,
-                point_departure,
-                prolongation_a_treaty,
-                purpose_use,
-                registration_number_mortgage,
-                separat_records_goods,
-                signatory_contractor,
-                sum_payments_per_month,
-                two_number_of_shares,
-                type_extension,
-                type_contract,
-                unit_storage,
-                usage_purpose,
-                validity,
-                view_buyer,
-                view_one_shares,
-                view_two_shares',
+            array('contractor_id', 'required'),
+            array('contractor_id', 'in', 'range' => array_keys(Contractor::model()->getListNames($this->forceCached))),
 
-                'in', 'range' => array_keys(self::getStatuses())),
+            array('date, expire', 'required'),
+            array('date, expire', 'date', 'format' => 'yyyy-MM-dd'),
+
+//            array('invalid', 'required'),
+//            array('invalid', 'in', 'range' => array(1, 2)),
+
+            array('prolongation_type', 'required'),
+            array('prolongation_type', 'in', 'range' => array_keys(self::getProlongationTypes())),
+
+            array('currency', 'required'),
+            array('currency', 'in', 'range' => array_keys(Currency::model()->listNames($this->forceCached))),
+
+            array('responsible', 'required'),
+            array('responsible', 'in', 'range' => array_keys(Individual::model()->listNames($this->forceCached))),
+
+            array('sum', 'required'),
+            array('sum', 'numerical', 'integerOnly' => true, 'min' => 0, 'max' => '9999999999999'),
+            array('sum_month', 'numerical', 'integerOnly' => true, 'min' => 0, 'max' => '9999999999999'),
+//            array('date_infomation', 'numerical', 'integerOnly' => true, 'min' => 0, 'max' => '999'),
+
+            array('json_organization_signatories, json_contractor_signatories', 'validJson'),
+
+            array('role', 'required'),
+            array('role', 'in', 'range' => array_keys(self::getRoles())),
+
+            array('contractor_signatories', 'validSignatory'),
+            array('signatory', 'validSignatory'),
+
+            array('place_contract_id, place_court_id, comment', 'safe')
         );
     }
 
     /**
-     * Список видов договоров.
-     * @param bool $forceCached.
+     * Список договоров. Формат [key => name].
+     * Результат сохранеятся в кеш.
      * @return array
      */
-    public function listNames($forceCached = false)
+    public static function getValues()
     {
-        $cache_id = __CLASS__ . self::PREFIX_CACHE_LIST_NAMES;
-        if ($forceCached || ($data = Yii::app()->cache->get($cache_id)) === false) {
+        $cache_id = __CLASS__ . '_list';
+        $data = Yii::app()->cache->get($cache_id);
+        if ($data === false) {
+            $elements = self::model()->findAll();
             $data = array();
-            $elements = $this->listModels($forceCached);
-            foreach ($elements as $elem) {
-                $data[$elem->primaryKey] = $elem->name;
+            if ($elements) {
+                foreach ($elements as $elem) {
+                    $data[$elem->getprimaryKey()] = $elem->name;
+                }
             }
             Yii::app()->cache->set($cache_id, $data);
         }
@@ -732,17 +526,64 @@ class ContractType extends SOAPModel
     }
 
     /**
-     * Список моделей видов договоров.
-     * @param bool $forceCached.
-     * @return array
+     * @return array Возвращает список видов договора. Формат [key => name].
      */
-    public function listModels($forceCached = false)
+    public static function getTypes()
     {
-        $cache_id = __CLASS__ . self::PREFIX_CACHE_LIST_MODELS;
-        if ($forceCached || ($data = Yii::app()->cache->get($cache_id)) === false) {
-            $data = $this->findAll();
-            Yii::app()->cache->set($cache_id, $data);
+        return array(
+            'СПоставщиком' => 'С поставщиком',
+            'СПокупателем' => 'С покупателем',
+            'СКомитентом' => 'С комитентом',
+            'СКомиссионером' => 'С комиссионером',
+            'Прочее' => 'Прочее',
+        );
+    }
+
+    /**
+     * @return array Возвращает список типов прологации. Формат [key => name].
+     */
+    public static function getProlongationTypes()
+    {
+        return array(
+            'Нет' => 'Нет',
+            'Автоматическая' => 'Автоматическая',
+            'ПоСоглашениюСторон' => 'По соглашению сторон',
+            'Перезаключение' => 'Перезаключение',
+        );
+    }
+
+    /**
+     * @return array Возвращает список ролей. Формат [key => name].
+     */
+    public static function getRoles()
+    {
+        return array(
+            self::ROLE_CONTRACTOR => self::ROLE_CONTRACTOR,
+            self::ROLE_BUYER => self::ROLE_BUYER,
+        );
+    }
+
+    /**
+     * @param string $attribute
+     */
+    public function validJson($attribute)
+    {
+        if (CJSON::decode($this->$attribute) === null) {
+            $this->addError($attribute, 'Неправильная JSON строка.');
         }
-        return $data;
+    }
+
+    /**
+     * @param string $attribute
+     */
+    public function validSignatory($attribute)
+    {
+        if (!is_array($this->$attribute)) {
+            $this->addError($attribute, 'Передан неправильный формат данных.');
+        } elseif (empty($this->$attribute)) {
+            $this->addError($attribute, 'Должен быть выбран хотя бы один подписант.');
+        } elseif (count($this->$attribute) > 2) {
+            $this->addError($attribute, 'Выберите не более 2-х подписантов.');
+        }
     }
 }

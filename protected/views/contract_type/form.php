@@ -41,26 +41,8 @@ if ($model->hasErrors()) {
 
 $statuses = $model->getStatuses();
 echo $form->textFieldRow($model, 'name');
-echo $form->radioButtonListInlineRow($model, 'contractor', $statuses);
-echo $form->radioButtonListInlineRow($model, 'title', $statuses);
-echo $form->radioButtonListInlineRow($model, 'number', $statuses);
-echo $form->radioButtonListInlineRow($model, 'date', $statuses);
-echo $form->radioButtonListInlineRow($model, 'date_expire', $statuses);
-echo $form->radioButtonListInlineRow($model, 'contract_status', $statuses);
-echo $form->radioButtonListInlineRow($model, 'place_of_contract', $statuses);
-echo $form->radioButtonListInlineRow($model, 'type_of_prolongation', $statuses);
-echo $form->radioButtonListInlineRow($model, 'notice_end_of_contract', $statuses);
-echo $form->radioButtonListInlineRow($model, 'currency', $statuses);
-echo $form->radioButtonListInlineRow($model, 'sum_contract', $statuses);
-echo $form->radioButtonListInlineRow($model, 'sum_month', $statuses);
-echo $form->radioButtonListInlineRow($model, 'responsible_contract', $statuses);
-echo $form->radioButtonListInlineRow($model, 'role', $statuses);
-echo $form->radioButtonListInlineRow($model, 'organization_signatories', $statuses);
-echo $form->radioButtonListInlineRow($model, 'contractor_signatories', $statuses);
-echo $form->radioButtonListInlineRow($model, 'third_parties_signatories', $statuses);
-echo $form->radioButtonListInlineRow($model, 'place_of_court', $statuses);
-echo $form->radioButtonListInlineRow($model, 'comment', $statuses);
-echo $form->radioButtonListInlineRow($model, 'scans', $statuses);
-echo $form->radioButtonListInlineRow($model, 'original_documents', $statuses);
-
+$attributes = $model->listAttributes();
+foreach ($attributes as $a){
+    echo $form->radioButtonListInlineRow($model, $a, $statuses);
+}
 $this->endWidget();

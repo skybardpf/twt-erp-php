@@ -16,7 +16,7 @@ abstract class SOAPModel extends CModel
     private $_forceCached = false;
 
 	/** Пока не реализована авторизация - для сохранения объектов надо передавать какого-то пользователя */
-	const USER_NAME = "test_user@user.test"; // TODO При реализации авторизации передавать правильное значение
+//	const USER_NAME = "test_user@user.test"; // TODO При реализации авторизации передавать правильное значение
     const PREFIX_CACHE_MODEL_PK = '_model_pk_';
 
     private static $_models = array();  // class name => model
