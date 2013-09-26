@@ -143,7 +143,8 @@ class Event extends SOAPModel {
             $data['made_by_user']  = true;
         }
 
-        $data['user'] = SOAPModel::USER_NAME;
+//        $data['user'] = SOAPModel::USER_NAME;
+        $data['user'] = Yii::app()->user->getId();
         $data['for_yur'] = ($data['for_yur'] == self::FOR_ORGANIZATIONS) ? true : false;
 
         if ($data['for_yur']){

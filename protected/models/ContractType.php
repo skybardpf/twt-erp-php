@@ -5,6 +5,7 @@
  *
  * @property bool   $is_standart
  * @property bool   $deleted
+ * @property string $name
  *
  * @property string $account_counterparty
  * @property string $account_payment_contract
@@ -29,7 +30,6 @@
  * @property string $comment
  * @property string $commission
  * @property string $contractor_id
- * @property string $contract_type_id
  * @property string $contractor_signatories
  * @property string $control_amount_debt
  * @property string $control_number_days
@@ -59,7 +59,6 @@
  * @property string $maintaining_mutual
  * @property string $maturity_date_loan
  * @property string $method_providing
- * @property string $name
  * @property string $name_title_deed
  * @property string $notice_period_contract
  * @property string $number
@@ -155,7 +154,6 @@ class ContractType extends SOAPModel
         $this->comment = self::STATUS_SHOW;
         $this->commission = self::STATUS_SHOW;
         $this->contractor_id = self::STATUS_SHOW;
-        $this->contract_type_id = self::STATUS_SHOW;
         $this->contractor_signatories = self::STATUS_SHOW;
         $this->control_amount_debt = self::STATUS_SHOW;
         $this->control_number_days = self::STATUS_SHOW;
@@ -337,7 +335,6 @@ class ContractType extends SOAPModel
             'comment',
             'commission',
             'contractor_id',
-            'contract_type_id',
             'contractor_signatories',
             'control_amount_debt',
             'control_number_days',
@@ -454,7 +451,6 @@ class ContractType extends SOAPModel
             'comment' => 'Комментарий',
             'commission' => 'Комиссионное вознаграждение',
             'contractor_id' => 'Контрагент',
-            'contract_type_id' => 'Вида договора',
             'contractor_signatories' => 'Подписанты контрагента',
             'control_amount_debt' => 'Контролировать сумму задолженности',
             'control_number_days' => 'Контролировать число дней задолженности',
@@ -554,7 +550,6 @@ class ContractType extends SOAPModel
                 comment,
                 commission,
                 contractor_id,
-                contract_type_id,
                 contractor_signatories,
                 control_amount_debt,
                 control_number_days,
@@ -648,7 +643,6 @@ class ContractType extends SOAPModel
                 comment,
                 commission,
                 contractor_id,
-                contract_type_id,
                 contractor_signatories,
                 control_amount_debt,
                 control_number_days,
