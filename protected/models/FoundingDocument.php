@@ -103,7 +103,8 @@ class FoundingDocument extends SOAPModel
         $this->id_yur    = $org->primaryKey;
         $this->type_yur  = "Организации";
         $this->from_user = true;
-        $this->user      = SOAPModel::USER_NAME;
+//        $this->user      = SOAPModel::USER_NAME;
+        $this->user      = Yii::app()->user->getId();
         $this->list_files = array();
         $this->list_scans = array();
         return $this;

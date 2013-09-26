@@ -25,7 +25,8 @@ class UpdateAction extends CAction
         if ($model->type_yur != 'Организации') {
             throw new CHttpException(404, 'У документа неверный тип для данной страницы');
         }
-        $model->user = SOAPModel::USER_NAME;
+//        $model->user = SOAPModel::USER_NAME;
+        $model->user = Yii::app()->user->getId();
         $model->setForceCached($force_cache);
         $org = Organization::model()->findByPk($model->id_yur, $force_cache);
 

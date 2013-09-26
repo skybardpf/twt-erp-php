@@ -21,7 +21,7 @@ class CreateAction extends CAction
 
         $org = Organization::model()->findByPk($org_id, $controller->getForceCached());
         $model = new Contract();
-        $model->id_yur = $org->primaryKey;
+        $model->contractor_id = $org->primaryKey;
 
         if (isset($_POST[get_class($model)])) {
             $model->setAttributes($_POST[get_class($model)]);

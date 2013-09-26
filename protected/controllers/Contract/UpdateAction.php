@@ -20,7 +20,7 @@ class UpdateAction extends CAction
         $controller->pageTitle .= ' | Редактирование договора';
 
         $model = Contract::model()->findByPk($id, $controller->getForceCached());
-        $org = Organization::model()->findByPk($model->id_yur, $controller->getForceCached());
+        $org = Organization::model()->findByPk($model->contractor_id, $controller->getForceCached());
 
         $class_name = get_class($model);
 

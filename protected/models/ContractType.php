@@ -5,6 +5,7 @@
  *
  * @property bool   $is_standart
  * @property bool   $deleted
+ * @property string $name
  *
  * @property string $account_counterparty
  * @property string $account_payment_contract
@@ -53,11 +54,11 @@
  * @property string $kind_of_contract
  * @property string $list_documents
  * @property string $list_scans
+ * @property string list_templates
  * @property string $location_court
  * @property string $maintaining_mutual
  * @property string $maturity_date_loan
  * @property string $method_providing
- * @property string $name
  * @property string $name_title_deed
  * @property string $notice_period_contract
  * @property string $number
@@ -86,6 +87,7 @@
  * @property string $sum_payments_per_month
  * @property string $two_number_of_shares
  * @property string $type_extension
+ * @property string $type_contract
  * @property string $unit_storage
  * @property string $usage_purpose
  * @property string $validity
@@ -129,91 +131,93 @@ class ContractType extends SOAPModel
     {
         $this->is_standart = false;
 
-        $this->account_counterparty =  self::STATUS_SHOW;
-        $this->account_payment_contract =  self::STATUS_SHOW;
-        $this->additional_charge_contract =  self::STATUS_SHOW;
-        $this->additional_project =  self::STATUS_SHOW;
-        $this->additional_third_party =  self::STATUS_SHOW;
-        $this->additional_type_contract =  self::STATUS_SHOW;
-        $this->address_object =  self::STATUS_SHOW;
-        $this->address_warehouse =  self::STATUS_SHOW;
-        $this->allowable_amount_of_debt =  self::STATUS_SHOW;
-        $this->allowable_number_of_days =  self::STATUS_SHOW;
-        $this->amount_charges =  self::STATUS_SHOW;
-        $this->amount_contract =  self::STATUS_SHOW;
-        $this->amount_insurance =  self::STATUS_SHOW;
-        $this->amount_liability =  self::STATUS_SHOW;
-        $this->amount_marketing_support =  self::STATUS_SHOW;
-        $this->amount_other_services =  self::STATUS_SHOW;
-        $this->amount_property_insurance =  self::STATUS_SHOW;
-        $this->amount_security_deposit =  self::STATUS_SHOW;
-        $this->amount_transportation =  self::STATUS_SHOW;
-        $this->calculated_third =  self::STATUS_SHOW;
-        $this->comment =  self::STATUS_SHOW;
-        $this->commission =  self::STATUS_SHOW;
-        $this->contractor_id =  self::STATUS_SHOW;
-        $this->contractor_signatories =  self::STATUS_SHOW;
-        $this->control_amount_debt =  self::STATUS_SHOW;
-        $this->control_number_days =  self::STATUS_SHOW;
-        $this->country_applicable_law =  self::STATUS_SHOW;
-        $this->country_exportation =  self::STATUS_SHOW;
-        $this->country_imports =  self::STATUS_SHOW;
-        $this->country_service_product =  self::STATUS_SHOW;
-        $this->currency_id =  self::STATUS_SHOW;
-        $this->currency_payment_contract =  self::STATUS_SHOW;
-        $this->date =  self::STATUS_SHOW;
-        $this->description_goods =  self::STATUS_SHOW;
-        $this->description_leased =  self::STATUS_SHOW;
-        $this->description_work =  self::STATUS_SHOW;
-        $this->destination =  self::STATUS_SHOW;
-        $this->guarantee_period =  self::STATUS_SHOW;
-        $this->incoterm =  self::STATUS_SHOW;
-        $this->interest_book_value =  self::STATUS_SHOW;
-        $this->interest_guarantee =  self::STATUS_SHOW;
-        $this->interest_loan =  self::STATUS_SHOW;
-        $this->invalid =  self::STATUS_SHOW;
-        $this->keep_reserve_without_paying =  self::STATUS_SHOW;
-        $this->kind_of_contract =  self::STATUS_SHOW;
-        $this->list_documents =  self::STATUS_SHOW;
-        $this->list_scans =  self::STATUS_SHOW;
-        $this->location_court =  self::STATUS_SHOW;
-        $this->maintaining_mutual =  self::STATUS_SHOW;
-        $this->maturity_date_loan =  self::STATUS_SHOW;
-        $this->method_providing =  self::STATUS_SHOW;
-        $this->name_title_deed =  self::STATUS_SHOW;
-        $this->notice_period_contract =  self::STATUS_SHOW;
-        $this->number =  self::STATUS_SHOW;
-        $this->number_days_without_payment =  self::STATUS_SHOW;
-        $this->number_hours_services =  self::STATUS_SHOW;
-        $this->number_locations =  self::STATUS_SHOW;
-        $this->number_of_months =  self::STATUS_SHOW;
-        $this->number_right_property =  self::STATUS_SHOW;
-        $this->number_specialists =  self::STATUS_SHOW;
-        $this->object_address_leased =  self::STATUS_SHOW;
-        $this->one_number_shares =  self::STATUS_SHOW;
-        $this->organization_signatories =  self::STATUS_SHOW;
-        $this->pay_day =  self::STATUS_SHOW;
-        $this->paying_storage_month =  self::STATUS_SHOW;
-        $this->payment_loading =  self::STATUS_SHOW;
-        $this->percentage_liability =  self::STATUS_SHOW;
-        $this->percentage_turnover =  self::STATUS_SHOW;
-        $this->period_of_notice =  self::STATUS_SHOW;
-        $this->place_of_contract =  self::STATUS_SHOW;
-        $this->point_departure =  self::STATUS_SHOW;
-        $this->prolongation_a_treaty =  self::STATUS_SHOW;
-        $this->purpose_use =  self::STATUS_SHOW;
-        $this->registration_number_mortgage =  self::STATUS_SHOW;
-        $this->separat_records_goods =  self::STATUS_SHOW;
-        $this->signatory_contractor =  self::STATUS_SHOW;
-        $this->sum_payments_per_month =  self::STATUS_SHOW;
-        $this->two_number_of_shares =  self::STATUS_SHOW;
-        $this->type_extension =  self::STATUS_SHOW;
-        $this->unit_storage =  self::STATUS_SHOW;
-        $this->usage_purpose =  self::STATUS_SHOW;
-        $this->validity =  self::STATUS_SHOW;
-        $this->view_buyer =  self::STATUS_SHOW;
-        $this->view_one_shares =  self::STATUS_SHOW;
-        $this->view_two_shares =  self::STATUS_SHOW;
+        $this->account_counterparty = self::STATUS_SHOW;
+        $this->account_payment_contract = self::STATUS_SHOW;
+        $this->additional_charge_contract = self::STATUS_SHOW;
+        $this->additional_project = self::STATUS_SHOW;
+        $this->additional_third_party = self::STATUS_SHOW;
+        $this->additional_type_contract = self::STATUS_SHOW;
+        $this->address_object = self::STATUS_SHOW;
+        $this->address_warehouse = self::STATUS_SHOW;
+        $this->allowable_amount_of_debt = self::STATUS_SHOW;
+        $this->allowable_number_of_days = self::STATUS_SHOW;
+        $this->amount_charges = self::STATUS_SHOW;
+        $this->amount_contract = self::STATUS_SHOW;
+        $this->amount_insurance = self::STATUS_SHOW;
+        $this->amount_liability = self::STATUS_SHOW;
+        $this->amount_marketing_support = self::STATUS_SHOW;
+        $this->amount_other_services = self::STATUS_SHOW;
+        $this->amount_property_insurance = self::STATUS_SHOW;
+        $this->amount_security_deposit = self::STATUS_SHOW;
+        $this->amount_transportation = self::STATUS_SHOW;
+        $this->calculated_third = self::STATUS_SHOW;
+        $this->comment = self::STATUS_SHOW;
+        $this->commission = self::STATUS_SHOW;
+        $this->contractor_id = self::STATUS_SHOW;
+        $this->contractor_signatories = self::STATUS_SHOW;
+        $this->control_amount_debt = self::STATUS_SHOW;
+        $this->control_number_days = self::STATUS_SHOW;
+        $this->country_applicable_law = self::STATUS_SHOW;
+        $this->country_exportation = self::STATUS_SHOW;
+        $this->country_imports = self::STATUS_SHOW;
+        $this->country_service_product = self::STATUS_SHOW;
+        $this->currency_id = self::STATUS_SHOW;
+        $this->currency_payment_contract = self::STATUS_SHOW;
+        $this->date = self::STATUS_SHOW;
+        $this->description_goods = self::STATUS_SHOW;
+        $this->description_leased = self::STATUS_SHOW;
+        $this->description_work = self::STATUS_SHOW;
+        $this->destination = self::STATUS_SHOW;
+        $this->guarantee_period = self::STATUS_SHOW;
+        $this->incoterm = self::STATUS_SHOW;
+        $this->interest_book_value = self::STATUS_SHOW;
+        $this->interest_guarantee = self::STATUS_SHOW;
+        $this->interest_loan = self::STATUS_SHOW;
+        $this->invalid = self::STATUS_SHOW;
+        $this->keep_reserve_without_paying = self::STATUS_SHOW;
+        $this->kind_of_contract = self::STATUS_SHOW;
+        $this->list_documents = self::STATUS_SHOW;
+        $this->list_scans = self::STATUS_SHOW;
+        $this->list_templates = self::STATUS_SHOW;
+        $this->location_court = self::STATUS_SHOW;
+        $this->maintaining_mutual = self::STATUS_SHOW;
+        $this->maturity_date_loan = self::STATUS_SHOW;
+        $this->method_providing = self::STATUS_SHOW;
+        $this->name_title_deed = self::STATUS_SHOW;
+        $this->notice_period_contract = self::STATUS_SHOW;
+        $this->number = self::STATUS_SHOW;
+        $this->number_days_without_payment = self::STATUS_SHOW;
+        $this->number_hours_services = self::STATUS_SHOW;
+        $this->number_locations = self::STATUS_SHOW;
+        $this->number_of_months = self::STATUS_SHOW;
+        $this->number_right_property = self::STATUS_SHOW;
+        $this->number_specialists = self::STATUS_SHOW;
+        $this->object_address_leased = self::STATUS_SHOW;
+        $this->one_number_shares = self::STATUS_SHOW;
+        $this->organization_signatories = self::STATUS_SHOW;
+        $this->pay_day = self::STATUS_SHOW;
+        $this->paying_storage_month = self::STATUS_SHOW;
+        $this->payment_loading = self::STATUS_SHOW;
+        $this->percentage_liability = self::STATUS_SHOW;
+        $this->percentage_turnover = self::STATUS_SHOW;
+        $this->period_of_notice = self::STATUS_SHOW;
+        $this->place_of_contract = self::STATUS_SHOW;
+        $this->point_departure = self::STATUS_SHOW;
+        $this->prolongation_a_treaty = self::STATUS_SHOW;
+        $this->purpose_use = self::STATUS_SHOW;
+        $this->registration_number_mortgage = self::STATUS_SHOW;
+        $this->separat_records_goods = self::STATUS_SHOW;
+        $this->signatory_contractor = self::STATUS_SHOW;
+        $this->sum_payments_per_month = self::STATUS_SHOW;
+        $this->two_number_of_shares = self::STATUS_SHOW;
+        $this->type_extension = self::STATUS_SHOW;
+        $this->type_contract = self::STATUS_SHOW;
+        $this->unit_storage = self::STATUS_SHOW;
+        $this->usage_purpose = self::STATUS_SHOW;
+        $this->validity = self::STATUS_SHOW;
+        $this->view_buyer = self::STATUS_SHOW;
+        $this->view_one_shares = self::STATUS_SHOW;
+        $this->view_two_shares = self::STATUS_SHOW;
 
         parent::afterConstruct();
     }
@@ -293,7 +297,7 @@ class ContractType extends SOAPModel
         if ($this->primaryKey) {
             $ret = $this->SOAP->deleteContractTypes(array('id' => $this->primaryKey));
             $ret = SoapComponent::parseReturn($ret, false);
-            if ($ret){
+            if ($ret) {
                 $this->clearCache();
             }
             return $ret;
@@ -355,6 +359,7 @@ class ContractType extends SOAPModel
             'kind_of_contract',
             'list_documents',
             'list_scans',
+            'list_templates',
             'location_court',
             'maintaining_mutual',
             'maturity_date_loan',
@@ -387,6 +392,7 @@ class ContractType extends SOAPModel
             'sum_payments_per_month',
             'two_number_of_shares',
             'type_extension',
+            'type_contract',
             'unit_storage',
             'usage_purpose',
             'validity',
@@ -445,7 +451,6 @@ class ContractType extends SOAPModel
             'comment' => 'Комментарий',
             'commission' => 'Комиссионное вознаграждение',
             'contractor_id' => 'Контрагент',
-            'contract_type_id' => 'Вида договора',
             'contractor_signatories' => 'Подписанты контрагента',
             'control_amount_debt' => 'Контролировать сумму задолженности',
             'control_number_days' => 'Контролировать число дней задолженности',
@@ -516,10 +521,10 @@ class ContractType extends SOAPModel
     /**
      * @return array validation rules for model attributes.
      */
-	public function rules()
+    public function rules()
     {
-		return array(
-			array('name', 'length', 'max' => '100'),
+        return array(
+            array('name', 'length', 'max' => '100'),
 
             array(
                 'account_counterparty,
@@ -569,6 +574,7 @@ class ContractType extends SOAPModel
                 kind_of_contract,
                 list_documents,
                 list_scans,
+                list_templates,
                 location_court,
                 maintaining_mutual,
                 maturity_date_loan,
@@ -602,6 +608,7 @@ class ContractType extends SOAPModel
                 sum_payments_per_month,
                 two_number_of_shares,
                 type_extension,
+                type_contract,
                 unit_storage,
                 usage_purpose,
                 validity,
@@ -660,6 +667,7 @@ class ContractType extends SOAPModel
                 kind_of_contract,
                 list_documents,
                 list_scans,
+                list_templates,
                 location_court,
                 maintaining_mutual,
                 maturity_date_loan,
@@ -692,6 +700,7 @@ class ContractType extends SOAPModel
                 sum_payments_per_month,
                 two_number_of_shares,
                 type_extension,
+                type_contract,
                 unit_storage,
                 usage_purpose,
                 validity,
@@ -700,8 +709,8 @@ class ContractType extends SOAPModel
                 view_two_shares',
 
                 'in', 'range' => array_keys(self::getStatuses())),
-		);
-	}
+        );
+    }
 
     /**
      * Список видов договоров.

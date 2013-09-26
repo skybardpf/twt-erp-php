@@ -104,7 +104,8 @@ class FreeDocument extends SOAPModel
         $this->id_yur    = $org->primaryKey;
         $this->type_yur  = "Организации";
         $this->from_user = true;
-        $this->user      = SOAPModel::USER_NAME;
+//        $this->user      = SOAPModel::USER_NAME;
+        $this->user      = Yii::app()->user->getId();
         $this->list_files = array();
         $this->list_scans = array();
         return $this;
@@ -181,7 +182,8 @@ class FreeDocument extends SOAPModel
             unset($data['id']);
         }
         $data['type_yur']   = 'Организации';
-        $data['user']       = SOAPModel::USER_NAME;
+//        $data['user']       = SOAPModel::USER_NAME;
+        $data['user']       = Yii::app()->user->getId();
         $data['from_user']  = true;
 
         $list_scans = array();

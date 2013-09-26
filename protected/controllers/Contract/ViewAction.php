@@ -19,7 +19,7 @@ class ViewAction extends CAction
         $controller->pageTitle .= ' | Просмотр договора';
 
         $model = Contract::model()->findByPk($id, $controller->getForceCached());
-        $org = Organization::model()->findByPk($model->id_yur, $controller->getForceCached());
+        $org = Organization::model()->findByPk($model->contractor_id, $controller->getForceCached());
 
         // TODO только для тестов. Потом убрать. Здесь должен быть массив. Сейчас строка.
         $model->organization_signatories = array('0000000033', '0000000044');
