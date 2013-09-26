@@ -18,6 +18,7 @@ Thumbs.db
 # composer itself is not needed
 composer.phar
 
+# Skibardin Andrey
 protected/runtime/*
 public/assets/*
 protected/filestorage/*
