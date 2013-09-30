@@ -12,7 +12,7 @@
 
 <?php
 Yii::app()->clientScript->registerScriptFile($this->asset_static . '/js/jquery.json-2.4.min.js');
-Yii::app()->clientScript->registerScriptFile($this->asset_static . '/js/legal/contract/form.js');
+Yii::app()->clientScript->registerScriptFile($this->asset_static . '/js/contract/form.js');
 
 echo '<h2>' . ($model->primaryKey ? 'Редактирование' : 'Создание') . ' договора</h2>';
 
@@ -25,6 +25,9 @@ $form = $this->beginWidget('bootstrap.widgets.MTbActiveForm', array(
     'enableAjaxValidation' => true,
     'clientOptions' => array(
         'validateOnChange' => true,
+    ),
+    'htmlOptions' => array(
+        'enctype' => 'multipart/form-data'
     ),
 ));
 
@@ -78,12 +81,13 @@ if ($model->hasErrors()) {
     $data_scans = array();
     $data_documents = array();
 
+    echo $form->dropDownListRow($model, 'additional_type_contract', $contractTypes);
+
     echo $form->dropDownListRow($model, 'account_counterparty', $settlementAccountNames);
     echo $form->dropDownListRow($model, 'account_payment_contract', $settlementAccountNames);
     echo $form->dropDownListRow($model, 'additional_charge_contract', $individuals);
     echo $form->dropDownListRow($model, 'additional_project', $projects);
     echo $form->dropDownListRow($model, 'additional_third_party', $contractors);
-    echo $form->dropDownListRow($model, 'additional_type_contract', $contractTypes);
     echo $form->textFieldRow($model, 'address_object');
     echo $form->textFieldRow($model, 'address_warehouse');
     echo $form->textFieldRow($model, 'allowable_amount_of_debt');
@@ -226,7 +230,7 @@ if ($model->hasErrors()) {
         'label' => 'Добавить',
         'htmlOptions' => array(
             'class' => $class_button,
-            'data-type' => 'signatory_contractor',
+            'data-type' => 'contractor_signatories',
         )
     ), true);
 
@@ -235,7 +239,7 @@ if ($model->hasErrors()) {
         <?= CHtml::activeLabelEx($model, 'contractor_signatories', array('class' => 'control-label')); ?>
         <div class="controls">
             <?php
-            echo $div_signatory;
+            echo $div_signatory_contractor;
             echo CHtml::tag('div', array(), $form->error($model, 'contractor_signatories'));
             ?>
         </div>

@@ -8,7 +8,6 @@
  * @property string $additional_charge_contract
  * @property string $additional_project
  * @property string $additional_third_party
- * @property string $additional_type_contract
  * @property string $address_object
  * @property string $address_warehouse
  * @property string $allowable_amount_of_debt

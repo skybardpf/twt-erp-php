@@ -19,8 +19,10 @@ class UpdateAction extends CAction
         $controller = $this->controller;
         $controller->pageTitle .= ' | Редактирование договора';
 
-        $model = Contract::model()->findByPk($id, $controller->getForceCached());
+        $contractTypeId = Yii::app()->request->getQuery('ctid');
+        $model = Contract::model()->findByPk($id, $contractTypeId, $controller->getForceCached());
         $org = Organization::model()->findByPk($model->contractor_id, $controller->getForceCached());
+//        var_dump($model->list_documents);die;
 
         $class_name = get_class($model);
 
@@ -36,17 +38,20 @@ class UpdateAction extends CAction
         if ($data) {
             $model->setAttributes($data);
 
-            $model->organization_signatories = CJSON::decode($model->json_organization_signatories);
-            $model->contractor_signatories = CJSON::decode($model->json_contractor_signatories);
+            $json = CJSON::decode($model->json_organization_signatories);
+            if ($json !== null)
+                $model->organization_signatories = $json;
+            $json = CJSON::decode($model->json_contractor_signatories);
+            if ($json !== null)
+                $model->contractor_signatories = $json;
 
-            if ($model->validate('json_exists_documents')){
+            if ($model->validate('json_exists_documents'))
                 $model->list_documents = CJSON::decode($model->json_exists_documents);
-            }
-            if ($model->validate('json_exists_scans')){
+            if ($model->validate('json_exists_scans'))
                 $model->list_scans = CJSON::decode($model->json_exists_scans);
-            }
+
             $model->upload_scans = CUploadedFile::getInstancesByName('upload_scans');
-            $model->upload_files = CUploadedFile::getInstancesByName('upload_documents');
+            $model->upload_documents = CUploadedFile::getInstancesByName('upload_documents');
 
             if ($model->validate()) {
                 try {

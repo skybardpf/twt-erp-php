@@ -18,18 +18,17 @@ class ViewAction extends CAction
         $controller = $this->controller;
         $controller->pageTitle .= ' | Просмотр договора';
 
-        $model = Contract::model()->findByPk($id, $controller->getForceCached());
+        $model = Contract::model()->findByPk($id, null, $controller->getForceCached());
         $org = Organization::model()->findByPk($model->contractor_id, $controller->getForceCached());
 
-        // TODO только для тестов. Потом убрать. Здесь должен быть массив. Сейчас строка.
-        $model->organization_signatories = array('0000000033', '0000000044');
-        $model->contractor_signatories = array('0000000038', '0000000054');
+        $contractType = ContractType::model()->findByPk($model->additional_type_contract);
 
         $controller->render('/organization/show', array(
             'content' => $controller->renderPartial('/contract/view',
                 array(
                     'organization' => $org,
-                    'model' => $model
+                    'model' => $model,
+                    'contractType' => $contractType,
                 ), true),
             'organization' => $org,
             'cur_tab' => 'contract',

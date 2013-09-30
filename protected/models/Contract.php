@@ -7,6 +7,7 @@
  * @property string     $id
  * @property string     $name
  * @property boolean    $deleted
+ * @property string     $additional_type_contract
  *
  * @property array      $organization_signatories
  * @property array      $contractor_signatories
@@ -30,275 +31,24 @@ class Contract extends ContractAbstract
     public $json_exists_scans;
 
     public $upload_scans = array();
-    public $upload_files = array();
+    public $upload_documents = array();
+
+    private $_rules = array();
+    private $_contractType = null;
 
     protected function afterConstruct()
     {
-        $this->attachBehaviors($this->behaviors());
-        parent::afterConstruct();
-    }
-
-    /**
-     * Подключаем поведение для загрузки файлов.
-     * @return array
-     */
-    public function behaviors()
-    {
-        return array(
-            'uploadDocument' => array(
-                'class' => 'application.components.Behavior.UploadDocument',
-                'uploadDir' => Yii::getPathOfAlias(Yii::app()->params->uploadDocumentDir),
-            ),
-        );
-    }
-
-    /**
-     * @static
-     * @param string $className
-     * @return Contract
-     */
-    public static function model($className = __CLASS__)
-    {
-        return parent::model($className);
-    }
-
-    /**
-     * @param string $organizationId
-     * @param bool $forceCached
-     * @return Contract[]
-     * @throws CHttpException
-     */
-    public function listModels($organizationId, $forceCached = false)
-    {
-        $cache_id = __CLASS__ . self::PREFIX_CACHE_LIST_MODELS . $organizationId;
-        if ($forceCached || ($data = Yii::app()->cache->get($cache_id)) === false) {
-            $data = $this->where('contractor_id', $organizationId)->findAll();
-            Yii::app()->cache->set($cache_id, $data);
-        }
-        return $data;
-    }
-
-    /**
-     * Список договоров.
-     * @return Contract[]
-     */
-    protected function findAll()
-    {
-        $filters = SoapComponent::getStructureElement($this->where);
-        if (!$filters)
-            $filters = array(array());
-        $request = array('filters' => $filters, 'sort' => array(array()));
-        $ret = $this->SOAP->listContracts($request);
-        $ret = SoapComponent::parseReturn($ret);
-        return $this->publish_list($ret, __CLASS__);
-    }
-
-    /**
-     * Получить договор по его номеру.
-     *
-     * @param string $id
-     * @param bool $forceCached
-     * @return Contract
-     */
-    public function findByPk($id, $forceCached = false)
-    {
-        $cache_id = __CLASS__ . self::PREFIX_CACHE_MODEL_PK . $id;
-        if ($forceCached || ($model = Yii::app()->cache->get($cache_id)) === false) {
-            $ret = $this->SOAP->getContracts(array('id' => $id));
-            $ret = SoapComponent::parseReturn($ret);
-            $model = $this->publish_elem(current($ret), __CLASS__);
-            Yii::app()->cache->set($cache_id, $model);
-        }
-        return $model;
-    }
-
-    /**
-     * Удаление договора
-     * @return bool Успешность операции удаления
-     */
-    public function delete()
-    {
-        if ($pk = $this->getprimaryKey()) {
-            $ret = $this->SOAP->deleteContract(array('id' => $pk));
-
-            /**
-             * Сбрасываем кеш.
-             */
-            $this->clearCache();
-
-            return $ret->return;
-        }
-        return false;
-    }
-
-    /**
-     *  Редактирование/создание договора.
-     * @return string Идентификатор созданой/отредактированой записи
-     * @throws CHttpException
-     */
-    public function save()
-    {
-        $data = $this->getAttributes();
-
-        if (!$this->primaryKey) {
-            unset($data['id']);
-        }
-        unset($data['deleted']);
-        unset($data['json_organization_signatories']);
-        unset($data['json_contractor_signatories']);
-        unset($data['json_exists_files']);
-        unset($data['json_exists_scans']);
-
-        unset($data['list_scans']);
-        unset($data['list_documents']);
-        unset($data['organization_signatories']);
-        unset($data['contractor_signatories']);
-
-        unset($data['list_templates']);
-
-        // TODO убрать
-        unset($data['place_of_contract']);
-        $data["responsible_contract_id"] = "0000000067";
-        /////////////////////////
-
-        $list_scans = array();
-        $list_files = array();
-
-        $id = ($this->primaryKey) ? $this->primaryKey : 'tmp_id';
-
-        $path = Yii::app()->user->getId(). DIRECTORY_SEPARATOR . __CLASS__ . DIRECTORY_SEPARATOR . $id;
-        $path_scans = $path . DIRECTORY_SEPARATOR . MDocumentCategory::SCAN;
-        $path_files = $path . DIRECTORY_SEPARATOR . MDocumentCategory::FILE;
-
-        foreach ($this->upload_scans as $f) {
-            if ($this->upload($path_scans, $f)){
-                $list_scans[] = $f->name;
-            }
-        }
-        foreach ($this->upload_files as $f) {
-            if ($this->upload($path_files, $f)){
-                $list_files[] = $f->name;
-            }
-        }
-
-        $list_files = array_merge($list_files, $this->list_documents);
-        $list_scans = array_merge($list_scans, $this->list_scans);
-
-//        $data['invalid'] = $data['invalid'] == 1 ? true : false;
-//        $data['signatory_contr'] = implode(',', $data['signatory_contr']);
-//        $data['signatory'] = implode(',', $data['signatory']);
-//        $data['role_ur_face'] = ($data['role_ur_face'] == self::ROLE_CONTRACTOR) ? MTypeOrganization::CONTRACTOR : MTypeOrganization::ORGANIZATION;
-
-//        echo '<pre>';
-//        var_dump($data);
-//        echo '</pre>';die;
-        $ret = $this->SOAP->saveContract(array(
-            'data' => SoapComponent::getStructureElement($data),
-            'list_files' => $list_files,
-            'list_scans' => $list_scans,
-            'organization_signatories' => $this->organization_signatories,
-            'contractor_signatories' => $this->contractor_signatories,
-//            'list_templates' => $this->list_templates,
-        ));
-        $ret = SoapComponent::parseReturn($ret, false);
-
-        /**
-         * 1. Возникли ошибки - удаляем все документы из временной диретории.
-         * 2. Все нормально - переносим документы из временной папки в папку
-         * созданного документа ($this->primaryKey).
-         */
-        if (!$this->primaryKey) {
-            try {
-                if (!ctype_digit($ret)){
-                    $this->removeFiles($path_files, $list_files);
-                    $this->removeFiles($path_scans, $list_scans);
-                } else {
-                    $path = Yii::app()->user->getId()
-                        .DIRECTORY_SEPARATOR . __CLASS__
-                        .DIRECTORY_SEPARATOR . $ret;
-                    $dest_scans = $path.DIRECTORY_SEPARATOR.MDocumentCategory::SCAN;
-                    $dest_files = $path.DIRECTORY_SEPARATOR.MDocumentCategory::FILE;
-
-                    $this->moveFiles($path_files, $dest_files, $list_files);
-                    $this->moveFiles($path_scans, $dest_scans, $list_scans);
-                }
-            } catch (UploadDocumentException $e){
-                Yii::log($e->getMessage(), cLogger::LEVEL_ERROR);
-                $this->addError('id', $e->getMessage());
-            }
-        }
-        $this->clearCache();
-        return $ret;
-    }
-
-    /**
-     * @return array
-     */
-    public function attributeNames()
-    {
-        return array_merge(
-            array(
-                'id', // string
-                'deleted', // bool
-                'name', // string
-            ),
-            parent::attributeNames()
-        );
-    }
-
-    /**
-     * Returns the list of attribute names of the model.
-     * @return array list of attribute names.
-     */
-    public function attributeLabels()
-    {
-        return array_merge(
-            array(
-                'id' => 'Номер',
-                'name' => 'Название',
-            ),
-            parent::attributeLabels()
-        );
-    }
-
-    /**
-     * @return array validation rules for model attributes.
-     */
-    public function rules()
-    {
-        return array(
+        $this->_rules = array(
             array('name', 'required'),
-//            array('name', 'length', 'max' => 25),
+            array('name', 'length', 'max' => 50),
 
-//            array('number', 'required'),
-////            array('name', 'length', 'max' => 25),
-//
-//            array('contract_type_id', 'required'),
-//            array('contract_type_id', 'in', 'range' => array_keys(self::getTypes())),
-//
-//            array('contractor_id', 'required'),
-//            array('contractor_id', 'in', 'range' => array_keys(Contractor::model()->getListNames($this->forceCached))),
-//
-//            array('date, expire', 'required'),
-//            array('date, expire', 'date', 'format' => 'yyyy-MM-dd'),
-//
-////            array('invalid', 'required'),
-////            array('invalid', 'in', 'range' => array(1, 2)),
-//
-//            array('prolongation_type', 'required'),
-//            array('prolongation_type', 'in', 'range' => array_keys(self::getProlongationTypes())),
-//
-//            array('currency', 'required'),
-//            array('currency', 'in', 'range' => array_keys(Currency::model()->listNames($this->forceCached))),
-//
-//            array('responsible', 'required'),
-//            array('responsible', 'in', 'range' => array_keys(Individual::model()->listNames($this->forceCached))),
-//
-//            array('sum', 'required'),
-//            array('sum', 'numerical', 'integerOnly' => true, 'min' => 0, 'max' => '9999999999999'),
-//            array('sum_month', 'numerical', 'integerOnly' => true, 'min' => 0, 'max' => '9999999999999'),
-////            array('date_infomation', 'numerical', 'integerOnly' => true, 'min' => 0, 'max' => '999'),
-//
+            array(
+                'organization_signatories,
+                contractor_signatories',
+
+                'validSignatory'
+            ),
+
             array('
                 json_organization_signatories,
                 json_contractor_signatories
@@ -307,13 +57,7 @@ class Contract extends ContractAbstract
 
                 'validJson'
             ),
-//
-//            array('role', 'required'),
-//            array('role', 'in', 'range' => array_keys(self::getRoles())),
-//
-//            array('contractor_signatories', 'validSignatory'),
-//            array('signatory', 'validSignatory'),
-//
+
             array('validity,
                 date,
                 maturity_date_loan,
@@ -335,7 +79,7 @@ class Contract extends ContractAbstract
                 sum_payments_per_month,
                 two_number_of_shares,',
 
-                'numerical', 'integerOnly'=>true
+                'numerical', 'integerOnly' => true, 'min' => 0, 'max' => 9999999999999
             ),
 
             array('
@@ -433,6 +177,257 @@ class Contract extends ContractAbstract
 
             array('place_of_contract', 'in', 'range' => array_keys(ContractPlace::model()->listNames($this->getForceCached()))),
         );
+
+        $this->attachBehaviors($this->behaviors());
+        parent::afterConstruct();
+    }
+
+    /**
+     * Подключаем поведение для загрузки файлов.
+     * @return array
+     */
+    public function behaviors()
+    {
+        return array(
+            'uploadDocument' => array(
+                'class' => 'application.components.Behavior.UploadDocument',
+                'uploadDir' => Yii::getPathOfAlias(Yii::app()->params->uploadDocumentDir),
+            ),
+        );
+    }
+
+    /**
+     * @static
+     * @param string $className
+     * @return Contract
+     */
+    public static function model($className = __CLASS__)
+    {
+        return parent::model($className);
+    }
+
+    /**
+     * @param string $organizationId
+     * @param bool $forceCached
+     * @return Contract[]
+     * @throws CHttpException
+     */
+    public function listModels($organizationId, $forceCached = false)
+    {
+        $cache_id = __CLASS__ . self::PREFIX_CACHE_LIST_MODELS . $organizationId;
+        if ($forceCached || ($data = Yii::app()->cache->get($cache_id)) === false) {
+            $data = $this->where('contractor_id', $organizationId)->findAll();
+            Yii::app()->cache->set($cache_id, $data);
+        }
+        return $data;
+    }
+
+    /**
+     * Список договоров.
+     * @return Contract[]
+     */
+    protected function findAll()
+    {
+        $filters = SoapComponent::getStructureElement($this->where);
+        if (!$filters)
+            $filters = array(array());
+        $request = array('filters' => $filters, 'sort' => array(array()));
+        $ret = $this->SOAP->listContracts($request);
+        $ret = SoapComponent::parseReturn($ret);
+        return $this->publish_list($ret, __CLASS__);
+    }
+
+    /**
+     * Получить договор по его номеру.
+     *
+     * @param string $id
+     * @param string $typeContractId
+     * @param bool $forceCached
+     * @return Contract
+     */
+    public function findByPk($id, $typeContractId = null, $forceCached = false)
+    {
+        $cache_id = __CLASS__ . self::PREFIX_CACHE_MODEL_PK . $id;
+        if ($forceCached || ($model = Yii::app()->cache->get($cache_id)) === false) {
+            $ret = $this->SOAP->getContracts(array('id' => $id));
+            $ret = SoapComponent::parseReturn($ret);
+            $model = $this->publish_elem(current($ret), __CLASS__);
+
+//            $model->additional_type_contract = is_null($typeContractId) ? $model->additional_type_contract : $typeContractId;
+//            $this->_contractType = ContractType::model()->findByPk($model->additional_type_contract);
+
+//            $this->_makeRules();
+
+            Yii::app()->cache->set($cache_id, $model);
+        }
+        return $model;
+    }
+
+    /**
+     * Создаем правила
+     */
+    private function _makeRules()
+    {
+        if (!is_null($this->_contractType)){
+
+        }
+    }
+
+//    /**
+//     * @param string $attribute
+//     * @return bool
+//     */
+//    public function isShowAttribute($attribute)
+//    {
+//        if (!property_exists($this->_contractType, $attribute))
+//            return false;
+//        return ($this->_contractType->$attribute == ContractType::STATUS_REQUIRED || $this->_contractType->$attribute == ContractType::STATUS_SHOW);
+//    }
+
+    /**
+     * Удаление договора
+     * @return bool Успешность операции удаления
+     */
+    public function delete()
+    {
+        if ($pk = $this->getprimaryKey()) {
+            $ret = $this->SOAP->deleteContract(array('id' => $pk));
+
+            /**
+             * Сбрасываем кеш.
+             */
+            $this->clearCache();
+
+            return $ret->return;
+        }
+        return false;
+    }
+
+    /**
+     *  Редактирование/создание договора.
+     * @return string Идентификатор созданой/отредактированой записи
+     * @throws CHttpException
+     */
+    public function save()
+    {
+        $data = $this->getAttributes();
+
+        if (!$this->primaryKey) {
+            unset($data['id']);
+        }
+        unset($data['deleted']);
+        unset($data['json_organization_signatories']);
+        unset($data['json_contractor_signatories']);
+        unset($data['json_exists_files']);
+        unset($data['json_exists_scans']);
+
+        unset($data['list_scans']);
+        unset($data['list_documents']);
+        unset($data['organization_signatories']);
+        unset($data['contractor_signatories']);
+
+        unset($data['list_templates']);
+
+        // TODO убрать
+        unset($data['place_of_contract']);
+        $data["responsible_contract_id"] = "0000000067";
+        /////////////////////////
+
+        $list_scans = array();
+        $list_files = array();
+        $id = ($this->primaryKey) ? $this->primaryKey : 'tmp_id';
+        $path = Yii::app()->user->getId() . DIRECTORY_SEPARATOR . __CLASS__ . DIRECTORY_SEPARATOR . $id;
+        $path_scans = $path . DIRECTORY_SEPARATOR . MDocumentCategory::SCAN;
+        $path_files = $path . DIRECTORY_SEPARATOR . MDocumentCategory::FILE;
+        foreach ($this->upload_scans as $f) {
+            if ($this->upload($path_scans, $f)) {
+                $list_scans[] = $f->name;
+            }
+        }
+        foreach ($this->upload_documents as $f) {
+            if ($this->upload($path_files, $f)) {
+                $list_files[] = $f->name;
+            }
+        }
+        $list_files = array_merge($list_files, $this->list_documents);
+        $list_scans = array_merge($list_scans, $this->list_scans);
+
+        $ret = $this->SOAP->saveContract(array(
+            'data' => SoapComponent::getStructureElement($data),
+            'list_documents' => $list_files,
+            'list_scans' => $list_scans,
+            'organization_signatories' => $this->organization_signatories,
+            'contractor_signatories' => $this->contractor_signatories,
+//            'list_templates' => $this->list_templates,
+        ));
+        $ret = SoapComponent::parseReturn($ret, false);
+
+        /**
+         * 1. Возникли ошибки - удаляем все документы из временной диретории.
+         * 2. Все нормально - переносим документы из временной папки в папку
+         * созданного документа ($this->primaryKey).
+         */
+        if (!$this->primaryKey) {
+            try {
+                if (!ctype_digit($ret)) {
+                    $this->removeFiles($path_files, $list_files);
+                    $this->removeFiles($path_scans, $list_scans);
+                } else {
+                    $path = Yii::app()->user->getId()
+                        . DIRECTORY_SEPARATOR . __CLASS__
+                        . DIRECTORY_SEPARATOR . $ret;
+                    $dest_scans = $path . DIRECTORY_SEPARATOR . MDocumentCategory::SCAN;
+                    $dest_files = $path . DIRECTORY_SEPARATOR . MDocumentCategory::FILE;
+
+                    $this->moveFiles($path_files, $dest_files, $list_files);
+                    $this->moveFiles($path_scans, $dest_scans, $list_scans);
+                }
+            } catch (UploadDocumentException $e) {
+                Yii::log($e->getMessage(), cLogger::LEVEL_ERROR);
+                $this->addError('id', $e->getMessage());
+            }
+        }
+        $this->clearCache();
+        return $ret;
+    }
+
+    /**
+     * @return array
+     */
+    public function attributeNames()
+    {
+        return array_merge(
+            array(
+                'id', // string
+                'deleted', // bool
+                'name', // string
+                'additional_type_contract',
+            ),
+            parent::attributeNames()
+        );
+    }
+
+    /**
+     * Returns the list of attribute names of the model.
+     * @return array list of attribute names.
+     */
+    public function attributeLabels()
+    {
+        return array_merge(
+            array(
+                'id' => 'Номер',
+                'name' => 'Название',
+            ),
+            parent::attributeLabels()
+        );
+    }
+
+    /**
+     * @return array validation rules for model attributes.
+     */
+    public function rules()
+    {
+        return $this->_rules;
     }
 
     /**
@@ -507,8 +502,8 @@ class Contract extends ContractAbstract
             $this->addError($attribute, 'Передан неправильный формат данных.');
         } elseif (empty($this->$attribute)) {
             $this->addError($attribute, 'Должен быть выбран хотя бы один подписант.');
-        } elseif (count($this->$attribute) > 2) {
+        } /*elseif (count($this->$attribute) > 2) {
             $this->addError($attribute, 'Выберите не более 2-х подписантов.');
-        }
+        }*/
     }
 }

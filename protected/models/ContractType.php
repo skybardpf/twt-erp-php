@@ -27,6 +27,15 @@ class ContractType extends ContractAbstract
     }
 
     /**
+     * @param string $attribute
+     * @return bool
+     */
+    public function isShowAttribute($attribute)
+    {
+        return (isset($this->$attribute) && ($this->$attribute == self::STATUS_REQUIRED || $this->$attribute == self::STATUS_SHOW));
+    }
+
+    /**
      * Список названий
      * @param bool $forceCached.
      * @return array
