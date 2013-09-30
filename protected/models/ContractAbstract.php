@@ -26,7 +26,6 @@
  * @property string $comment
  * @property string $commission
  * @property string $contractor_id
- * @property string $contractor_signatories
  * @property string $control_amount_debt
  * @property string $control_number_days
  * @property string $country_applicable_law
@@ -66,7 +65,6 @@
  * @property string $number_specialists
  * @property string $object_address_leased
  * @property string $one_number_shares
- * @property string $organization_signatories
  * @property string $pay_day
  * @property string $paying_storage_month
  * @property string $payment_loading
@@ -300,7 +298,7 @@ abstract class ContractAbstract extends SOAPModel
             'signatory_contractor' => 'Подписант контрагента',
             'sum_payments_per_month' => 'Сумма платежей в месяц',
             'two_number_of_shares' => 'Количество 2 акций',
-            'type_contract' => 'Вид договора',
+            'type_contract' => 'Вид договора контрагентов',
             'type_extension' => 'Тип пролонгации',
             'unit_storage' => 'Единица места хранения',
             'usage_purpose' => 'Цель использования',
@@ -309,39 +307,5 @@ abstract class ContractAbstract extends SOAPModel
             'view_one_shares' => 'Вид 1 акций',
             'view_two_shares' => 'Вид 2 акций',
         );
-    }
-
-    /**
-     * Список названий
-     * @param bool $forceCached.
-     * @return array
-     */
-    public function listNames($forceCached = false)
-    {
-        $cache_id = get_class($this) . self::PREFIX_CACHE_LIST_NAMES;
-        if ($forceCached || ($data = Yii::app()->cache->get($cache_id)) === false) {
-            $data = array();
-            $elements = $this->listModels($forceCached);
-            foreach ($elements as $elem) {
-                $data[$elem->primaryKey] = $elem->name;
-            }
-            Yii::app()->cache->set($cache_id, $data);
-        }
-        return $data;
-    }
-
-    /**
-     * Список моделей.
-     * @param bool $forceCached.
-     * @return array
-     */
-    public function listModels($forceCached = false)
-    {
-        $cache_id = get_class($this) . self::PREFIX_CACHE_LIST_MODELS;
-        if ($forceCached || ($data = Yii::app()->cache->get($cache_id)) === false) {
-            $data = $this->findAll();
-            Yii::app()->cache->set($cache_id, $data);
-        }
-        return $data;
     }
 }

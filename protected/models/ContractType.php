@@ -6,6 +6,9 @@
  * @property bool   $is_standart
  * @property bool   $deleted
  * @property string $name
+ *
+ * @property string $organization_signatories
+ * @property string $contractor_signatories
  */
 class ContractType extends ContractAbstract
 {
@@ -21,6 +24,40 @@ class ContractType extends ContractAbstract
     public static function model($className = __CLASS__)
     {
         return parent::model($className);
+    }
+
+    /**
+     * Список названий
+     * @param bool $forceCached.
+     * @return array
+     */
+    public function listNames($forceCached = false)
+    {
+        $cache_id = __CLASS__ . self::PREFIX_CACHE_LIST_NAMES;
+        if ($forceCached || ($data = Yii::app()->cache->get($cache_id)) === false) {
+            $data = array();
+            $elements = $this->listModels($forceCached);
+            foreach ($elements as $elem) {
+                $data[$elem->primaryKey] = $elem->name;
+            }
+            Yii::app()->cache->set($cache_id, $data);
+        }
+        return $data;
+    }
+
+    /**
+     * Список моделей.
+     * @param bool $forceCached.
+     * @return array
+     */
+    public function listModels($forceCached = false)
+    {
+        $cache_id = __CLASS__ . self::PREFIX_CACHE_LIST_MODELS;
+        if ($forceCached || ($data = Yii::app()->cache->get($cache_id)) === false) {
+            $data = $this->findAll();
+            Yii::app()->cache->set($cache_id, $data);
+        }
+        return $data;
     }
 
     /**

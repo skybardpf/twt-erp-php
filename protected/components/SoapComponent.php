@@ -126,6 +126,12 @@ class SoapParseException extends CException{}
  *
  * Корзина акционирования. Косвенная схема (@class IndirectShareholding)
  * @method mixed listInDirectShareHolding(array $data)
+ *
+ * Международные правила в формате словаря (@class Incoterm)
+ * @method mixed listIncoterms(array $data)
+ *
+ * Проекты (@class Project)
+ * @method mixed listAdditionalProject(array $data)
  */
 class SoapComponent extends CApplicationComponent
 {
@@ -284,23 +290,23 @@ class SoapComponent extends CApplicationComponent
 				}
 				if (YII_DEBUG) {
 					$time = microtime(true) - $time;
-//                    Yii::log(
-//						'function ' . $name . ' in '.$time.' seconds with data: ' .
-//							(defined('JSON_UNESCAPED_UNICODE')
-//								? json_encode($ret, JSON_UNESCAPED_UNICODE)
-//								: preg_replace('#\\\\u([0-9a-f]{4})#se','iconv("UTF-16BE","UTF-8",pack("H4","$1"))',json_encode($ret))
-//							),
-//						CLogger::LEVEL_INFO,
-//						'soap'
-//					);
-
                     Yii::log(
-                        'function ' . $name . ' in '.$time.' seconds with data: ' .
-                        CJSON::encode($ret),
+						'function ' . $name . ' in '.$time.' seconds with data: ' .
+							(defined('JSON_UNESCAPED_UNICODE')
+								? json_encode($ret, JSON_UNESCAPED_UNICODE)
+								: preg_replace('#\\\\u([0-9a-f]{4})#se','iconv("UTF-16BE","UTF-8",pack("H4","$1"))',json_encode($ret))
+							),
+						CLogger::LEVEL_INFO,
+						'soap'
+					);
+
+//                    Yii::log(
+//                        'function ' . $name . ' in '.$time.' seconds with data: ' .
+//                        CJSON::encode($ret),
 //                        json_encode($ret, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES),
-                        CLogger::LEVEL_INFO,
-                        'soap'
-                    );
+//                        CLogger::LEVEL_INFO,
+//                        'soap'
+//                    );
 				}
 
 				return $ret;

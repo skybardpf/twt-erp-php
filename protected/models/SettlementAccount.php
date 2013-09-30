@@ -31,8 +31,9 @@
 class SettlementAccount extends SOAPModel
 {
     const TYPE_VIEW_NOT_SELECTED = '---not_selected---';
-    const PREFIX_CACHE_LIST_MODELS = '_lis_models';
-    const PREFIX_CACHE_LIST_MODELS_BY_ORG = '_lis_models_by_org_';
+    const PREFIX_CACHE_LIST_MODELS = '_list_models';
+    const PREFIX_CACHE_LIST_MODELS_BY_ORG = '_list_models_by_org_';
+    const PREFIX_CACHE_LIST_NAMES = '_list_names';
 
 //    public $typeView;   // отформатированное представление
     public $json_managing_persons = '[]';
@@ -196,6 +197,7 @@ class SettlementAccount extends SOAPModel
         if ($this->id_yur)
             Yii::app()->cache->delete(__CLASS__.self::PREFIX_CACHE_LIST_MODELS_BY_ORG.$this->id_yur);
         Yii::app()->cache->delete(__CLASS__.self::PREFIX_CACHE_LIST_MODELS);
+        Yii::app()->cache->delete(__CLASS__.self::PREFIX_CACHE_LIST_NAMES);
     }
 
 	/**
@@ -409,6 +411,24 @@ class SettlementAccount extends SOAPModel
                 ->where('deleted', false)
                 ->where('id_yur', $org->primaryKey)
                 ->findAll();
+            Yii::app()->cache->set($cache_id, $data);
+        }
+        return $data;
+    }
+
+    /**
+     * Список наименовай счетов.
+     * @param bool $forceCache
+     * @return array
+     */
+    public function listNames($forceCache=false){
+        $cache_id = __CLASS__.self::PREFIX_CACHE_LIST_NAMES;
+        if ($forceCache || ($data = Yii::app()->cache->get($cache_id)) === false){
+            $data = array();
+            $models = $this->listModels($forceCache);
+            foreach ($models as $model){
+                $data[$model->primaryKey] = $model->name;
+            }
             Yii::app()->cache->set($cache_id, $data);
         }
         return $data;
