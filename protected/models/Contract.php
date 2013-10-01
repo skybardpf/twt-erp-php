@@ -33,11 +33,12 @@ class Contract extends ContractAbstract
     public $upload_scans = array();
     public $upload_documents = array();
 
-    private $_rules = array();
-    private $_contractType = null;
-
+    /**
+     * Инициализируем переменные
+     */
     protected function afterConstruct()
     {
+        /*
         $this->_rules = array(
             array('name', 'required'),
             array('name', 'length', 'max' => 50),
@@ -177,6 +178,31 @@ class Contract extends ContractAbstract
 
             array('place_of_contract', 'in', 'range' => array_keys(ContractPlace::model()->listNames($this->getForceCached()))),
         );
+*/
+
+        $this->country_service_product = 'Null';
+        $this->country_imports = 'Null';
+        $this->country_exportation = 'Null';
+        $this->country_applicable_law = 'Null';
+        $this->currency_id = 'Null';
+        $this->currency_payment_contract = 'Null';
+        $this->type_extension = 'Null';
+        $this->type_contract = 'Null';
+        $this->maintaining_mutual = 'Null';
+        $this->kind_of_contract = 'Null';
+        $this->incoterm = 'Null';
+        $this->contractor_id = 'Null';
+        $this->additional_third_party = 'Null';
+        $this->additional_project = 'Null';
+        $this->additional_charge_contract = 'Null';
+        $this->signatory_contractor = 'Null';
+        $this->account_counterparty = 'Null';
+        $this->place_of_contract = 'Null';
+
+        $this->organization_signatories = array();
+        $this->contractor_signatories = array();
+        $this->list_documents = array();
+        $this->list_scans = array();
 
         $this->attachBehaviors($this->behaviors());
         parent::afterConstruct();
@@ -241,23 +267,19 @@ class Contract extends ContractAbstract
      * Получить договор по его номеру.
      *
      * @param string $id
-     * @param string $typeContractId
      * @param bool $forceCached
      * @return Contract
+     * @throws CHttpException
      */
-    public function findByPk($id, $typeContractId = null, $forceCached = false)
+    public function findByPk($id, $forceCached = false)
     {
         $cache_id = __CLASS__ . self::PREFIX_CACHE_MODEL_PK . $id;
         if ($forceCached || ($model = Yii::app()->cache->get($cache_id)) === false) {
             $ret = $this->SOAP->getContracts(array('id' => $id));
             $ret = SoapComponent::parseReturn($ret);
             $model = $this->publish_elem(current($ret), __CLASS__);
-
-//            $model->additional_type_contract = is_null($typeContractId) ? $model->additional_type_contract : $typeContractId;
-//            $this->_contractType = ContractType::model()->findByPk($model->additional_type_contract);
-
-//            $this->_makeRules();
-
+            if ($model === null)
+                throw new CHttpException(404, 'Не найден договор');
             Yii::app()->cache->set($cache_id, $model);
         }
         return $model;
@@ -266,23 +288,274 @@ class Contract extends ContractAbstract
     /**
      * Создаем правила
      */
-    private function _makeRules()
+    public function makeRules(ContractType $contractType)
     {
-        if (!is_null($this->_contractType)){
+        $safe = array();
 
+        $data = array(
+            array(
+                'validator' => 'validSignatory',
+                'attributes' => array(
+                    'organization_signatories',
+                    'contractor_signatories'
+                ),
+                'params' => array(),
+            ),
+
+            array(
+                'validator' => 'date',
+                'attributes' => array(
+                    'validity',
+                    'date',
+                    'maturity_date_loan',
+                    'pay_day',
+                    'period_of_notice',
+                ),
+                'params' => array(
+                    'format' => 'yyyy-MM-dd'
+                ),
+            ),
+
+            array(
+                'validator' => 'numerical',
+                'attributes' => array(
+                    'guarantee_period',
+                    'notice_period_contract',
+                    'number_specialists',
+                    'one_number_shares',
+                    'paying_storage_month',
+                    'payment_loading',
+                    'percentage_liability',
+                    'percentage_turnover',
+                    'prolongation_a_treaty',
+                    'sum_payments_per_month',
+                    'two_number_of_shares',
+                ),
+                'params' => array(
+                    'integerOnly' => true,
+                    'min' => 0,
+                    'max' => 9999999999999,
+                ),
+            ),
+
+            array(
+                'validator' => 'boolean',
+                'attributes' => array(
+                    'control_amount_debt',
+                    'control_number_days',
+                    'invalid',
+                    'keep_reserve_without_paying',
+                    'separat_records_goods',
+                ),
+                'params' => array(),
+            ),
+
+            array(
+                'validator' => 'length',
+                'attributes' => array(
+                    'address_object',
+                    'address_warehouse',
+                    'allowable_amount_of_debt',
+                    'allowable_number_of_days',
+                    'amount_charges',
+                    'amount_contract',
+                    'amount_insurance',
+                    'amount_liability',
+                    'amount_marketing_support',
+                    'amount_other_services',
+                    'amount_property_insurance',
+                    'amount_security_deposit',
+                    'amount_transportation',
+                    'calculated_third',
+                    'comment',
+                    'commission',
+                    'description_goods',
+                    'description_leased',
+                    'description_work',
+                    'destination',
+                    'interest_book_value',
+                    'interest_guarantee',
+                    'interest_loan',
+                    'location_court',
+                    'method_providing',
+                    'name_title_deed',
+                    'number',
+                    'number_days_without_payment',
+                    'number_hours_services',
+                    'number_locations',
+                    'number_of_months',
+                    'number_right_property',
+                    'object_address_leased',
+                    'view_buyer',
+                    'view_one_shares',
+                    'view_two_shares',
+                    'unit_storage',
+                    'usage_purpose',
+                    'purpose_use',
+                    'registration_number_mortgage',
+                    'place_of_contract',
+                    'point_departure',
+                ),
+                'params' => array(
+                    'max' => 100
+                ),
+            ),
+
+            array(
+                'validator' => 'in',
+                'attributes' => array(
+                    'country_applicable_law',
+                    'country_exportation',
+                    'country_imports',
+                    'country_service_product',
+                ),
+                'params' => array(
+                    'range' => array_keys(Country::model()->listNames($this->forceCached))
+                ),
+            ),
+
+            array(
+                'validator' => 'in',
+                'attributes' => array(
+                    'currency_id',
+                    'currency_payment_contract',
+                ),
+                'params' => array(
+                    'range' => array_keys(Currency::model()->listNames($this->forceCached))
+                ),
+            ),
+            array(
+                'validator' => 'in',
+                'attributes' => array(
+                    'type_extension',
+                ),
+                'params' => array(
+                    'range' => array_keys(Contract::getProlongationTypes())
+                ),
+            ),
+            array(
+                'validator' => 'in',
+                'attributes' => array(
+                    'type_contract',
+                ),
+                'params' => array(
+                    'range' => array_keys(Contract::getTypesAgreementsAccounts())
+                ),
+            ),
+            array(
+                'validator' => 'in',
+                'attributes' => array(
+                    'type_contract',
+                ),
+                'params' => array(
+                    'range' => array_keys(Contract::getTypesAgreementsAccounts())
+                ),
+            ),
+            array(
+                'validator' => 'in',
+                'attributes' => array(
+                    'maintaining_mutual',
+                ),
+                'params' => array(
+                    'range' => array_keys(Contract::getMaintainingMutual())
+                ),
+            ),
+            array(
+                'validator' => 'in',
+                'attributes' => array(
+                    'kind_of_contract',
+                ),
+                'params' => array(
+                    'range' => array_keys(Contract::getKindsOfContract())
+                ),
+            ),
+            array(
+                'validator' => 'in',
+                'attributes' => array(
+                    'incoterm',
+                ),
+                'params' => array(
+                    'range' => array_keys(Incoterm::model()->listNames($this->forceCached))
+                ),
+            ),
+            array(
+                'validator' => 'in',
+                'attributes' => array(
+                    'contractor_id',
+                ),
+                'params' => array(
+                    'range' => array_keys(Organization::model()->getListNames($this->forceCached))
+                ),
+            ),
+            array(
+                'validator' => 'in',
+                'attributes' => array(
+                    'additional_third_party',
+                ),
+                'params' => array(
+                    'range' => array_keys(Contractor::model()->getListNames($this->forceCached))
+                ),
+            ),
+            array(
+                'validator' => 'in',
+                'attributes' => array(
+                    'additional_project',
+                ),
+                'params' => array(
+                    'range' => array_keys(Project::model()->listNames($this->forceCached))
+                ),
+            ),
+            array(
+                'validator' => 'in',
+                'attributes' => array(
+                    'additional_charge_contract',
+                    'signatory_contractor',
+                ),
+                'params' => array(
+                    'range' => array_keys(Individual::model()->listNames($this->forceCached))
+                ),
+            ),
+            array(
+                'validator' => 'in',
+                'attributes' => array(
+                    'account_counterparty',
+                    'account_payment_contract',
+                ),
+                'params' => array(
+                    'range' => array_keys(SettlementAccount::model()->listNames($this->forceCached))
+                ),
+            ),
+            array(
+                'validator' => 'in',
+                'attributes' => array(
+                    'place_of_contract',
+                ),
+                'params' => array(
+                    'range' => array_keys(ContractPlace::model()->listNames($this->getForceCached()))
+                ),
+            ),
+        );
+        foreach ($data as $v){
+            foreach ($v['attributes'] as $attr){
+                if (!$contractType->isShowAttribute($attr)){
+                    $safe[] = $attr;
+                } else {
+                    $this->validatorList->add(
+                        CValidator::createValidator($v['validator'], $this, $attr, $v['params'])
+                    );
+                    if ($contractType->isRequiredAttribute($attr)){
+                        $this->validatorList->add(
+                            CValidator::createValidator('required', $this, $attr)
+                        );
+                    }
+                }
+            }
         }
-    }
 
-//    /**
-//     * @param string $attribute
-//     * @return bool
-//     */
-//    public function isShowAttribute($attribute)
-//    {
-//        if (!property_exists($this->_contractType, $attribute))
-//            return false;
-//        return ($this->_contractType->$attribute == ContractType::STATUS_REQUIRED || $this->_contractType->$attribute == ContractType::STATUS_SHOW);
-//    }
+        $this->validatorList->add(
+            CValidator::createValidator('safe', $this, implode(',', $safe))
+        );
+    }
 
     /**
      * Удаление договора
@@ -329,8 +602,8 @@ class Contract extends ContractAbstract
         unset($data['list_templates']);
 
         // TODO убрать
-        unset($data['place_of_contract']);
-        $data["responsible_contract_id"] = "0000000067";
+//        unset($data['place_of_contract']);
+//        $data["responsible_contract_id"] = "0000000067";
         /////////////////////////
 
         $list_scans = array();
@@ -351,6 +624,8 @@ class Contract extends ContractAbstract
         }
         $list_files = array_merge($list_files, $this->list_documents);
         $list_scans = array_merge($list_scans, $this->list_scans);
+        $list_files = (empty($list_files)) ? array('Null') : $list_files;
+        $list_scans = (empty($list_scans)) ? array('Null') : $list_scans;
 
         $ret = $this->SOAP->saveContract(array(
             'data' => SoapComponent::getStructureElement($data),
@@ -427,7 +702,24 @@ class Contract extends ContractAbstract
      */
     public function rules()
     {
-        return $this->_rules;
+        return array(
+            array('name', 'required'),
+            array('name', 'length', 'max' => 50),
+
+            array('
+                json_organization_signatories,
+                json_contractor_signatories
+                json_exists_documents
+                json_exists_scans',
+
+                'validJson'
+            ),
+
+            array(
+                'additional_type_contract',
+                'in', 'range' => array_keys(ContractType::model()->listNames($this->forceCached))
+            ),
+        );
     }
 
     /**

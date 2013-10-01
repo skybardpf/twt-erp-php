@@ -18,10 +18,10 @@ class ViewAction extends CAction
         $controller = $this->controller;
         $controller->pageTitle .= ' | Просмотр договора';
 
-        $model = Contract::model()->findByPk($id, null, $controller->getForceCached());
+        $model = Contract::model()->findByPk($id, $controller->getForceCached());
         $org = Organization::model()->findByPk($model->contractor_id, $controller->getForceCached());
-
         $contractType = ContractType::model()->findByPk($model->additional_type_contract);
+        $contractTemplates = ContractTemplate::model()->listNames($model->primaryKey, $controller->getForceCached());
 
         $controller->render('/organization/show', array(
             'content' => $controller->renderPartial('/contract/view',
@@ -29,6 +29,7 @@ class ViewAction extends CAction
                     'organization' => $org,
                     'model' => $model,
                     'contractType' => $contractType,
+                    'contractTemplates' => $contractTemplates,
                 ), true),
             'organization' => $org,
             'cur_tab' => 'contract',

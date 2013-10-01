@@ -113,7 +113,7 @@ class TemplateLibraryGroup extends SOAPModel
                     'text' => CHtml::link(
                         CHtml::encode($template->name),
                         Yii::app()->createUrl('site/download', array(
-                                'path' => $this->decodePath($template->path))
+                                'path' => self::decodePath($template->path))
                         ),
                         array(
                             'target' => '_blank'
@@ -141,7 +141,7 @@ class TemplateLibraryGroup extends SOAPModel
                     'text' => CHtml::link(
                         CHtml::encode($template->name),
                         Yii::app()->createUrl('site/download', array(
-                                'path' => $this->decodePath($template->path))
+                                'path' => self::decodePath($template->path))
                         ),
                         array(
                             'target' => '_blank'
@@ -215,10 +215,11 @@ class TemplateLibraryGroup extends SOAPModel
 
     /**
      * Кодируем переданный путь по хитрому алгоритму. Для передачи в site/download.
+     * @static
      * @param string $path
      * @return string
      */
-    private function decodePath($path)
+    public static function decodePath($path)
     {
         if (empty($path))
             return '';

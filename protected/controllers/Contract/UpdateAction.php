@@ -20,9 +20,12 @@ class UpdateAction extends CAction
         $controller->pageTitle .= ' | Редактирование договора';
 
         $contractTypeId = Yii::app()->request->getQuery('ctid');
-        $model = Contract::model()->findByPk($id, $contractTypeId, $controller->getForceCached());
+        $model = Contract::model()->findByPk($id, $controller->getForceCached());
         $org = Organization::model()->findByPk($model->contractor_id, $controller->getForceCached());
-//        var_dump($model->list_documents);die;
+
+        $model->additional_type_contract = empty($contractTypeId) ? $model->additional_type_contract : $contractTypeId;
+        $contractType = ContractType::model()->findByPk($model->additional_type_contract);
+        $model->makeRules($contractType);
 
         $class_name = get_class($model);
 
@@ -70,7 +73,6 @@ class UpdateAction extends CAction
 
         $model->json_organization_signatories = CJSON::encode($model->organization_signatories);
         $model->json_contractor_signatories = CJSON::encode($model->contractor_signatories);
-
         $model->json_exists_documents = CJSON::encode($model->list_documents);
         $model->json_exists_scans = CJSON::encode($model->list_scans);
 
@@ -78,7 +80,9 @@ class UpdateAction extends CAction
             'content' => $controller->renderPartial('/contract/form',
                 array(
                     'organization' => $org,
-                    'model' => $model
+                    'model' => $model,
+                    'contractType' => $contractType,
+                    'action' => 'edit',
                 ),
                 true
             ),

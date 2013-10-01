@@ -6,6 +6,18 @@ $(document).ready(function(){
     $('button.add-signatory').on('click', showModal);
     $('button.add-signatory-contractor').on('click', showModal);
 
+    $('#Contract_additional_type_contract').change(function(){
+        var url = '/contract/';
+        if (window.contractAction == 'edit'){
+            url += window.contractAction + '/id/'+window.contractId + '?ctid='+$(this).val();
+        } else if (window.contractAction == 'add'){
+            url += window.contractAction + '/org_id/'+window.organizationId + '?ctid='+$(this).val();
+        } else {
+            return;
+        }
+        window.location.href = url;
+    });
+
     function del_signatory(){
         var type = $(this).data('type');
         if (type != 'organization_signatories' && type != 'contractor_signatories'){

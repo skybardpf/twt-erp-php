@@ -132,6 +132,9 @@ class SoapParseException extends CException{}
  *
  * Проекты (@class Project)
  * @method mixed listAdditionalProject(array $data)
+ *
+ * Шаблон контракта (@class ContractTemplate)
+ * @method mixed listTemplates(array $data)
  */
 class SoapComponent extends CApplicationComponent
 {

@@ -7,6 +7,7 @@
  * @var ContractController $this
  * @var Contract $model
  * @var ContractType $contractType
+ * @var ContractTemplate $contractTemplates
  * @var Organization $organization
  */
 ?>
@@ -14,6 +15,7 @@
 <?php
 Yii::app()->clientScript->registerScriptFile($this->asset_static.'/js/jquery.fileDownload.js');
 Yii::app()->clientScript->registerScriptFile($this->asset_static.'/js/legal/manage_files.js');
+Yii::app()->clientScript->registerScriptFile($this->asset_static.'/js/contract/download_template.js');
 
 echo '<h2>Договор</h2>';
 
@@ -378,6 +380,18 @@ if ($contractType->isShowAttribute('list_scans') && !empty($model->list_scans)) 
         ) . '<br/>';
     }
 }
+if ($contractType->isShowAttribute('list_templates') && !empty($contractTemplates)) {
+    echo '<h4>Шаблоны:</h4>';
+    foreach ($contractTemplates as $k=>$f) {
+        echo CHtml::link($f, '#', array(
+                'class' => 'download_template',
+                'data-template-id' => $k,
+            )
+        ) . '<br/>';
+    }
+}
+
+
 ?>
 <div id="preparing-file-modal" title="Подготовка файла..." style="display: none;">
     Подготавливается файл для скачивания, подождите...

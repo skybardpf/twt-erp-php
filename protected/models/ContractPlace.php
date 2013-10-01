@@ -61,6 +61,7 @@ class ContractPlace extends SOAPModel
     /**
      * Список мест заключения контрактов. Формат [key => name].
      * Результат сохранеятся в кеш.
+     * @param bool $forceCached
      * @return array
      */
     public function listNames($forceCached = false)
