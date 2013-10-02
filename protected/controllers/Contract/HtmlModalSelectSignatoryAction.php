@@ -12,13 +12,15 @@ class HtmlModalSelectSignatoryAction extends CAction
     public function run()
     {
         if (Yii::app()->request->isAjaxRequest) {
-            if (!isset($_POST['type']) || !in_array($_POST['type'], array('signatory', 'signatory_contractor'))){
+            $type = Yii::app()->request->getPost('type', '');
+            if (!in_array($type, array('organization_signatories', 'contractor_signatories'))){
                 echo 'Передан неизвестный тип подписанта';
                 Yii::app()->end();
             }
-            $data = Individual::getValues();
-            if (isset($_POST['ids']) && !empty($_POST['ids'])){
-                $sel = CJSON::decode($_POST['ids']);
+            $data = Individual::model()->listNames();
+            $ids = Yii::app()->request->getPost('ids');
+            if (!empty($ids)){
+                $sel = CJSON::decode($ids);
                 if ($sel !== null){
                     foreach ($sel as $k){
                         if (isset($data[$k])){
@@ -33,7 +35,7 @@ class HtmlModalSelectSignatoryAction extends CAction
                 '/contract/_form_select_signatory',
                 array(
                     'data' => $data,
-                    'type' => $_POST['type']
+                    'type' => $type,
                 ),
                 false
             );

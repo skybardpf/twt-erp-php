@@ -27,6 +27,7 @@
         'type' => 'striped bordered condensed',
         'dataProvider' => new CArrayDataProvider($data),
         'template' => "{items} {pager}",
+        'htmlOptions'=> array('style' => 'font-size:12px;'),
         'columns' => array(
             array(
                 'name' => 'number',

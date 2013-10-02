@@ -17,7 +17,7 @@ Yii::app()->clientScript->registerScriptFile($this->asset_static . '/js/legal/ma
 $form = $this->beginWidget('bootstrap.widgets.MTbActiveForm', array(
 	'id'    => 'horizontalForm',
     'type' => 'horizontal',
-    'enableAjaxValidation' => false,
+    'enableAjaxValidation' => true,
     'clientOptions' => array(
         'validateOnChange' => true,
     ),
@@ -186,8 +186,6 @@ echo $this->renderPartial('/_files/grid_files',
     true
 );
 ?>
-
-
 </fieldset>
 
 <?php

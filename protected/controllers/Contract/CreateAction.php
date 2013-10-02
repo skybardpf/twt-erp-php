@@ -19,9 +19,17 @@ class CreateAction extends CAction
         $controller = $this->controller;
         $controller->pageTitle .= ' | Создание договора';
 
+        $contractTypeId = Yii::app()->request->getQuery('ctid');
         $org = Organization::model()->findByPk($org_id, $controller->getForceCached());
         $model = new Contract();
         $model->contractor_id = $org->primaryKey;
+
+        if (empty($contractTypeId)){
+            $contractType = new ContractType();
+        } else {
+            $model->additional_type_contract = $contractTypeId;
+            $contractType = ContractType::model()->findByPk($model->additional_type_contract);
+        }
 
         if (isset($_POST[get_class($model)])) {
             $model->setAttributes($_POST[get_class($model)]);
@@ -36,18 +44,18 @@ class CreateAction extends CAction
             }
         }
 
-        // TODO только для тестов. Потом убрать. Здесь должен быть массив. Сейчас строка.
-        $model->organization_signatories = array('0000000033', '0000000044');
-        $model->contractor_signatories = array('0000000038', '0000000054');
-
         $model->json_organization_signatories = CJSON::encode($model->organization_signatories);
         $model->json_contractor_signatories = CJSON::encode($model->contractor_signatories);
+        $model->json_exists_documents = CJSON::encode($model->list_documents);
+        $model->json_exists_scans = CJSON::encode($model->list_scans);
 
         $controller->render('/organization/show', array(
             'content' => $controller->renderPartial('/contract/form',
                 array(
                     'organization' => $org,
-                    'model' => $model
+                    'model' => $model,
+                    'contractType' => $contractType,
+                    'action' => 'add',
                 ), true),
             'organization' => $org,
             'cur_tab' => 'contract',

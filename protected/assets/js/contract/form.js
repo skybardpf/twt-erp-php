@@ -6,9 +6,21 @@ $(document).ready(function(){
     $('button.add-signatory').on('click', showModal);
     $('button.add-signatory-contractor').on('click', showModal);
 
+    $('#Contract_additional_type_contract').change(function(){
+        var url = '/contract/';
+        if (window.contractAction == 'edit'){
+            url += window.contractAction + '/id/'+window.contractId + '?ctid='+$(this).val();
+        } else if (window.contractAction == 'add'){
+            url += window.contractAction + '/org_id/'+window.organizationId + '?ctid='+$(this).val();
+        } else {
+            return;
+        }
+        window.location.href = url;
+    });
+
     function del_signatory(){
         var type = $(this).data('type');
-        if (type != 'signatory' && type != 'signatory_contractor'){
+        if (type != 'organization_signatories' && type != 'contractor_signatories'){
             return false;
         }
         var local = $(this);
@@ -26,13 +38,17 @@ $(document).ready(function(){
                     Loading.show();
 
                     var id = local.data('id');
-                    var json, button_add;
-                    if (type == 'signatory'){
-                        json = $('#Contract_json_signatory');
+                    var json, button_add, table;
+                    if (type == 'organization_signatories'){
+                        json = $('#Contract_json_organization_signatories');
+                        table = $('#Contract_signatory');
                         button_add = $('.add-signatory');
-                    } else {
-                        json = $('#Contract_json_signatory_contractor');
+                    } else if (type == 'contractor_signatories') {
+                        json = $('#Contract_json_contractor_signatories');
+                        table = $('#Contract_signatory_contr');
                         button_add = $('.add-signatory-contractor');
+                    } else {
+                        return false;
                     }
                     var persons = eval(json.val());
                     var ind = persons.indexOf(id);
@@ -42,12 +58,19 @@ $(document).ready(function(){
                         local.parents('tr').remove();
                     }
 
-                    if (persons.length < 2){
-                        button_add.removeClass('hide');
+                    if (table.find('tr').size() == 1){
+                        table.find('tbody').append(
+                            '<tr>' +
+                            '<td colspan="2" class="empty">' +
+                            '<span class="empty">Нет результатов.</span>' +
+                            '</td>' +
+                            '</tr>'
+                        );
                     }
 
                     Loading.hide();
                     dialog.dialog('destroy');
+                    return false;
                 }
             },{
                 text: 'Отмена',
@@ -63,23 +86,20 @@ $(document).ready(function(){
      */
     function showModal(){
         var type = $(this).data('type');
-
-        if (type != 'signatory' && type != 'signatory_contractor'){
-            return false;
-        }
         var ids = [];
-        if (type == 'signatory'){
-            ids = $('#Contract_json_signatory').val()
+        if (type == 'organization_signatories'){
+            ids = $('#Contract_json_organization_signatories').val()
+        } else if (type == 'contractor_signatories'){
+            ids = $('#Contract_json_contractor_signatories').val()
         } else {
-            ids = $('#Contract_json_signatory_contractor').val()
+            return false;
         }
 
         Loading.show();
-
         $.ajax({
             type: 'POST',
             dataType: "html",
-            url: "/legal/contract/_html_modal_select_signatory/",
+            url: "/contract/_html_modal_select_signatory/",
             cache: false,
             data: {
                 ids: ids,
@@ -112,15 +132,12 @@ $(document).ready(function(){
             return false;
         }
         var type = $('#form-select-signatory').data('type');
-        if (type != 'signatory' && type != 'signatory_contractor'){
-            return false;
-        }
         var name = sel.html();
 
         $.ajax({
             type: 'POST',
             dataType: "html",
-            url: "/legal/contract/_html_row_signatory/",
+            url: "/contract/_html_row_signatory/",
             cache: false,
             data: {
                 id: pid,
@@ -129,15 +146,18 @@ $(document).ready(function(){
             }
         }).done(function(data) {
             var table, json, button;
-            if (type == 'signatory'){
-                json = $('#Contract_json_signatory');
+            if (type == 'organization_signatories'){
+                json = $('#Contract_json_organization_signatories');
                 table = $('#Contract_signatory');
                 button = $('.add-signatory');
-            } else {
-                json = $('#Contract_json_signatory_contractor');
+            } else if (type == 'contractor_signatories') {
+                json = $('#Contract_json_contractor_signatories');
                 table = $('#Contract_signatory_contr');
                 button = $('.add-signatory-contractor');
+            } else {
+                return false;
             }
+
             var persons = eval(json.val());
             var ind = persons.indexOf(pid);
             if (ind == -1){
@@ -145,15 +165,16 @@ $(document).ready(function(){
             }
             json.val($.toJSON(persons));
 
+            if (table.find('.empty')){
+                table.find('.empty').parents('tr').remove();
+            }
             var number = ((table.find('tr').size())%2 === 0) ? 'even' : 'odd';
             var html = '<tr class="'+number+'">'+data+'</tr>';
 
             table.find('tbody').append(html);
             $('.del-signatory').off('click').on('click', del_signatory);
 
-            if (persons.length >= 2){
-                button.addClass('hide');
-            }
+            return false;
 
         }).fail(function(a, ret, message) {
 

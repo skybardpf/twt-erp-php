@@ -12,6 +12,11 @@ class HtmlRowSignatoryAction extends CAction
     public function run()
     {
         if (Yii::app()->request->isAjaxRequest) {
+            $type = Yii::app()->request->getPost('type', '');
+            if (!in_array($type, array('organization_signatories', 'contractor_signatories'))){
+                echo 'Передан неизвестный тип подписанта';
+                Yii::app()->end();
+            }
             if (!isset($_POST['id']) || empty($_POST['id'])){
                 echo 'Не указан идентификатор подписанта';
                 Yii::app()->end();
@@ -20,17 +25,13 @@ class HtmlRowSignatoryAction extends CAction
                 echo 'Не указано ФИО подписанта';
                 Yii::app()->end();
             }
-            if (!isset($_POST['type']) || !in_array($_POST['type'], array('signatory', 'signatory_contractor'))){
-                echo 'Передан неизвестный тип подписанта';
-                Yii::app()->end();
-            }
 
             $this->controller->renderPartial(
                 '/contract/_new_row_signatory',
                 array(
                     'id' => $_POST['id'],
                     'name' => $_POST['name'],
-                    'type' => $_POST['type']
+                    'type' => $type,
                 ),
                 false
             );

@@ -20,6 +20,7 @@ class ContractController extends Controller{
             'edit' => 'application.controllers.Contract.UpdateAction',
             'add' => 'application.controllers.Contract.CreateAction',
             'delete' => 'application.controllers.Contract.DeleteAction',
+            'download_template' => 'application.controllers.Contract.DownloadTemplateAction',
 
             '_html_modal_select_signatory' => 'application.controllers.Contract.HtmlModalSelectSignatoryAction',
             '_html_row_signatory' => 'application.controllers.Contract.HtmlRowSignatoryAction',
