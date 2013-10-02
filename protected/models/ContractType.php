@@ -165,7 +165,7 @@ class ContractType extends ContractAbstract
         $this->percentage_liability = self::STATUS_SHOW;
         $this->percentage_turnover = self::STATUS_SHOW;
         $this->period_of_notice = self::STATUS_SHOW;
-        $this->place_of_contract = self::STATUS_SHOW;
+        $this->place_contract = self::STATUS_SHOW;
         $this->point_departure = self::STATUS_SHOW;
         $this->prolongation_a_treaty = self::STATUS_SHOW;
         $this->purpose_use = self::STATUS_SHOW;

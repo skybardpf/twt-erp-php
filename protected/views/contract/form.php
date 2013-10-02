@@ -556,8 +556,8 @@ if ($model->hasErrors()) {
         <?php
     }
 
-    if ($contractType->isShowAttribute('place_of_contract'))
-        echo $form->dropDownListRow($model, 'place_of_contract', ContractPlace::model()->listNames($this->getForceCached()));
+    if ($contractType->isShowAttribute('place_contract'))
+        echo $form->dropDownListRow($model, 'place_contract', ContractPlace::model()->listNames($this->getForceCached()));
     if ($contractType->isShowAttribute('point_departure'))
         echo $form->textFieldRow($model, 'point_departure');
     if ($contractType->isShowAttribute('purpose_use'))
