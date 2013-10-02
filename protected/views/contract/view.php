@@ -111,7 +111,7 @@ $arr = array(
     'percentage_liability',
     'percentage_turnover',
     'period_of_notice',
-    'place_of_contract',
+    'place_contract',
     'point_departure',
     'prolongation_a_treaty',
     'purpose_use',

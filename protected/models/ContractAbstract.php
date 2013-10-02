@@ -70,7 +70,7 @@
  * @property string $percentage_liability
  * @property string $percentage_turnover
  * @property string $period_of_notice
- * @property string $place_of_contract
+ * @property string $place_contract
  * @property string $point_departure
  * @property string $prolongation_a_treaty
  * @property string $purpose_use
@@ -183,7 +183,7 @@ abstract class ContractAbstract extends SOAPModel
             'percentage_liability',
             'percentage_turnover',
             'period_of_notice',
-            'place_of_contract',
+            'place_contract',
             'point_departure',
             'prolongation_a_treaty',
             'purpose_use',
@@ -288,7 +288,7 @@ abstract class ContractAbstract extends SOAPModel
             'percentage_liability' => 'Процент ответственности',
             'percentage_turnover' => 'Процент с оборота',
             'period_of_notice' => 'Срок уведомления',
-            'place_of_contract' => 'Место заключения договора',
+            'place_contract' => 'Место заключения договора',
             'point_departure' => 'Пункт отправления',
             'prolongation_a_treaty' => 'Пролонгация договора',
             'purpose_use' => 'Назначение использования',

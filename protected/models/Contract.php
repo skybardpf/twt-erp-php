@@ -184,20 +184,21 @@ class Contract extends ContractAbstract
         $this->country_imports = 'Null';
         $this->country_exportation = 'Null';
         $this->country_applicable_law = 'Null';
-        $this->currency_id = 'Null';
         $this->currency_payment_contract = 'Null';
         $this->type_extension = 'Null';
-        $this->type_contract = 'Null';
-        $this->maintaining_mutual = 'Null';
+
         $this->kind_of_contract = 'Null';
         $this->incoterm = 'Null';
-        $this->contractor_id = 'Null';
         $this->additional_third_party = 'Null';
         $this->additional_project = 'Null';
         $this->additional_charge_contract = 'Null';
         $this->signatory_contractor = 'Null';
         $this->account_counterparty = 'Null';
-        $this->place_of_contract = 'Null';
+        $this->place_contract = 'Null';
+
+        $this->currency_id = '643'; // RUB
+        $this->type_contract = 'Прочее';
+        $this->maintaining_mutual = 'ПоДоговоруВЦелом';
 
         $this->organization_signatories = array();
         $this->contractor_signatories = array();
@@ -393,7 +394,7 @@ class Contract extends ContractAbstract
                     'usage_purpose',
                     'purpose_use',
                     'registration_number_mortgage',
-                    'place_of_contract',
+                    'place_contract',
                     'point_departure',
                 ),
                 'params' => array(
@@ -528,7 +529,7 @@ class Contract extends ContractAbstract
             array(
                 'validator' => 'in',
                 'attributes' => array(
-                    'place_of_contract',
+                    'place_contract',
                 ),
                 'params' => array(
                     'range' => array_keys(ContractPlace::model()->listNames($this->getForceCached()))
@@ -601,13 +602,6 @@ class Contract extends ContractAbstract
         unset($data['organization_signatories']);
         unset($data['contractor_signatories']);
 
-
-
-        // TODO убрать
-//        unset($data['place_of_contract']);
-//        $data["responsible_contract_id"] = "0000000067";
-        /////////////////////////
-
         $list_scans = array();
         $list_files = array();
         $id = ($this->primaryKey) ? $this->primaryKey : 'tmp_id';
@@ -628,6 +622,8 @@ class Contract extends ContractAbstract
         $list_scans = array_merge($list_scans, $this->list_scans);
         $list_files = (empty($list_files)) ? array('Null') : $list_files;
         $list_scans = (empty($list_scans)) ? array('Null') : $list_scans;
+
+        $data['responsible_contract_id'] = "0000000067";
 
         $ret = $this->SOAP->saveContract(array(
             'data' => SoapComponent::getStructureElement($data),
