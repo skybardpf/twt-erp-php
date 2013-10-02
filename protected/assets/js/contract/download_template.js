@@ -13,14 +13,19 @@ $(document).ready(function(){
             url: url,
             cache: false
         }).done(function(data) {
-                console.log(data);
-            }).fail(function(a, ret, message) {
+            console.log(data);
+            if (!data.success){
+                alert(data.message);
+            } else {
+                download_template('/site/download/path/'+data.path);
+            }
 
-            }).always(function(){
-                Loading.hide();
-            });
+        }).fail(function(a, ret, message) {
 
-
+        }).always(function(){
+            Loading.hide();
+        });
+        return false;
     });
 
     function download_template(url){

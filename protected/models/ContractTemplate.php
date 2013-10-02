@@ -4,6 +4,7 @@
  * @author Skibardin A.A. <webprofi1983@gmail.com>
  *
  * @property string $name
+ * @property string $path
  */
 class ContractTemplate extends SOAPModel
 {
@@ -41,13 +42,18 @@ class ContractTemplate extends SOAPModel
      */
     public function findByPk($contractId, $contractTemplateId, $forceCached = false)
     {
-        $cache_id = __CLASS__ . self::PREFIX_CACHE_MODEL_PK . $id;
+        $cache_id = __CLASS__ . self::PREFIX_CACHE_MODEL_PK . $contractId . '_' . $contractTemplateId;
         if ($forceCached || ($model = Yii::app()->cache->get($cache_id)) === false) {
-            $ret = $this->SOAP->getContracts(array('id' => $id));
+            $ret = $this->SOAP->getTemplate(
+                array(
+                    'id_template' => $contractTemplateId,
+                    'id_contract' => $contractId,
+                )
+            );
             $ret = SoapComponent::parseReturn($ret);
             $model = $this->publish_elem(current($ret), __CLASS__);
             if ($model === null)
-                throw new CHttpException(404, 'Не найден договор');
+                throw new CHttpException(404, 'Не найден шаблон договора');
             Yii::app()->cache->set($cache_id, $model);
         }
         return $model;
@@ -61,7 +67,7 @@ class ContractTemplate extends SOAPModel
         return array(
             'id',
             'name',
-            'link'
+            'path'
         );
     }
 

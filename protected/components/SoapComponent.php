@@ -135,6 +135,7 @@ class SoapParseException extends CException{}
  *
  * Шаблон контракта (@class ContractTemplate)
  * @method mixed listTemplates(array $data)
+ * @method mixed getTemplate(array $data)
  */
 class SoapComponent extends CApplicationComponent
 {
@@ -293,6 +294,11 @@ class SoapComponent extends CApplicationComponent
 				}
 				if (YII_DEBUG) {
 					$time = microtime(true) - $time;
+//                    var_dump('function ' . $name . ' in '.$time.' seconds with data: ' .
+//                    (defined('JSON_UNESCAPED_UNICODE')
+//                        ? json_encode($ret, JSON_UNESCAPED_UNICODE)
+//                        : preg_replace('#\\\\u([0-9a-f]{4})#se','iconv("UTF-16BE","UTF-8",pack("H4","$1"))',json_encode($ret))
+//                    ));die;
                     Yii::log(
 						'function ' . $name . ' in '.$time.' seconds with data: ' .
 							(defined('JSON_UNESCAPED_UNICODE')

@@ -13,6 +13,20 @@ class DownloadTemplateAction extends CAction
      */
     public function run($id, $tid)
     {
-
+        try {
+            $template = ContractTemplate::model()->findByPk($id, $tid, true);
+            echo CJSON::encode(array(
+                    'success' => true,
+                    'path' => TemplateLibraryGroup::decodePath($template->path),
+                    'dpath' => $template->path,
+                )
+            );
+        } catch(CException $e){
+            echo CJSON::encode(array(
+                    'success' => false,
+                    'message' => $e->getMessage(),
+                )
+            );
+        }
     }
 }

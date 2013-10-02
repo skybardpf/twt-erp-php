@@ -596,10 +596,12 @@ class Contract extends ContractAbstract
 
         unset($data['list_scans']);
         unset($data['list_documents']);
+        unset($data['list_templates']);
+
         unset($data['organization_signatories']);
         unset($data['contractor_signatories']);
 
-        unset($data['list_templates']);
+
 
         // TODO убрать
 //        unset($data['place_of_contract']);
@@ -690,7 +692,6 @@ class Contract extends ContractAbstract
     {
         return array_merge(
             array(
-                'id' => 'Номер',
                 'name' => 'Название',
             ),
             parent::attributeLabels()
