@@ -23,6 +23,7 @@ class DownloadAction extends CAction
             echo 'Not found';
             Yii::app()->end(404);
         }
+        header('Set-Cookie: fileDownload=true; path=/');
         Yii::app()->request->sendFile(basename($path), file_get_contents($path));
     }
 }

@@ -13,7 +13,6 @@ $(document).ready(function(){
             url: url,
             cache: false
         }).done(function(data) {
-            console.log(data);
             if (!data.success){
                 alert(data.message);
             } else {

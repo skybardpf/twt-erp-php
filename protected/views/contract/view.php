@@ -128,6 +128,11 @@ $arr = array(
 $attributes = array(
     'name',
     $attributes[] = array(
+        'name' => 'le_id',
+        'label' => 'Владелец',
+        'value' => (isset($contractors[$model->le_id])) ? $contractors[$model->le_id] : '---'
+    ),
+    $attributes[] = array(
         'name' => 'additional_type_contract',
         'label' => 'Вид договора',
         'value' => (isset($contractTypes[$model->additional_type_contract])) ? $contractTypes[$model->additional_type_contract] : '---'

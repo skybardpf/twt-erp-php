@@ -93,6 +93,7 @@ if ($model->hasErrors()) {
     $data_documents = array();
 
     echo $form->textFieldRow($model, 'name');
+    echo $form->dropDownListRow($model, 'le_id', $contractors);
     echo $form->dropDownListRow($model, 'additional_type_contract', $contractTypes);
 
     if ($contractType->isShowAttribute('account_counterparty'))
@@ -211,7 +212,6 @@ if ($model->hasErrors()) {
         </div>
         <?php
     }
-
 
     /**
      * Генерируем таблицу для отображения подписантов контрагента
