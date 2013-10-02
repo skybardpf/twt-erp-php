@@ -60,6 +60,7 @@ $kindsOfContract = Contract::getKindsOfContract();
 $maintainingMutual = Contract::getMaintainingMutual();
 $prolongationTypes = Contract::getProlongationTypes();
 $typesAgreementsAccounts = Contract::getTypesAgreementsAccounts();
+$contractPlaces = ContractPlace::model()->listNames($this->getForceCached());
 
 $arr = array(
     'address_object',
@@ -111,7 +112,6 @@ $arr = array(
     'percentage_liability',
     'percentage_turnover',
     'period_of_notice',
-    'place_contract',
     'point_departure',
     'prolongation_a_treaty',
     'purpose_use',
@@ -155,6 +155,13 @@ if ($contractType->isShowAttribute('account_payment_contract')){
         'name' => 'account_payment_contract',
         'label' => 'Расчетный счет платежа по договору',
         'value' => (isset($settlementAccountNames[$model->account_payment_contract])) ? $settlementAccountNames[$model->account_payment_contract] : '---'
+    );
+}
+if ($contractType->isShowAttribute('place_contract')){
+    $attributes[] = array(
+        'name' => 'place_contract',
+        'label' => 'Место заключения договора',
+        'value' => (isset($contractPlaces[$model->place_contract])) ? $contractPlaces[$model->place_contract] : '---'
     );
 }
 if ($contractType->isShowAttribute('additional_charge_contract')){

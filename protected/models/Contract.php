@@ -8,6 +8,7 @@
  * @property string     $name
  * @property boolean    $deleted
  * @property string     $additional_type_contract
+ * @property string     $le_id
  *
  * @property array      $organization_signatories
  * @property array      $contractor_signatories
@@ -622,8 +623,6 @@ class Contract extends ContractAbstract
         $list_scans = array_merge($list_scans, $this->list_scans);
         $list_files = (empty($list_files)) ? array('Null') : $list_files;
         $list_scans = (empty($list_scans)) ? array('Null') : $list_scans;
-
-        $data['responsible_contract_id'] = "0000000067";
 
         $ret = $this->SOAP->saveContract(array(
             'data' => SoapComponent::getStructureElement($data),
