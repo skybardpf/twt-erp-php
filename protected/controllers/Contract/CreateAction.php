@@ -30,9 +30,36 @@ class CreateAction extends CAction
             $model->additional_type_contract = $contractTypeId;
             $contractType = ContractType::model()->findByPk($model->additional_type_contract);
         }
+        $model->makeRules($contractType);
 
-        if (isset($_POST[get_class($model)])) {
-            $model->setAttributes($_POST[get_class($model)]);
+        $class_name = get_class($model);
+
+        if(isset($_POST['ajax']) && $_POST['ajax']==='form-contract') {
+            $model->organization_signatories = CJSON::decode($_POST[$class_name]['json_organization_signatories']);
+            $model->contractor_signatories = CJSON::decode($_POST[$class_name]['json_contractor_signatories']);
+
+            echo CActiveForm::validate($model);
+            Yii::app()->end();
+        }
+
+        $data = Yii::app()->request->getPost($class_name);
+        if ($data) {
+            $model->setAttributes($data);
+
+            $json = CJSON::decode($model->json_organization_signatories);
+            if ($json !== null)
+                $model->organization_signatories = $json;
+            $json = CJSON::decode($model->json_contractor_signatories);
+            if ($json !== null)
+                $model->contractor_signatories = $json;
+
+            if ($model->validate('json_exists_documents'))
+                $model->list_documents = CJSON::decode($model->json_exists_documents);
+            if ($model->validate('json_exists_scans'))
+                $model->list_scans = CJSON::decode($model->json_exists_scans);
+
+            $model->upload_scans = CUploadedFile::getInstancesByName('upload_scans');
+            $model->upload_documents = CUploadedFile::getInstancesByName('upload_documents');
 
             if ($model->validate()) {
                 try {
