@@ -18,7 +18,6 @@ class DownloadTemplateAction extends CAction
             echo CJSON::encode(array(
                     'success' => true,
                     'path' => TemplateLibraryGroup::decodePath($template->path),
-                    'dpath' => $template->path,
                 )
             );
         } catch(CException $e){

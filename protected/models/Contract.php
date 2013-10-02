@@ -678,6 +678,7 @@ class Contract extends ContractAbstract
                 'id', // string
                 'deleted', // bool
                 'name', // string
+                'le_id', // string
                 'additional_type_contract',
             ),
             parent::attributeNames()
@@ -693,6 +694,7 @@ class Contract extends ContractAbstract
         return array_merge(
             array(
                 'name' => 'Название',
+                'le_id' => 'Владелец',
             ),
             parent::attributeLabels()
         );
@@ -706,6 +708,9 @@ class Contract extends ContractAbstract
         return array(
             array('name', 'required'),
             array('name', 'length', 'max' => 50),
+
+            array('le_id', 'required'),
+            array('le_id', 'in', 'range' => array_keys(Contractor::model()->getListNames($this->forceCached))),
 
             array('
                 json_organization_signatories,
