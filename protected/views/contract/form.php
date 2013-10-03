@@ -369,6 +369,19 @@ if ($model->hasErrors()) {
         </div>
         <?php
     }
+    if ($contractType->isShowAttribute('period_of_notice')){
+        ?>
+        <div class="control-group">
+            <?= $form->labelEx($model, 'period_of_notice', array('class' => 'control-label')); ?>
+            <div class="controls">
+                <?php
+                echo CHtml::activeNumberField($model, 'period_of_notice');
+                echo $form->error($model, 'period_of_notice');
+                ?>
+            </div>
+        </div>
+    <?php
+    }
 
     if ($contractType->isShowAttribute('incoterm'))
         echo $form->dropDownListRow($model, 'incoterm', $incoterms);
@@ -538,25 +551,6 @@ if ($model->hasErrors()) {
                 <?php
                 echo CHtml::activeNumberField($model, 'prolongation_a_treaty');
                 echo $form->error($model, 'prolongation_a_treaty');
-                ?>
-            </div>
-        </div>
-        <?php
-    }
-
-    if ($contractType->isShowAttribute('period_of_notice')){
-        ?>
-        <div class="control-group">
-            <?= $form->labelEx($model, 'period_of_notice', array('class' => 'control-label')); ?>
-            <div class="controls">
-                <?php
-                $this->widget('zii.widgets.jui.CJuiDatePicker', array_merge(
-                    array(
-                        'model' => $model,
-                        'attribute' => 'period_of_notice'
-                    ), $jui_date_options
-                ));
-                echo $form->error($model, 'period_of_notice');
                 ?>
             </div>
         </div>

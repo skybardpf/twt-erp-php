@@ -169,7 +169,6 @@ class Contract extends ContractAbstract
                     'date',
                     'maturity_date_loan',
                     'pay_day',
-                    'period_of_notice',
                 ),
                 'params' => array(
                     'format' => 'yyyy-MM-dd'
@@ -181,6 +180,7 @@ class Contract extends ContractAbstract
                 'attributes' => array(
                     'guarantee_period',
                     'notice_period_contract',
+                    'period_of_notice',
                     'number_specialists',
                     'one_number_shares',
                     'paying_storage_month',
