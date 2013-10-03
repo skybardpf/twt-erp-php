@@ -209,6 +209,9 @@ class ContractType extends ContractAbstract
      */
     public function findByPk($id, $forceCached = false)
     {
+        if (empty($id))
+            throw new CHttpException(500, 'В договоре не указан идентификатор вида договора');
+
         $cache_id = __CLASS__ . self::PREFIX_CACHE_MODEL_PK . $id;
         if ($forceCached || ($model = Yii::app()->cache->get($cache_id)) === false) {
             $model = $this->SOAP->getContractTypes(
