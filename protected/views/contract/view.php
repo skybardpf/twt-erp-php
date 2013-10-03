@@ -38,7 +38,7 @@ if (!$model->deleted) {
             'data-question' => 'Вы уверены, что хотите удалить договор?',
             'data-title' => 'Удаление договора',
             'data-url' => $this->createUrl('delete', array('id' => $model->primaryKey)),
-            'data-redirect_url' => $this->createUrl('list', array('id' => $model->contractor_id)),
+            'data-redirect_url' => $this->createUrl('list', array('org_id' => $model->contractor_id)),
             'data-delete_item_element' => '1'
         )
     ));

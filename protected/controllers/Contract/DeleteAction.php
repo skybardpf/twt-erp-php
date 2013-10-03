@@ -22,7 +22,7 @@ class DeleteAction extends CAction
         /**
          * @var $model Contract
          */
-        $model = $controller->loadModel($id);
+        $model = Contract::model()->findByPk($id, $controller->getForceCached());
 
         if (Yii::app()->request->isAjaxRequest) {
             $ret = array();
