@@ -79,6 +79,19 @@ class ContractType extends ContractAbstract
     }
 
     /**
+     * Очистка кеша.
+     */
+    public function clearCache()
+    {
+        $class = get_class($this);
+        $cache = Yii::app()->cache;
+        if ($this->primaryKey)
+            $cache->delete($class . self::PREFIX_CACHE_MODEL_PK . $this->primaryKey);
+        $cache->delete($class . self::PREFIX_CACHE_LIST_MODELS);
+        $cache->delete($class . self::PREFIX_CACHE_LIST_NAMES);
+    }
+
+    /**
      * @static
      * @return array
      */
