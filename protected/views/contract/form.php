@@ -104,8 +104,12 @@ if ($model->hasErrors()) {
         echo $form->dropDownListRow($model, 'additional_charge_contract', $individuals);
     if ($contractType->isShowAttribute('additional_project'))
         echo $form->dropDownListRow($model, 'additional_project', $projects);
-    if ($contractType->isShowAttribute('additional_third_party'))
-        echo $form->dropDownListRow($model, 'additional_third_party', $contractors);
+    if ($contractType->isShowAttribute('additional_third_party')){
+        $third_contractors = $contractors;
+        $third_contractors[''] = '--- Не указан ---';
+        echo $form->dropDownListRow($model, 'additional_third_party', $third_contractors);
+    }
+
     if ($contractType->isShowAttribute('address_object'))
         echo $form->textFieldRow($model, 'address_object');
     if ($contractType->isShowAttribute('address_warehouse'))

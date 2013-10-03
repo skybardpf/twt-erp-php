@@ -624,6 +624,8 @@ class Contract extends ContractAbstract
         $list_files = (empty($list_files)) ? array('Null') : $list_files;
         $list_scans = (empty($list_scans)) ? array('Null') : $list_scans;
 
+        $data['additional_third_party'] = empty($data['additional_third_party']) ? 'Null' : $data['additional_third_party'];
+
         $ret = $this->SOAP->saveContract(array(
             'data' => SoapComponent::getStructureElement($data),
             'list_documents' => $list_files,
