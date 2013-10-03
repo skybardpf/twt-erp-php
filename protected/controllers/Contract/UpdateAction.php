@@ -66,7 +66,7 @@ class UpdateAction extends CAction
                         )
                     ));
                 } catch (Exception $e) {
-                    $model->addError('id', '<pre>'.$e->getMessage() . '<br/>' . $e->getTraceAsString().'</pre>');
+                    $model->addError('id', $e->getMessage());
                 }
             }
         }
