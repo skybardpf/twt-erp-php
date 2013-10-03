@@ -100,6 +100,9 @@ if ($model->hasErrors()) {
         echo $form->dropDownListRow($model, 'account_counterparty', $settlementAccountNames);
     if ($contractType->isShowAttribute('account_payment_contract'))
         echo $form->dropDownListRow($model, 'account_payment_contract', $settlementAccountNames);
+    if ($contractType->isShowAttribute('calculated_third'))
+        echo $form->dropDownListRow($model, 'calculated_third', $settlementAccountNames);
+
     if ($contractType->isShowAttribute('additional_charge_contract'))
         echo $form->dropDownListRow($model, 'additional_charge_contract', $individuals);
     if ($contractType->isShowAttribute('additional_project'))
@@ -109,6 +112,7 @@ if ($model->hasErrors()) {
         $third_contractors[''] = '--- Не указан ---';
         echo $form->dropDownListRow($model, 'additional_third_party', $third_contractors);
     }
+
 
     if ($contractType->isShowAttribute('address_object'))
         echo $form->textFieldRow($model, 'address_object');
@@ -136,8 +140,7 @@ if ($model->hasErrors()) {
         echo $form->textFieldRow($model, 'amount_security_deposit');
     if ($contractType->isShowAttribute('amount_transportation'))
         echo $form->textFieldRow($model, 'amount_transportation');
-    if ($contractType->isShowAttribute('calculated_third'))
-        echo $form->textFieldRow($model, 'calculated_third');
+
     if ($contractType->isShowAttribute('comment'))
         echo $form->textFieldRow($model, 'comment');
     if ($contractType->isShowAttribute('commission'))

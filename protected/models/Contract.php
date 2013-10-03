@@ -39,148 +39,6 @@ class Contract extends ContractAbstract
      */
     protected function afterConstruct()
     {
-        /*
-        $this->_rules = array(
-            array('name', 'required'),
-            array('name', 'length', 'max' => 50),
-
-            array(
-                'organization_signatories,
-                contractor_signatories',
-
-                'validSignatory'
-            ),
-
-            array('
-                json_organization_signatories,
-                json_contractor_signatories
-                json_exists_documents
-                json_exists_scans',
-
-                'validJson'
-            ),
-
-            array('validity,
-                date,
-                maturity_date_loan,
-                pay_day,
-                period_of_notice,',
-
-                'date', 'format' => 'yyyy-MM-dd'
-            ),
-
-            array('guarantee_period,
-                notice_period_contract,
-                number_specialists,
-                one_number_shares,
-                paying_storage_month,
-                payment_loading,
-                percentage_liability,
-                percentage_turnover,
-                prolongation_a_treaty,
-                sum_payments_per_month,
-                two_number_of_shares,',
-
-                'numerical', 'integerOnly' => true, 'min' => 0, 'max' => 9999999999999
-            ),
-
-            array('
-                control_amount_debt,
-                control_number_days,
-                invalid,
-                keep_reserve_without_paying,
-                separat_records_goods,',
-
-                'boolean'
-            ),
-
-            array('address_object,
-                address_warehouse,
-                allowable_amount_of_debt,
-                allowable_number_of_days,
-                amount_charges,
-                amount_contract,
-                amount_insurance,
-                amount_liability,
-                amount_marketing_support,
-                amount_other_services,
-                amount_property_insurance,
-                amount_security_deposit,
-                amount_transportation,
-                calculated_third,
-                comment,
-                commission,
-                description_goods,
-                description_leased,
-                description_work,
-                destination,
-                interest_book_value,
-                interest_guarantee,
-                interest_loan,
-                location_court,
-                method_providing,
-                name_title_deed,
-                number,
-                number_days_without_payment,
-                number_hours_services,
-                number_locations,
-                number_of_months,
-                number_right_property,
-                object_address_leased,
-                view_buyer,
-                view_one_shares,
-                view_two_shares,
-                unit_storage,
-                usage_purpose,
-                purpose_use,
-                registration_number_mortgage,
-                place_of_contract,
-                point_departure,',
-
-                'length', 'max' => 100
-            ),
-
-            array('country_applicable_law,
-                country_exportation,
-                country_imports,
-                country_service_product',
-
-                'in', 'range' => array_keys(Country::model()->listNames($this->forceCached))
-            ),
-
-            array('currency_id, currency_payment_contract',
-                'in', 'range' => array_keys(Currency::model()->listNames($this->forceCached))
-            ),
-
-            array('type_extension', 'in', 'range' => array_keys(Contract::getProlongationTypes())),
-            array('type_contract', 'in', 'range' => array_keys(Contract::getTypesAgreementsAccounts())),
-
-            array('maintaining_mutual', 'in', 'range' => array_keys(Contract::getMaintainingMutual())),
-
-            array('kind_of_contract', 'in', 'range' => array_keys(Contract::getKindsOfContract())),
-
-            array('incoterm', 'in', 'range' => array_keys(Incoterm::model()->listNames($this->forceCached))),
-
-            array('contractor_id', 'in', 'range' => array_keys(Organization::model()->getListNames($this->forceCached))),
-
-            array('additional_type_contract', 'in', 'range' => array_keys(ContractType::model()->listNames($this->forceCached))),
-
-            array('additional_third_party', 'in', 'range' => array_keys(Contractor::model()->getListNames($this->forceCached))),
-
-            array('additional_project', 'in', 'range' => array_keys(Project::model()->listNames($this->forceCached))),
-
-            array('additional_charge_contract,
-                signatory_contractor,',
-
-                'in', 'range' => array_keys(Individual::model()->listNames($this->forceCached))
-            ),
-
-            array('account_counterparty, account_payment_contract', 'in', 'range' => array_keys(SettlementAccount::model()->listNames($this->forceCached))),
-
-            array('place_of_contract', 'in', 'range' => array_keys(ContractPlace::model()->listNames($this->getForceCached()))),
-        );
-*/
-
         $this->country_service_product = 'Null';
         $this->country_imports = 'Null';
         $this->country_exportation = 'Null';
@@ -368,7 +226,6 @@ class Contract extends ContractAbstract
                     'amount_property_insurance',
                     'amount_security_deposit',
                     'amount_transportation',
-                    'calculated_third',
                     'comment',
                     'commission',
                     'description_goods',
@@ -522,6 +379,7 @@ class Contract extends ContractAbstract
                 'attributes' => array(
                     'account_counterparty',
                     'account_payment_contract',
+                    'calculated_third',
                 ),
                 'params' => array(
                     'range' => array_keys(SettlementAccount::model()->listNames($this->forceCached))
