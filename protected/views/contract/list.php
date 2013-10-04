@@ -23,9 +23,15 @@
 <h2>Договоры</h2>
 
 <?php
+    $provider = new CArrayDataProvider($data);
+    $contractorTypes = ContractType::model()->listNames($this->getForceCached());
+    foreach ($provider->rawData as $key=>$raw){
+        $provider->rawData[$key]['contract_type_id'] = (isset($contractorTypes[$raw['contract_type_id']])) ? $contractorTypes[$raw['contract_type_id']] : '---';
+    }
+
     $this->widget('bootstrap.widgets.TbGridView', array(
         'type' => 'striped bordered condensed',
-        'dataProvider' => new CArrayDataProvider($data),
+        'dataProvider' => $provider,
         'template' => "{items} {pager}",
         'htmlOptions'=> array('style' => 'font-size:12px;'),
         'columns' => array(
@@ -40,8 +46,8 @@
                 'value' => 'CHtml::link($data["name"], Yii::app()->getController()->createUrl("contract/view", array("id" => $data["id"])))'
             ),
             array(
-                'name' => 'character',
-                'header' => 'Характер договора',
+                'name' => 'contract_type_id',
+                'header' => 'Вид договора',
             ),
             array(
                 'name' => 'le_id',

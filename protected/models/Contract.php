@@ -547,6 +547,7 @@ class Contract extends ContractAbstract
                 'name', // string
                 'le_id', // string
                 'additional_type_contract',
+                'contract_type_id',
             ),
             parent::attributeNames()
         );
