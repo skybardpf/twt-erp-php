@@ -460,6 +460,7 @@ class Contract extends ContractAbstract
 
         unset($data['organization_signatories']);
         unset($data['contractor_signatories']);
+        unset($data['contract_type_id']);
 
         $list_scans = array();
         $list_files = array();
