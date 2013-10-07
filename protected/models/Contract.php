@@ -102,7 +102,9 @@ class Contract extends ContractAbstract
     {
         $cache_id = __CLASS__ . self::PREFIX_CACHE_LIST_MODELS . $organizationId;
         if ($forceCached || ($data = Yii::app()->cache->get($cache_id)) === false) {
-            $data = $this->where('contractor_id', $organizationId)->findAll();
+            $data = $this->where('contractor_id', $organizationId)
+                ->order('name', 'ASC')
+                ->findAll();
             Yii::app()->cache->set($cache_id, $data);
         }
         return $data;
@@ -117,7 +119,10 @@ class Contract extends ContractAbstract
         $filters = SoapComponent::getStructureElement($this->where);
         if (!$filters)
             $filters = array(array());
-        $request = array('filters' => $filters, 'sort' => array(array()));
+        $request = array(
+            'filters' => $filters,
+            'sort' => (empty($this->order) ? array(array()) : array($this->order)),
+        );
         $ret = $this->SOAP->listContracts($request);
         $ret = SoapComponent::parseReturn($ret);
         return $this->publish_list($ret, __CLASS__);
@@ -484,6 +489,13 @@ class Contract extends ContractAbstract
         $list_scans = (empty($list_scans)) ? array('Null') : $list_scans;
 
         $data['additional_third_party'] = empty($data['additional_third_party']) ? 'Null' : $data['additional_third_party'];
+        $data['country_applicable_law'] = empty($data['country_applicable_law']) ? 'Null' : $data['country_applicable_law'];
+        $data['country_exportation'] = empty($data['country_exportation']) ? 'Null' : $data['country_exportation'];
+        $data['country_imports'] = empty($data['country_imports']) ? 'Null' : $data['country_imports'];
+        $data['country_service_product'] = empty($data['country_service_product']) ? 'Null' : $data['country_service_product'];
+        $data['account_counterparty'] = empty($data['account_counterparty']) ? 'Null' : $data['account_counterparty'];
+        $data['account_payment_contract'] = empty($data['account_payment_contract']) ? 'Null' : $data['account_payment_contract'];
+        $data['calculated_third'] = empty($data['calculated_third']) ? 'Null' : $data['calculated_third'];
 
         $ret = $this->SOAP->saveContract(array(
             'data' => SoapComponent::getStructureElement($data),

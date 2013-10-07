@@ -43,7 +43,7 @@ return array(
 		),
 		'calc' => array(
 			'class' => 'SoapComponent',
-			'wsdl'  => 'http://144.76.90.162/testmakarov/ws/CalcIns?wsdl',
+			'wsdl'  => 'http://144.76.90.163/testmakarov/ws/CalcIns?wsdl',
 			'connection_options' => array(
 				'login'     => 'Site',
 				'password'  => 'Site',

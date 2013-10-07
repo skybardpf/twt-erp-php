@@ -84,9 +84,11 @@ if ($model->hasErrors()) {
     $organizations = Organization::model()->getListNames($this->getForceCached());
     $currencies = Currency::model()->listNames($this->getForceCached());
     $countries = Country::model()->listNames($this->getForceCached());
+    $countries[''] = '--- Выбрать ---';
     $projects = Project::model()->listNames($this->getForceCached());
     $incoterms = Incoterm::model()->listNames($this->getForceCached());
     $settlementAccountNames = SettlementAccount::model()->listNames($this->getForceCached());
+    $settlementAccountNames[''] = '--- Выбрать ---';
     $contractTypes = ContractType::model()->listNames($this->getForceCached());
 
     $data_scans = array();
@@ -112,7 +114,6 @@ if ($model->hasErrors()) {
         $third_contractors[''] = '--- Не указан ---';
         echo $form->dropDownListRow($model, 'additional_third_party', $third_contractors);
     }
-
 
     if ($contractType->isShowAttribute('address_object'))
         echo $form->textFieldRow($model, 'address_object');
