@@ -39,20 +39,23 @@ class Contract extends ContractAbstract
      */
     protected function afterConstruct()
     {
-        $this->country_service_product = 'Null';
-        $this->country_imports = 'Null';
-        $this->country_exportation = 'Null';
-        $this->country_applicable_law = 'Null';
+        $this->country_service_product = '';
+        $this->country_imports = '';
+        $this->country_exportation = '';
+        $this->country_applicable_law = '';
+
+        $this->account_counterparty = '';
+        $this->account_payment_contract = '';
+        $this->calculated_third = '';
+
         $this->currency_payment_contract = 'Null';
         $this->type_extension = 'Null';
-
         $this->kind_of_contract = 'Null';
         $this->incoterm = 'Null';
         $this->additional_third_party = 'Null';
         $this->additional_project = 'Null';
         $this->additional_charge_contract = 'Null';
         $this->signatory_contractor = 'Null';
-        $this->account_counterparty = 'Null';
         $this->place_contract = 'Null';
 
         $this->currency_id = '643'; // RUB
@@ -489,10 +492,12 @@ class Contract extends ContractAbstract
         $list_scans = (empty($list_scans)) ? array('Null') : $list_scans;
 
         $data['additional_third_party'] = empty($data['additional_third_party']) ? 'Null' : $data['additional_third_party'];
+
         $data['country_applicable_law'] = empty($data['country_applicable_law']) ? 'Null' : $data['country_applicable_law'];
         $data['country_exportation'] = empty($data['country_exportation']) ? 'Null' : $data['country_exportation'];
         $data['country_imports'] = empty($data['country_imports']) ? 'Null' : $data['country_imports'];
         $data['country_service_product'] = empty($data['country_service_product']) ? 'Null' : $data['country_service_product'];
+
         $data['account_counterparty'] = empty($data['account_counterparty']) ? 'Null' : $data['account_counterparty'];
         $data['account_payment_contract'] = empty($data['account_payment_contract']) ? 'Null' : $data['account_payment_contract'];
         $data['calculated_third'] = empty($data['calculated_third']) ? 'Null' : $data['calculated_third'];
