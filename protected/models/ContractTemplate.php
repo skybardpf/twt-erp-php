@@ -75,20 +75,19 @@ class ContractTemplate extends SOAPModel
      * Список наименований шаблонов контракта. Формат [key => name].
      * Результат сохраняется в кеш.
      * @param string $contractId
-     * @param bool $forceCached
      * @return array
      */
-    public function listNames($contractId, $forceCached = false)
+    public function listNames($contractId/*, $forceCached = false*/)
     {
-        $cache_id = __CLASS__ . self::CACHE_PREFIX_LIST_NAMES;
-        if ($forceCached || ($data = Yii::app()->cache->get($cache_id)) === false) {
+//        $cache_id = __CLASS__ . self::CACHE_PREFIX_LIST_NAMES;
+//        if ($forceCached || ($data = Yii::app()->cache->get($cache_id)) === false) {
             $elements = self::model()->where('id_contract', $contractId)->findAll();
             $data = array();
             foreach ($elements as $elem) {
                 $data[$elem->primaryKey] = $elem->name;
             }
-            Yii::app()->cache->set($cache_id, $data);
-        }
+//            Yii::app()->cache->set($cache_id, $data);
+//        }
         return $data;
     }
 }
