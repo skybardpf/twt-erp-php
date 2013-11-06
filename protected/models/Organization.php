@@ -256,7 +256,7 @@ class Organization extends OrganizationAbstract
             array('sert_date', 'date', 'format' => 'yyyy-MM-dd'),
 
             array('gendirector_id', 'required'),
-            array('gendirector_id', 'in', 'range' => array_keys(ContactPersonForOrganization::model()->listNames($this->forceCached))),
+            array('gendirector_id', 'in', 'range' => array_keys(Individual::model()->listNames($this->getForceCached()))),
 
             array('json_signatories', 'validJson'),
 		);
