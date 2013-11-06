@@ -106,28 +106,13 @@ if ($model->hasErrors()) {
     <?php
     echo $form->textAreaRow($model, 'info');
     echo $form->dropDownListRow($model, 'profile', ContractorTypesActivities::model()->listNames($model->getForceCached()));
-    ?>
-    <!--<div class="control-group">
-        <?/*= $form->labelEx($model, 'profile', array('class' => 'control-label')); */?>
-        <div class="controls">
-            <input class="input-profile"
-                id = '<?/*= get_class($model).'_profile'; */?>'
-                type="text"
-                name="<?/*= get_class($model).'[profile]'; */?>"
-                data-placeholder="Виды деятельности"
-                data-tnved="1"
-                data-minimum_input_length="4"
-                data-allow_clear="1"
-                data-ajax="1"
-                data-ajax_url="<?/*= $this->createUrl('get_activities_types'); */?>"
-                value="<?/*= $model->profile; */?>">
-            <?/*= $form->error($model, 'profile'); */?>
-        </div>
-    </div>-->
-    <?php
+
+//    ContactPersonForOrganization::model()->listNames($model->getForceCached())
+
+
     echo $form->textFieldRow($model, 'yur_address');
     echo $form->textFieldRow($model, 'fact_address');
-    echo $form->dropDownListRow($model, 'gendirector_id', ContactPersonForOrganization::model()->listNames($model->getForceCached()));
+    echo $form->dropDownListRow($model, 'gendirector_id', Individual::model()->listNames($model->getForceCached()));
     echo $form->textFieldRow($model, 'email');
     echo $form->textFieldRow($model, 'phone');
     echo $form->textFieldRow($model, 'fax');
@@ -148,19 +133,6 @@ if ($model->hasErrors()) {
                     : '---'
                 ),
                 'doc' => (isset($docs[$v['doc_id']]) ? $docs[$v['doc_id']] : '---'),
-//                'doc' => (isset($docs[$v['doc_id']])
-//                    ? CHtml::link($docs[$v['doc_id']], $this->createUrl('power_attorney_le/view', array('id' => $v['doc_id'])))
-//                    : '---'
-//                ),
-//                'delete' => $this->widget('bootstrap.widgets.TbButton', array(
-//                    'buttonType' => 'button',
-//                    'type' => 'primary',
-//                    'label' => 'Удалить',
-//                    'htmlOptions' => array(
-//                        'class' => 'del-signatory',
-//                        'data-id' => $v['id'].'_'.$v['doc_id'],
-//                    )
-//                ), true)
             );
         }
         echo $form->hiddenField($model, 'json_signatories');
@@ -196,23 +168,9 @@ if ($model->hasErrors()) {
                                     'style' => 'width: 45%',
                                 )
                             ),
-//                        array(
-//                            'name' => 'delete',
-//                            'header' => '',
-//                            'type' => 'raw'
-//                        ),
                         )
                     )
                 );
-
-                //            $this->widget('bootstrap.widgets.TbButton', array(
-                //                'buttonType'=> 'button',
-                //                'type' => 'primary',
-                //                'label' => 'Добавить',
-                //                'htmlOptions' => array(
-                //                    'class' => 'add-signatory',
-                //                )
-                //            ));
                 ?>
             </div>
         </div>
