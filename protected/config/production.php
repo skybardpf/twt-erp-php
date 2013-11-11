@@ -9,7 +9,8 @@ return CMap::mergeArray(
 
             'soap' => array(
                 'class' => 'SoapComponent',
-                'wsdl' => 'http://172.22.0.11/twt_erp/ws/erp?wsdl',
+//                'wsdl' => 'http://172.22.0.11/twt_erp/ws/erp?wsdl',
+                'wsdl' => 'http://144.76.182.82/erp/ws/erp_jur?wsdl',
                 'connection_options' => array(
                     'login' => 'Site',
                     'password' => 'Site',
