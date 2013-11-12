@@ -201,7 +201,7 @@ class SoapComponent extends CApplicationComponent
 	public static function parseReturn($data, $json = true)
     {
 		if (is_string($data->return) && stripos($data->return, 'error') === 0) {
-			throw new SoapParseException($data->return);
+//			throw new SoapParseException($data->return);
 		} else {
 			if (is_string($data->return) && $json) {
                 $data = CJSON::decode($data->return);

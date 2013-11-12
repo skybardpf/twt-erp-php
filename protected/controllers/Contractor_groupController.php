@@ -43,13 +43,13 @@ class Contractor_groupController extends Controller{
     }
 
     /**
-     * @param ContractorGroup $parent
+     * @param integer $parent_id
      * @return ContractorGroup Возвращаем созданную модель.
      */
-    public function createModel(ContractorGroup $parent)
+    public function createModel($parent_id)
     {
         $model = new ContractorGroup();
-        $model->parent_id = $parent->primaryKey;
+        $model->parent_id = $parent_id;
         return $model;
     }
 }

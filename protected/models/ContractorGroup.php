@@ -265,10 +265,15 @@ class ContractorGroup extends SOAPModel
             }
             // TODO все переписать. Делал на коленке. Skibardin A.A.
             $data = array();
-            for($i=0,$l=count($tmp)-1; $i<$l; $i++){
+            $count = count($tmp)-1;
+//            $count = ($count === 1) ? 1 : $count-1;
+            for($i=0; $i<=$count; $i++){
                 foreach($tmp[$i] as $k=>$name){
-                    $tmp_index[$k]->children = $this->_getChildrenByLevel($tmp_index, $k, $tmp[$i+1]);
-                    if ($i == 0){
+
+                    if ($count > 0 && $i < $count){
+                        $tmp_index[$k]->children = $this->_getChildrenByLevel($tmp_index, $k, $tmp[$i+1]);
+                    }
+                    if ($i === 0 /*|| empty($tmp_index[$k]->parent_id)*/){
                         $data[$k] = $tmp_index[$k];
                     }
                 }

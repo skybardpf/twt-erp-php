@@ -19,6 +19,7 @@ class IndexAction extends CAction
 
         $force_cache = (isset($_GET['force_cache']) && $_GET['force_cache'] == 1) ? true : false;
         $data = ContractorGroup::model()->getTreeOnlyGroup($force_cache);
+//        var_dump($data);die;
 
         $controller->render(
             '/contractor/index_menu_tabs',

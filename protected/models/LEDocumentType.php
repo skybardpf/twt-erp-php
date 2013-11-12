@@ -10,7 +10,8 @@
  * @property array  $list_of_countries
  * @property string $deleted
  */
-class LEDocumentType extends SOAPModel {
+class LEDocumentType extends SOAPModel
+{
     const PREFIX_CACHE_ID_LIST_NAMES = '_list_names';
 
 	static public $values = array();
@@ -116,14 +117,14 @@ class LEDocumentType extends SOAPModel {
 	/**
 	 * @return array validation rules for model attributes.
 	 */
-	public function rules() {
-		return array(
-			array('name_of_doc, new_countries', 'required'),
-			array('new_countries', 'validateCountriesList'),
-			array('list_of_countries', 'unsafe'),
-			array('id, name_of_doc', 'safe', 'on'=>'search'),
-		);
-	}
+//	public function rules() {
+//		return array(
+//			array('name_of_doc, new_countries', 'required'),
+//			array('new_countries', 'validateCountriesList'),
+//			array('list_of_countries', 'unsafe'),
+//			array('id, name_of_doc', 'safe', 'on'=>'search'),
+//		);
+//	}
 
 	/**
 	 * Переопределенный метод setAttribute для отдельной установки списка документов
@@ -153,7 +154,7 @@ class LEDocumentType extends SOAPModel {
 		$cache = $cacher->get('LEDoc_type_values');
 		if ($cache === false) {
 			if (!self::$values) {
-				$elements = self::model()->where('deleted', false)->findAll();
+				$elements = self::model()/*->where('deleted', false)*/->findAll();
 				$return   = array();
 				if ($elements) { foreach ($elements as $elem) {
 					$return[$elem->getprimaryKey()] = $elem->name_of_doc;
@@ -177,7 +178,7 @@ class LEDocumentType extends SOAPModel {
     {
         $cache_id = __CLASS__ . self::PREFIX_CACHE_ID_LIST_NAMES;
         if ($force_cache || ($data = Yii::app()->cache->get($cache_id)) === false){
-            $elements = $this->where('deleted', false)->findAll();
+            $elements = $this/*->where('deleted', false)*/->findAll();
             $data = array();
             if ($elements) {
                 foreach ($elements as $elem) {
@@ -188,39 +189,4 @@ class LEDocumentType extends SOAPModel {
         }
         return $data;
     }
-
-	/*public function validateCountriesList($attribute, $params) {
-		if ($attribute != 'new_countries') throw new Exception('Данный метод только для валидации новых стран');
-		$countries = array();
-
-		// Страны, которые были до редактирования (установим те, что загружены администрацией)
-		if ($this->getprimaryKey()) {
-			// Не новая запись - проверить администраторские страны
-			foreach ($this->list_of_countries as $country) {
-				if ($country['from_user'] == false) {
-					// Страна не редактируется
-					$countries[$country['country']] = $country;
-				}
-			}
-			unset($country);
-		}
-
-		//Страны, полученные в форме, надо проверить
-		foreach ($this->new_countries as $country) {
-			if (isset($countries[$country['country']])) {
-				if (!$this->getError($attribute)) {
-					$this->addError($attribute, 'Страны не должны повторяться.');
-				}
-				continue;
-			}
-			$country['user'] = 'test';
-			$country['from_user'] = true;
-			$countries[$country['country']] = $country;
-		}
-
-		if (!$countries) {
-			$this->addError($attribute, 'Укажите хоть 1 страну юрисдикции.');
-		}
-		$this->list_of_countries = array_values($countries);
-	}*/
 }

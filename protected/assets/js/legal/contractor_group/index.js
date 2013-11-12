@@ -7,22 +7,6 @@ Ext.require([
 Ext.onReady(function() {
     Ext.QuickTips.init();
 
-    var store = Ext.create('Ext.data.TreeStore', {
-        proxy: {
-            data : global_data, // instead it goes here
-            type: 'memory',
-            reader: {
-                type: 'json'
-            }
-        },
-
-        listeners: {
-            load : function(){
-                toggleDisabledButtons(false);
-            }
-        }
-    });
-
     var buttonAdd = new Ext.Button({
         text: 'Добавить',
         handler: onClickAdd,
@@ -38,9 +22,33 @@ Ext.onReady(function() {
         handler: onClickDel,
         disabled: true
     });
+
+    console.log(global_data);
+    var store = Ext.create('Ext.data.TreeStore', {
+        proxy: {
+            data : global_data, // instead it goes here
+            type: 'memory',
+            reader: {
+                type: 'json'
+            }
+        },
+        root: {
+            text: 'Все группы',
+            id: 'root',
+            expanded: true
+        },
+
+        listeners: {
+            load : function(){
+                toggleDisabledButtons(false);
+            }
+        }
+    });
+
+
     var tree = Ext.create('Ext.tree.Panel', {
         store: store,
-        rootVisible: false,
+        rootVisible: true,
         autoScroll: true,
         buttons: [
             buttonAdd, buttonEdit, buttonDel
@@ -84,6 +92,10 @@ Ext.onReady(function() {
             return false;
         }
         selectedNode = selectedNode[0];
+        if (selectedNode.isRoot()){
+            Ext.Msg.alert('Ошибка', 'Нельзя редактировать корневую группу.');
+            return false;
+        }
         Ext.MessageBox.prompt('Название', 'Введите название группы:', editGroupName, selectedNode, false, selectedNode.data.text);
         return true;
     }
@@ -105,7 +117,7 @@ Ext.onReady(function() {
 
             Loading.show();
             Ext.Ajax.request({
-                url: '/legal/contractor_group/create/id/'+root_node.get('id'),
+                url: '/contractor_group/create/id/'+root_node.get('id'),
                 params: {
                     name: text
                 },
@@ -155,7 +167,7 @@ Ext.onReady(function() {
 
             Loading.show();
             Ext.Ajax.request({
-                url: '/legal/contractor_group/update/id/'+node.get('id'),
+                url: '/contractor_group/update/id/'+node.get('id'),
                 params: {
                     name: text
                 },
@@ -190,6 +202,10 @@ Ext.onReady(function() {
             return false;
         }
         selectedNode = selectedNode[0];
+        if (selectedNode.isRoot()){
+            Ext.Msg.alert('Ошибка', 'Нельзя удалить корневую группу.');
+            return false;
+        }
 
         if (selectedNode.hasChildNodes()){
             Ext.Msg.alert('Ошибка', 'Нельзя удалить группу, у которой присутствуют подгруппы.');
@@ -199,7 +215,7 @@ Ext.onReady(function() {
         toggleDisabledButtons(true);
         Loading.show();
         Ext.Ajax.request({
-            url: '/legal/contractor_group/delete/id/'+selectedNode.get('id'),
+            url: '/contractor_group/delete/id/'+selectedNode.get('id'),
             success: function(response){
                 Loading.hide();
                 toggleDisabledButtons(false);
