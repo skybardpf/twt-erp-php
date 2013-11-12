@@ -149,6 +149,18 @@ class Contractor extends OrganizationAbstract
 	}
 
     /**
+     * Сбрасываем кеш
+     */
+    public function clearCache()
+    {
+        $class = get_class($this);
+        Yii::app()->cache->delete($class.self::PREFIX_CACHE_ID_LIST_FULL_DATA_GROUP_BY);
+
+        parent::clearCache();
+    }
+
+
+    /**
      * @return array
      */
     public function attributeNames()

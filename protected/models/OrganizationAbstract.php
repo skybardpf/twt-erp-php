@@ -176,13 +176,14 @@ abstract class OrganizationAbstract extends SOAPModel
     public function clearCache()
     {
         $class = get_class($this);
+        $cache = Yii::app()->cache;
         if ($this->primaryKey){
-            Yii::app()->cache->delete( $class.self::PREFIX_CACHE_MODEL_PK.$this->primaryKey);
+            $cache->delete( $class.self::PREFIX_CACHE_MODEL_PK.$this->primaryKey);
         }
-        Yii::app()->cache->delete($class.self::PREFIX_CACHE_ID_LIST_FULL_DATA);
-        Yii::app()->cache->delete($class.self::PREFIX_CACHE_ID_LIST_NAMES);
-        Yii::app()->cache->delete($class.self::PREFIX_CACHE_ID_LIST_OGRN);
-        Yii::app()->cache->delete($class.self::PREFIX_CACHE_ID_LIST_INN);
+        $cache->delete($class.self::PREFIX_CACHE_ID_LIST_FULL_DATA);
+        $cache->delete($class.self::PREFIX_CACHE_ID_LIST_NAMES);
+        $cache->delete($class.self::PREFIX_CACHE_ID_LIST_OGRN);
+        $cache->delete($class.self::PREFIX_CACHE_ID_LIST_INN);
     }
 
     /**
