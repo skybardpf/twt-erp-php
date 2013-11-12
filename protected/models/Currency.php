@@ -8,6 +8,7 @@
  */
 class Currency extends SOAPModel
 {
+    const RUB_ID = '643';
     const PREFIX_CACHE_LIST_MODELS = '_list_models';
 
 	/**

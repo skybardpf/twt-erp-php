@@ -185,11 +185,11 @@ if ($contractType->isShowAttribute('additional_third_party')){
         'value' => (isset($contractors[$model->additional_third_party])) ? $contractors[$model->additional_third_party] : '---'
     );
 }
-if ($contractType->isShowAttribute('contractor_id')){
+if ($contractType->isShowAttribute('le_id')){
     $attributes[] = array(
-        'name' => 'contractor_id',
+        'name' => 'le_id',
         'label' => 'Контрагент',
-        'value' => (isset($organizations[$model->contractor_id])) ? $organizations[$model->contractor_id] : '---'
+        'value' => (isset($organizations[$model->le_id])) ? $organizations[$model->le_id] : '---'
     );
 }
 

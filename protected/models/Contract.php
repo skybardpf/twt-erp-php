@@ -8,7 +8,7 @@
  * @property string     $name
  * @property boolean    $deleted
  * @property string     $additional_type_contract
- * @property string     $le_id
+ * @property string     $contractor_id
  *
  * @property array      $organization_signatories
  * @property array      $contractor_signatories
@@ -58,7 +58,7 @@ class Contract extends ContractAbstract
         $this->signatory_contractor = 'Null';
         $this->place_contract = 'Null';
 
-        $this->currency_id = '643'; // RUB
+        $this->currency_id = Currency::RUB_ID; // RUB
         $this->type_contract = 'Прочее';
         $this->maintaining_mutual = 'ПоДоговоруВЦелом';
 
@@ -278,6 +278,16 @@ class Contract extends ContractAbstract
                 ),
                 'params' => array(
                     'range' => array_keys(Country::model()->listNames($this->forceCached))
+                ),
+            ),
+
+            array(
+                'validator' => 'in',
+                'attributes' => array(
+                    'le_id',
+                ),
+                'params' => array(
+                    'range' => array_keys(Contractor::model()->getListNames($this->forceCached)),
                 ),
             ),
 
@@ -563,7 +573,7 @@ class Contract extends ContractAbstract
                 'id', // string
                 'deleted', // bool
                 'name', // string
-                'le_id', // string
+                'contractor_id', // string
                 'additional_type_contract',
                 'contract_type_id',
             ),
@@ -580,7 +590,7 @@ class Contract extends ContractAbstract
         return array_merge(
             array(
                 'name' => 'Название',
-                'le_id' => 'Владелец',
+                'contractor_id' => 'Владелец',
             ),
             parent::attributeLabels()
         );
@@ -595,9 +605,6 @@ class Contract extends ContractAbstract
             array('name', 'required'),
             array('name', 'length', 'max' => 50),
 
-            array('le_id', 'required'),
-            array('le_id', 'in', 'range' => array_keys(Contractor::model()->getListNames($this->forceCached))),
-
             array('
                 json_organization_signatories,
                 json_contractor_signatories
@@ -607,6 +614,7 @@ class Contract extends ContractAbstract
                 'validJson'
             ),
 
+            array('additional_type_contract', 'required'),
             array(
                 'additional_type_contract',
                 'in', 'range' => array_keys(ContractType::model()->listNames($this->forceCached))

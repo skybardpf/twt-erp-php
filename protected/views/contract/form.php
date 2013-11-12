@@ -90,12 +90,13 @@ if ($model->hasErrors()) {
     $settlementAccountNames = SettlementAccount::model()->listNames($this->getForceCached());
     $settlementAccountNames[''] = '--- Выбрать ---';
     $contractTypes = ContractType::model()->listNames($this->getForceCached());
+    $contractTypes[''] = '--- Не выбран ---';
 
     $data_scans = array();
     $data_documents = array();
 
     echo $form->textFieldRow($model, 'name');
-    echo $form->dropDownListRow($model, 'le_id', $contractors);
+//    echo $form->dropDownListRow($model, 'le_id', $contractors);
     echo $form->dropDownListRow($model, 'additional_type_contract', $contractTypes);
 
     if ($contractType->isShowAttribute('account_counterparty'))
@@ -146,8 +147,10 @@ if ($model->hasErrors()) {
         echo $form->textFieldRow($model, 'comment');
     if ($contractType->isShowAttribute('commission'))
         echo $form->textFieldRow($model, 'commission');
-    if ($contractType->isShowAttribute('contractor_id'))
-        echo $form->dropDownListRow($model, 'contractor_id', $organizations);
+    if ($contractType->isShowAttribute('le_id')){
+//        echo $form->dropDownListRow($model, 'le_id', $organizations);
+        echo $form->dropDownListRow($model, 'le_id', $contractors);
+    }
 
     /**
      * Генерируем таблицу для отображения подписантов организации

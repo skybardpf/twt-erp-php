@@ -24,7 +24,7 @@
  * @property string $calculated_third
  * @property string $comment
  * @property string $commission
- * @property string $contractor_id
+ * @property string $le_id
  * @property string $control_amount_debt
  * @property string $control_number_days
  * @property string $country_applicable_law
@@ -122,7 +122,7 @@ abstract class ContractAbstract extends SOAPModel
             'calculated_third',
             'comment',
             'commission',
-            'contractor_id',
+            'le_id',
             'contractor_signatories',
             'control_amount_debt',
             'control_number_days',
@@ -227,7 +227,7 @@ abstract class ContractAbstract extends SOAPModel
             'calculated_third' => 'Расчетный счет третьей стороны',
             'comment' => 'Комментарий',
             'commission' => 'Комиссионное вознаграждение',
-            'contractor_id' => 'Контрагент',
+            'le_id' => 'Контрагент',
             'contractor_signatories' => 'Подписанты контрагента',
             'control_amount_debt' => 'Контролировать сумму задолженности',
             'control_number_days' => 'Контролировать число дней задолженности',

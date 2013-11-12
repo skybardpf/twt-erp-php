@@ -130,7 +130,7 @@ class ContractType extends ContractAbstract
         $this->calculated_third = self::STATUS_SHOW;
         $this->comment = self::STATUS_SHOW;
         $this->commission = self::STATUS_SHOW;
-        $this->contractor_id = self::STATUS_SHOW;
+        $this->le_id = self::STATUS_SHOW;
         $this->contractor_signatories = self::STATUS_SHOW;
         $this->control_amount_debt = self::STATUS_SHOW;
         $this->control_number_days = self::STATUS_SHOW;
