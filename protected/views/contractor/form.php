@@ -129,6 +129,7 @@
     echo $form->textFieldRow($model, 'yur_address');
     echo $form->textFieldRow($model, 'fact_address');
     echo $form->dropDownListRow($model, 'gendirector', ContactPersonForContractors::model()->listNames($model->forceCached));
+//    echo $form->dropDownListRow($model, 'gendirector', Individual::model()->listNames($model->forceCached));
     echo $form->textFieldRow($model, 'email');
     echo $form->textFieldRow($model, 'phone');
     echo $form->textFieldRow($model, 'fax');

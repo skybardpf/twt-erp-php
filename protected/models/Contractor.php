@@ -156,6 +156,9 @@ class Contractor extends OrganizationAbstract
         $class = get_class($this);
         Yii::app()->cache->delete($class.self::PREFIX_CACHE_ID_LIST_FULL_DATA_GROUP_BY);
 
+        $group = new ContractorGroup();
+        $group->clearCache();
+
         parent::clearCache();
     }
 
@@ -254,6 +257,7 @@ class Contractor extends OrganizationAbstract
 
             array('gendirector', 'required'),
             array('gendirector', 'in', 'range' => array_keys(ContactPersonForContractors::model()->listNames($this->forceCached))),
+//            array('gendirector', 'in', 'range' => array_keys(Individual::model()->listNames($this->forceCached))),
 
             array('okopf', 'required'),
             array('okopf', 'in', 'range' => array_keys(CodesOKOPF::model()->listNames($this->forceCached))),
