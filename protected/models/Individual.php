@@ -42,7 +42,7 @@ class Individual extends SOAPModel {
     public function clearCache()
     {
         if ($this->primaryKey){
-            Yii::app()->cache->delete(__CLASS__.'_'.$this->primaryKey);
+            Yii::app()->cache->delete(__CLASS__.self::PREFIX_CACHE_MODEL_PK.$this->primaryKey);
         }
         Yii::app()->cache->delete(__CLASS__.self::PREFIX_CACHE_ID_LIST_FULL_DATA);
         Yii::app()->cache->delete(__CLASS__.self::PREFIX_CACHE_ID_LIST_FIO);

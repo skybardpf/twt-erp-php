@@ -15,7 +15,8 @@ class CreateAction extends CAction
     {
         if (Yii::app()->request->isAjaxRequest) {
             try {
-                if (!isset($_POST['name']) || empty($_POST['name'])){
+                $name = Yii::app()->request->getPost('name');
+                if (!$name){
                     throw new CException('Не указано название группы.');
                 }
 
@@ -23,10 +24,14 @@ class CreateAction extends CAction
                  * @var Contractor_groupController    $controller
                  */
                 $controller = $this->controller;
-                $parent = $controller->loadModel($id);
-
-                $model = $controller->createModel($parent);
-                $model->name = $_POST['name'];
+                if ($id === 'root'){
+                    $parent_id = "";
+                } else {
+                    $parent = $controller->loadModel($id);
+                    $parent_id = $parent->primaryKey;
+                }
+                $model = $controller->createModel($parent_id);
+                $model->name = $name;
                 $id = $model->save();
 
                 $ret = array(

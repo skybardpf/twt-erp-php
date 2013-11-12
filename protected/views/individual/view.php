@@ -41,13 +41,14 @@
 <br/><br/>
 <div>
 <?php
+    $countries = Country::model()->listNames($this->getForceCached());
     $this->widget('bootstrap.widgets.TbDetailView', array(
         'data' => $model,
         'attributes'=>array(
             array(
                 'label' => 'Гражданство',
                 'type'  => 'raw',
-                'value' => $model->citizenship ? $model->citizenship : '&mdash;',
+                'value' => (isset($countries[$model->citizenship]) ? $countries[$model->citizenship] : '&mdash;'),
             ),
             array('name' => 'birth_date',       'label' => 'Дата рождения'),
             array(
