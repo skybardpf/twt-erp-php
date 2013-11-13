@@ -85,7 +85,7 @@ $jui_date_options = array(
     <div class="control-group list-individuals">
         <?= $form->labelEx($model, 'individual_id', array('class' => 'control-label')); ?>
         <div class="controls">
-            <?= CHtml::activeDropDownList($model, 'individual_id', Individual::model()->listNames()); ?>
+            <?= CHtml::activeDropDownList($model, 'individual_id', Individual::model()->listNames(), array('empty' => '--- Не выбран ---')); ?>
         </div>
     </div>
 

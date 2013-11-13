@@ -36,6 +36,13 @@ class UpdateAction extends CAction
          */
         $model = InterestedPersonShareholder::model()->findByPk($id, $type_lico, $org_id, $org_type, $date, $number_stake, $controller->getForceCached());
         $model->individual_id = $model->organization_id = $model->contractor_id = $model->primaryKey;
+        if ($model->type_lico == MTypeInterestedPerson::ORGANIZATION) {
+            $model->setScenario('typeOrganization');
+        } elseif ($model->type_lico == MTypeInterestedPerson::INDIVIDUAL) {
+            $model->setScenario('typeIndividual');
+        } elseif ($model->type_lico == MTypeInterestedPerson::CONTRACTOR) {
+            $model->setScenario('typeContractor');
+        }
 
         if(isset($_POST['ajax']) && $_POST['ajax'] === 'form-person') {
             echo CActiveForm::validate($model);

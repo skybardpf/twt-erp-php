@@ -173,13 +173,13 @@ class InterestedPersonShareholder extends InterestedPersonAbstract
                 array('currency', 'required'),
                 array('currency', 'in', 'range' => array_keys(Currency::model()->listNames($this->forceCached))),
 
-                array('individual_id', 'required'),
+                array('individual_id', 'required', 'on' => 'typeIndividual'),
                 array('individual_id', 'in', 'range' => array_keys(Individual::model()->listNames($this->forceCached)), 'on' => 'typeIndividual'),
 
-                array('organization_id', 'required'),
+                array('organization_id', 'required', 'on' => 'typeOrganization'),
                 array('organization_id', 'in', 'range' => array_keys(Organization::model()->getListNames($this->forceCached)), 'on' => 'typeOrganization'),
 
-                array('contractor_id', 'required'),
+                array('contractor_id', 'required', 'on' => 'typeContractor'),
                 array('contractor_id', 'in', 'range' => array_keys(Contractor::model()->getListNames($this->forceCached)), 'on' => 'typeContractor'),
             )
 		);

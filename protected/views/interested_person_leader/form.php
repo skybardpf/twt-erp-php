@@ -77,7 +77,7 @@ $jui_date_options = array(
 
 <fieldset>
     <?php
-    echo $form->radioButtonListInlineRow($model, 'type_lico', $model->listPersonTypes(), array('class' => 'type_lico'));
+    echo $form->radioButtonListInlineRow($model, 'type_lico', $model->listPersonTypes(), array('class' => 'type_lico', 'disabled' => ($model->primaryKey) ? 'disabled' : ''));
     if ($model->type_lico == MTypeInterestedPerson::INDIVIDUAL) {
         $class_person = '';
         $class_cont = 'hide';
@@ -108,13 +108,13 @@ $jui_date_options = array(
     <div class="control-group list-individuals <?= $class_person; ?>">
         <?= $form->labelEx($model, 'individual_id', array('class' => 'control-label')); ?>
         <div class="controls">
-            <?= CHtml::activeDropDownList($model, 'individual_id', Individual::model()->listNames($model->forceCached)); ?>
+            <?= CHtml::activeDropDownList($model, 'individual_id', Individual::model()->listNames($model->forceCached), array('empty' => '--- Не выбран ---')); ?>
         </div>
     </div>
     <div class="control-group list-contractors <?= $class_cont; ?>">
         <?= $form->labelEx($model, 'contractor_id', array('class' => 'control-label')); ?>
         <div class="controls">
-            <?= CHtml::activeDropDownList($model, 'contractor_id', $contractors); ?>
+            <?= CHtml::activeDropDownList($model, 'contractor_id', $contractors, array('empty' => '--- Не выбран ---')); ?>
         </div>
     </div>
 
