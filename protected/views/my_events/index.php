@@ -54,7 +54,7 @@
         array(
             'class' => 'block_countries' . ($for_yur == 1 ? ' hide' : '')
         ),
-        Chtml::dropDownList('EventForm_countries', $country_id, $countries)
+        CHtml::dropDownList('EventForm_countries', $country_id, $countries)
     );
 
     /**
@@ -115,7 +115,9 @@
             ),
             array(
                 'name' => 'event_date',
-                'header' => 'Первая дата'
+                'header' => 'Первая дата',
+                'type' => 'raw',
+                'value' => 'Yii::app()->dateFormatter->format("d MMMM yyyy", $data["event_date"]);',
             ),
             array(
                 'name' => 'period',

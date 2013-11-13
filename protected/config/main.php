@@ -8,8 +8,11 @@ Yii::setPathOfAlias('filestorage', dirname(__FILE__).'/../filestorage');
 return array(
 	'basePath' => dirname(__FILE__).DIRECTORY_SEPARATOR.'..',
 	'name' => 'TWT Consult',
-	'sourceLanguage' => 'root',
-	'language' => 'ru',
+//	'sourceLanguage' => 'root',
+
+    'sourceLanguage'=>'en_US',
+    'language'=>'ru',
+    'charset'=>'utf-8',
 
 	'preload' => array('log', 'bootstrap'),
 

@@ -43,7 +43,9 @@
             ),
             array(
                 'name' => 'event_date',
-                'header' => 'Дата следующего наступления'
+                'header' => 'Дата следующего наступления',
+                'type' => 'raw',
+                'value' => 'Yii::app()->dateFormatter->format("d MMMM yyyy", $data["event_date"]);',
             ),
         ),
     ));
