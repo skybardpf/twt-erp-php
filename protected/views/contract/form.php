@@ -95,8 +95,9 @@ if ($model->hasErrors()) {
     $data_scans = array();
     $data_documents = array();
 
+    echo $form->dropDownListRow($model, 'contractor_id', $organizations, array('disabled' => 'disabled'));
+
     echo $form->textFieldRow($model, 'name');
-//    echo $form->dropDownListRow($model, 'le_id', $contractors);
     echo $form->dropDownListRow($model, 'additional_type_contract', $contractTypes);
 
     if ($contractType->isShowAttribute('account_counterparty'))

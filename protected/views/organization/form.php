@@ -109,10 +109,9 @@ if ($model->hasErrors()) {
 
 //    ContactPersonForOrganization::model()->listNames($model->getForceCached())
 
-
     echo $form->textFieldRow($model, 'yur_address');
     echo $form->textFieldRow($model, 'fact_address');
-    echo $form->dropDownListRow($model, 'gendirector_id', Individual::model()->listNames($model->getForceCached()));
+    echo $form->dropDownListRow($model, 'gendirector_id', Individual::model()->listNames($model->getForceCached()), array('empty' => '--- Не выбран ---'));
     echo $form->textFieldRow($model, 'email');
     echo $form->textFieldRow($model, 'phone');
     echo $form->textFieldRow($model, 'fax');
