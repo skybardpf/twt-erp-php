@@ -50,6 +50,7 @@ Ext.onReady(function() {
         store: store,
         rootVisible: true,
         autoScroll: true,
+        height: 800,
         buttons: [
             buttonAdd, buttonEdit, buttonDel
         ]

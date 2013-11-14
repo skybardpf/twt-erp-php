@@ -115,8 +115,8 @@ class SettlementAccount extends SOAPModel
     public static function getManagementMethods()
     {
         return array(
-            'Все вместе' => 'Требуются подписи всех',
-            'По одному' => 'Требуется подпись любого',
+            'ВсеВместе' => 'Требуются подписи всех',
+            'ПоОдному' => 'Требуется подпись любого',
         );
     }
 
@@ -343,8 +343,10 @@ class SettlementAccount extends SOAPModel
             array('currency', 'required'),
             array('currency', 'in', 'range'  => array_keys(Currency::model()->listNames($this->forceCached))),
 
-            array('bank, correspondent_bank', 'required'),
-            array('bank, correspondent_bank', 'isValidBank'),
+            array('bank', 'required'),
+            array('bank', 'isValidBank'),
+
+            array('correspondent_bank', 'isValidBankCor'),
 
             array('type_account', 'required'),
             array('type_account', 'in', 'range'  => array_keys(SettlementAccount::getAccountTypes())),
@@ -376,9 +378,26 @@ class SettlementAccount extends SOAPModel
      */
     public function isValidBank($attribute)
     {
+        if ($attribute === ''){
+
+        }
         $name = Bank::model()->getName($this->$attribute, $this->forceCached);
         if (empty($name)){
             $this->addError($attribute, '{'.$this->getAttributeLabel($attribute).'} - Необходимо указать правильный БИК / SWIFT');
+        }
+    }
+
+    /**
+     * Проверка правильности введенного идентификатора банка.
+     * @param string $attribute
+     */
+    public function isValidBankCor($attribute)
+    {
+        if (!empty($this->$attribute)){
+            $name = Bank::model()->getName($this->$attribute, $this->forceCached);
+            if (empty($name)){
+                $this->addError($attribute, '{'.$this->getAttributeLabel($attribute).'} - Необходимо указать правильный БИК / SWIFT');
+            }
         }
     }
 

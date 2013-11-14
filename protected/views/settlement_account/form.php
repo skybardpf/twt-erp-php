@@ -75,13 +75,19 @@ if ($model->hasErrors()) {
 
     $type_view = $model->getTypeView();
     $type_view[SettlementAccount::TYPE_VIEW_NOT_SELECTED] = '--- Шаблон не выбран ---';
-    if ($model->primaryKey){
-        $class = array('class' => 'span6');
-    } else {
-        $class = array('class' => 'span6', 'disabled'=>true);
+
+    $class = array('class' => 'span6');
+
+    if (empty($model->s_nom) || empty($model->type_account) || empty($model->bank_name)){
+        $class['disabled'] = true;
+        $model->name = SettlementAccount::TYPE_VIEW_NOT_SELECTED;
+    } elseif (!isset($type_view[$model->name])){
+        if ($key = array_search($model->name, $type_view)) {
+            $model->name = $key;
+        } else {
+            $model->name = SettlementAccount::TYPE_VIEW_NOT_SELECTED;
+        }
     }
-    $key = array_search($model->name, $type_view);
-    $model->name = ($key === false) ? SettlementAccount::TYPE_VIEW_NOT_SELECTED : $key;
     echo CHtml::tag(
         'div',
         array('class' => 'block-type-view'),
@@ -126,7 +132,6 @@ if ($model->hasErrors()) {
     /**
      * Заполняем блок, управляющих персон.
      */
-
     $data = array();
     if (!empty($model->managing_persons)){
         $p = Individual::model()->listNames($model->forceCached);

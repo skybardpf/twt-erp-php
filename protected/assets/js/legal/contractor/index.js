@@ -21,7 +21,8 @@ Ext.onReady(function() {
     var tree = Ext.create('Ext.tree.Panel', {
         store: store,
         rootVisible: false,
-        autoScroll: true
+        autoScroll: true,
+        height: 800
     });
 
 
