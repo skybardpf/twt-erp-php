@@ -35,9 +35,19 @@ class CreateAction extends CAction
         $model->id_yur = $org->primaryKey;
         $model->type_yur = $org_type;
         $model->forceCached = $controller->getForceCached();
+        $model->setScenario('typeIndividual');
 
         $data = Yii::app()->request->getPost(get_class($model));
         if ($data) {
+            $type_lico = isset($data['type_lico']) ? $data['type_lico'] : null;
+            if ($type_lico == MTypeInterestedPerson::ORGANIZATION) {
+                $model->setScenario('typeOrganization');
+            } elseif ($type_lico == MTypeInterestedPerson::INDIVIDUAL) {
+                $model->setScenario('typeIndividual');
+            } elseif ($type_lico == MTypeInterestedPerson::CONTRACTOR) {
+                $model->setScenario('typeContractor');
+            }
+
             $model->setAttributes($data);
             if ($model->validate()) {
                 try {
