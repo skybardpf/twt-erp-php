@@ -37,6 +37,11 @@ class CreateAction extends CAction
         $model->forceCached = $controller->getForceCached();
         $model->setScenario('typeIndividual');
 
+        if(isset($_POST['ajax']) && $_POST['ajax'] === 'form-person') {
+            echo CActiveForm::validate($model);
+            Yii::app()->end();
+        }
+
         $data = Yii::app()->request->getPost(get_class($model));
         if ($data) {
             $type_lico = isset($data['type_lico']) ? $data['type_lico'] : null;
