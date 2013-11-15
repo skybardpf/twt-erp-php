@@ -48,6 +48,7 @@ class UpdateAction extends CAction
         } elseif ($model->type_lico == MTypeInterestedPerson::CONTRACTOR) {
             $model->setScenario('typeContractor');
         }
+        $model->old_value_stake = $model->value_stake;
 
         if(isset($_POST['ajax']) && $_POST['ajax'] === 'form-person') {
             echo CActiveForm::validate($model);

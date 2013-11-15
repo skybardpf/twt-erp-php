@@ -39,7 +39,9 @@ class DeleteAction extends CAction
         if (Yii::app()->request->isAjaxRequest) {
             $ret = array();
             try {
-                $model->delete();
+                if (!$model->delete()) {
+                    throw new Exception('Не удалось удалить бенефициара.');
+                }
             } catch (Exception $e) {
                 $ret['error'] = $e->getMessage();
             }

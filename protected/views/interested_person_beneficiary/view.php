@@ -48,7 +48,7 @@ $this->widget('bootstrap.widgets.TbButton', array(
             )
         ),
         'data-redirect_url' => $this->createUrl(
-            'interested_person/index',
+            'interested_person_beneficiary/index',
             array(
                 'org_id' => $organization->primaryKey,
                 'org_type' => $organization->type,

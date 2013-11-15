@@ -8,6 +8,8 @@
  */
 class InterestedPersonBeneficiary extends InterestedPersonShareholder
 {
+    public $old_value_stake;
+
     /**
      * Возвращает тип заинтересованного лица.
      * @return string
@@ -75,15 +77,25 @@ class InterestedPersonBeneficiary extends InterestedPersonShareholder
 
     public function validValueStake()
     {
-        if (!$this->primaryKey){
-            $p = $this->_getPercentBeneficiary();
-            if ($this->type_stake === 'Обыкновенные'){
-                if (isset($p['common_value_stake']) && ($p['common_value_stake'] + $this->value_stake) > 100){
-                    $this->addError('value_stake', 'Обычных акций будет '.($p['common_value_stake'] + $this->value_stake).'%. Не может быть больше 100%');
+        $p = $this->_getPercentBeneficiary();
+        if ($this->type_stake === 'Обыкновенные'){
+            if (isset($p['common_value_stake'])){
+                $pr = ($p['common_value_stake'] + $this->value_stake);
+                if ($this->primaryKey){
+                    $pr -= $this->old_value_stake;
                 }
-            } elseif ($this->type_stake === 'Привилегированные'){
-                if (isset($p['privileged_value_stake']) && ($p['privileged_value_stake'] + $this->value_stake) > 100){
-                    $this->addError('value_stake', 'Привилегированных акций будет '.($p['privileged_value_stake'] + $this->value_stake).'%. Не может быть больше 100%');
+                if ($pr > 100){
+                    $this->addError('value_stake', 'Обычных акций будет '.($pr).'%. Не может быть больше 100%');
+                }
+            }
+        } elseif ($this->type_stake === 'Привилегированные'){
+            if (isset($p['privileged_value_stake'])){
+                $pr = ($p['privileged_value_stake'] + $this->value_stake);
+                if ($this->primaryKey){
+                    $pr -= $this->old_value_stake;
+                }
+                if ($pr > 100){
+                    $this->addError('value_stake', 'Привилегированных акций будет '.$pr.'%. Не может быть больше 100%');
                 }
             }
         }
