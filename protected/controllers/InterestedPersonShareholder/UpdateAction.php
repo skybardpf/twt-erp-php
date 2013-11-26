@@ -36,11 +36,12 @@ class UpdateAction extends CAction
          */
         $model = InterestedPersonShareholder::model()->findByPk($id, $type_lico, $org_id, $org_type, $date, $number_stake, $controller->getForceCached());
         $model->individual_id = $model->organization_id = $model->contractor_id = $model->primaryKey;
-        if ($model->type_lico == MTypeInterestedPerson::ORGANIZATION) {
+        $type_lico = $model->type_lico;
+        if ($type_lico == MTypeInterestedPerson::ORGANIZATION) {
             $model->setScenario('typeOrganization');
-        } elseif ($model->type_lico == MTypeInterestedPerson::INDIVIDUAL) {
+        } elseif ($type_lico == MTypeInterestedPerson::INDIVIDUAL) {
             $model->setScenario('typeIndividual');
-        } elseif ($model->type_lico == MTypeInterestedPerson::CONTRACTOR) {
+        } elseif ($type_lico == MTypeInterestedPerson::CONTRACTOR) {
             $model->setScenario('typeContractor');
         }
 
@@ -57,6 +58,7 @@ class UpdateAction extends CAction
         $data = Yii::app()->request->getPost(get_class($model));
         if ($data) {
             $model->setAttributes($data);
+            $model->type_lico = $type_lico;
             if ($model->validate()) {
                 try {
                     $ret = $model->save($old_model);
