@@ -1,12 +1,12 @@
 <?php
 
-Yii::setPathOfAlias('bootstrap', dirname(__FILE__).'/../extensions/bootstrap');
-Yii::setPathOfAlias('filestorage', dirname(__FILE__).'/../filestorage');
+Yii::setPathOfAlias('bootstrap', dirname(__FILE__).'/../../extensions/bootstrap');
+Yii::setPathOfAlias('filestorage', dirname(__FILE__).'/../../filestorage');
 
 // This is the main Web application configuration. Any writable
 // CWebApplication properties can be configured here.
 return array(
-	'basePath' => dirname(__FILE__).DIRECTORY_SEPARATOR.'..',
+	'basePath' => dirname(__FILE__).DIRECTORY_SEPARATOR.'..'.DIRECTORY_SEPARATOR.'..',
 	'name' => 'TWT Consult',
 //	'sourceLanguage' => 'root',
 
@@ -26,8 +26,8 @@ return array(
     'defaultController' => 'organization',
 
     'modules'=>array(
-		'legal',
-        'calc' => array(),
+//		'legal',
+//        'calc' => array(),
 //		'gii' => array(
 //			'generatorPaths'=>array(
 //				'bootstrap.gii',
