@@ -12,7 +12,7 @@
 
 <?php
 Yii::app()->clientScript->registerScriptFile($this->asset_static . '/js/jquery.json-2.4.min.js');
-Yii::app()->clientScript->registerScriptFile($this->asset_static . '/js/legal/organization/form.js');
+Yii::app()->clientScript->registerScriptFile($this->asset_static . '/js/organization/form.js');
 
 echo '<h2>' . ($model->primaryKey ? 'Редактирование ' : 'Создание ') . 'организации</h2>';
 
